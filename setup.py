@@ -23,4 +23,4 @@ setup(name='DNAChisel',
     license='MIT',
     keywords="DNA patterns synthetic biology",
     packages= find_packages(exclude='docs'),
-    install_requires=["numpy", "Biopython"])
+    install_requires=["numpy", "Biopython", "tqdm"])

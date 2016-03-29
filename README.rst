@@ -1,4 +1,8 @@
-# DNA Chisel
+DNA Chisel
+==========
+
+DNAChisel is a Python library to modify the nucleotides of DNA sequences with respect to a set of
+constraints and optimization objectives.
 
 In DNA Chisel you define constraints on a DNA sequence, such as:
 - DNA coding sequences that must be preserved (only synonymous mutations are authorized)
@@ -10,8 +14,13 @@ In DNA Chisel you define constraints on a DNA sequence, such as:
 
 
 
-## Examples
+Example
+--------
 
+
+
+::
+from 
 canvas = DNACanvas(
     sequence = "ATGCGTGTGCGTATGCGTGTGTGCGTGATG",
     constraints = [

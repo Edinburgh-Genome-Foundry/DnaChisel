@@ -7,8 +7,19 @@ import numpy as np
 def complement(sequence):
     return "".join([biotables.COMPLEMENTS[c] for c in sequence])
 
+
+def random_dna_sequence(length, probas=None):
+    if probas is None:
+        sequence = np.random.choice(list("ATCG"), length)
+    else:
+        bases, probas = zip(*probas.items())
+        sequence = np.random.choice(bases, length, probas)
+    return "".join(sequence)
+
+
 def reverse_complement(sequence):
     return complement(sequence)[::-1]
+
 
 def reverse_translate(protein_sequence):
     return "".join([
@@ -16,11 +27,13 @@ def reverse_translate(protein_sequence):
         for aa in protein_sequence
     ])
 
+
 def translate(dna_sequence):
     return "".join([
         biotables.CODON_TRANSLATIONS[dna_sequence[3*k:3*(k+1)]]
         for k in range(len(dna_sequence)/3)
     ])
+
 
 def to_regexpr(self):
     """Return a regular expression pattern the sequence in ATGC sequences.
@@ -32,6 +45,7 @@ def to_regexpr(self):
         biotables.NUCLEOTIDE_TO_REGEXPR[n]
         for n in self
     ])
+
 
 def windows_overlap(window1, window2):
     """Return the overlap span between two windows.

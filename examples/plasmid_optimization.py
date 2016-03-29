@@ -1,24 +1,25 @@
+import urllib
+from dnachisel import *
+from Bio import SeqIO
+
 # DOWNLOAD THE PLASMID
 
-import urllib
 url ="http://www.stevekellylab.com/constructs/pDex/pDex577-G.gb"
 urllib.urlretrieve(url, "pDex577-G.gb")
 
 
 # PARSE THE PLASMID FILE WITH BIOPYTHON, GET SEQUENCE AND GENES LOCATIONS
 
-from Bio import SeqIO
 annotated_sequence = SeqIO.read(open("pDex577-G.gb"), "genbank")
 sequence = str(annotated_sequence.seq)
-orfs = [
+CDS_list = [
     (int(f.location.start), int(f.location.end), int(f.location.strand))
     for f in annotated_sequence.features
     if f.type == "CDS"
 ]
 
-# PARSE THE PLASMID FILE WITH BIOPYTHON, GET SEQUENCE AND GENES LOCATIONS
 
-from dnachisel import *
+# DEFINE THE CONSTRAINTS
 
 GEN9_constraints = [
     NoPatternConstraint(enzyme_pattern("BsaI")),
@@ -31,13 +32,24 @@ GEN9_constraints = [
     GCPercentConstraint(0.25, 0.80, gc_window=50)
 ]
 CDS_constraints = [
-    EnforceTranslationConstraint((start, end), sequence=sequence, strand=strand)
-    for (start, end, strand) in orfs
+    EnforceTranslationConstraint(
+        (start, end),
+        sequence=sequence,
+        strand=strand
+    )
+    for (start, end, strand) in CDS_list
 ]
 
+
+# DEFINE OBJECTIVES
+
+objectives =
+
+# DEFINE AND SOLVE THE PROBLEM
 canvas = DNACanvas(
     sequence=sequence,
-    constraints= GEN9_constraints + CDS_constraints
+    constraints= GEN9_constraints + CDS_constraints,
+    objectives = objectives
 )
 
 print ("\n\n=== Status before optimization ===")

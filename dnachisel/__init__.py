@@ -12,5 +12,5 @@ from objectives import (
     CodonOptimizationObjective,
     Objective
 )
-from biotools import translate, reverse_complement
+from biotools import translate, reverse_complement, random_dna_sequence
 from .version import __version__
