@@ -18,8 +18,9 @@ exec(open('dnachisel/version.py').read()) # loads __version__
 setup(name='DNAChisel',
       version=__version__,
       author='Zulko',
-    description='Add and remove patterns in DNA sequences, the respectful way.',
+    description='Optimize DNA sequences under constraints.',
     long_description=open('README.rst').read(),
     license='MIT',
     keywords="DNA patterns synthetic biology",
-    packages= find_packages(exclude='docs'))
+    packages= find_packages(exclude='docs'),
+    install_requires=["numpy", "Biopython"])
