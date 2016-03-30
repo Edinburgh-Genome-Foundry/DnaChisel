@@ -10,7 +10,7 @@ import itertools as itt
 
 import numpy as np
 
-from biotools import translate, reverse_translate, gc_percent, read_fasta
+from biotools import translate, reverse_translate, gc_percent, read_fasta, reverse_complement
 import biotables
 import constraints as cst
 
@@ -39,15 +39,20 @@ class DNACanvas:
             if isinstance(constraint, cst.EnforceTranslationConstraint):
                 start, end = constraint.window
                 for i, aa in enumerate(constraint.translation):
-                    cstart, cstop = start + 3 * i, start + 3 * (i + 1)
-                    seq_codon = self.sequence[cstart:cstop]
+                    if constraint.strand == 1:
+                        cstart, cstop = start + 3 * i, start + 3 * (i + 1)
+                        seq_codon = self.sequence[cstart:cstop]
+                    else:
+                        cstart, cstop = end - 3 * (i+1), end - 3 * i
+                        seq_codon = reverse_complement(
+                                        self.sequence[cstart:cstop])
                     possible_codons = biotables.CODONS_SEQUENCES[aa][:]
                     local_immutable_unibases = (
                         unibase_mutable[cstart:cstop] == 0
                     ).nonzero()[0]
 
-                def array_subsequence(seq, inds):
-                    return np.array([seq[i] for i in inds])
+                    def array_subsequence(seq, inds):
+                        return np.array([seq[i] for i in inds])
                     if len(local_immutable_unibases):
                         reachable_possible_codons = [
                             codon
@@ -69,13 +74,20 @@ class DNACanvas:
                                 " clash with a DoNotTouch constraint."
                             )
                         possible_codons = reachable_possible_codons
+                    if constraint.strand == -1:
+                        possible_codons = [
+                            reverse_complement(possible_codon)
+                            for possible_codon in possible_codons
+                        ]
                     unibase_mutable[cstart:cstop] = 0
+
                     if seq_codon in possible_codons:
                         possible_codons.remove(seq_codon)
+
                     if possible_codons != []:
                         self.possible_mutations[
                             (cstart, cstop)] = possible_codons
-
+        #print unibase_mutable
         for i in unibase_mutable.nonzero()[0]:
             self.possible_mutations[i] = ["A", "T", "G", "C"]
 
@@ -224,7 +236,8 @@ class DNACanvas:
                         constraint.localized(window)
                     ] + passing_localized_constraints
                 )
-
+                #print constraint, localized_canvas.mutation_space_size()
+                #print localized_canvas.possible_mutations
                 if (localized_canvas.mutation_space_size() <
                         randomization_threshold):
                     localized_canvas.solve_all_constraints_by_exhaustive_search(
@@ -252,7 +265,7 @@ class DNACanvas:
             for constraint in failed_constraints:
                 self.solve_constraint_by_localization(
                     constraint, randomization_threshold,
-                    max_random_iters, verbose
+                    max_random_iters, verbose=verbose
                 )
 
         raise ValueError(

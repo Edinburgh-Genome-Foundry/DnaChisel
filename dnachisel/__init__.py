@@ -13,5 +13,10 @@ from objectives import (
     Objective,
     GCPercentObjective
 )
-from biotools import translate, reverse_complement, random_dna_sequence
+from biotools import (
+    translate,
+    reverse_complement,
+    random_dna_sequence,
+    reverse_translate
+)
 from .version import __version__

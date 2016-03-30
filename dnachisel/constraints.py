@@ -59,13 +59,16 @@ class PatternConstraint(Constraint):
 class EnforcePatternConstraint(PatternConstraint):
 
     def __init__(self, pattern, window=None, occurences=1):
-        PatternConstraint.__init__(pattern, window)
+        PatternConstraint.__init__(self, pattern, window)
         self.occurences = occurences
 
     def evaluate(self, canvas):
-        windows = self.pattern.find_matches(canvas.sequence, self.window)
+        window = self.window
+        if window is None:
+            window = (0, len(canvas.sequence))
+        windows = self.pattern.find_matches(canvas.sequence, window)
         score = -abs(len(windows) - self.occurences)
-        return ConstraintEvaluation(self, canvas, score, windows)
+        return ConstraintEvaluation(self, canvas, score, windows=[window])
 
     def evaluation_message(self, evaluation):
         if evaluation.passes:
@@ -79,7 +82,7 @@ class EnforcePatternConstraint(PatternConstraint):
                 return ("Failed. Pattern found %d times instead of %d wanted,"
                         " at positions %s") % (len(evaluation.windows),
                                                self.occurences,
-                                               evaluation.windows)
+                                               pattern_window)
 
     def __str__(self):
         return "EnforcePattern(%s, %s)" % (self.pattern, self.window)
@@ -222,4 +225,4 @@ class DoNotModifyConstraint(Constraint):
             return ConstraintEvaluation(self, canvas, score)
 
     def __str__(self):
-        return "DoNotModify(%s)" % self.window
+        return "DoNotModify(%s)" % str(self.window)
