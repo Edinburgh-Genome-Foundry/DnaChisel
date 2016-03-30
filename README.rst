@@ -4,15 +4,22 @@ DNA Chisel
 DNAChisel is a Python library to modify the nucleotides of DNA sequences with respect to a set of
 constraints and optimization objectives.
 
-Example
--------
+It can be used for many purposes, such as codon-optimizing the genes of a sequence
+for a particular micro-organism, modifying a sequence to meet the constraints of
+a DNA provider while preserving genes and other sensible patterns, or inserting
+a pattern in a sequence using only synonymous mutations.
 
-In the following example we consider a randomly-generated generated sequence, which
-we optimize to have a GC content of 40%, under the constraints that (1) the sequence
-should contain no restriction site for BsaI (GGTCTC), and (2) the local GC content on every
-50-nucleotide window should remain between 30% and 70%.
+Example of use
+---------------
 
-.. code:: python
+In this basic example we optimize a sequence with respect to the following constraints and objectives:
+
+- **Constraint 1:** The sequence should contain no restriction site for BsaI (GGTCTC).
+- **Constraint 2:** The local GC content of every 50-nucleotide subsequence should be between 30% and 70%.
+- **Objective 1:** The sequence's  GC content should be 40% (or as close as possible)
+
+Here is the Python code to solve the problem with DNAChisel:
+::
     from dnachisel import *
 
     # DEFINE THE OPTIMIZATION PROBLEM
@@ -27,18 +34,21 @@ should contain no restriction site for BsaI (GGTCTC), and (2) the local GC conte
     # SOLVE THE CONSTRAINTS, OPTIMIZE WITH RESPECT TO THE OBJECTIVE
 
     canvas.solve_all_constraints_one_by_one()
-    canvas.maximize_all_objectives_one_by_one()
+    canvas.maximize_all_objectives_one_by_one(max_random_iters=10000)
 
     # PRINT SUMMARIES TO CHECK THAT CONSTRAINTS PASS
 
     canvas.print_constraints_summary() # Will print success reports
     canvas.print_objectives_summary() # That will be good !
 
-See also this other script for a more complete and meaningful example, featuring more advanced
-constraints (preserving coding sequences, preserving arbitrary sequences,
-avoiding homopolymers, etc.) and optimizations (such as codon optimization, or
-conservative optimization). DNAChisel provides a framework in which it is also
-very easy to implement new constraints and objectives.
+For a more complete and meaningful example, see also this other script, in which
+a plasmid is codon-optimized and tweaked so as to verify constraints imposed by
+a DNA synthesis company.
+
+DNAChisel implements advanced constraints such as the preservation of coding
+sequences,  or the inclusion or exclusion of advanced patterns, as well as
+some common biological objectives (such as codon optimization, GC content), but it
+is also very easy to implement new constraints and objectives.
 
 
 Search strategies
@@ -49,7 +59,7 @@ Long DNA sequences have a huge space of possible mutations
 possible to solve a DNA optimization problem through an exhaustive.
 DNAChisel uses the following strategies to avoid exploring the whole search space:
 
-- **Constraining of the mutation space:* no mutation can be done in segments of the sequence
+- **Constraining of the mutation space:** no mutation can be done in segments of the sequence
   subject to a ``DoNotModify`` constraint, and in segments subject to an
   ``EnforceTranslation`` constraint only synonymous mutations of the codons are
   allowed.
@@ -79,17 +89,16 @@ DNAChisel uses the following strategies to avoid exploring the whole search spac
   constraints. The optimization of objectives functions in a similar way.
 
 
+Installation
+-------------
 
-  Installation
-  -------------
+You can install DNAChisel through PIP
+::
+    sudo pip install dnachisel
 
-  You can install DNAChisel through PIP
-  ::
-      sudo pip install dnachisel
-
-  Alternatively, you can unzip the sources in a folder and type
-  ::
-      sudo python setup.py install
+Alternatively, you can unzip the sources in a folder and type
+::
+    sudo python setup.py install
 
 
 
@@ -99,9 +108,3 @@ Contribute
 
 DNAChisel is an open-source library originally written at the Edinburgh Genome Foundry by Zulko_.
 It is released on Github under the MIT licence, everyone is welcome to contribute.
-
-All examples
--------------
-
-Reference
----------

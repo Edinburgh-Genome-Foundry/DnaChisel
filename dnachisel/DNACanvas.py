@@ -25,17 +25,17 @@ class DNACanvas:
 
     Examples
     --------
-    ::
-        from dnachisel import *
-        canvas = DNACanvas(
-            sequence = "ATGCGTGTGTGC...",
-            constraints = [constraint1, constraint2, ...],
-            objectives = [objective1, objective2, ...]
-        )
-        canvas.solve_all_constraints_one_by_one()
-        canvas.maximize_all_objectives_one_by_one()
-        canvas.print_constraints_summary()
-        canvas.print_objectives_summary()
+
+    >>> from dnachisel import *
+    >>> canvas = DNACanvas(
+    >>>     sequence = "ATGCGTGTGTGC...",
+    >>>     constraints = [constraint1, constraint2, ...],
+    >>>     objectives = [objective1, objective2, ...]
+    >>> )
+    >>> canvas.solve_all_constraints_one_by_one()
+    >>> canvas.maximize_all_objectives_one_by_one()
+    >>> canvas.print_constraints_summary()
+    >>> canvas.print_objectives_summary()
 
 
     Parameters
@@ -55,6 +55,7 @@ class DNACanvas:
 
     Attributes
     ----------
+
     sequence
       The sequence
 
@@ -65,13 +66,22 @@ class DNACanvas:
       The list of objectives
 
     possible_mutations
-      A dictionnary of the form ``{location1 : list1, location2: list2...}``
-      where ``location`` is either a single index (e.g. 10) indicating the
-      position of a nucleotide to be muted, or a couple ``(start, end)``
-      indicating a whole segment whose sub-sequence should be replaced.
-      The ``list``s are lists of possible sequences to replace each location,
-      e.g. for the mutation of a whole codon `(3,6): ["ATT", "ACT", "AGT"]`.
+      A dictionnary indicating the possible mutations
+
+    Notes
+    -----
+
+    The dictionnary ``self.possible_mutations`` is of the form
+    ``{location1 : list1, location2: list2...}``
+    where ``location`` is either a single index (e.g. 10) indicating the
+    position of a nucleotide to be muted, or a couple ``(start, end)``
+    indicating a whole segment whose sub-sequence should be replaced.
+    The ``list`` s are lists of possible sequences to replace each location,
+    e.g. for the mutation of a whole codon ``(3,6): ["ATT", "ACT", "AGT"]``.
     """
+
+
+
 
 
     def __init__(self, sequence, constraints=None, objectives=None):

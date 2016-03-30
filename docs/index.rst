@@ -1,10 +1,3 @@
-
-
-
-DNAChisel
-===========
-
-
 .. raw:: html
 
     <a href="https://twitter.com/share" class="twitter-share-button"
@@ -17,75 +10,151 @@ DNAChisel
     <iframe src="http://ghbtns.com/github-btn.html?user=Edinburgh-Genome-Foundry&repo=dnachisel&type=watch&count=true&size=large"
     allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30px" margin-bottom="30px"></iframe>
 
-DNAChisel is a Python module to produce living art. It transforms an image into files that a liquid dispenser can use to *print* the image to a plate using pigmented yeast or bacteria.
+DNA Chisel
+==========
 
-Here are two examples of bio-art:
+DNAChisel is a Python library to modify the nucleotides of DNA sequences with respect to a set of
+constraints and optimization objectives.
 
-.. figure:: images/bioprint_dolly.jpeg
-    :align: center
+It can be used for many purposes, such as codon-optimizing the genes of a sequence
+for a particular micro-organism, modifying a sequence to meet the constraints of
+a DNA provider while preserving genes and other sensible patterns, or inserting
+a pattern in a sequence using only synonymous mutations.
 
-    Dolly drawn with baker yeast (white), violacein-producing yeast (black), and carotene-producing yeast (orange)
+Example of use
+---------------
 
+In this basic example we optimize a sequence with respect to the following constraints and objectives:
 
-.. figure:: images/bioprint_england.jpeg
-    :align: center
+- **Constraint 1:** The sequence should contain no restriction site for BsaI (GGTCTC).
+- **Constraint 2:** The local GC content of every 50-nucleotide subsequence should be between 30% and 70%.
+- **Objective 1:** The sequence's  global GC content should be 40% (or as close as possible)
 
-    England flag drawn with 3 different strains of the bacterium *E. coli*.
-
-
-DNAChisel is released on Github_ under the MIT licence (¢ Edinburgh Genome Foundry), everyone is welcome to contribute !
-
-DNAChisel was written at the Edinburgh Genome Foundry by Zulko_ after an original idea and Matlab code by Mike Shen (`Mike's project on Github <https://github.com/mshen5/BioPointillism>`_).
-
-
-
-
-Installation
---------------
-
-If you have PIP installed: ::
-
-    (sudo) pip install ez_setup dnachisel
-
-Or unzip the source code in a directory and type in a terminal: ::
-
-    sudo python setup.py install
-
-
-Usage
---------
-
-In the same folder as your code, place an image. It can have any resolution, but keep in mind that the width/height ratio of the plate it is printed on is 1.5. Make sure that a specific color is used to mark the un-pigmented background of the image, here we use blue:
-
-.. figure:: images/dolly.jpeg
-    :align: center
-
-Then write the following code in ``dolly.py``:
+Here is the Python code to solve the problem with DNAChisel:
 ::
-    from DNAChisel import bioprint
+    from dnachisel import *
 
-    bioprint(
-        image_filename="../docs/images/dolly.jpeg",
-        output_filename="dolly.csv",
-        bg_color=[0, 0, 255], # blue background represents empty wells
-        pigments_wells={"A1": [0, 0, 0],  # black yeast in source well A1
-                        "A2": [250, 120, 10],  # orange yeast in well A2
-                        "A3": [255, 255, 255]},  # white yeast in well A3
-        quantified_image_filename="dolly_preview.jpeg"
+    # DEFINE THE OPTIMIZATION PROBLEM
+
+    canvas = DNACanvas(
+        sequence=random_dna_sequence(10000),
+        constraints=[NoPatternConstraint(enzyme_pattern("BsaI")),
+                     GCContentConstraint(0.3, 0.7, gc_window=50)],
+        objectives = [GCContentObjective(0.4)]
     )
 
-Execute in a terminal with ``python dolly.py``. This will produce a ``dolly.csv`` file as well as a preview image of the final printing (so that you can check if the image looks good at this low resolution).
+    # SOLVE THE CONSTRAINTS, OPTIMIZE WITH RESPECT TO THE OBJECTIVE
 
-.. figure:: images/dolly_preview.png
-    :align: center
+    canvas.solve_all_constraints_one_by_one()
+    canvas.maximize_all_objectives_one_by_one(max_random_iters=10000)
 
-Prepare a source plate with the right pigmented yeasts in wells A1, A2, A3, use an agar plate as the destination plate, and feed ``dolly.csv`` to the `Labcyte Echo <http://www.labcyte.com/products/liquidhandling/echo-555-liquid-handler>`_. Once the printing is finished, incubate 2 days at 30C (it would be one day at 37C for bacteria). Enjoy the result !
+    # PRINT SUMMARIES TO CHECK THE CONSTRAINTS AND OBJECTIVES
+
+    canvas.print_constraints_summary()
+    canvas.print_objectives_summary()
+
+This prints the following result, indicating that all constraints pass in the end
+and the objective has benn (very well) optimized:
+::
+    ===> SUCCESS - all constraints evaluations pass
+    NoPattern(GGTCTC (BsaI), None) Passed. Pattern not found !
+    GCContent(min 0.30, max 0.70, gc_win 50, window None) Passed !
 
 
-Reference manual
+    ===> TOTAL OBJECTIVES SCORE: 0.00
+    GCContentObj(0.40, global): scored -0.00E+00. GC content is 0.400 (0.400 wanted)
+
+
+
+For a more complete and meaningful example, see also this other script, in which
+a plasmid is codon-optimized and tweaked so as to verify constraints imposed by
+a DNA synthesis company.
+
+DNAChisel implements advanced constraints such as the preservation of coding
+sequences,  or the inclusion or exclusion of advanced patterns, as well as
+some common biological objectives (such as codon optimization, GC content), but it
+is also very easy to implement new constraints and objectives.
+
+
+Search strategies
 -----------------
 
-.. autofunction:: DNAChisel.bioprint
+Long DNA sequences have a huge space of possible mutations
+(just 20 nucleotides can form a trillion different sequences), therefore it is not
+possible to solve a DNA optimization problem through an exhaustive search.
+DNAChisel uses the following strategies to avoid exploring the whole search space:
+
+- **Constraining of the mutation space:** Prior to searching, DNAChisel trims the
+  possible mutations by analyzing the constraints of the problem. For instance
+  a ``DoNotModify(segment)`` constraint makes it impossible to mutate the nucleotides
+  of the concerned DNA segment, and in segments subject to an
+  ``EnforceTranslation`` constraint, only synonymous mutations of the codons are
+  allowed.
+
+- **Constraints solving before objective optimization**: DNAChisel currently enforces a
+  resolution of problems in two steps: first solve the constraints and make sure
+  that they all pass, then optimize the sequence with respect to the different
+  objectives, while making sure that they all pass. While not to always yield
+  optimal results, this heuristic gives generally very good results, and is more
+  practical, as solving for the constraints first is generally very fast and directly
+  informs on whether all constraints can be met.
+
+- **Localized searches:** When DNAChisel finds that a constraint is not
+  verified, and if the constraint breaches are localized on the
+  sequence (for instance, a forbidden restriction site at a given location),
+  then it will attempt to solve each breach separately
+  by creating *localized* versions of the mutations space and constraints around
+  the problematic region.
+  It works the same for optimization objectives: localized objectives indicate
+  on which segments of the sequence to focus the search.
+
+- **A mix of exhaustive searches and random searches:** for each localized
+  constraint problem, if the search space is small enough DNAChisel performs
+  an exhaustive search (i.e. it tries every possible change of the sequence until
+  all constraints are resolved), else DNAChisel performs a random search where
+  if create random valid variations of the sequence until one meets all the
+  constraints. The optimization of objectives functions in a similar way.
+
+Installation
+-------------
+
+You can install DNAChisel through PIP
+::
+  sudo pip install dnachisel
+
+Alternatively, you can unzip the sources in a folder and type
+::
+  sudo python setup.py install
+
+
+Contribute
+----------
+
+DNAChisel is an open-source library originally written at the Edinburgh Genome Foundry by Zulko_.
+It is released on Github under the MIT licence, everyone is welcome to contribute.
+
+
+
+.. toctree::
+    :hidden:
+    :maxdepth: 3
+
+    self
+
+.. toctree::
+    :hidden:
+    :caption: Reference
+    :maxdepth: 3
+
+    ref
+
+.. toctree::
+    :caption: Examples
+
+    examples/plasmid_optimization
+    examples/repeated_kmers_minimization
+
 
 .. _Zulko: https://github.com/Zulko/
-.. _Github: https://github.com/Edinburgh-Genome-Foundry/DNAChisel
+.. _Github: https://github.com/EdinburghGenomeFoundry/dnachisel
+.. _PYPI: https://pypi.python.org/pypi/dnachisel
