@@ -66,8 +66,8 @@ and the objective has benn (very well) optimized:
 
 
 
-For a more complete and meaningful example, see also this other script, in which
-a plasmid is codon-optimized and tweaked so as to verify constraints imposed by
+For a more complete and meaningful example, see also :ref:`this other script <plasmid-optimization>`,
+in which a plasmid is codon-optimized and tweaked so as to verify constraints imposed by
 a DNA synthesis company.
 
 DNAChisel implements advanced constraints such as the preservation of coding

@@ -1,4 +1,4 @@
-.. plasmid_optimization:
+.. _plasmid-optimization:
 
 Plasmid optimization with DNAChisel
 ------------------------------------

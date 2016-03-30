@@ -6,11 +6,11 @@ The DNA provider Gen9 indicates that repeated 9-mers (i.e. 9-base-pair segments
 of a sequence which have at least another identical twin somewhere else in the
 sequence) create problems for synthesis (maybe due to misannealing ?) and should
 be avoided.
-So too much 9-mers, and synthesis becomes a 9-mer (nightmare), ah ah ah !)
+So too much 9-mers, and synthesis becomes a 9-mer (nightmare), ah ah ah !
 Anyways, Gen9 wants us to get read of these repeated 9-mers and has created
-the following score that should be as small as possible:
+the following score that we should minimize:
 
-    score = 9.0 * number_of_non_unique_9mers / len(seq)
+    score = 9.0 * number_of_non_unique_9mers / sequence_length
 
 In this script we show how to create a new objective ``MinimizeNinemersScore``
 to minimize this score, and we use it to optimize a coding sequence.
