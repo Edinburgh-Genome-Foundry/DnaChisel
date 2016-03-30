@@ -10,7 +10,8 @@ from .constraints import (
 )
 from objectives import (
     CodonOptimizationObjective,
-    Objective
+    Objective,
+    GCPercentObjective
 )
 from biotools import translate, reverse_complement, random_dna_sequence
 from .version import __version__

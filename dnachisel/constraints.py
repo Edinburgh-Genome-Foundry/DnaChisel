@@ -6,17 +6,23 @@ import numpy as np
 
 class ConstraintEvaluation:
 
-    def __init__(self, score, windows=None):
+    def __init__(self, constraint, canvas, score, windows=None, message=None):
+        self.constraint = constraint
+        self.canvas = canvas
         self.score = score
         self.passes = score >= 0
         self.windows = windows
+        self.message = message
 
     def __str__(self):
-        return str((
-            "Passes" if self.passes else "Fails",
-            "score : %.02f" % self.score,
-            self.windows
-        ))
+        return (
+            self.message if (self.message is not None) else
+            str((
+                "Passes" if self.passes else "Fails",
+                "score : %.02f" % self.score,
+                self.windows
+            ))
+        )
 
 
 class Constraint:
@@ -29,12 +35,6 @@ class Constraint:
 
     def localized(self, window):
         return self
-
-    def initialize_canvas(self, canvas):
-        pass
-
-    def evaluation_message(self, evaluation):
-        return str(evaluation)
 
     def copy_with_changes(self, **kwargs):
         new_constraint = copy.deepcopy(self)
@@ -52,7 +52,7 @@ class PatternConstraint(Constraint):
     def localized(self, window):
         start, end = window
         pattern_size = self.pattern.size
-        return self.copy_with_changes(window=[start - pattern_size,
+        return self.copy_with_changes(window=[max(0,start - pattern_size),
                                               end + pattern_size])
 
 
@@ -65,7 +65,7 @@ class EnforcePatternConstraint(PatternConstraint):
     def evaluate(self, canvas):
         windows = self.pattern.find_matches(canvas.sequence, self.window)
         score = -abs(len(windows) - self.occurences)
-        return ConstraintEvaluation(score, windows=windows)
+        return ConstraintEvaluation(self, canvas, score, windows)
 
     def evaluation_message(self, evaluation):
         if evaluation.passes:
@@ -90,15 +90,13 @@ class NoPatternConstraint(PatternConstraint):
     def evaluate(self, canvas):
         windows = self.pattern.find_matches(canvas.sequence, self.window)
         score = -len(windows)
-        return ConstraintEvaluation(score, windows=windows)
-
-    def evaluation_message(self, evaluation):
-        if evaluation.passes:
-            return "Passed. Pattern not found !"
+        if score == 0:
+            message= "Passed. Pattern not found !"
         else:
-            return "Failed. Pattern found at positions %s" % (
-                evaluation.windows
-            )
+            message= "Failed. Pattern found at positions %s" % windows
+        return ConstraintEvaluation(
+            self, canvas, score, windows=windows, message=message
+        )
 
     def __str__(self):
         return "NoPattern(%s, %s)" % (self.pattern, self.window)
@@ -132,7 +130,7 @@ class EnforceTranslationConstraint(Constraint):
         if self.strand == -1:
             subsequence = reverse_complement(subsequence)
         success = 1 if (translate(subsequence) == self.translation) else -1
-        return ConstraintEvaluation(success)
+        return ConstraintEvaluation(self, canvas, success)
 
     def __str__(self):
         return "EnforceTranslation(%s)" % str(self.window)
@@ -163,7 +161,7 @@ class GCPercentConstraint(Constraint):
             breaches_windows = []
         elif len(breaches_starts) == 1:
             start = breaches_starts[0]
-            breaches_windows = [start, start + self.gc_window]
+            breaches_windows = [[start, start + self.gc_window]]
         else:
             breaches_windows = []
             current_start = breaches_starts[0]
@@ -181,7 +179,14 @@ class GCPercentConstraint(Constraint):
             breaches_windows.append(
                 [wstart + current_start, wstart + last_end])
 
-        return ConstraintEvaluation(score, breaches_windows)
+        if breaches_windows == []:
+            message = "Passed !"
+        else:
+            message= ("Failed: GC content out of bound on segments " +
+                      ", ".join(["%s-%s" % (s[0], s[1])
+                                for s in breaches_windows]))
+        return ConstraintEvaluation(self, canvas, score, breaches_windows,
+                                    message = message)
 
     def localized(self, window):
         if self.window is not None:
@@ -189,7 +194,8 @@ class GCPercentConstraint(Constraint):
         else:
             start, end = window
             if self.gc_window is not None:
-                new_window = [start - self.gc_window, end + self.gc_window]
+                new_window = [max(0, start - self.gc_window),
+                              end + self.gc_window]
             else:
                 new_window = None
         return self.copy_with_changes(window=new_window)
@@ -200,14 +206,10 @@ class GCPercentConstraint(Constraint):
                                       self.gc_window, self.window
         )
 
-
 class DoNotModifyConstraint(Constraint):
 
     def __init__(self, window):
         self.window = window
-
-    def initialize_canvas(self, canvas):
-        canvas.original_sequence = canvas.sequence
 
     def evaluate(self, canvas):
         sequence = canvas.sequence
@@ -217,7 +219,7 @@ class DoNotModifyConstraint(Constraint):
         else:
             start, end = self.window
             score = 1 if (sequence[start:end] == original[start:end]) else -1
-            return ConstraintEvaluation(score)
+            return ConstraintEvaluation(self, canvas, score)
 
     def __str__(self):
         return "DoNotModify(%s)" % self.window

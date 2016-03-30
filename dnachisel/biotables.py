@@ -89,7 +89,7 @@ CODON_USAGE = {
         "GGT" : 3.92,   "GGC" : 0.06,   "GGA" : 0.00,   "GGG" : 0.02
     },
 
-    "E. Coli": {
+    "E. coli": {
 
         "TTT" : 0.34,   "TTC" : 1.66,   "TTA" : 0.06,   "TTG" : 0.07,
         "CTT" : 0.13,   "CTC" : 0.17,   "CTA" : 0.04,   "CTG" : 5.54,

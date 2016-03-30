@@ -8,11 +8,12 @@ canvas = DNACanvas(
         NoPatternConstraint(DNAPattern("ATTATTATT")),
         GCPercentConstraint(0.3, 0.7, gc_window=50)
     ]
+    objectives = [GCPercentObjective(0.6)]
 )
 
 print ("\n\n=== Status before optimization ===")
-canvas.print_constraints_summary()
+canvas.print_constraints_summary(failed_only=True)
 canvas.solve_all_constraints_one_by_one()
 print ("\n\n=== Status after optimization ===")
-canvas.print_constraints_summary()
-print (canvas.sequence)
+canvas.print_constraints_summary(failed_only=True)
+print ("Final sequence: %s" % canvas.sequence)

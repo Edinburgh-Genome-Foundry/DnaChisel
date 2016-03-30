@@ -13,7 +13,7 @@ import numpy as np
 from biotools import translate, reverse_translate, gc_percent, read_fasta
 import biotables
 import constraints as cst
-from tqdm import tqdm
+
 
 class DNACanvas:
 
@@ -26,34 +26,7 @@ class DNACanvas:
 
         self.compute_possible_mutations()
 
-    def all_constraints_evaluations(self):
-        return [
-            constraint.evaluate(self)
-            for constraint in self.constraints
-        ]
-
-    def all_constraints_pass(self):
-        return all([
-            evaluation.passes
-            for evaluation in self.all_constraints_evaluations()
-        ])
-
-    def print_constraints_summary(self, failed_only=False):
-        evaluations = self.all_constraints_evaluations()
-        failed_evaluations = [
-            e for e in evaluations
-            if not e.passes
-        ]
-        if failed_only:
-            evaluations = failed_evaluations
-        if failed_evaluations == []:
-            print("===> SUCCESS - all constraints evaluations pass")
-        else:
-            print ("===> FAILURE: %d constraints evaluations failed" %
-                   len(failed_evaluations))
-        for constraint in self.constraints:
-            evaluation = constraint.evaluate(self)
-            print("%s %s" % (constraint, constraint.evaluate(self)))
+    # MUTATIONS
 
     def compute_possible_mutations(self):
         self.possible_mutations = {}
@@ -127,9 +100,35 @@ class DNACanvas:
                     sequence_buffer[ind] = seq
                 else:
                     start, end = ind
-                    # print seq, start, end, self.sequence_buffer[start:end]
                     sequence_buffer[start:end] = seq
         self.sequence = sequence_buffer.value
+
+     # CONSTRAINTS
+
+    def all_constraints_evaluations(self):
+        return [
+            constraint.evaluate(self)
+            for constraint in self.constraints
+        ]
+
+    def all_constraints_pass(self):
+        return all([
+            evaluation.passes
+            for evaluation in self.all_constraints_evaluations()
+        ])
+
+    def print_constraints_summary(self, failed_only=False):
+        evaluations = self.all_constraints_evaluations()
+        failed_evaluations = [e for e in evaluations if not e.passes]
+        if failed_only:
+            evaluations = failed_evaluations
+        if failed_evaluations == []:
+            print("===> SUCCESS - all constraints evaluations pass")
+        else:
+            print ("===> FAILURE: %d constraints evaluations failed" %
+                   len(failed_evaluations))
+        for evaluation in evaluations:
+            print("%s %s" % (evaluation.constraint, evaluation))
 
     def solve_all_constraints_by_exhaustive_search(self, verbose=False):
         for mutations in self.iter_mutations_space():
@@ -153,7 +152,7 @@ class DNACanvas:
             for e in evaluations
             if not e.passes
         ])
-        for iteration in tqdm(range(max_iter)):
+        for iteration in range(max_iter):
             if score == 0:
                 return
 
@@ -178,7 +177,7 @@ class DNACanvas:
                 for e in evaluations
                 if not e.passes
             ])
-            #print "now scores with muts", map(str,evaluations), new_score, score
+            # print "now scores with muts", map(str,evaluations), new_score, score
             if new_score > score:
                 score = new_score
             else:
@@ -189,6 +188,10 @@ class DNACanvas:
     def solve_constraint_by_localization(self, constraint,
                                          randomization_threshold=10000,
                                          max_random_iters=1000, verbose=False):
+        """Solve the constraint using local, targeted mutations.
+
+
+        """
 
         evaluation = constraint.evaluate(self)
         if evaluation.passes:
@@ -240,11 +243,11 @@ class DNACanvas:
         for iteration in range(max_loops):
             evaluations = self.all_constraints_evaluations()
             failed_constraints = [
-                cst
-                for cst, evaluation in zip(self.constraints, evaluations)
+                evaluation.constraint
+                for evaluation in evaluations
                 if not evaluation.passes
             ]
-            if all([e.passes for e in evaluations]):
+            if failed_constraints == []:
                 return
             for constraint in failed_constraints:
                 self.solve_constraint_by_localization(
@@ -252,7 +255,138 @@ class DNACanvas:
                     max_random_iters, verbose
                 )
 
-
-
         raise ValueError(
-            "Could not solve all constraints before reaching max_loops")
+            "Could not solve all constraints before reaching max_loops"
+        )
+
+    # OBJECTIVES
+    def all_objectives_evaluations(self):
+        return [
+            objective.evaluate(self)
+            for objective in self.objectives
+        ]
+
+    def all_objectives_score_sum(self):
+        return sum([
+            objective.boost * objective.evaluate(self).score
+            for objective in self.objectives
+        ])
+
+    def print_objectives_summary(self, failed_only=False):
+        print("===> TOTAL OBJECTIVES SCORE: %.02f" %
+              self.all_objectives_score_sum())
+        for evaluation in self.all_objectives_evaluations():
+            print "%s: %s" % (evaluation.objective, evaluation)
+
+    def maximize_objectives_by_exhaustive_search(self, verbose=False):
+        """
+        """
+        if not self.all_constraints_pass():
+            raise ValueError("Optimization can only be done when all"
+                             " constraints are verified")
+        current_score = self.all_objectives_score_sum()
+        current_best_sequence = self.sequence
+        for mutations in self.iter_mutations_space():
+            self.mutate_sequence(mutations)
+            if self.all_constraints_pass():
+                score = self.all_objectives_score()
+                if score > current_score:
+                    current_score = score
+                    current_best_sequence = self.sequence
+            self.sequence = self.original_sequence
+        self.sequence = current_best_sequence
+
+    def maximize_objectives_by_random_mutations(self, max_iter=1000,
+                                                n_mutations=3,
+                                                verbose=False):
+        """
+        """
+        if not self.all_constraints_pass():
+            raise ValueError("Optimization can only be done when all"
+                             " constraints are verified")
+        mutations_locs = self.possible_mutations.keys()
+        score = self.all_objectives_score_sum()
+        for iteration in range(max_iter):
+            random_mutations_inds = np.random.randint(
+                0, len(mutations_locs), n_mutations)
+            mutations = [
+                (mutations_locs[ind],
+                 np.random.choice(
+                    self.possible_mutations[mutations_locs[ind]], 1
+                 )[0]
+                )
+                for ind in random_mutations_inds
+            ]
+            if verbose:
+                self.print_constraints_summary()
+            previous_sequence = self.sequence
+            self.mutate_sequence(mutations)
+            if self.all_constraints_pass():
+                new_score = self.all_objectives_score_sum()
+                if new_score > score:
+                    score = new_score
+                else:
+                    self.sequence = previous_sequence
+            else:
+                self.sequence = previous_sequence
+
+    def maximize_objective_by_localization(self, objective, windows=None,
+        randomization_threshold=10000, max_random_iters=1000, verbose=False):
+        """Maximize the objective via local, targeted mutations.
+        """
+
+        if windows is None:
+            windows = objective.evaluate(self).windows
+            if windows is None:
+                raise ValueError(
+                    "max_objective_by_localization requires either that"
+                    " windows be provided or that the objective evaluation"
+                    " returns windows."
+                )
+        for window in windows:
+            if verbose:
+                print(window)
+            do_not_modify_window = [
+                max(0, window[0] - 5),
+                min(window[1] + 5, len(self.sequence))
+            ]
+            localized_canvas = DNACanvas(
+                sequence=self.sequence,
+                constraints=[
+                    _constraint.localized(window)
+                    for _constraint in self.constraints
+                ] + [
+                    cst.DoNotModifyConstraint([0, do_not_modify_window[0]]),
+                    cst.DoNotModifyConstraint([do_not_modify_window[1],
+                                               len(self.sequence)]),
+                ],
+                objectives = [
+                    _objective.localized(window)
+                    for _objective in self.objectives
+                ]
+            )
+
+            if (localized_canvas.mutation_space_size() <
+                    randomization_threshold):
+                localized_canvas.maximize_objectives_by_exhaustive_search(
+                    verbose=verbose)
+            else:
+                localized_canvas.maximize_objectives_by_random_mutations(
+                    max_iter=max_random_iters, n_mutations=1,
+                    verbose=verbose)
+            self.sequence = localized_canvas.sequence
+
+
+    def maximize_all_objectives_one_by_one(self, n_loops=1,
+                                           randomization_threshold=10000,
+                                           max_random_iters=1000,
+                                           verbose=False):
+
+        for iteration in range(n_loops):
+            for objective in self.objectives:
+                self.maximize_objective_by_localization(
+                    objective,
+                    randomization_threshold=randomization_threshold,
+                    max_random_iters=max_random_iters,
+                    verbose=verbose
+                )
