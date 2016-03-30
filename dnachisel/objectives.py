@@ -1,6 +1,7 @@
 from biotables import CODON_USAGE
-from biotools import gc_percent, reverse_complement
+from biotools import gc_percent, reverse_complement, sequences_differences
 import numpy as np
+
 
 class ObjectiveEvaluation:
 
@@ -17,8 +18,10 @@ class ObjectiveEvaluation:
             "score: %.02E, windows: %s" % (self.score, str(self.windows))
         )
 
+
 class Objective:
-    def __init__(self, boost=1.-0):
+
+    def __init__(self, boost=1. - 0):
         self.boost = boost
 
     def localized(self, window):
@@ -47,8 +50,8 @@ class CodonOptimizationObjective(Objective):
             raise ValueError("CodonOptimizationObjective on a window/sequence"
                              "with size %d not multiple of 3)" % length)
         score = sum([
-            usage[subsequence[3*i:3*(i+1)]]
-            for i in range(length/3)
+            usage[subsequence[3 * i:3 * (i + 1)]]
+            for i in range(length / 3)
         ])
         return ObjectiveEvaluation(
             self, canvas, score, windows=[[start, end]],
@@ -60,7 +63,7 @@ class CodonOptimizationObjective(Objective):
         return "CodonOptimize(%s, %s)" % (str(self.window), self.organism)
 
 
-class GCPercentObjective(Objective):
+class GCContentObjective(Objective):
 
     def __init__(self, gc_percent, exponent=1.0, window=None,  boost=1.0):
         Objective.__init__(self, boost=boost)
@@ -74,14 +77,42 @@ class GCPercentObjective(Objective):
         start, end = window
         subsequence = canvas.sequence[start: end]
         gc = gc_percent(subsequence)
-        score = -( abs(gc - self.gc_percent) ** self.exponent)
+        score = -(abs(gc - self.gc_percent) ** self.exponent)
         return ObjectiveEvaluation(self, canvas, score=score, windows=[window],
-            message = "scored %.02E. GC content is %.03f (%.03f wanted)" %
-            (score, gc, self.gc_percent))
+                                   message="scored %.02E. GC content is %.03f (%.03f wanted)" %
+                                   (score, gc, self.gc_percent))
 
     def __str__(self):
-        return "GCPercentObj(%.02f, %s)" % (
+        return "GCContentObj(%.02f, %s)" % (
             self.gc_percent,
             "global" if (self.window is None) else
             ("window: %s" % str(self.window))
+        )
+
+
+class MinimizeDifferencesObjective(Objective):
+
+    def __init__(self, window=None, sequence=None, original_sequence=None,
+                 boost=1.0):
+        Objective.__init__(self, boost=boost)
+        self.window = window
+        if sequence is None:
+            sequence = original_sequence[window[0]:window[1]]
+        self.sequence = sequence
+
+    def evaluate(self, canvas):
+        window = (self.window if self.window is not None
+                  else [0, len(canvas.sequence)])
+        start, end = window
+        subsequence = canvas.sequence[start: end]
+        diffs = - sequences_differences(subsequence, self.sequence)
+        return ObjectiveEvaluation(
+            self, canvas, score=-diffs, windows=[window],
+            message="Found %d differences with target sequence" % diffs
+        )
+
+    def __str__(self):
+        return "MinimizeDifferencesObj(%s, %s...)" % (
+            "global" if self.window is None else str(self.window),
+            self.sequence[:7]
         )

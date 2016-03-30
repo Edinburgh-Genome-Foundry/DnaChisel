@@ -14,8 +14,65 @@ from biotools import translate, reverse_translate, gc_percent, read_fasta, rever
 import biotables
 import constraints as cst
 
+class NoSolutionFoundError(Exception):
+    pass
 
 class DNACanvas:
+    """DNA Canvas specify of constrained DNA optimization problems.
+
+    DNA Canvas also allow you to solve the optimization problem. This is done
+    in-place, by modifying the sequence of the DNA Canvas.
+
+    Examples
+    --------
+    ::
+        from dnachisel import *
+        canvas = DNACanvas(
+            sequence = "ATGCGTGTGTGC...",
+            constraints = [constraint1, constraint2, ...],
+            objectives = [objective1, objective2, ...]
+        )
+        canvas.solve_all_constraints_one_by_one()
+        canvas.maximize_all_objectives_one_by_one()
+        canvas.print_constraints_summary()
+        canvas.print_objectives_summary()
+
+
+    Parameters
+    ----------
+
+    sequence
+      A string of ATGC characters (they must be upper case!), e.g. "ATTGTGTA"
+
+    constraints
+      A list of objects of type ``Constraint``.
+
+    objectives
+      A list of objects of type ``Objective`` specifying what must be optimized
+      in the problem. Note that each objective has a float ``boost`` parameter.
+      The larger the boost, the more the objective is taken into account during
+      the optimization.
+
+    Attributes
+    ----------
+    sequence
+      The sequence
+
+    constraints
+      The list of constraints
+
+    objectives
+      The list of objectives
+
+    possible_mutations
+      A dictionnary of the form ``{location1 : list1, location2: list2...}``
+      where ``location`` is either a single index (e.g. 10) indicating the
+      position of a nucleotide to be muted, or a couple ``(start, end)``
+      indicating a whole segment whose sub-sequence should be replaced.
+      The ``list``s are lists of possible sequences to replace each location,
+      e.g. for the mutation of a whole codon `(3,6): ["ATT", "ACT", "AGT"]`.
+    """
+
 
     def __init__(self, sequence, constraints=None, objectives=None):
 
@@ -26,9 +83,39 @@ class DNACanvas:
 
         self.compute_possible_mutations()
 
+    def extract_subsequence(self, location):
+        """Return the subsequence (a string) atthe given location).
+
+         The ``location`` can be either an index (an integer) indicating the
+         position of a single nucleotide, or a list/couple ``(start, end)``
+         indicating a whole sub-segment.
+        """
+        if hasattr(location, "__iter__"):
+            start, end = location
+            return self.sequence[start:end]
+        else:
+            return self.sequence[location]
+
     # MUTATIONS
 
     def compute_possible_mutations(self):
+        """Compute all possible mutations that can be applied to the sequence.
+
+        The result of the computations is stored in ``self.possible_mutations``
+        (see ``DNACanvas`` documentation).
+
+        The possible mutations are constrained by the ``constraints`` of the
+        DNACanvas with respect to the following rules:
+
+        - ``DoNotModify``  constraints disable mutations for the nucleotides of
+          the concerned segments.
+        - ``EnforceTranlation`` constraints ensure that on the concerned
+          segments only codons that translate to the imposed amino-acid will
+          be considered, so a triplet of nucleotides that should code for
+          Asparagin will see its choices down to ["AAT", "AAC"], instead of
+          the 64 possible combinations of free triplets.
+
+        """
         self.possible_mutations = {}
         unibase_mutable = np.ones(len(self.sequence))
         for constraint in self.constraints:
@@ -69,7 +156,7 @@ class DNACanvas:
                             )
                         ]
                         if reachable_possible_codons == []:
-                            raise ValueError(
+                            raise NoSolutionFoundError(
                                 "An EnforceTranslation constraint seems to"
                                 " clash with a DoNotTouch constraint."
                             )
@@ -81,29 +168,72 @@ class DNACanvas:
                         ]
                     unibase_mutable[cstart:cstop] = 0
 
-                    if seq_codon in possible_codons:
-                        possible_codons.remove(seq_codon)
+                    # if seq_codon in possible_codons:
+                    #    possible_codons.remove(seq_codon)
 
-                    if possible_codons != []:
-                        self.possible_mutations[
-                            (cstart, cstop)] = possible_codons
+                    #if (possible_codons != []) and possible_codons != [seq_codon]:
+                    if possible_codons not in [[], [seq_codon]]:
+                        self.possible_mutations[(cstart, cstop)] = \
+                            possible_codons
         #print unibase_mutable
         for i in unibase_mutable.nonzero()[0]:
             self.possible_mutations[i] = ["A", "T", "G", "C"]
 
     def mutation_space_size(self):
+        """Return the total number of possible sequence variants.
+
+        The result is a float.
+        """
         return np.prod([
-            len(v) + 1.0
+            1.0*len(v) #+ 1.0
             for v in self.possible_mutations.values()
         ])
 
     def iter_mutations_space(self):
         return itt.product(*[
-            [None] + [(k, seq) for seq in values]
+            #[None] +
+            [(k, seq) for seq in values]
             for k, values in self.possible_mutations.items()
         ])
 
+    def get_random_mutations(self, n_mutations=1):
+        """Pick a random set of possible mutations.
+
+        Returns a list ``[(location1, new_sequence1), ...]`` where location is
+        either an index or a couple ``(start, end)`` and ``new_sequence`` is
+        a DNA string like ``ATGC``, indicating that the canvas' sequence
+        should be modified through mutations of the form
+        ``self.sequence[location1] = new_sequence1``.
+        """
+        locs = self.possible_mutations.keys()
+        if n_mutations == 1:
+            indices = [np.random.randint(0, len(locs), 1)]
+        else:
+            indices = np.random.choice(range(0, len(locs)), n_mutations,
+                                       replace=False)
+        mutations = []
+        for index in indices:
+            location = locs[index]
+            subsequence = self.extract_subsequence(location)
+            choices = self.possible_mutations[location]
+            if subsequence in choices:
+                choices.remove(subsequence)
+            if choices == []:
+                mutations.append(None)
+            else:
+                choice = np.random.choice(choices)
+                mutations.append((location, choice))
+        return mutations
+
     def mutate_sequence(self, mutations):
+        """Modify the canvas's sequence (inplace) through mutations.
+
+        ``mutations`` must be a list ``[(location1, new_sequence1), ...]``
+        where location is either an index or a couple ``(start, end)`` and
+        ``new_sequence`` is a DNA string like ``ATGC``, indicating that the
+        canvas' sequence should be modified through mutations of the form
+        ``self.sequence[location1] = new_sequence1``.
+        """
         sequence_buffer = ctypes.create_string_buffer(self.sequence)
         for mutation in mutations:
             if mutation is not None:
@@ -118,31 +248,51 @@ class DNACanvas:
      # CONSTRAINTS
 
     def all_constraints_evaluations(self):
+        """Return a list of the evaluations of each constraint of the canvas.
+
+        Returns ``[c.evaluate(self) for c in self.constraints]``
+        """
         return [
             constraint.evaluate(self)
             for constraint in self.constraints
         ]
 
     def all_constraints_pass(self):
+        """Return True if and only if the canvas meet all its constraints."""
         return all([
             evaluation.passes
             for evaluation in self.all_constraints_evaluations()
         ])
 
     def print_constraints_summary(self, failed_only=False):
+        """Print each constraint with a summary of its evaluation.
+
+        This method is meant for interactive use in a terminal or IPython
+        notebook.
+        """
         evaluations = self.all_constraints_evaluations()
         failed_evaluations = [e for e in evaluations if not e.passes]
         if failed_only:
             evaluations = failed_evaluations
         if failed_evaluations == []:
-            print("===> SUCCESS - all constraints evaluations pass")
+            message = "SUCCESS - all constraints evaluations pass"
         else:
-            print ("===> FAILURE: %d constraints evaluations failed" %
-                   len(failed_evaluations))
-        for evaluation in evaluations:
-            print("%s %s" % (evaluation.constraint, evaluation))
+            message = ("FAILURE: %d constraints evaluations failed" %
+                       len(failed_evaluations))
+        text_evaluations = "\n".join([
+            "%s %s" % (evaluation.constraint, evaluation)
+            for evaluation in evaluations
+        ])
+        print("\n===> %s\n%s\n" % (message, text_evaluations))
 
     def solve_all_constraints_by_exhaustive_search(self, verbose=False):
+        """Solve all constraints by exploring the whole search space.
+
+        This method iterates over ``self.iter_mutations_space()`` (space of
+        all sequences that could be reached through successive mutations) and
+        stops when it finds a sequence which meets all the constraints of the
+        canvas.
+        """
         for mutations in self.iter_mutations_space():
             self.mutate_sequence(mutations)
             if verbose:
@@ -151,13 +301,29 @@ class DNACanvas:
                 return
             else:
                 self.sequence = self.original_sequence
-        raise ValueError(
+        raise NoSolutionFoundError(
             "Exhaustive search failed to satisfy all constraints.")
 
     def solve_all_constraints_by_random_mutations(self, max_iter=1000,
                                                   n_mutations=3,
                                                   verbose=False):
-        mutations_locs = self.possible_mutations.keys()
+        """Solve all constraints by successive sets of random mutations.
+
+        This method modifies the canvas sequence by applying a number
+        ``n_mutations`` of random mutations. The constraints are then evaluated
+        on the new sequence. If all constraints pass, the new sequence becomes
+        the canvas's new sequence.
+        If not all constraints pass, the sum of all scores from failing
+        constraints is considered. If this score is superior to the score of
+        the previous sequence, the new sequence becomes the canvas's new
+        sequence.
+
+        This operation is repeated `max_iter` times at most, after which
+        a ``NoSolutionFoundError`` is thrown.
+
+
+        """
+        #mutations_locs = self.possible_mutations.keys()
         evaluations = self.all_constraints_evaluations()
         score = sum([
             e.score
@@ -167,7 +333,8 @@ class DNACanvas:
         for iteration in range(max_iter):
             if score == 0:
                 return
-
+            mutations = self.get_random_mutations(n_mutations)
+            """
             random_mutations_inds = np.random.randint(
                 0, len(mutations_locs), n_mutations)
             mutations = [
@@ -178,10 +345,12 @@ class DNACanvas:
                 )
                 for ind in random_mutations_inds
             ]
+            """
             if verbose:
                 self.print_constraints_summary()
             previous_sequence = self.sequence
             self.mutate_sequence(mutations)
+
 
             evaluations = self.all_constraints_evaluations()
             new_score = sum([
@@ -194,14 +363,35 @@ class DNACanvas:
                 score = new_score
             else:
                 self.sequence = previous_sequence
-        raise ValueError(
+        raise NoSolutionFoundError(
             "Random search hit max_iterations without finding a solution.")
 
     def solve_constraint_by_localization(self, constraint,
                                          randomization_threshold=10000,
                                          max_random_iters=1000, verbose=False):
-        """Solve the constraint using local, targeted mutations.
+        """Solve a particular constraint using local, targeted searches.
 
+        Parameters
+        ----------
+
+        constraint
+          The ``Constraint`` object for which the sequence should be solved
+
+        randomization_threshold
+          Local problems with a search space size under this threshold will be
+          solved using deterministic, exhaustive search of the search space
+          (see ``solve_all_constraints_by_exhaustive_search``)
+          When the space size is above this threshold, local searches will use
+          a randomized search algorithm
+          (see ``solve_all_constraints_by_random_mutations``).
+
+        max_random_iters
+          Maximal number of iterations when performing a randomized search
+          (see ``solve_all_constraints_by_random_mutations``).
+
+        verbose
+          If True, each step of each search will print in the console the
+          evaluation of each constraint.
 
         """
 
@@ -249,9 +439,38 @@ class DNACanvas:
                         verbose=verbose)
                     self.sequence = localized_canvas.sequence
 
-    def solve_all_constraints_one_by_one(self, max_loops=3,
+    def solve_all_constraints_one_by_one(self, max_loops=1,
                                          randomization_threshold=10000,
                                          max_random_iters=1000, verbose=False):
+        """Solve each of the canvas' constraints in turn, using local, targeted
+        searches.
+
+        Parameters
+        ----------
+
+        max_loops
+          Number of times that the constraints will be considered one after the
+          other. The function may stop sooner, as soon as all constraints pass.
+          If after all these loops some constraints are still not passing, a
+          ``NoSolutionFoundError`` is raised.
+
+        randomization_threshold
+          Local problems with a search space size under this threshold will be
+          solved using deterministic, exhaustive search of the search space
+          (see ``solve_all_constraints_by_exhaustive_search``)
+          When the space size is above this threshold, local searches will use
+          a randomized search algorithm
+          (see ``solve_all_constraints_by_random_mutations``).
+
+        max_random_iters
+          Maximal number of iterations when performing a randomized search
+          (see ``solve_all_constraints_by_random_mutations``).
+
+        verbose
+          If True, each step of each search will print in the console the
+          evaluation of each constraints.
+
+        """
 
         for iteration in range(max_loops):
             evaluations = self.all_constraints_evaluations()
@@ -267,12 +486,13 @@ class DNACanvas:
                     constraint, randomization_threshold,
                     max_random_iters, verbose=verbose
                 )
-
-        raise ValueError(
-            "Could not solve all constraints before reaching max_loops"
-        )
+        if not self.all_constraints_pass():
+            raise NoSolutionFoundError(
+                "One-by-one could not solve all constraints before max_loops."
+            )
 
     # OBJECTIVES
+
     def all_objectives_evaluations(self):
         return [
             objective.evaluate(self)
@@ -286,17 +506,20 @@ class DNACanvas:
         ])
 
     def print_objectives_summary(self, failed_only=False):
-        print("===> TOTAL OBJECTIVES SCORE: %.02f" %
-              self.all_objectives_score_sum())
-        for evaluation in self.all_objectives_evaluations():
-            print "%s: %s" % (evaluation.objective, evaluation)
+        score = self.all_objectives_score_sum()
+        message = "TOTAL OBJECTIVES SCORE: %.02f" % score
+        objectives_texts = "\n".join([
+            "%s: %s" % (evaluation.objective, evaluation)
+            for evaluation in self.all_objectives_evaluations()
+        ])
+        print("\n===> %s\n%s\n" % (message, objectives_texts))
 
     def maximize_objectives_by_exhaustive_search(self, verbose=False):
         """
         """
         if not self.all_constraints_pass():
-            raise ValueError("Optimization can only be done when all"
-                             " constraints are verified")
+            raise NoSolutionFoundError("Optimization can only be done when all"
+                                       " constraints are verified")
         current_score = self.all_objectives_score_sum()
         current_best_sequence = self.sequence
         for mutations in self.iter_mutations_space():

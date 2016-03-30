@@ -1,8 +1,8 @@
-from .DNACanvas import DNACanvas
+from .DNACanvas import DNACanvas, NoSolutionFoundError
 from patterns import DNAPattern, homopolymer_pattern, enzyme_pattern
 from .constraints import (
     DoNotModifyConstraint,
-    GCPercentConstraint,
+    GCContentConstraint,
     EnforcePatternConstraint,
     NoPatternConstraint,
     EnforceTranslationConstraint,
@@ -11,12 +11,13 @@ from .constraints import (
 from objectives import (
     CodonOptimizationObjective,
     Objective,
-    GCPercentObjective
+    GCContentObjective
 )
 from biotools import (
-    translate,
-    reverse_complement,
     random_dna_sequence,
-    reverse_translate
+    random_protein_sequence,
+    reverse_complement,
+    reverse_translate,
+    translate
 )
 from .version import __version__

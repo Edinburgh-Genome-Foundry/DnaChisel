@@ -139,7 +139,7 @@ class EnforceTranslationConstraint(Constraint):
         return "EnforceTranslation(%s)" % str(self.window)
 
 
-class GCPercentConstraint(Constraint):
+class GCContentConstraint(Constraint):
 
     def __init__(self, gc_min, gc_max, gc_window=None, window=None):
         self.gc_min = gc_min
@@ -204,7 +204,7 @@ class GCPercentConstraint(Constraint):
         return self.copy_with_changes(window=new_window)
 
     def __str__(self):
-        return "GCPercent(min %.02f, max %.02f, gc_win %s, window %s)" % (
+        return "GCContent(min %.02f, max %.02f, gc_win %s, window %s)" % (
             self.gc_min, self.gc_max, "global" if (self.gc_window is None) else
                                       self.gc_window, self.window
         )

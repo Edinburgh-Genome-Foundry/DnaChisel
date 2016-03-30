@@ -2,13 +2,48 @@
 import biotables
 import re
 import numpy as np
+from Bio.Seq import Seq
+
+def complement(dna_sequence):
+    """Return the complement of the DNA sequence.
+
+    For instance ``complement("ATGCCG")`` returns ``"TACGGC"``.
+
+    Uses BioPython for speed.
+    """
+    return str(Seq(dna_sequence).complement())
+
+    # complement_codes = {65:84, 84:65, 67:71, 71:67}
+    # arr1 = np.fromstring(seq, dtype="uint8")
+    # arr2 = np.zeros(len(arr1), dtype="uint8")
+    # for code, complement_code in complement_codes.items():
+    #     arr2[(arr1 == code).nonzero()[0]] = complement_code
+    # return arr2.tostring()
 
 
-def complement(sequence):
-    return "".join([biotables.COMPLEMENTS[c] for c in sequence])
+def reverse_complement(sequence):
+    """Return the reverse-complement of the DNA sequence.
 
+    For instance ``complement("ATGCCG")`` returns ``"GCCGTA"``.
+
+    Uses BioPython for speed.
+    """
+    return complement(sequence)[::-1]
 
 def random_dna_sequence(length, probas=None):
+    """Return a random DNA sequence ("ATGGCGT...") with the specified length.
+
+    Parameters
+    ----------
+
+    length
+      Length of the DNA sequence.
+
+    proba
+      Frequencies for the different nucleotides, for instance
+      ``proba={"A":0.2, "T":0.4, "G":0.4, "C":0.2}``.
+      If not specified, all nucleotides are equiprobable (p=0.25).
+    """
     if probas is None:
         sequence = np.random.choice(list("ATCG"), length)
     else:
@@ -16,12 +51,23 @@ def random_dna_sequence(length, probas=None):
         sequence = np.random.choice(bases, length, probas)
     return "".join(sequence)
 
+def random_protein_sequence(length):
+    """Return a random protein sequence "MNQTW...YL*" of the specified length.
 
-def reverse_complement(sequence):
-    return complement(sequence)[::-1]
+    Note: it will always start with ``"M"`` and end with a stop codon ``"*"``,
+    for realism.
+    """
+    aa_list = list('ACEDGFIHKLNQPSRTWVY')
+    aa_choices = np.random.choice(aa_list, length-2)
+    return "M%s*" % ("".join(aa_choices))
 
 
 def reverse_translate(protein_sequence):
+    """Return a DNA sequence which translates to the provided protein sequence
+
+    Note: at the moment, the first valid codon found is used for each
+    amino-acid (so it is deterministic but no codon-optimization is done).
+    """
     return "".join([
         biotables.CODONS_SEQUENCES[aa][0]
         for aa in protein_sequence
@@ -29,21 +75,25 @@ def reverse_translate(protein_sequence):
 
 
 def translate(dna_sequence):
-    return "".join([
-        biotables.CODON_TRANSLATIONS[dna_sequence[3*k:3*(k+1)]]
-        for k in range(len(dna_sequence)/3)
-    ])
+    """Translate the DNA sequence into an amino-acids sequence "MLKYQT..." """
+    return str(Seq(dna_sequence).translate())
+
+    # "".join([
+    #     biotables.CODON_TRANSLATIONS[dna_sequence[3*k:3*(k+1)]]
+    #     for k in range(len(dna_sequence)/3)
+    # ])
 
 
-def to_regexpr(self):
-    """Return a regular expression pattern the sequence in ATGC sequences.
 
-    For instance DNASequence('ATTNN').to_regexpr() returns
-    "ATT[A|T|G|C][A|T|G|C]".
+def dna_pattern_to_regexpr(dna_pattern):
+    """Return a regular expression pattern for the provided DNA pattern
+
+    For instance ``dna_pattern_to_regexpr('ATTNN')`` returns
+    ``"ATT[A|T|G|C][A|T|G|C]"``.
     """
     return "".join([
         biotables.NUCLEOTIDE_TO_REGEXPR[n]
-        for n in self
+        for n in dna_pattern
     ])
 
 
@@ -75,11 +125,11 @@ def windows_overlap(window1, window2):
         return [ start2, min(end1, end2)]
     else:
         return None
-
-assert(windows_overlap([1,5], [3,7]) == [3,5])
-assert(windows_overlap([3,7] ,[1,5]) == [3,5])
-assert(windows_overlap([1,5] ,[1,5]) == [1,5])
-assert(windows_overlap([1,5] ,[6,10]) is None)
+#
+# assert(windows_overlap([1,5], [3,7]) == [3,5])
+# assert(windows_overlap([3,7] ,[1,5]) == [3,5])
+# assert(windows_overlap([1,5] ,[1,5]) == [1,5])
+# assert(windows_overlap([1,5] ,[6,10]) is None)
 
 def read_fasta(filename):
     """Read A sequence in a FASTA file with Biopython."""
@@ -122,3 +172,8 @@ def gc_percent(sequence, window_size = None):
         a = cs[window_size-1:]
         b = np.hstack([[0],cs[:-window_size]])
         return 1.0*(a-b) / window_size
+
+def sequences_differences(seq1, seq2):
+    arr1 = np.fromstring(seq1, dtype="uint8")
+    arr2 = np.fromstring(seq2, dtype="uint8")
+    (arr1 != arr2).sum()
