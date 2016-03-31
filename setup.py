@@ -8,7 +8,7 @@ except ImportError:
         ez_setup.use_setuptools()
     except ImportError:
         raise ImportError("DnaChisel could not be installed, probably because"
-                          " neither setuptools nor ez_setup are installed on
+                          " neither setuptools nor ez_setup are installed on"
                           "this computer. \nInstall ez_setup "
                           "([sudo] pip install ez_setup) and try again.")
 
