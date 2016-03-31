@@ -13,13 +13,17 @@
 DNA Chisel
 ==========
 
-DnaChisel is a Python library to modify the nucleotides of DNA sequences with respect to a set of
+Dna Chisel is a Python library to modify the nucleotides of DNA sequences with respect to a set of
 constraints and optimization objectives.
 
 It can be used for many purposes, such as codon-optimizing the genes of a sequence
 for a particular micro-organism, modifying a sequence to meet the constraints of
 a DNA provider while preserving genes and other sensible patterns, or inserting
 a pattern in a sequence using only synonymous mutations.
+
+DNA Chisel takes advantage of libraries from the Python ecosystem,
+in particular the Biopython library which allows to read from and
+write to the most common formats (GenBank, FASTA,...).
 
 Example of use
 ---------------
@@ -54,7 +58,7 @@ Here is the Python code to solve the problem with DnaChisel:
     canvas.print_objectives_summary()
 
 This prints the following result, indicating that all constraints pass in the end
-and the objective has benn (very well) optimized:
+and the objective has been (very well) optimized:
 ::
     ===> SUCCESS - all constraints evaluations pass
     NoPattern(GGTCTC (BsaI), None) Passed. Pattern not found !
