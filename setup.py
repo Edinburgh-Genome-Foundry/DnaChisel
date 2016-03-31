@@ -7,7 +7,7 @@ except ImportError:
         import ez_setup
         ez_setup.use_setuptools()
     except ImportError:
-        raise ImportError("DNAChisel could not be installed, probably because"
+        raise ImportError("DnaChisel could not be installed, probably because"
                           " neither setuptools nor ez_setup are installed on
                           "this computer. \nInstall ez_setup "
                           "([sudo] pip install ez_setup) and try again.")
@@ -16,7 +16,7 @@ from setuptools import setup, find_packages
 
 exec(open('dnachisel/version.py').read())  # loads __version__
 
-setup(name='DNAChisel',
+setup(name='DnaChisel',
       version=__version__,
       author='Zulko',
       description='Optimize DNA sequences under constraints.',

@@ -20,7 +20,6 @@ def complement(dna_sequence):
     #     arr2[(arr1 == code).nonzero()[0]] = complement_code
     # return arr2.tostring()
 
-
 def reverse_complement(sequence):
     """Return the reverse-complement of the DNA sequence.
 
@@ -29,6 +28,10 @@ def reverse_complement(sequence):
     Uses BioPython for speed.
     """
     return complement(sequence)[::-1]
+
+def is_palyndromic(dna_sequence):
+    """Return True if the DNA sequence is equal to its reverse complement."""
+    return reverse_complement(dna_sequence) == dna_sequence
 
 def random_dna_sequence(length, probas=None):
     """Return a random DNA sequence ("ATGGCGT...") with the specified length.
@@ -137,7 +140,7 @@ def read_fasta(filename):
     with open(filename) as f:
         return str(seqio.read(f, "fasta").seq)
 
-def gc_percent(sequence, window_size = None):
+def gc_content(sequence, window_size = None):
     """Compute global or local GC content.
 
     Parameters

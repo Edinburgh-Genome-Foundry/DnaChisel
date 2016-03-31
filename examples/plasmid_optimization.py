@@ -1,4 +1,4 @@
-"""Example of plasmid optimization with DNAChisel.
+"""Example of plasmid optimization with DnaChisel.
 
 In this example, we download a plasmid from the web in GENBANK format and
 modify the sequence with respect to the following constraints and objectives:
@@ -74,15 +74,17 @@ for (start, end, strand) in CDS_list:
 
 # DEFINE ALL THE OBJECTIVES
 
-objectives = [GCContentObjective(0.51)] + [
-    CodonOptimizationObjective("E. coli", window=(start, end), strand=strand)
+objectives = [GCContentObjective(0.51, boost=10000)] + [
+    CodonOptimizationObjective("E. coli",
+                               window=(start, end),
+                               strand=strand)
     for (start, end, strand) in CDS_list
 ]
 
 
 # DEFINE AND SOLVE THE PROBLEM
 
-canvas = DNACanvas(
+canvas = DnaCanvas(
     sequence=sequence,
     constraints=GEN9_constraints + CDS_constraints,
     objectives=objectives

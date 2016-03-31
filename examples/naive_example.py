@@ -1,6 +1,6 @@
 from dnachisel import *
 
-canvas = DNACanvas(
+canvas = DnaCanvas(
     sequence=random_dna_sequence(10000),
     constraints=[NoPatternConstraint(enzyme_pattern("BsaI")),
                  GCContentConstraint(0.3, 0.7, gc_window=50)],

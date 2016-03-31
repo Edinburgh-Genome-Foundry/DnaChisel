@@ -1,7 +1,7 @@
 .. raw:: html
 
     <a href="https://twitter.com/share" class="twitter-share-button"
-    data-text="DNAChisel - A Python module for printing with living matter" data-size="large" data-hashtags="Bioprinting">Tweet
+    data-text="DnaChisel - A Python module for printing with living matter" data-size="large" data-hashtags="Bioprinting">Tweet
     </a>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
     if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
@@ -13,7 +13,7 @@
 DNA Chisel
 ==========
 
-DNAChisel is a Python library to modify the nucleotides of DNA sequences with respect to a set of
+DnaChisel is a Python library to modify the nucleotides of DNA sequences with respect to a set of
 constraints and optimization objectives.
 
 It can be used for many purposes, such as codon-optimizing the genes of a sequence
@@ -30,16 +30,16 @@ In this basic example we optimize a sequence with respect to the following const
 - **Constraint 2:** The local GC content of every 50-nucleotide subsequence should be between 30% and 70%.
 - **Objective 1:** The sequence's  global GC content should be 40% (or as close as possible)
 
-Here is the Python code to solve the problem with DNAChisel:
+Here is the Python code to solve the problem with DnaChisel:
 ::
     from dnachisel import *
 
     # DEFINE THE OPTIMIZATION PROBLEM
 
-    canvas = DNACanvas(
-        sequence=random_dna_sequence(10000),
-        constraints=[NoPatternConstraint(enzyme_pattern("BsaI")),
-                     GCContentConstraint(0.3, 0.7, gc_window=50)],
+    canvas = DnaCanvas(
+        sequence=random_dna_sequence(length=10000),
+        constraints=[ NoPatternConstraint(enzyme_pattern("BsaI")),
+                      GCContentConstraint(0.3, 0.7, gc_window=50)],
         objectives = [GCContentObjective(0.4)]
     )
 
@@ -70,7 +70,7 @@ For a more complete and meaningful example, see also :ref:`this other script <pl
 in which a plasmid is codon-optimized and tweaked so as to verify constraints imposed by
 a DNA synthesis company.
 
-DNAChisel implements advanced constraints such as the preservation of coding
+DnaChisel implements advanced constraints such as the preservation of coding
 sequences,  or the inclusion or exclusion of advanced patterns, as well as
 some common biological objectives (such as codon optimization, GC content), but it
 is also very easy to implement new constraints and objectives.
@@ -82,16 +82,16 @@ Search strategies
 Long DNA sequences have a huge space of possible mutations
 (just 20 nucleotides can form a trillion different sequences), therefore it is not
 possible to solve a DNA optimization problem through an exhaustive search.
-DNAChisel uses the following strategies to avoid exploring the whole search space:
+DnaChisel uses the following strategies to avoid exploring the whole search space:
 
-- **Constraining of the mutation space:** Prior to searching, DNAChisel trims the
+- **Constraining of the mutation space:** Prior to searching, DnaChisel trims the
   possible mutations by analyzing the constraints of the problem. For instance
   a ``DoNotModify(segment)`` constraint makes it impossible to mutate the nucleotides
   of the concerned DNA segment, and in segments subject to an
   ``EnforceTranslation`` constraint, only synonymous mutations of the codons are
   allowed.
 
-- **Constraints solving before objective optimization**: DNAChisel currently enforces a
+- **Constraints solving before objective optimization**: DnaChisel currently enforces a
   resolution of problems in two steps: first solve the constraints and make sure
   that they all pass, then optimize the sequence with respect to the different
   objectives, while making sure that they all pass. While not to always yield
@@ -99,7 +99,7 @@ DNAChisel uses the following strategies to avoid exploring the whole search spac
   practical, as solving for the constraints first is generally very fast and directly
   informs on whether all constraints can be met.
 
-- **Localized searches:** When DNAChisel finds that a constraint is not
+- **Localized searches:** When DnaChisel finds that a constraint is not
   verified, and if the constraint breaches are localized on the
   sequence (for instance, a forbidden restriction site at a given location),
   then it will attempt to solve each breach separately
@@ -109,16 +109,16 @@ DNAChisel uses the following strategies to avoid exploring the whole search spac
   on which segments of the sequence to focus the search.
 
 - **A mix of exhaustive searches and random searches:** for each localized
-  constraint problem, if the search space is small enough DNAChisel performs
+  constraint problem, if the search space is small enough DnaChisel performs
   an exhaustive search (i.e. it tries every possible change of the sequence until
-  all constraints are resolved), else DNAChisel performs a random search where
+  all constraints are resolved), else DnaChisel performs a random search where
   if create random valid variations of the sequence until one meets all the
   constraints. The optimization of objectives functions in a similar way.
 
 Installation
 -------------
 
-You can install DNAChisel through PIP
+You can install DnaChisel through PIP
 ::
   sudo pip install dnachisel
 
@@ -130,7 +130,7 @@ Alternatively, you can unzip the sources in a folder and type
 Contribute
 ----------
 
-DNAChisel is an open-source library originally written at the Edinburgh Genome Foundry by Zulko_.
+DnaChisel is an open-source library originally written at the Edinburgh Genome Foundry by Zulko_.
 It is released on Github under the MIT licence, everyone is welcome to contribute.
 
 
@@ -152,7 +152,7 @@ It is released on Github under the MIT licence, everyone is welcome to contribut
     :caption: Examples
 
     examples/plasmid_optimization
-    examples/repeated_kmers_minimization
+    examples/non_unique_kmers_minimization
 
 
 .. _Zulko: https://github.com/Zulko/

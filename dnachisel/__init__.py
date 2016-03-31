@@ -1,5 +1,5 @@
-from .DNACanvas import DNACanvas, NoSolutionFoundError
-from patterns import DNAPattern, homopolymer_pattern, enzyme_pattern
+from .DnaCanvas import DnaCanvas, NoSolutionFoundError
+from patterns import DnaNotationPattern, homopolymer_pattern, enzyme_pattern
 from .constraints import (
     DoNotModifyConstraint,
     GCContentConstraint,

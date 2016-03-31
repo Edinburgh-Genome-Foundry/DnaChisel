@@ -1,12 +1,12 @@
 .. reference ::
 
-DNAChisel Reference manual
+DnaChisel Reference manual
 ==========================
 
-DNACanvas
+DnaCanvas
 ---------
 
-.. autoclass:: dnachisel.DNACanvas
+.. autoclass:: dnachisel.DnaCanvas
    :members:
 
 Constraints

@@ -1,6 +1,6 @@
 .. _plasmid-optimization:
 
-Plasmid optimization with DNAChisel
+Plasmid optimization with DnaChisel
 ------------------------------------
 
 .. literalinclude:: ../../examples/plasmid_optimization.py

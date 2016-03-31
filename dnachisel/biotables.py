@@ -71,6 +71,9 @@ CODON_TRANSLATIONS = {
 CODONS_SEQUENCES = reverse_table(CODON_TRANSLATIONS)
 
 
+# Values in this table are taken from the GeneDesign project:
+# https://github.com/GeneDesign/GeneDesign
+
 CODON_USAGE = {
 
     "S. cerevisiae": {

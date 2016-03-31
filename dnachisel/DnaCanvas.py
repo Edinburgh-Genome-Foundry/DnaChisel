@@ -1,6 +1,6 @@
-"""Define DNACanvas.
+"""Define DnaCanvas.
 
-DNACanvas is where the whole problem is defined: sequence,
+DnaCanvas is where the whole problem is defined: sequence,
 constraints, objectives.
 """
 
@@ -10,24 +10,26 @@ import itertools as itt
 
 import numpy as np
 
-from biotools import translate, reverse_translate, gc_percent, read_fasta, reverse_complement
+from biotools import translate, reverse_translate, gc_content, read_fasta, reverse_complement
 import biotables
 import constraints as cst
 
 class NoSolutionFoundError(Exception):
     pass
 
-class DNACanvas:
-    """DNA Canvas specify of constrained DNA optimization problems.
+class DnaCanvas:
+    """A DNA Canvas specifies a constrained DNA optimization problem.
 
-    DNA Canvas also allow you to solve the optimization problem. This is done
-    in-place, by modifying the sequence of the DNA Canvas.
+    The original constraints, objectives, and original sequence of the problem
+    are stored in the DNA Canvas. This class also has methods to display
+    reports on the constraints and objectives, as well as solving the
+    constraints and objectives.
 
     Examples
     --------
 
     >>> from dnachisel import *
-    >>> canvas = DNACanvas(
+    >>> canvas = DnaCanvas(
     >>>     sequence = "ATGCGTGTGTGC...",
     >>>     constraints = [constraint1, constraint2, ...],
     >>>     objectives = [objective1, objective2, ...]
@@ -112,10 +114,10 @@ class DNACanvas:
         """Compute all possible mutations that can be applied to the sequence.
 
         The result of the computations is stored in ``self.possible_mutations``
-        (see ``DNACanvas`` documentation).
+        (see ``DnaCanvas`` documentation).
 
         The possible mutations are constrained by the ``constraints`` of the
-        DNACanvas with respect to the following rules:
+        DnaCanvas with respect to the following rules:
 
         - ``DoNotModify``  constraints disable mutations for the nucleotides of
           the concerned segments.
@@ -426,7 +428,7 @@ class DNACanvas:
                     for _constraint in localized_constraints
                     if _constraint.evaluate(self).passes
                 ]
-                localized_canvas = DNACanvas(
+                localized_canvas = DnaCanvas(
                     sequence=self.sequence,
                     constraints=[
                         cst.DoNotModifyConstraint([0, do_not_modify_window[0]]),
@@ -596,7 +598,7 @@ class DNACanvas:
                 max(0, window[0] - 5),
                 min(window[1] + 5, len(self.sequence))
             ]
-            localized_canvas = DNACanvas(
+            localized_canvas = DnaCanvas(
                 sequence=self.sequence,
                 constraints=[
                     _constraint.localized(window)

@@ -40,7 +40,7 @@ source_suffix = ['.rst']
 master_doc = 'index'
 
 # General information about the project.
-project = u'DNAChisel'
+project = u'DnaChisel'
 copyright = u'2015, Edinburgh Genome Foundry'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -177,7 +177,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'DNAChiseldoc'
+htmlhelp_basename = 'DnaChiseldoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -196,7 +196,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'DNAChisel.tex', u'DNAChisel Documentation',
+  ('index', 'DnaChisel.tex', u'DnaChisel Documentation',
    u'Zulko', 'manual'),
 ]
 
@@ -226,7 +226,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'DNAChisel', u'PACKAGE_NAME Documentation',
+    ('index', 'DnaChisel', u'PACKAGE_NAME Documentation',
      [u'Zulko'], 1)
 ]
 
@@ -240,8 +240,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'DNAChisel', u'DNAChisel Documentation',
-   u'Zulko', 'DNAChisel', 'One line description of project.',
+  ('index', 'DnaChisel', u'DnaChisel Documentation',
+   u'Zulko', 'DnaChisel', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -261,7 +261,7 @@ texinfo_documents = [
 # -- Options for Epub output ---------------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'DNAChisel'
+epub_title = u'DnaChisel'
 epub_author = u'Zulko'
 epub_publisher = u'Zulko'
 epub_copyright = u'2016, Zulko'
