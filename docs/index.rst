@@ -153,6 +153,7 @@ It is released on Github under the MIT licence, everyone is welcome to contribut
 
     examples/plasmid_optimization
     examples/non_unique_kmers_minimization
+    examples/pattern_instertion
 
 
 .. _Zulko: https://github.com/Zulko/

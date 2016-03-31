@@ -13,13 +13,6 @@ def complement(dna_sequence):
     """
     return str(Seq(dna_sequence).complement())
 
-    # complement_codes = {65:84, 84:65, 67:71, 71:67}
-    # arr1 = np.fromstring(seq, dtype="uint8")
-    # arr2 = np.zeros(len(arr1), dtype="uint8")
-    # for code, complement_code in complement_codes.items():
-    #     arr2[(arr1 == code).nonzero()[0]] = complement_code
-    # return arr2.tostring()
-
 def reverse_complement(sequence):
     """Return the reverse-complement of the DNA sequence.
 
@@ -33,7 +26,7 @@ def is_palyndromic(dna_sequence):
     """Return True if the DNA sequence is equal to its reverse complement."""
     return reverse_complement(dna_sequence) == dna_sequence
 
-def random_dna_sequence(length, probas=None):
+def random_dna_sequence(length, probas=None, seed=None):
     """Return a random DNA sequence ("ATGGCGT...") with the specified length.
 
     Parameters
@@ -46,7 +39,15 @@ def random_dna_sequence(length, probas=None):
       Frequencies for the different nucleotides, for instance
       ``proba={"A":0.2, "T":0.4, "G":0.4, "C":0.2}``.
       If not specified, all nucleotides are equiprobable (p=0.25).
+
+    seed
+      The seed to feed to the random number generator. When a seed is provided
+      the random results depend deterministically on the seed, thus enabling
+      reproducibility
+
     """
+    if seed is not None:
+        np.random.seed(seed)
     if probas is None:
         sequence = np.random.choice(list("ATCG"), length)
     else:
@@ -54,15 +55,29 @@ def random_dna_sequence(length, probas=None):
         sequence = np.random.choice(bases, length, probas)
     return "".join(sequence)
 
-def random_protein_sequence(length):
+def random_protein_sequence(length, seed=None):
     """Return a random protein sequence "MNQTW...YL*" of the specified length.
 
-    Note: it will always start with ``"M"`` and end with a stop codon ``"*"``,
-    for realism.
+    Parameters
+    ----------
+
+    length
+      Length of the protein sequence (in number of amino-acids). Note that the
+      sequence will always start with ``"M"`` and end with a stop codon ``"*"``
+      with (length-2) random amino-acids in the middle
+
+    seed
+      The seed to feed to the random number generator. When a seed is provided
+      the random results depend deterministically on the seed, thus enabling
+      reproducibility
+
     """
+    if seed is not None:
+        np.random.seed(seed)
+
     aa_list = list('ACEDGFIHKLNQPSRTWVY')
     aa_choices = np.random.choice(aa_list, length-2)
-    return "M%s*" % ("".join(aa_choices))
+    return "M" + "".join(aa_choices) + "*"
 
 
 def reverse_translate(protein_sequence):

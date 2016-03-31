@@ -187,7 +187,7 @@ class EnforcePatternConstraint(PatternConstraint):
         windows = self.pattern.find_matches(canvas.sequence, window)
         score = -abs(len(windows) - self.occurences)
 
-        if score > 0:
+        if score == 0:
             message = "Passed. Pattern found at positions %s" % windows
         else:
             if self.occurences == 0:

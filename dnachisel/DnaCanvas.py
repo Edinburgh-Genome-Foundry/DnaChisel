@@ -638,3 +638,21 @@ class DnaCanvas:
                     max_random_iters=max_random_iters,
                     verbose=verbose
                 )
+
+    def include_pattern_by_successive_tries(self, pattern, window=None):
+        if window is None:
+            window = [0, len(self.sequence)]
+        constraint = cst.EnforcePatternConstraint(pattern, window)
+        self.constraints.append(constraint)
+        start, end = window
+        for i in range(start, end - pattern.size):
+            original_sequence = self.sequence
+            window = [i, i+pattern.size]
+            self.mutate_sequence([(window, pattern.pattern)])
+            try:
+                self.solve_all_constraints_one_by_one()
+                return # Success !
+            except NoSolutionFoundError:
+                self.sequence = original_sequence
+        self.constraints.pop() # remove the pattern constraint
+        raise NoSolutionFoundError("Failed to insert the pattern")
