@@ -119,16 +119,16 @@ class VoidConstraint(Constraint):
     """
 
     def __init__(self, parent_constraint=None):
-        self.window = window
         self.parent_constraint = parent_constraint
-        self.message = ("Pass (%s not applicable in this context)"
+        self.message = ("Pass (not relevant in this context)"
                         % parent_constraint)
 
     def evaluate(self, canvas):
         """The evaluation of VoidConstraints always passes with score=1.0
         It returns a message indicating that the parent constraint was voided
         """
-        return ConstraintEvaluation(self, canvas, score=1.0, message=message,
+        return ConstraintEvaluation(self, canvas, score=1.0,
+                                    message=self.message,
                                     windows = None)
 
     def __str__(self):
@@ -153,11 +153,14 @@ class PatternConstraint(Constraint):
                 ostart, oend = overlap
                 if ostart == start:
                     new_window = [start, min(end, oend + pattern_size)]
+                    #new_window = [start, oend + pattern_size]
                 else:  # oend = end
                     new_window = [max(start, ostart - pattern_size), end]
+                    #new_window = [ostart - pattern_size, end]
         else:
             start, end = window
-            new_window = [max(0, start - pattern_size), end + pattern_size]
+            margin = pattern_size - 1
+            new_window = [max(0, start - margin), end + margin]
 
         return self.copy_with_changes(window=new_window)
 
@@ -300,8 +303,14 @@ class EnforceTranslationConstraint(Constraint):
         success = 1 if (translate(subsequence) == self.translation) else -1
         return ConstraintEvaluation(self, canvas, success)
 
-    def localize(self):
+    def localized(self, window):
         """TODO: implement the localization of this one"""
+        if self.window is not None:
+            overlap = windows_overlap(window, self.window)
+            if overlap is None:
+                return VoidConstraint(parent_constraint=self)
+            else:
+                return self
         return self
 
     def __str__(self):
@@ -363,8 +372,11 @@ class GCContentConstraint(Constraint):
         if len(breaches_starts) == 0:
             breaches_windows = []
         elif len(breaches_starts) == 1:
-            start = breaches_starts[0]
-            breaches_windows = [[start, start + self.gc_window]]
+            if self.gc_window is not None:
+                start = breaches_starts[0]
+                breaches_windows = [[start, start + self.gc_window]]
+            else:
+                breaches_windows = [[wstart, wend]]
         else:
             breaches_windows = []
             current_start = breaches_starts[0]

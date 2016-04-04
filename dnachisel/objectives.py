@@ -162,6 +162,10 @@ class CodonOptimizationObjective(Objective):
     def __str__(self):
         return "CodonOptimize(%s, %s)" % (str(self.window), self.organism)
 
+def subdivide_window(window, max_span):
+    start, end = window
+    inds = list(range(start, end, max_span))+[end]
+    return zip(inds, inds[1:])
 
 class GCContentObjective(Objective):
     """Objective to obtain the desired global GC content.
@@ -190,9 +194,11 @@ class GCContentObjective(Objective):
         subsequence = canvas.sequence[start: end]
         gc = gc_content(subsequence)
         score = -(abs(gc - self.gc_content) ** self.exponent)
-        return ObjectiveEvaluation(self, canvas, score=score, windows=[window],
-                                   message="scored %.02E. GC content is %.03f (%.03f wanted)" %
-                                   (score, gc, self.gc_content))
+        return ObjectiveEvaluation(
+            self, canvas, score=score,
+            windows=subdivide_window(window, 500),
+            message="scored %.02E. GC content is %.03f (%.03f wanted)" %
+                    (score, gc, self.gc_content))
 
     def __str__(self):
         return "GCContentObj(%.02f, %s)" % (
