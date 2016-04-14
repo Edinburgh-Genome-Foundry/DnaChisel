@@ -53,7 +53,7 @@ class ConstraintEvaluation:
         self.windows = windows
         self.message = message
 
-    def __str__(self):
+    def __repr__(self):
         return (
             self.message if (self.message is not None) else
             str((
@@ -108,6 +108,7 @@ class Constraint:
         new_constraint.__dict__.update(kwargs)
         return new_constraint
 
+
 class VoidConstraint(Constraint):
     """Void Constraints are a special case of constraints that always pass.
 
@@ -131,7 +132,7 @@ class VoidConstraint(Constraint):
                                     message=self.message,
                                     windows = None)
 
-    def __str__(self):
+    def __repr__(self):
         return "Void %s" % self.parent_constraint
 
 
@@ -205,7 +206,7 @@ class EnforcePatternConstraint(PatternConstraint):
             windows=None if window is None else [window],
         )
 
-    def __str__(self):
+    def __repr__(self):
         return "EnforcePattern(%s, %s)" % (self.pattern, self.window)
 
 
@@ -224,7 +225,7 @@ class NoPatternConstraint(PatternConstraint):
             self, canvas, score, windows=windows, message=message
         )
 
-    def __str__(self):
+    def __repr__(self):
         return "NoPattern(%s, %s)" % (self.pattern, self.window)
 
 
@@ -304,7 +305,9 @@ class EnforceTranslationConstraint(Constraint):
         return ConstraintEvaluation(self, canvas, success)
 
     def localized(self, window):
-        """TODO: implement the localization of this one"""
+        """TODO: implement the localization of this one. At the moment
+        it just voids the constraint in regions that do not overlap at all
+        with its window."""
         if self.window is not None:
             overlap = windows_overlap(window, self.window)
             if overlap is None:
@@ -313,7 +316,7 @@ class EnforceTranslationConstraint(Constraint):
                 return self
         return self
 
-    def __str__(self):
+    def __repr__(self):
         return "EnforceTranslation(%s)" % str(self.window)
 
 
@@ -422,7 +425,7 @@ class GCContentConstraint(Constraint):
                 new_window = None
         return self.copy_with_changes(window=new_window)
 
-    def __str__(self):
+    def __repr__(self):
         return "GCContent(min %.02f, max %.02f, gc_win %s, window %s)" % (
             self.gc_min, self.gc_max, "global" if (self.gc_window is None) else
                                       self.gc_window, self.window
@@ -464,5 +467,69 @@ class DoNotModifyConstraint(Constraint):
         return self.copy_with_changes(window=new_window)
 
 
-    def __str__(self):
+    def __repr__(self):
         return "DoNotModify(%s)" % str(self.window)
+
+
+class NoHairpinsIDTConstraint(Constraint):
+
+    def __init__(self, stem_size=20, hairpin_window=200):
+
+        self.stem_size = stem_size
+        self.hairpin_window = hairpin_window
+
+    def evaluate(self, canvas):
+        sequence = canvas.sequence
+        reverse = reverse_complement(sequence)
+        windows = []
+        for i in range(len(sequence)-self.hairpin_window):
+            word = sequence[i:i + self.stem_size]
+            rest = reverse[-(i+self.hairpin_window):-(i+self.stem_size)]
+            if word in rest:
+                windows.append([i, i+self.hairpin_window])
+        score = -len(windows)
+
+        return ConstraintEvaluation(self, canvas, score, windows=windows)
+
+    def __repr__(self):
+        return "NoHairpinsIDTConstraint(size=%d, window=%d)" % \
+            (self.stem_size, self.hairpin_window)
+
+
+class TerminalConstraint(Constraint):
+
+    def evaluate(self, canvas):
+        sequence = canvas.sequence
+        L = len(sequence)
+        wsize = self.window_size
+        ends_sequences = [
+            ((0, wsize), sequence[:wsize]),
+            ((L - wsize, L), sequence[-wsize:])
+        ]
+        windows = []
+        for window, sequence in ends_sequences:
+            if not self.evaluate_end(sequence):
+                windows.append(window)
+
+        if windows == []:
+            message = "Passed (no breach at the ends)"
+        else:
+            message = "Failed: breaches at ends %s" % str(windows)
+
+        return ConstraintEvaluation(self, canvas, score=len(windows),
+                                    windows=windows, message= message)
+
+
+class TerminalGCContentConstraint(TerminalConstraint):
+
+    def __init__(self, gc_min, gc_max, window_size):
+        self.gc_min = gc_min
+        self.gc_max = gc_max
+        self.window_size = window_size
+
+    def evaluate_end(self, sequence):
+        return (self.gc_min < gc_content(sequence) < self.gc_max)
+
+    def __repr__(self):
+        return "Terminal(%.02f < gc < %.02f, window: %d)" % \
+            (self.gc_min, self.gc_max, self.window_size)

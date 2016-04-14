@@ -622,8 +622,7 @@ class DnaCanvas:
     def maximize_objective_by_localization(self, objective, windows=None,
         randomization_threshold=10000, max_random_iters=1000, verbose=False,
         progress_bars=False):
-        """Maximize the objective via local, targeted mutations.
-        """
+        """Maximize the objective via local, targeted mutations."""
 
         if windows is None:
             windows = objective.evaluate(self).windows
