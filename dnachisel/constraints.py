@@ -3,7 +3,6 @@ from biotools import gc_content, translate, reverse_complement, windows_overlap
 import numpy as np
 
 
-
 class ConstraintEvaluation:
     """Store relevant infos about the evaluation of a constraint on a canvas
 
@@ -130,7 +129,7 @@ class VoidConstraint(Constraint):
         """
         return ConstraintEvaluation(self, canvas, score=1.0,
                                     message=self.message,
-                                    windows = None)
+                                    windows=None)
 
     def __repr__(self):
         return "Void %s" % self.parent_constraint
@@ -218,9 +217,9 @@ class NoPatternConstraint(PatternConstraint):
         windows = self.pattern.find_matches(canvas.sequence, self.window)
         score = -len(windows)
         if score == 0:
-            message= "Passed. Pattern not found !"
+            message = "Passed. Pattern not found !"
         else:
-            message= "Failed. Pattern found at positions %s" % windows
+            message = "Failed. Pattern found at positions %s" % windows
         return ConstraintEvaluation(
             self, canvas, score, windows=windows, message=message
         )
@@ -371,7 +370,6 @@ class GCContentConstraint(Constraint):
         score = - (breaches.sum())
         breaches_starts = (breaches > 0).nonzero()[0]
 
-
         if len(breaches_starts) == 0:
             breaches_windows = []
         elif len(breaches_starts) == 1:
@@ -400,11 +398,11 @@ class GCContentConstraint(Constraint):
         if breaches_windows == []:
             message = "Passed !"
         else:
-            message= ("Failed: GC content out of bound on segments " +
-                      ", ".join(["%s-%s" % (s[0], s[1])
-                                for s in breaches_windows]))
+            message = ("Failed: GC content out of bound on segments " +
+                       ", ".join(["%s-%s" % (s[0], s[1])
+                                  for s in breaches_windows]))
         return ConstraintEvaluation(self, canvas, score, breaches_windows,
-                                    message = message)
+                                    message=message)
 
     def localized(self, window):
         """Localize the GC content evaluation
@@ -430,6 +428,7 @@ class GCContentConstraint(Constraint):
             self.gc_min, self.gc_max, "global" if (self.gc_window is None) else
                                       self.gc_window, self.window
         )
+
 
 class DoNotModifyConstraint(Constraint):
     """Specify that a segment of the sequence should not be changed.
@@ -466,7 +465,6 @@ class DoNotModifyConstraint(Constraint):
             return VoidConstraint(parent_constraint=self)
         return self.copy_with_changes(window=new_window)
 
-
     def __repr__(self):
         return "DoNotModify(%s)" % str(self.window)
 
@@ -482,11 +480,11 @@ class NoHairpinsIDTConstraint(Constraint):
         sequence = canvas.sequence
         reverse = reverse_complement(sequence)
         windows = []
-        for i in range(len(sequence)-self.hairpin_window):
+        for i in range(len(sequence) - self.hairpin_window):
             word = sequence[i:i + self.stem_size]
-            rest = reverse[-(i+self.hairpin_window):-(i+self.stem_size)]
+            rest = reverse[-(i + self.hairpin_window):-(i + self.stem_size)]
             if word in rest:
-                windows.append([i, i+self.hairpin_window])
+                windows.append([i, i + self.hairpin_window])
         score = -len(windows)
 
         return ConstraintEvaluation(self, canvas, score, windows=windows)
@@ -537,14 +535,19 @@ class TerminalGCContentConstraint(TerminalConstraint):
 
 class SequenceLengthConstraint(Constraint):
 
-    def __init__(self, min_length, max_length):
+    def __init__(self, min_length=None, max_length=None):
         self.min_length = min_length
         self.max_length = max_length
 
     def evaluate(self, canvas):
-        L = len(canvas.sequence)
-        return ConstraintEvaluation(self, canvas,
-                                    score=(self.min_length < L < self.max_)-1)
+        L, mini, maxi = len(canvas.sequence), self.min_length, self.max_length
+        if mini is None:
+            score = L <= maxi
+        elif maxi is None:
+            score = L >= mini
+        else:
+            score = (mini <= L <= maxi)
+        return ConstraintEvaluation(self, canvas, score - 1)
 
     def __repr__(self):
         return "Length(%d < L < %d)" % (self.min_length, self.max_length)

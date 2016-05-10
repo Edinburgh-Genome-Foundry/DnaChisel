@@ -6,7 +6,8 @@ from .constraints import (
     EnforcePatternConstraint,
     NoPatternConstraint,
     EnforceTranslationConstraint,
-    Constraint
+    Constraint,
+    SequenceLengthConstraint
 )
 from objectives import (
     CodonOptimizationObjective,
