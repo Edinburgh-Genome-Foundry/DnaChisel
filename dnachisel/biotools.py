@@ -143,11 +143,6 @@ def windows_overlap(window1, window2):
         return [ start2, min(end1, end2)]
     else:
         return None
-#
-# assert(windows_overlap([1,5], [3,7]) == [3,5])
-# assert(windows_overlap([3,7] ,[1,5]) == [3,5])
-# assert(windows_overlap([1,5] ,[1,5]) == [1,5])
-# assert(windows_overlap([1,5] ,[6,10]) is None)
 
 def read_fasta(filename):
     """Read A sequence in a FASTA file with Biopython."""
@@ -192,6 +187,40 @@ def gc_content(sequence, window_size = None):
         return 1.0*(a-b) / window_size
 
 def sequences_differences(seq1, seq2):
+    """Return the number of nucleotides that differ in the two sequences.
+
+    Parameters
+    ----------
+
+    seq1, seq2
+      Strings of DNA sequences e.g. "ATGCTGTGC"
+
+    """
+
     arr1 = np.fromstring(seq1, dtype="uint8")
     arr2 = np.fromstring(seq2, dtype="uint8")
-    (arr1 != arr2).sum()
+    return (arr1 != arr2).sum()
+
+
+def find_orfs(self, minsize=300):
+    import tempfile
+    import os
+    import subprocess as sp
+    import regex
+    input_temp = tempfile.mkstemp(suffix=".fa")[1]
+    self.to_fasta(filename=input_temp)
+    outfile = tempfile.mkstemp(suffix=".seq")[1]
+    proc = sp.Popen(["getorf", "-minsize", "%d" % minsize,
+                    "-sequence", input_temp, "-outseq", outfile])
+    proc.wait()
+    with open(outfile, 'r') as f:
+        result = f.read()
+
+    os.remove(outfile)
+    os.remove(input_temp)
+    orfs_coordinates = regex.findall(">(\S+) \[(\d+) - (\d+)\]",
+                                     result)
+    return [
+        (int(start), int(stop), (+1 if int(start) < int(stop) else -1))
+        for (_, start, stop) in orfs_coordinates
+    ]

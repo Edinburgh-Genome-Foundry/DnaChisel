@@ -517,7 +517,7 @@ class TerminalConstraint(Constraint):
             message = "Failed: breaches at ends %s" % str(windows)
 
         return ConstraintEvaluation(self, canvas, score=len(windows),
-                                    windows=windows, message= message)
+                                    windows=windows, message=message)
 
 
 class TerminalGCContentConstraint(TerminalConstraint):
@@ -542,8 +542,9 @@ class SequenceLengthConstraint(Constraint):
         self.max_length = max_length
 
     def evaluate(self, canvas):
+        L = len(canvas.sequence)
+        return ConstraintEvaluation(self, canvas,
+                                    score=(self.min_length < L < self.max_)-1)
 
-        score = (self.min_length < < self.max_)
     def __repr__(self):
-        return "Length(%.02f < gc < %.02f, window: %d)" % \
-            (self.gc_min, self.gc_max, self.window_size)
+        return "Length(%d < L < %d)" % (self.min_length, self.max_length)
