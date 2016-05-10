@@ -537,13 +537,21 @@ class TerminalGCContentConstraint(TerminalConstraint):
 
 class SequenceLengthConstraint(Constraint):
 
-    def __init__(self, min_length, max_length):
+    def __init__(self, min_length=None, max_length=None):
         self.min_length = min_length
         self.max_length = max_length
 
     def evaluate(self, canvas):
+        L, mini, maxi = len(canvas.sequence), self.min_length, self.max_length
+        if mini is None:
+            score =  L <= maxi
+        elif maxi is None:
+            score = L >= mini
+        else:
+            score = (mini <= L <= maxi)
+        return ConstraintEvaluation(self, canvas, score)
 
-        score = (self.min_length < < self.max_)
+        score = (self.min_length < len(canvas.sequence) < self.max_length)
     def __repr__(self):
         return "Length(%.02f < gc < %.02f, window: %d)" % \
             (self.gc_min, self.gc_max, self.window_size)
