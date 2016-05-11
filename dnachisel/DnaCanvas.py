@@ -537,18 +537,21 @@ class DnaCanvas:
     # OBJECTIVES
 
     def all_objectives_evaluations(self):
+        """Return a list of the evaluation of each objective of the canvas"""
         return [
             objective.evaluate(self)
             for objective in self.objectives
         ]
 
     def all_objectives_score_sum(self):
+        """Return the total sum of all objective evaluation's score"""
         return sum([
             objective.boost * objective.evaluate(self).score
             for objective in self.objectives
         ])
 
     def objectives_summary(self, failed_only=False):
+        """Return a string summarizing the evaluation of all objectives"""
         score = self.all_objectives_score_sum()
         message = "TOTAL OBJECTIVES SCORE: %.02f" % score
         objectives_texts = "\n".join([

@@ -23,4 +23,6 @@ from biotools import (
 )
 from .presets import PROVIDERS_CONSTRAINTS
 
+from .utils import random_compatible_dna_sequence
+
 from .version import __version__
