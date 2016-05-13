@@ -91,8 +91,8 @@ canvas = DnaCanvas(
 )
 
 print ("\n\n=== Initial Status ===")
-canvas.print_constraints_summary(failed_only=True)
-canvas.print_objectives_summary()
+print (canvas.constraints_summary(failed_only=True))
+print (canvas.objectives_summary())
 
 print ("Now solving constraints...")
 canvas.solve_all_constraints_one_by_one()
@@ -100,8 +100,8 @@ print ("Done. Now optimizing objectives...")
 canvas.maximize_all_objectives_one_by_one(max_random_iters=2000)
 
 print ("\n\n=== Status after optimization ===")
-canvas.print_constraints_summary(failed_only=True)
-canvas.print_objectives_summary()
+print (canvas.constraints_summary(failed_only=True))
+print (canvas.objectives_summary())
 
 # Write the final sequence back to GENBANK (annotations are conserved)
 

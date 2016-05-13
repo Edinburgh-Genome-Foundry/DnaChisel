@@ -70,7 +70,8 @@ class DnaCanvas:
       The list of objectives
 
     possible_mutations
-      A dictionnary indicating the possible mutations
+      A dictionnary indicating the possible mutations. Note that this is only
+      computed the first time that canvas.possible_mutations is invoked.
 
     Notes
     -----
@@ -94,8 +95,7 @@ class DnaCanvas:
         self.original_sequence = sequence
         self.constraints = [] if constraints is None else constraints
         self.objectives = [] if objectives is None else objectives
-
-        self.compute_possible_mutations()
+        self.possible_mutations_dict = None
 
     def extract_subsequence(self, location):
         """Return the subsequence (a string) atthe given location).
@@ -111,6 +111,12 @@ class DnaCanvas:
             return self.sequence[location]
 
     # MUTATIONS
+
+    @property
+    def possible_mutations(self):
+        if self.possible_mutations_dict is None:
+            self.compute_possible_mutations()
+        return self.possible_mutations_dict
 
     def compute_possible_mutations(self):
         """Compute all possible mutations that can be applied to the sequence.
@@ -130,7 +136,7 @@ class DnaCanvas:
           the 64 possible combinations of free triplets.
 
         """
-        self.possible_mutations = {}
+        self.possible_mutations_dict = {}
         unibase_mutable = np.ones(len(self.sequence))
         for constraint in self.constraints:
             if isinstance(constraint, cst.DoNotModifyConstraint):
@@ -187,11 +193,11 @@ class DnaCanvas:
 
                     #if (possible_codons != []) and possible_codons != [seq_codon]:
                     if possible_codons not in [[], [seq_codon]]:
-                        self.possible_mutations[(cstart, cstop)] = \
+                        self.possible_mutations_dict[(cstart, cstop)] = \
                             possible_codons
         #print unibase_mutable
         for i in unibase_mutable.nonzero()[0]:
-            self.possible_mutations[i] = ["A", "T", "G", "C"]
+            self.possible_mutations_dict[i] = ["A", "T", "G", "C"]
 
     def mutation_space_size(self):
         """Return the total number of possible sequence variants.
