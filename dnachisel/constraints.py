@@ -1,5 +1,6 @@
 import copy
-from biotools import gc_content, translate, reverse_complement, windows_overlap
+from biotools import (gc_content, translate, reverse_complement,
+                      windows_overlap, blast_sequence)
 import numpy as np
 
 
@@ -551,3 +552,70 @@ class SequenceLengthConstraint(Constraint):
 
     def __repr__(self):
         return "Length(%d < L < %d)" % (self.min_length, self.max_length)
+
+
+class NoBlastMatchConstraint(Constraint):
+    """Enforce that the given pattern is absent in the sequence.
+    """
+
+    def __init__(self, blast_db, word_size=4, perc_identity=100,
+                 num_alignments=1000, num_threads=3, min_align_length=20,
+                 window=None):
+        self.blast_db = blast_db
+        self.word_size = word_size
+        self.perc_identity = perc_identity
+        self.num_alignments = num_alignments
+        self.num_threads = num_threads
+        self.min_align_length = min_align_length
+        self.window = window
+
+    def evaluate(self, canvas):
+        window = self.window
+        if window is None:
+            window = (0, len(canvas.sequence))
+        wstart, wend = window
+        sequence = canvas.sequence[wstart:wend]
+        blast_record = blast_sequence(
+            sequence, blast_db=self.blast_db,
+            word_size=self.word_size,
+            perc_identity=self.perc_identity,
+            num_alignments=self.num_alignments,
+            num_threads=self.num_threads
+        )
+        windows = sorted([
+            sorted((hit.query_start + wstart, hit.query_end + wstart))
+            for alignment in blast_record.alignments
+            for hit in alignment.hsps
+            if abs(hit.query_end - hit.query_start) > self.min_align_length
+        ])
+
+        if windows == []:
+            return ConstraintEvaluation(self, canvas, score=1,
+                                        message="Passed: no BLAST match found")
+
+        return ConstraintEvaluation(self, canvas, score=-len(windows),
+                                    windows=windows,
+                                    message="Failed - matches at %s" % windows)
+
+    def localized(self, window):
+        """Localize the evaluation
+
+        For a window [start, end], the GC content evaluation will be restricted
+        to [start - r, end + r]
+        """
+        if self.window is not None:
+            new_window = windows_overlap(self.window, window)
+            if new_window is None:
+                return VoidConstraint(parent_constraint=self)
+        else:
+            start, end = window
+            new_window = [max(0, start - self.min_align_length),
+                          end + self.min_align_length]
+
+        return self.copy_with_changes(window=new_window)
+
+    def __repr__(self):
+        return "NoBlastMatchesConstraint%s(%s, %d+ bp, perc %d+)" % (
+            self.window, self.blast_db, self.min_align_length,
+            self.perc_identity
+        )

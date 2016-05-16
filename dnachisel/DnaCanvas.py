@@ -403,7 +403,8 @@ class DnaCanvas:
     def solve_constraint_by_localization(self, constraint,
                                          randomization_threshold=10000,
                                          max_random_iters=1000, verbose=False,
-                                         progress_bars=0):
+                                         progress_bars=0,
+                                         evaluation=None):
         """Solve a particular constraint using local, targeted searches.
 
         Parameters
@@ -429,8 +430,9 @@ class DnaCanvas:
           evaluation of each constraint.
 
         """
+        if evaluation is None:
+            evaluation = constraint.evaluate(self)
 
-        evaluation = constraint.evaluate(self)
         if evaluation.passes:
             return
         if evaluation.windows is not None:
@@ -465,8 +467,6 @@ class DnaCanvas:
                         constraint.localized(do_not_modify_window)
                     ] + passing_localized_constraints
                 )
-                #print constraint, localized_canvas.mutation_space_size()
-                #print localized_canvas.possible_mutations
                 if (localized_canvas.mutation_space_size() <
                         randomization_threshold):
                     localized_canvas.solve_all_constraints_by_exhaustive_search(
@@ -517,21 +517,22 @@ class DnaCanvas:
             range_loops = tqdm(range_loops, desc="Loop", leave=False)
         for iteration in range_loops:
             evaluations = self.all_constraints_evaluations()
-            failed_constraints = [
-                evaluation.constraint
+            failed_evaluations = [
+                evaluation
                 for evaluation in evaluations
                 if not evaluation.passes
             ]
-            if failed_constraints == []:
+            if failed_evaluations == []:
                 return
             if progress_bars > 1:
-                failed_constraints = tqdm(failed_constraints, leave=False,
-                                          desc="Failing Constraint")
-            for constraint in failed_constraints:
+                failed_evaluations= tqdm(failed_evaluations, leave=False,
+                                         desc="Failing Constraint")
+            for evaluation in failed_evaluations:
                 self.solve_constraint_by_localization(
-                    constraint, randomization_threshold,
+                    evaluation.constraint, randomization_threshold,
                     max_random_iters, verbose=verbose,
-                    progress_bars=progress_bars - 2
+                    progress_bars=progress_bars - 2,
+                    evaluation=evaluation
                 )
         if not self.all_constraints_pass():
             summary = self.constraints_summary(failed_only=True)

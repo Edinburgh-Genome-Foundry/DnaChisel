@@ -1,8 +1,13 @@
-
-import biotables
+import tempfile
 import re
+import os
+
 import numpy as np
 from Bio.Seq import Seq
+from Bio.Blast.Applications import NcbiblastnCommandline
+from Bio.Blast import NCBIXML
+
+import biotables
 
 def complement(dna_sequence):
     """Return the complement of the DNA sequence.
@@ -37,7 +42,7 @@ def random_dna_sequence(length, probas=None, seed=None):
 
     proba
       Frequencies for the different nucleotides, for instance
-      ``proba={"A":0.2, "T":0.4, "G":0.4, "C":0.2}``.
+      ``probas={"A":0.2, "T":0.3, "G":0.3, "C":0.2}``.
       If not specified, all nucleotides are equiprobable (p=0.25).
 
     seed
@@ -52,7 +57,7 @@ def random_dna_sequence(length, probas=None, seed=None):
         sequence = np.random.choice(list("ATCG"), length)
     else:
         bases, probas = zip(*probas.items())
-        sequence = np.random.choice(bases, length, probas)
+        sequence = np.random.choice(bases, length, p=probas)
     return "".join(sequence)
 
 def random_protein_sequence(length, seed=None):
@@ -95,11 +100,6 @@ def reverse_translate(protein_sequence):
 def translate(dna_sequence):
     """Translate the DNA sequence into an amino-acids sequence "MLKYQT..." """
     return str(Seq(dna_sequence).translate())
-
-    # "".join([
-    #     biotables.CODON_TRANSLATIONS[dna_sequence[3*k:3*(k+1)]]
-    #     for k in range(len(dna_sequence)/3)
-    # ])
 
 
 
@@ -224,3 +224,42 @@ def find_orfs(self, minsize=300):
         (int(start), int(stop), (+1 if int(start) < int(stop) else -1))
         for (_, start, stop) in orfs_coordinates
     ]
+
+def blast_sequence(sequence, blast_db, word_size=4, perc_identity=80,
+                   num_alignments=1000, num_threads=3):
+    """Return a Biopython BLAST record of the given sequence BLASTed
+    against the provided database.
+
+    Parameters
+    ----------
+
+    sequence
+      An ATGC sequence
+
+    Examples
+    --------
+
+    >>> blast_record = blast_sequence("ATTGTGCGTGTGTGCGT", "blastdb/ecoli")
+    >>> for alignment in blast_record.alignments:
+    >>>     for hit in alignment.hsps:
+    >>>         print (hit.identities)
+    """
+    temp_fasta_file = tempfile.mkstemp(".fa")[1]
+    temp_xml_file = tempfile.mkstemp(".xml")[1]
+    with open(temp_fasta_file, "w+") as f:
+        f.write(">seq\n" + sequence)
+
+    blastn_cline = NcbiblastnCommandline(
+        num_threads=num_threads, db=blast_db, query=temp_fasta_file,
+        out=temp_xml_file, word_size=word_size, perc_identity=perc_identity,
+        outfmt=5, num_alignments=num_alignments
+    )
+    blastn_cline()
+    with open(temp_xml_file, "r") as f:
+        blast_record = NCBIXML.read(f)
+
+    os.remove(temp_xml_file)
+    os.remove(temp_fasta_file)
+    del blastn_cline
+
+    return blast_record
