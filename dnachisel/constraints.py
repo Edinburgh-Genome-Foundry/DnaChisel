@@ -1,4 +1,5 @@
 import copy
+from collections import Counter, defaultdict
 from biotools import (gc_content, translate, reverse_complement,
                       windows_overlap, blast_sequence)
 import numpy as np
@@ -154,10 +155,10 @@ class PatternConstraint(Constraint):
                 ostart, oend = overlap
                 if ostart == start:
                     new_window = [start, min(end, oend + pattern_size)]
-                    #new_window = [start, oend + pattern_size]
+                    # new_window = [start, oend + pattern_size]
                 else:  # oend = end
                     new_window = [max(start, ostart - pattern_size), end]
-                    #new_window = [ostart - pattern_size, end]
+                    # new_window = [ostart - pattern_size, end]
         else:
             start, end = window
             margin = pattern_size - 1
@@ -598,11 +599,7 @@ class NoBlastMatchConstraint(Constraint):
                                     message="Failed - matches at %s" % windows)
 
     def localized(self, window):
-        """Localize the evaluation
-
-        For a window [start, end], the GC content evaluation will be restricted
-        to [start - r, end + r]
-        """
+        """Localize the evaluation """
         if self.window is not None:
             new_window = windows_overlap(self.window, window)
             if new_window is None:
@@ -619,3 +616,59 @@ class NoBlastMatchConstraint(Constraint):
             self.window, self.blast_db, self.min_align_length,
             self.perc_identity
         )
+
+
+class NoNonuniqueKmerConstraint(Constraint):
+    """
+    from dnachisel import *
+    import dnachisel.constraints as cst
+    sequence = random_dna_sequence(50000)
+    canvas = DnaCanvas(
+        sequence,
+        constraints= [cst.NoNonuniqueKmerConstraint(10,
+                                include_reverse_complement=True)]
+    )
+    print canvas.constraints_summary()
+"""
+    def __init__(self, length, window=None, include_reverse_complement=False):
+        self.length = length
+        self.window = window
+        self.include_reverse_complement = include_reverse_complement
+
+    def evaluate(self, canvas):
+        window = self.window
+        if window is None:
+            window = (0, len(canvas.sequence))
+        wstart, wend = window
+        sequence = canvas.sequence[wstart:wend]
+        rev_complement = reverse_complement(sequence)
+        kmers_locations = defaultdict(lambda: [])
+        for i in range(len(sequence) - self.length):
+            start, end = i, i + self.length
+            kmers_locations[sequence[start:end]].append((start, end))
+        if self.include_reverse_complement:
+            for i in range(len(sequence) - self.length):
+                start, end = i, i + self.length
+                kmers_locations[rev_complement[start:end]].append(
+                    (len(sequence) - end, len(sequence) - start)
+                )
+
+        windows = sorted([
+            min(positions_list, key=lambda p: p[0])
+            for positions_list in kmers_locations.values()
+            if len(positions_list) > 1
+        ])
+
+        if windows == []:
+            return ConstraintEvaluation(
+                self, canvas, score=1,
+                message="Passed: no nonunique %d-mer found." % self.length)
+
+        return ConstraintEvaluation(
+            self, canvas, score=-len(windows),
+            windows=windows,
+            message="Failed, the following positions are the first occurences"
+                    "of non-unique kmers %s" % windows)
+
+    def __repr__(self):
+        return "NoNonuniqueKmers(%d)" % (self.length)
