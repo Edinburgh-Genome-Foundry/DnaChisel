@@ -367,8 +367,8 @@ class GCContentConstraint(Constraint):
         wstart, wend = window
         sequence = canvas.sequence[wstart:wend]
         gc = gc_content(sequence, self.gc_window)
-        breaches = np.maximum(0, self.gc_min - gc) + \
-            np.maximum(0, gc - self.gc_max)
+        breaches = (np.maximum(0, self.gc_min - gc) +
+                    np.maximum(0, gc - self.gc_max))
         score = - (breaches.sum())
         breaches_starts = (breaches > 0).nonzero()[0]
 
@@ -446,26 +446,43 @@ class DoNotModifyConstraint(Constraint):
       must be left unchanged.
     """
 
-    def __init__(self, window):
+    def __init__(self, window=None, indices=None):
         self.window = window
+        self.indices = np.array(indices)
 
     def evaluate(self, canvas):
         sequence = canvas.sequence
         original = canvas.original_sequence
-        if self.window is None:
+        if (self.window is None) and (self.indices is None):
             return ConstraintEvaluation(sequence == original)
-        else:
+        elif self.window is not None:
             start, end = self.window
             score = 1 if (sequence[start:end] == original[start:end]) else -1
+            return ConstraintEvaluation(self, canvas, score)
+        else:
+            sequence = np.fromstring(sequence, dtype="uint8")
+            original = np.fromstring(original, dtype="uint8")
+            #print  len(sequence), self.indices
+            if (sequence[self.indices] == original[self.indices]).min():
+                score = 1
+            else:
+                score = -1
+
             return ConstraintEvaluation(self, canvas, score)
 
     def localize(self, window):
         """Localize the DoNotModify to the overlap of its window and the new.
         """
-        new_window = windows_overlap(self.window, window)
-        if new_window is None:
-            return VoidConstraint(parent_constraint=self)
-        return self.copy_with_changes(window=new_window)
+        if self.window is not None:
+            new_window = windows_overlap(self.window, window)
+            if new_window is None:
+                return VoidConstraint(parent_constraint=self)
+            return self.copy_with_changes(window=new_window)
+        else:
+            start, end = window
+            inds = self.indices
+            new_indices = inds[(start <= inds) & (inds <= end)]
+            return self.copy_with_changes(indices=new_indices)
 
     def __repr__(self):
         return "DoNotModify(%s)" % str(self.window)
@@ -587,7 +604,7 @@ class NoBlastMatchConstraint(Constraint):
             sorted((hit.query_start + wstart, hit.query_end + wstart))
             for alignment in blast_record.alignments
             for hit in alignment.hsps
-            if abs(hit.query_end - hit.query_start) > self.min_align_length
+            if abs(hit.query_end - hit.query_start) >= self.min_align_length
         ])
 
         if windows == []:
@@ -606,8 +623,8 @@ class NoBlastMatchConstraint(Constraint):
                 return VoidConstraint(parent_constraint=self)
         else:
             start, end = window
-            new_window = [max(0, start - self.min_align_length),
-                          end + self.min_align_length]
+            radius = self.min_align_length
+            new_window = [max(0, start - radius), end + radius]
 
         return self.copy_with_changes(window=new_window)
 
@@ -630,6 +647,7 @@ class NoNonuniqueKmerConstraint(Constraint):
     )
     print canvas.constraints_summary()
 """
+
     def __init__(self, length, window=None, include_reverse_complement=False):
         self.length = length
         self.window = window

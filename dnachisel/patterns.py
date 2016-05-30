@@ -7,7 +7,8 @@ class SequencePattern:
     """Pattern/ that will be looked for in a DNA sequence.
 
     Use this class for matching regular expression patterns, and
-    DnaNotationPattern for matching explicit sequences or sequences using Ns etc.
+    DnaNotationPattern for matching explicit sequences or sequences using Ns
+    etc.
 
     Example
     -------

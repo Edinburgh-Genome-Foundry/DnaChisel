@@ -65,12 +65,13 @@ class Objective:
 
     """
 
+    max_possible_score = None
+
     def __init__(self, boost=1. - 0):
         self.boost = boost
 
     def evaluate(self):
-        """
-        """
+        """"""
         pass
 
     def localized(self, window):
@@ -181,11 +182,15 @@ class GCContentObjective(Objective):
 
     """
 
-    def __init__(self, gc_content, exponent=1.0, window=None,  boost=1.0):
+    max_possible_score = 0
+
+    def __init__(self, gc_content, exponent=1.0, window=None,  boost=1.0,
+                 subdivision_window=None):
         Objective.__init__(self, boost=boost)
         self.gc_content = gc_content
         self.exponent = exponent
         self.window = window
+        self.subdivision_window = subdivision_window
 
     def evaluate(self, canvas):
         window = (self.window if self.window is not None
@@ -194,9 +199,13 @@ class GCContentObjective(Objective):
         subsequence = canvas.sequence[start: end]
         gc = gc_content(subsequence)
         score = -(abs(gc - self.gc_content) ** self.exponent)
+        if self.subdivision_window is None:
+            windows = [window]
+        else:
+            windows = subdivide_window(window, self.subdivision_window)
+
         return ObjectiveEvaluation(
-            self, canvas, score=score,
-            windows=subdivide_window(window, 500),
+            self, canvas, score=score, windows=windows,
             message="scored %.02E. GC content is %.03f (%.03f wanted)" %
                     (score, gc, self.gc_content))
 
@@ -248,6 +257,8 @@ class MinimizeDifferencesObjective(Objective):
     >>> canvas.maximize_all_objectives_one_by_one()
 
     """
+
+    max_possible_score = 0
 
     def __init__(self, window=None, target_sequence=None,
                  original_sequence=None, boost=1.0):

@@ -16,8 +16,10 @@ import constraints as cst
 
 from tqdm import tqdm
 
+
 class NoSolutionFoundError(Exception):
     pass
+
 
 class DnaCanvas:
     """A DNA Canvas specifies a constrained DNA optimization problem.
@@ -85,10 +87,6 @@ class DnaCanvas:
     e.g. for the mutation of a whole codon ``(3,6): ["ATT", "ACT", "AGT"]``.
     """
 
-
-
-
-
     def __init__(self, sequence, constraints=None, objectives=None):
 
         self.sequence = sequence
@@ -140,8 +138,11 @@ class DnaCanvas:
         unibase_mutable = np.ones(len(self.sequence))
         for constraint in self.constraints:
             if isinstance(constraint, cst.DoNotModifyConstraint):
-                start, end = constraint.window
-                unibase_mutable[start:end] = 0
+                if constraint.window is not None:
+                    start, end = constraint.window
+                    unibase_mutable[start:end] = 0
+                else:
+                    unibase_mutable[constraint.indices] = 0
         for constraint in self.constraints:
             if isinstance(constraint, cst.EnforceTranslationConstraint):
                 start, end = constraint.window
@@ -150,9 +151,9 @@ class DnaCanvas:
                         cstart, cstop = start + 3 * i, start + 3 * (i + 1)
                         seq_codon = self.sequence[cstart:cstop]
                     else:
-                        cstart, cstop = end - 3 * (i+1), end - 3 * i
+                        cstart, cstop = end - 3 * (i + 1), end - 3 * i
                         seq_codon = reverse_complement(
-                                        self.sequence[cstart:cstop])
+                            self.sequence[cstart:cstop])
                     possible_codons = biotables.CODONS_SEQUENCES[aa][:]
                     local_immutable_unibases = (
                         unibase_mutable[cstart:cstop] == 0
@@ -188,14 +189,10 @@ class DnaCanvas:
                         ]
                     unibase_mutable[cstart:cstop] = 0
 
-                    # if seq_codon in possible_codons:
-                    #    possible_codons.remove(seq_codon)
-
-                    #if (possible_codons != []) and possible_codons != [seq_codon]:
                     if possible_codons not in [[], [seq_codon]]:
                         self.possible_mutations_dict[(cstart, cstop)] = \
                             possible_codons
-        #print unibase_mutable
+        # print unibase_mutable
         for i in unibase_mutable.nonzero()[0]:
             self.possible_mutations_dict[i] = ["A", "T", "G", "C"]
 
@@ -205,13 +202,12 @@ class DnaCanvas:
         The result is a float.
         """
         return np.prod([
-            1.0*len(v) #+ 1.0
+            1.0 * len(v)
             for v in self.possible_mutations.values()
         ])
 
     def iter_mutations_space(self):
         return itt.product(*[
-            #[None] +
             [(k, seq) for seq in values]
             for k, values in self.possible_mutations.items()
         ])
@@ -227,7 +223,7 @@ class DnaCanvas:
         """
         locs = self.possible_mutations.keys()
         if n_mutations == 1:
-            indices = [np.random.randint(0, len(locs), 1)]
+            indices = [np.random.randint(0, len(locs), 1)[0]]
         else:
             indices = np.random.choice(range(0, len(locs)), n_mutations,
                                        replace=False)
@@ -353,7 +349,7 @@ class DnaCanvas:
 
 
         """
-        #mutations_locs = self.possible_mutations.keys()
+
         evaluations = self.all_constraints_evaluations()
         score = sum([
             e.score
@@ -367,18 +363,6 @@ class DnaCanvas:
             if score == 0:
                 return
             mutations = self.get_random_mutations(n_mutations)
-            """
-            random_mutations_inds = np.random.randint(
-                0, len(mutations_locs), n_mutations)
-            mutations = [
-                (mutations_locs[ind],
-                 np.random.choice(
-                    self.possible_mutations[mutations_locs[ind]], 1
-                 )[0]
-                )
-                for ind in random_mutations_inds
-            ]
-            """
             if verbose:
                 print(self.constraints_summary())
             previous_sequence = self.sequence
@@ -390,7 +374,7 @@ class DnaCanvas:
                 for e in evaluations
                 if not e.passes
             ])
-            # print "now scores with muts", map(str,evaluations), new_score, score
+
             if new_score > score:
                 score = new_score
             else:
@@ -404,7 +388,9 @@ class DnaCanvas:
                                          randomization_threshold=10000,
                                          max_random_iters=1000, verbose=False,
                                          progress_bars=0,
-                                         evaluation=None):
+                                         evaluation=None,
+                                         n_mutations=1,
+                                         consider_other_constraints=True):
         """Solve a particular constraint using local, targeted searches.
 
         Parameters
@@ -448,19 +434,23 @@ class DnaCanvas:
                     max(0, window[0] - 5),
                     min(window[1] + 5, len(self.sequence))
                 ]
-                localized_constraints = [
-                    _constraint.localized(do_not_modify_window)
-                    for _constraint in self.constraints
-                ]
-                passing_localized_constraints = [
-                    _constraint
-                    for _constraint in localized_constraints
-                    if _constraint.evaluate(self).passes
-                ]
+                if consider_other_constraints:
+                    localized_constraints = [
+                        _constraint.localized(do_not_modify_window)
+                        for _constraint in self.constraints
+                    ]
+                    passing_localized_constraints = [
+                        _constraint
+                        for _constraint in localized_constraints
+                        if _constraint.evaluate(self).passes
+                    ]
+                else:
+                    passing_localized_constraints = []
                 localized_canvas = DnaCanvas(
                     sequence=self.sequence,
                     constraints=[
-                        cst.DoNotModifyConstraint([0, do_not_modify_window[0]]),
+                        cst.DoNotModifyConstraint(
+                            [0, do_not_modify_window[0]]),
                         cst.DoNotModifyConstraint([do_not_modify_window[1],
                                                    len(self.sequence)]),
                     ] + [
@@ -470,18 +460,20 @@ class DnaCanvas:
                 if (localized_canvas.mutation_space_size() <
                         randomization_threshold):
                     localized_canvas.solve_all_constraints_by_exhaustive_search(
-                        verbose=verbose, progress_bar= progress_bars > 1)
+                        verbose=verbose, progress_bar=progress_bars > 1)
                     self.sequence = localized_canvas.sequence
                 else:
                     localized_canvas.solve_all_constraints_by_random_mutations(
-                        max_iter=max_random_iters, n_mutations=1,
-                        verbose=verbose, progress_bar= progress_bars > 1)
+                        max_iter=max_random_iters, n_mutations=n_mutations,
+                        verbose=verbose, progress_bar=progress_bars > 1)
                     self.sequence = localized_canvas.sequence
 
     def solve_all_constraints_one_by_one(self, max_loops=1,
                                          randomization_threshold=10000,
                                          max_random_iters=1000, verbose=False,
-                                         progress_bars=0):
+                                         progress_bars=0,
+                                         n_mutations=1,
+                                         solve_independently=False):
         """Solve each of the canvas' constraints in turn, using local, targeted
         searches.
 
@@ -525,14 +517,16 @@ class DnaCanvas:
             if failed_evaluations == []:
                 return
             if progress_bars > 1:
-                failed_evaluations= tqdm(failed_evaluations, leave=False,
-                                         desc="Failing Constraint")
+                failed_evaluations = tqdm(failed_evaluations, leave=False,
+                                          desc="Failing Constraint")
             for evaluation in failed_evaluations:
                 self.solve_constraint_by_localization(
                     evaluation.constraint, randomization_threshold,
                     max_random_iters, verbose=verbose,
                     progress_bars=progress_bars - 2,
-                    evaluation=evaluation
+                    evaluation=evaluation,
+                    n_mutations=n_mutations,
+                    consider_other_constraints=not solve_independently
                 )
         if not self.all_constraints_pass():
             summary = self.constraints_summary(failed_only=True)
@@ -601,18 +595,18 @@ class DnaCanvas:
                              " constraints are verified")
         mutations_locs = self.possible_mutations.keys()
         score = self.all_objectives_score_sum()
-        range_iters =  range(max_iter)
+        range_iters = range(max_iter)
         if progress_bar:
             range_iters = tqdm(range_iters, desc="Random mutation",
                                leave=False)
-        for iteration in range(max_iter):
+        for iteration in range_iters:
             random_mutations_inds = np.random.randint(
                 0, len(mutations_locs), n_mutations)
             mutations = [
                 (mutations_locs[ind],
                  np.random.choice(
                     self.possible_mutations[mutations_locs[ind]], 1
-                 )[0]
+                )[0]
                 )
                 for ind in random_mutations_inds
             ]
@@ -630,8 +624,10 @@ class DnaCanvas:
                 self.sequence = previous_sequence
 
     def maximize_objective_by_localization(self, objective, windows=None,
-        randomization_threshold=10000, max_random_iters=1000, verbose=False,
-        progress_bars=False):
+                                           randomization_threshold=10000,
+                                           max_random_iters=1000, verbose=False,
+                                           progress_bars=False,
+                                           optimize_independently=False):
         """Maximize the objective via local, targeted mutations."""
 
         if windows is None:
@@ -651,6 +647,14 @@ class DnaCanvas:
                 max(0, window[0] - 5),
                 min(window[1] + 5, len(self.sequence))
             ]
+            if optimize_independently:
+                objectives = [objective.localized(window)]
+            else:
+                objectives = [
+                    _objective.localized(window)
+                    for _objective in self.objectives
+                ]
+
             localized_canvas = DnaCanvas(
                 sequence=self.sequence,
                 constraints=[
@@ -661,10 +665,7 @@ class DnaCanvas:
                     cst.DoNotModifyConstraint([do_not_modify_window[1],
                                                len(self.sequence)]),
                 ],
-                objectives = [
-                    _objective.localized(window)
-                    for _objective in self.objectives
-                ]
+                objectives=objectives
             )
 
             if (localized_canvas.mutation_space_size() <
@@ -677,13 +678,12 @@ class DnaCanvas:
                     verbose=verbose, progress_bar=progress_bars > 1)
             self.sequence = localized_canvas.sequence
 
-
     def maximize_all_objectives_one_by_one(self, n_loops=1,
                                            randomization_threshold=10000,
                                            max_random_iters=1000,
                                            verbose=False,
-                                           progress_bars=0):
-
+                                           progress_bars=0,
+                                           optimize_independently=False):
 
         range_loops = range(n_loops)
         if progress_bars > 0:
@@ -699,7 +699,8 @@ class DnaCanvas:
                     randomization_threshold=randomization_threshold,
                     max_random_iters=max_random_iters,
                     verbose=verbose,
-                    progress_bars = (progress_bars - 2)
+                    progress_bars=(progress_bars - 2),
+                    optimize_independently=optimize_independently
                 )
 
     def include_pattern_by_successive_tries(self, pattern, window=None):
@@ -710,12 +711,12 @@ class DnaCanvas:
         start, end = window
         for i in range(start, end - pattern.size):
             original_sequence = self.sequence
-            window = [i, i+pattern.size]
+            window = [i, i + pattern.size]
             self.mutate_sequence([(window, pattern.pattern)])
             try:
                 self.solve_all_constraints_one_by_one()
-                return # Success !
+                return  # Success !
             except NoSolutionFoundError:
                 self.sequence = original_sequence
-        self.constraints.pop() # remove the pattern constraint
+        self.constraints.pop()  # remove the pattern constraint
         raise NoSolutionFoundError("Failed to insert the pattern")

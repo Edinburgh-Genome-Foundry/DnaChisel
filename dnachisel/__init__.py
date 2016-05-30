@@ -7,7 +7,9 @@ from .constraints import (
     NoPatternConstraint,
     EnforceTranslationConstraint,
     Constraint,
-    SequenceLengthConstraint
+    SequenceLengthConstraint,
+    NoNonuniqueKmerConstraint,
+    NoBlastMatchConstraint
 )
 from objectives import (
     CodonOptimizationObjective,

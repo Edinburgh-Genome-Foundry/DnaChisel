@@ -1,6 +1,8 @@
 import tempfile
 import re
 import os
+import subprocess
+import time
 
 import numpy as np
 from Bio.Seq import Seq
@@ -59,6 +61,7 @@ def random_dna_sequence(length, probas=None, seed=None):
         bases, probas = zip(*probas.items())
         sequence = np.random.choice(bases, length, p=probas)
     return "".join(sequence)
+
 
 def random_protein_sequence(length, seed=None):
     """Return a random protein sequence "MNQTW...YL*" of the specified length.
@@ -244,22 +247,39 @@ def blast_sequence(sequence, blast_db, word_size=4, perc_identity=80,
     >>>     for hit in alignment.hsps:
     >>>         print (hit.identities)
     """
-    temp_fasta_file = tempfile.mkstemp(".fa")[1]
-    temp_xml_file = tempfile.mkstemp(".xml")[1]
-    with open(temp_fasta_file, "w+") as f:
+
+    xml_file, xml_name = tempfile.mkstemp(".xml")
+    fasta_file, fasta_name = tempfile.mkstemp(".fa")
+    with open(fasta_name, "w+") as f:
         f.write(">seq\n" + sequence)
 
-    blastn_cline = NcbiblastnCommandline(
-        num_threads=num_threads, db=blast_db, query=temp_fasta_file,
-        out=temp_xml_file, word_size=word_size, perc_identity=perc_identity,
-        outfmt=5, num_alignments=num_alignments
-    )
-    blastn_cline()
-    with open(temp_xml_file, "r") as f:
-        blast_record = NCBIXML.read(f)
+    p = subprocess.Popen([
+        "blastn", "-out", xml_name,
+        "-outfmt", "5",
+        "-num_alignments", str(num_alignments),
+        "-query", fasta_name,
+        "-db", blast_db,
+        "-word_size", str(word_size),
+        "-num_threads", str(num_threads),
+        "-perc_identity", str(perc_identity)
+    ], close_fds=True)
+    p.communicate()
+    p.wait()
+    for i in range(3):
+        try:
+            with open(xml_name,"r") as f:
+                blast_record = NCBIXML.read(f)
+            break
+        except ValueError:
+            time.sleep(0.1)
+    else:
+        raise ValueError("Problem reading the blast record.")
 
-    os.remove(temp_xml_file)
-    os.remove(temp_fasta_file)
-    del blastn_cline
+    os.fdopen(xml_file,'w').close()
+    os.fdopen(fasta_file,'w').close()
+
+    #os.remove(temp_xml_file)
+    #os.remove(temp_fasta_file)
+
 
     return blast_record
