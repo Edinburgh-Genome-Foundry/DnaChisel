@@ -162,7 +162,7 @@ def repeated_kmers(kmer_size, n_repeats):
 
     return SequencePattern(
         size=kmer_size * n_repeats,
-        expression=r"([ATGC]{%d})\1{%d}" % (kmer_size, n_repeats),
+        expression=r"([ATGC]{%d})\1{%d}" % (kmer_size, n_repeats-1),
         name="%d-repeats %d-mers" % (n_repeats, kmer_size),
         in_both_strands=False  # a kmer repeat one strand is also on the other
     )
