@@ -10,9 +10,11 @@ import itertools as itt
 
 import numpy as np
 
-from biotools import translate, reverse_translate, gc_content, read_fasta, reverse_complement
-import biotables
-import constraints as cst
+from .biotools.biotools import (translate, reverse_translate, gc_content,
+                                read_fasta, reverse_complement)
+from .biotools.biotables import CODONS_SEQUENCES
+from .objectives.objectives import (DoNotModify, EnforcePattern,
+                                    EnforceTranslation)
 
 from tqdm import tqdm
 
@@ -51,7 +53,7 @@ class DnaCanvas:
       A string of ATGC characters (they must be upper case!), e.g. "ATTGTGTA"
 
     constraints
-      A list of objects of type ``Constraint``.
+      A list of objects of type ``Objective``.
 
     objectives
       A list of objects of type ``Objective`` specifying what must be optimized
@@ -137,14 +139,14 @@ class DnaCanvas:
         self.possible_mutations_dict = {}
         unibase_mutable = np.ones(len(self.sequence))
         for constraint in self.constraints:
-            if isinstance(constraint, cst.DoNotModifyConstraint):
+            if isinstance(constraint, DoNotModify):
                 if constraint.window is not None:
                     start, end = constraint.window
                     unibase_mutable[start:end] = 0
                 else:
                     unibase_mutable[constraint.indices] = 0
         for constraint in self.constraints:
-            if isinstance(constraint, cst.EnforceTranslationConstraint):
+            if isinstance(constraint, EnforceTranslation):
                 start, end = constraint.window
                 for i, aa in enumerate(constraint.translation):
                     if constraint.strand == 1:
@@ -154,7 +156,7 @@ class DnaCanvas:
                         cstart, cstop = end - 3 * (i + 1), end - 3 * i
                         seq_codon = reverse_complement(
                             self.sequence[cstart:cstop])
-                    possible_codons = biotables.CODONS_SEQUENCES[aa][:]
+                    possible_codons = CODONS_SEQUENCES[aa][:]
                     local_immutable_unibases = (
                         unibase_mutable[cstart:cstop] == 0
                     ).nonzero()[0]
@@ -298,7 +300,7 @@ class DnaCanvas:
             message = ("FAILURE: %d constraints evaluations failed" %
                        len(failed_evaluations))
         text_evaluations = "\n".join([
-            "%s %s" % (evaluation.constraint, evaluation)
+            "%s %s" % (evaluation.objective, evaluation)
             for evaluation in evaluations
         ])
         return ("\n===> %s\n%s\n" % (message, text_evaluations))
@@ -397,7 +399,7 @@ class DnaCanvas:
         ----------
 
         constraint
-          The ``Constraint`` object for which the sequence should be solved
+          The ``Objective`` object for which the sequence should be solved
 
         randomization_threshold
           Local problems with a search space size under this threshold will be
@@ -421,6 +423,7 @@ class DnaCanvas:
 
         if evaluation.passes:
             return
+
         if evaluation.windows is not None:
 
             windows = evaluation.windows
@@ -449,10 +452,9 @@ class DnaCanvas:
                 localized_canvas = DnaCanvas(
                     sequence=self.sequence,
                     constraints=[
-                        cst.DoNotModifyConstraint(
-                            [0, do_not_modify_window[0]]),
-                        cst.DoNotModifyConstraint([do_not_modify_window[1],
-                                                   len(self.sequence)]),
+                        DoNotModify([0, do_not_modify_window[0]]),
+                        DoNotModify([do_not_modify_window[1],
+                                     len(self.sequence)]),
                     ] + [
                         constraint.localized(do_not_modify_window)
                     ] + passing_localized_constraints
@@ -518,10 +520,10 @@ class DnaCanvas:
                 return
             if progress_bars > 1:
                 failed_evaluations = tqdm(failed_evaluations, leave=False,
-                                          desc="Failing Constraint")
+                                          desc="Failing constraint")
             for evaluation in failed_evaluations:
                 self.solve_constraint_by_localization(
-                    evaluation.constraint, randomization_threshold,
+                    evaluation.objective, randomization_threshold,
                     max_random_iters, verbose=verbose,
                     progress_bars=progress_bars - 2,
                     evaluation=evaluation,
@@ -629,7 +631,8 @@ class DnaCanvas:
 
     def maximize_objective_by_localization(self, objective, windows=None,
                                            randomization_threshold=10000,
-                                           max_random_iters=1000, verbose=False,
+                                           max_random_iters=1000,
+                                           verbose=False,
                                            progress_bars=False,
                                            optimize_independently=False):
         """Maximize the objective via local, targeted mutations."""
@@ -665,9 +668,9 @@ class DnaCanvas:
                     _constraint.localized(do_not_modify_window)
                     for _constraint in self.constraints
                 ] + [
-                    cst.DoNotModifyConstraint([0, do_not_modify_window[0]]),
-                    cst.DoNotModifyConstraint([do_not_modify_window[1],
-                                               len(self.sequence)]),
+                    DoNotModify([0, do_not_modify_window[0]]),
+                    DoNotModify([do_not_modify_window[1],
+                                 len(self.sequence)]),
                 ],
                 objectives=objectives
             )
@@ -710,7 +713,7 @@ class DnaCanvas:
     def include_pattern_by_successive_tries(self, pattern, window=None):
         if window is None:
             window = [0, len(self.sequence)]
-        constraint = cst.EnforcePatternConstraint(pattern, window)
+        constraint = EnforcePattern(pattern, window)
         self.constraints.append(constraint)
         start, end = window
         for i in range(start, end - pattern.size):

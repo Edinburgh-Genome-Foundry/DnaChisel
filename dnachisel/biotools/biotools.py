@@ -11,6 +11,7 @@ from Bio.Blast import NCBIXML
 
 import biotables
 
+
 def complement(dna_sequence):
     """Return the complement of the DNA sequence.
 
@@ -19,6 +20,7 @@ def complement(dna_sequence):
     Uses BioPython for speed.
     """
     return str(Seq(dna_sequence).complement())
+
 
 def reverse_complement(sequence):
     """Return the reverse-complement of the DNA sequence.
@@ -29,9 +31,11 @@ def reverse_complement(sequence):
     """
     return complement(sequence)[::-1]
 
+
 def is_palyndromic(dna_sequence):
     """Return True if the DNA sequence is equal to its reverse complement."""
     return reverse_complement(dna_sequence) == dna_sequence
+
 
 def random_dna_sequence(length, probas=None, seed=None):
     """Return a random DNA sequence ("ATGGCGT...") with the specified length.
@@ -84,7 +88,7 @@ def random_protein_sequence(length, seed=None):
         np.random.seed(seed)
 
     aa_list = list('ACEDGFIHKLNQPSRTWVY')
-    aa_choices = np.random.choice(aa_list, length-2)
+    aa_choices = np.random.choice(aa_list, length - 2)
     return "M" + "".join(aa_choices) + "*"
 
 
@@ -103,7 +107,6 @@ def reverse_translate(protein_sequence):
 def translate(dna_sequence):
     """Translate the DNA sequence into an amino-acids sequence "MLKYQT..." """
     return str(Seq(dna_sequence).translate())
-
 
 
 def dna_pattern_to_regexpr(dna_pattern):
@@ -139,13 +142,14 @@ def windows_overlap(window1, window2):
     start1, end1 = window1
     start2, end2 = window2
 
-    if start2 < start1 :
+    if start2 < start1:
         return windows_overlap(window2, window1)
 
     if start1 <= start2 <= end1:
-        return [ start2, min(end1, end2)]
+        return [start2, min(end1, end2)]
     else:
         return None
+
 
 def read_fasta(filename):
     """Read A sequence in a FASTA file with Biopython."""
@@ -153,7 +157,8 @@ def read_fasta(filename):
     with open(filename) as f:
         return str(seqio.read(f, "fasta").seq)
 
-def gc_content(sequence, window_size = None):
+
+def gc_content(sequence, window_size=None):
     """Compute global or local GC content.
 
     Parameters
@@ -178,16 +183,17 @@ def gc_content(sequence, window_size = None):
     # The code is a little cryptic but speed gain is 300x
     # compared with pure-python string operations
 
-    arr = np.fromstring(sequence+"", dtype="uint8")
-    arr_GCs = (arr == 71) | (arr == 67) # 67=C, 71=G
+    arr = np.fromstring(sequence + "", dtype="uint8")
+    arr_GCs = (arr == 71) | (arr == 67)  # 67=C, 71=G
 
     if window_size is None:
         return 1.0 * arr_GCs.sum() / len(sequence)
     else:
         cs = np.cumsum(arr_GCs)
-        a = cs[window_size-1:]
-        b = np.hstack([[0],cs[:-window_size]])
-        return 1.0*(a-b) / window_size
+        a = cs[window_size - 1:]
+        b = np.hstack([[0], cs[:-window_size]])
+        return 1.0 * (a - b) / window_size
+
 
 def sequences_differences(seq1, seq2):
     """Return the number of nucleotides that differ in the two sequences.
@@ -214,7 +220,7 @@ def find_orfs(self, minsize=300):
     self.to_fasta(filename=input_temp)
     outfile = tempfile.mkstemp(suffix=".seq")[1]
     proc = sp.Popen(["getorf", "-minsize", "%d" % minsize,
-                    "-sequence", input_temp, "-outseq", outfile])
+                     "-sequence", input_temp, "-outseq", outfile])
     proc.wait()
     with open(outfile, 'r') as f:
         result = f.read()
@@ -227,6 +233,7 @@ def find_orfs(self, minsize=300):
         (int(start), int(stop), (+1 if int(start) < int(stop) else -1))
         for (_, start, stop) in orfs_coordinates
     ]
+
 
 def blast_sequence(sequence, blast_db, word_size=4, perc_identity=80,
                    num_alignments=1000, num_threads=3):
@@ -275,11 +282,15 @@ def blast_sequence(sequence, blast_db, word_size=4, perc_identity=80,
     else:
         raise ValueError("Problem reading the blast record.")
 
-    os.fdopen(xml_file,'w').close()
-    os.fdopen(fasta_file,'w').close()
-
-    #os.remove(temp_xml_file)
-    #os.remove(temp_fasta_file)
-
+    os.fdopen(xml_file, 'w').close()
+    os.fdopen(fasta_file, 'w').close()
 
     return blast_record
+
+
+def subdivide_window(window, max_span):
+    """Subdivide a window (start, end) into windows of size < max_span
+    (start, i_1), (i_1, i_2), ... (i_n, end)"""
+    start, end = window
+    inds = list(range(start, end, max_span)) + [end]
+    return zip(inds, inds[1:])

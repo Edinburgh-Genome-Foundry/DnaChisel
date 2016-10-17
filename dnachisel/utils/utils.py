@@ -1,5 +1,5 @@
-from .DnaCanvas import DnaCanvas
-from .biotools import random_dna_sequence
+from ..DnaCanvas import DnaCanvas
+from ..biotools import random_dna_sequence
 
 def random_compatible_dna_sequence(sequence_length, constraints, probas=None,
                                    **kwargs):

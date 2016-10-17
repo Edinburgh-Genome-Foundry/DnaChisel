@@ -1,173 +1,235 @@
+"""Collection of useful pre-defined objectives/constraints for DnaChisel."""
+
 import copy
 from collections import Counter, defaultdict
-from biotools import (gc_content, translate, reverse_complement,
-                      windows_overlap, blast_sequence)
+
 import numpy as np
 
+from ..biotools.biotables import CODON_USAGE
+from ..biotools.biotools import (gc_content, reverse_complement,
+                                 sequences_differences, windows_overlap,
+                                 blast_sequence, translate,
+                                 subdivide_window)
+from .Objective import (Objective, PatternObjective, TerminalObjective,
+                        ObjectiveEvaluation, VoidObjective)
 
-class ConstraintEvaluation:
-    """Store relevant infos about the evaluation of a constraint on a canvas
 
-    Examples
-    --------
+class CodonOptimize(Objective):
+    """Objective to codon-optimize a coding sequence for a particular organism.
 
-    >>> evaluation_result = ConstraintEvaluation(
-    >>>     constraint = constraint,
-    >>>     canvas = canvas,
-    >>>     score= evaluation_score, # float
-    >>>     windows=[(w1_start, w1_end), (w2_start, w2_end)...],
-    >>>     message = "Failed: constraint not met on windows (122,155),..."
-    >>> )
+    Several codon-optimization policies exist. At the moment this Objective
+    implements a method in which codons are replaced by the most frequent
+    codon in the species.
+
+    (as long as this doesn't break any Objective or lowers the global
+    optimization objective)
+
+    Supported organisms are ``E. coli``, ``S. cerevisiae``, ``H. Sapiens``,
+    ``C. elegans``, ``D. melanogaster``, ``B. subtilis``.
 
     Parameters
     ----------
 
-    constraint
-      The Constraint object that was evaluated.
+    organism
+      Name of the organism to codon-optimize for. Supported organisms are
+      ``E. coli``, ``S. cerevisiae``, ``H. Sapiens``, ``C. elegans``,
+      ``D. melanogaster``, ``B. subtilis``.
+      Note that the organism can be omited if a ``codon_usage_table`` is
+      provided instead
 
-    canvas
-      The canvas that the constraint was evaluated on.
+    window
+      Pair (start, end) indicating the position of the gene to codon-optimize.
+      If not provided, the whole sequence is considered as the gene. Make
+      sure the length of the sequence in the window is a multiple of 3.
 
-    score
-      The score associated to the evaluation. Note that for constraints, a
-      positive score (0 or more) means that the constraint is passing, and it
-      is expected that when it is negative, the distance to 0 reflects how far
-      the constraint is from passing (this is used by the constraints solver).
+    strand
+      Either 1 if the gene is encoded on the (+) strand, or -1 for antisense.
 
-    windows
-      A list of couples (start, end) indicating the windows on which the
-      constraints breaches were observed.
-      This parameter can be left to None if the constraint breaches are not
-      localized (for global constraints such as global GC content).
+    codon_usage_table
+      A dict of the form ``{"TAC": 0.112, "CCT": 0.68}`` giving the RSCU table
+      (relative usage of each codon). Only provide if no ``organism`` name
+      was provided.
 
-    message
-      A message that will be returned by ``str(evaluation)``. It will notably
-      be displayed by ``canvas.print_constraints_summaries``.
+    Examples
+    --------
+
+    >>> objective = CodonOptimizationObjective(
+    >>>     organism = "E. coli",
+    >>>     window = (150, 300), # coordinates of a gene
+    >>>     strand = -1
+    >>> )
+
 
     """
 
-    def __init__(self, constraint, canvas, score, windows=None, message=None):
-        self.constraint = constraint
-        self.canvas = canvas
-        self.score = score
-        self.passes = score >= 0
-        self.windows = windows
-        self.message = message
+    def __init__(self, organism=None, window=None, strand=1,
+                 codon_usage_table=None, boost=1.0):
+        Objective.__init__(self, boost=boost)
+        self.window = window
+        self.strand = strand
+        self.organism = organism
+        if organism is not None:
+            codon_usage_table = CODON_USAGE[self.organism]
+        if codon_usage_table is None:
+            raise ValueError("Provide either an organism name or a codon "
+                             "usage table")
+        self.codon_usage_table = codon_usage_table
 
-    def __repr__(self):
-        return (
-            self.message if (self.message is not None) else
-            str((
-                "Passes" if self.passes else "Fails",
-                "score : %.02f" % self.score,
-                self.windows
-            ))
+    def evaluate(self, canvas):
+
+        window = (self.window if self.window is not None
+                  else [0, len(canvas.sequence)])
+        start, end = window
+        subsequence = canvas.sequence[start:end]
+        if self.strand == -1:
+            subsequence = reverse_complement(subsequence)
+        length = len(subsequence)
+        if (length % 3):
+            raise ValueError("CodonOptimizationObjective on a window/sequence"
+                             "with size %d not multiple of 3)" % length)
+        score = sum([
+            self.codon_usage_table[subsequence[3 * i:3 * (i + 1)]]
+            for i in range(length / 3)
+        ])
+        return ObjectiveEvaluation(
+            self, canvas, score, windows=[[start, end]],
+            message="Codon opt. on window %s scored %.02E" %
+                    (str(window), score)
+        )
+
+    def __str__(self):
+        return "CodonOptimize(%s, %s)" % (str(self.window), self.organism)
+
+
+class MinimizeDifferences(Objective):
+    """Objective to minimize the differences to a given sequence.
+
+
+    This can be used to enforce "conservative" optimization, in which we try
+    to minimize the changes from the original sequence
+
+    Parameters
+    ----------
+
+    window
+      Pair (start, end) indicating the segment of the sequence. If none
+      provided, the whole sequence is considered.
+
+    target_sequence
+      The DNA sequence that the canvas' sequence (or subsequence) should equal.
+      Can be omitted if ``original_sequence`` is provided instead
+
+    original_sequence
+      A DNA sequence (will generally be the canvas' sequence itself) with
+      already the right sequence at the given ``window``. Only provide if
+      you are not providing a ``target_sequence``
+
+
+    Examples
+    --------
+
+    >>> from dnachisel import *
+    >>> sequence = random_dna_sequence(length=10000)
+    >>> # Fix the sequence's local gc content while minimizing changes.
+    >>> canvas = DnaCanvas(
+    >>>     sequence = sequence,
+    >>>     Objectives = [GCContentObjective(0.3,0.6, gc_window=50)],
+    >>>     objective = [MinimizeDifferencesObjective(
+    >>>                     original_sequence=sequence)]
+    >>> )
+    >>> canvas.solve_all_Objectives_one_by_one()
+    >>> canvas.maximize_all_objectives_one_by_one()
+
+    """
+
+    best_possible_score = 0
+
+    def __init__(self, window=None, target_sequence=None,
+                 original_sequence=None, boost=1.0):
+        self.boost = boost
+        self.window = window
+        if target_sequence is None:
+            target_sequence = (original_sequence if window is None else
+                               original_sequence[window[0]:window[1]])
+        self.reference_sequence = target_sequence
+
+    def evaluate(self, canvas):
+        window = (self.window if self.window is not None
+                  else [0, len(canvas.sequence)])
+        start, end = window
+        subsequence = canvas.sequence[start: end]
+        diffs = - sequences_differences(subsequence, self.reference_sequence)
+        return ObjectiveEvaluation(
+            self, canvas, score=-diffs, windows=[window],
+            message="Found %d differences with target sequence" % diffs
+        )
+
+    def __str__(self):
+        return "MinimizeDifferencesObj(%s, %s...)" % (
+            "global" if self.window is None else str(self.window),
+            self.sequence[:7]
         )
 
 
-class Constraint:
-    """General class to define constraints.
+class DoNotModify(Objective):
+    """Specify that some locations of the sequence should not be changed.
 
-    New types of constraints are defined by subclassing ``Constraint`` and
-    providing a custom ``evaluate`` and ``localized`` methods.
+    ``DoNotModify`` Objectives are used to constrain the mutations space
+    of DNA Canvas.
 
+    Parameters
+    ----------
+
+    window
+      Couple ``(start, end)`` indicating the position of the segment that
+      must be left unchanged.
     """
 
-    def __init__(self, window=None):
+    best_possible_score = 1
+
+    def __init__(self, window=None, indices=None, boost=1.0):
         self.window = window
+        self.indices = np.array(indices)
+        self.boost = boost
 
     def evaluate(self, canvas):
-        """Evaluate the constraint on the provided canvas.
-
-        Returns a ``ConstraintEvaluation`` object indicating whether the
-        constraint passed, the score of the evaluation, the windows on which
-        to focus searches in case the constraint failed and a string message
-        summarizing the evaluation (see ``ConstraintEvaluation``).
-        """
-        pass
-
-    def localized(self, window):
-        """Return a modified version of the constraint for the case where
-        sequence modifications are only performed inside the provided window.
-
-        For instance if a constraint concerns local GC content, and we are
-        only making local mutations to destroy a restriction site, then we only
-        need to check the local GC content around the restriction site after
-        each mutation (and not compute it for the whole sequence), so
-        ``GCContentConstraint.localised(window)`` will return a constraint
-        that only looks for GC content around the provided window.
-
-        If a constraint concerns a DNA segment that is completely disjoint from
-        the provided window, this must return a ``VoidConstraint``.
-
-        Must return an object of class ``Constraint``.
-        """
-        return self
-
-    def copy_with_changes(self, **kwargs):
-        new_constraint = copy.deepcopy(self)
-        new_constraint.__dict__.update(kwargs)
-        return new_constraint
-
-
-class VoidConstraint(Constraint):
-    """Void Constraints are a special case of constraints that always pass.
-
-    Void Constraints are generally obtained when a constraint is "made void"
-    by a localization. For instance, if we are optimizing the segment (10,50)
-    of a DNA segment, the constraint EnforceTranslation([300,500]) does not
-    apply as it concerns a Gene that is in a completely different segment.
-    Therefore the localized version of EnforceTranslation will be void.
-    """
-
-    def __init__(self, parent_constraint=None):
-        self.parent_constraint = parent_constraint
-        self.message = ("Pass (not relevant in this context)"
-                        % parent_constraint)
-
-    def evaluate(self, canvas):
-        """The evaluation of VoidConstraints always passes with score=1.0
-        It returns a message indicating that the parent constraint was voided
-        """
-        return ConstraintEvaluation(self, canvas, score=1.0,
-                                    message=self.message,
-                                    windows=None)
-
-    def __repr__(self):
-        return "Void %s" % self.parent_constraint
-
-
-class PatternConstraint(Constraint):
-    """Class for constraints such as presence or absence of a pattern."""
-
-    def __init__(self, pattern, window=None):
-        self.pattern = pattern
-        self.window = window
-
-    def localized(self, window):
-        pattern_size = self.pattern.size
-        if self.window is not None:
-            overlap = windows_overlap(self.window, window)
-            if overlap is None:
-                return VoidConstraint(parent_constraint=self)
+        sequence = canvas.sequence
+        original = canvas.original_sequence
+        if (self.window is None) and (self.indices is None):
+            return ObjectiveEvaluation(sequence == original)
+        elif self.window is not None:
+            start, end = self.window
+            score = 1 if (sequence[start:end] == original[start:end]) else -1
+            return ObjectiveEvaluation(self, canvas, score)
+        else:
+            sequence = np.fromstring(sequence, dtype="uint8")
+            original = np.fromstring(original, dtype="uint8")
+            if (sequence[self.indices] == original[self.indices]).min():
+                score = 1
             else:
-                start, end = window
-                ostart, oend = overlap
-                if ostart == start:
-                    new_window = [start, min(end, oend + pattern_size)]
-                    # new_window = [start, oend + pattern_size]
-                else:  # oend = end
-                    new_window = [max(start, ostart - pattern_size), end]
-                    # new_window = [ostart - pattern_size, end]
+                score = -1
+
+            return ObjectiveEvaluation(self, canvas, score)
+
+    def localize(self, window):
+        """Localize the DoNotModify to the overlap of its window and the new.
+        """
+        if self.window is not None:
+            new_window = windows_overlap(self.window, window)
+            if new_window is None:
+                return VoidObjective(parent_objective=self)
+            return self.copy_with_changes(window=new_window)
         else:
             start, end = window
-            margin = pattern_size - 1
-            new_window = [max(0, start - margin), end + margin]
+            inds = self.indices
+            new_indices = inds[(start <= inds) & (inds <= end)]
+            return self.copy_with_changes(indices=new_indices)
 
-        return self.copy_with_changes(window=new_window)
+    def __repr__(self):
+        return "DoNotModify(%s)" % str(self.window)
 
 
-class EnforcePatternConstraint(PatternConstraint):
+class EnforcePattern(PatternObjective):
     """Enforce that the given pattern is present in the sequence.
 
     Parameters
@@ -181,9 +243,10 @@ class EnforcePatternConstraint(PatternConstraint):
       the search
     """
 
-    def __init__(self, pattern, window=None, occurences=1):
-        PatternConstraint.__init__(self, pattern, window)
+    def __init__(self, pattern, window=None, occurences=1, boost=1.0):
+        PatternObjective.__init__(self, pattern, window)
         self.occurences = occurences
+        self.boost = boost
 
     def evaluate(self, canvas):
         window = self.window
@@ -202,7 +265,7 @@ class EnforcePatternConstraint(PatternConstraint):
                            " wanted at positions %s") % (len(windows),
                                                          self.occurences,
                                                          window)
-        return ConstraintEvaluation(
+        return ObjectiveEvaluation(
             self, canvas, score, message=message,
             windows=None if window is None else [window],
         )
@@ -211,7 +274,7 @@ class EnforcePatternConstraint(PatternConstraint):
         return "EnforcePattern(%s, %s)" % (self.pattern, self.window)
 
 
-class NoPatternConstraint(PatternConstraint):
+class AvoidPattern(PatternObjective):
     """Enforce that the given pattern is absent in the sequence.
     """
 
@@ -222,7 +285,7 @@ class NoPatternConstraint(PatternConstraint):
             message = "Passed. Pattern not found !"
         else:
             message = "Failed. Pattern found at positions %s" % windows
-        return ConstraintEvaluation(
+        return ObjectiveEvaluation(
             self, canvas, score, windows=windows, message=message
         )
 
@@ -230,7 +293,7 @@ class NoPatternConstraint(PatternConstraint):
         return "NoPattern(%s, %s)" % (self.pattern, self.window)
 
 
-class EnforceTranslationConstraint(Constraint):
+class EnforceTranslation(Objective):
     """Enforce that the DNA segment sequence translates to a specific
     amino-acid sequence.
 
@@ -261,23 +324,25 @@ class EnforceTranslationConstraint(Constraint):
 
     >>> from dnachisel import *
     >>> sequence = some_dna_sequence # with a gene in segment 150-300
-    >>> constraint = EnforceTranslationConstraint(
+    >>> Objective = EnforceTranslationObjective(
     >>>     window=(150,300),
     >>>     strand = 1,
     >>>     translation= translate(sequence[150:300]) # "MKKLYQ...YNL*"
     >>> )
     >>> # OR EQUIVALENT IF THE GENE ALREADY ENCODES THE RIGHT PROTEIN:
-    >>> constraint = EnforceTranslationConstraint(
+    >>> Objective = EnforceTranslationObjective(
     >>>     window=(150,300),
     >>>     strand = 1,
     >>>     sequence = sequence
     >>> )
-
-
-
     """
 
-    def __init__(self, window, sequence=None, translation=None, strand=1):
+    best_possible_score = 1
+
+    def __init__(self, window, sequence=None, translation=None, strand=1,
+                 boost=1.0):
+
+        self.boost = boost
         self.window = window
         if translation is None:
             start, end = window
@@ -303,16 +368,16 @@ class EnforceTranslationConstraint(Constraint):
         if self.strand == -1:
             subsequence = reverse_complement(subsequence)
         success = 1 if (translate(subsequence) == self.translation) else -1
-        return ConstraintEvaluation(self, canvas, success)
+        return ObjectiveEvaluation(self, canvas, success)
 
     def localized(self, window):
         """TODO: implement the localization of this one. At the moment
-        it just voids the constraint in regions that do not overlap at all
+        it just voids the Objective in regions that do not overlap at all
         with its window."""
         if self.window is not None:
             overlap = windows_overlap(window, self.window)
             if overlap is None:
-                return VoidConstraint(parent_constraint=self)
+                return VoidObjective(parent_objective=self)
             else:
                 return self
         return self
@@ -321,16 +386,16 @@ class EnforceTranslationConstraint(Constraint):
         return "EnforceTranslation(%s)" % str(self.window)
 
 
-class GCContentConstraint(Constraint):
-    """Constraint on the local or global proportion of G/C nucleotides.
+class EnforceGCContent(Objective):
+    """Objective on the local or global proportion of G/C nucleotides.
 
     Examples
     --------
 
     >>> # Enforce global GC content between 40 and 70 percent.
-    >>> constraint = GCContentConstraint(0.4, 0.7)
+    >>> Objective = GCContentObjective(0.4, 0.7)
     >>> # Enforce 30-80 percent local GC content over 50-nucleotides windows
-    >>> constraint = GCContentConstraint(0.3, 0.8, gc_window=50)
+    >>> Objective = GCContentObjective(0.3, 0.8, gc_window=50)
 
 
     Parameters
@@ -348,17 +413,22 @@ class GCContentConstraint(Constraint):
       considered
 
     window
-      Couple (start, end) indicating that the constraint only applies to a
+      Couple (start, end) indicating that the Objective only applies to a
       subsegment of the sequence. Make sure it is bigger than ``gc_window``
       if both parameters are provided
 
     """
 
-    def __init__(self, gc_min, gc_max, gc_window=None, window=None):
+    def __init__(self, gc_min=0, gc_max=1.0, gc_objective=None,
+                 gc_window=None, window=None, boost=1.0):
+        if gc_objective is not None:
+            gc_min = gc_max = gc_objective
+        self.gc_objective = gc_objective
         self.gc_min = gc_min
         self.gc_max = gc_max
         self.gc_window = gc_window
         self.window = window
+        self.boost = boost
 
     def evaluate(self, canvas):
         window = self.window
@@ -403,8 +473,8 @@ class GCContentConstraint(Constraint):
             message = ("Failed: GC content out of bound on segments " +
                        ", ".join(["%s-%s" % (s[0], s[1])
                                   for s in breaches_windows]))
-        return ConstraintEvaluation(self, canvas, score, breaches_windows,
-                                    message=message)
+        return ObjectiveEvaluation(self, canvas, score, breaches_windows,
+                                   message=message)
 
     def localized(self, window):
         """Localize the GC content evaluation
@@ -415,7 +485,7 @@ class GCContentConstraint(Constraint):
         if self.window is not None:
             new_window = windows_overlap(self.window, window)
             if new_window is None:
-                return VoidConstraint(parent_constraint=self)
+                return VoidObjective(parent_objective=self)
         else:
             start, end = window
             if self.gc_window is not None:
@@ -432,68 +502,15 @@ class GCContentConstraint(Constraint):
         )
 
 
-class DoNotModifyConstraint(Constraint):
-    """Specify that a segment of the sequence should not be changed.
+class AvoidIDTHairpins(Objective):
 
-    ``DoNotModify`` Constraints are used to constrain the mutations space
-    of DNA Canvas.
+    best_possible_score = 0
 
-    Parameters
-    ----------
-
-    window
-      Couple ``(start, end)`` indicating the position of the segment that
-      must be left unchanged.
-    """
-
-    def __init__(self, window=None, indices=None):
-        self.window = window
-        self.indices = np.array(indices)
-
-    def evaluate(self, canvas):
-        sequence = canvas.sequence
-        original = canvas.original_sequence
-        if (self.window is None) and (self.indices is None):
-            return ConstraintEvaluation(sequence == original)
-        elif self.window is not None:
-            start, end = self.window
-            score = 1 if (sequence[start:end] == original[start:end]) else -1
-            return ConstraintEvaluation(self, canvas, score)
-        else:
-            sequence = np.fromstring(sequence, dtype="uint8")
-            original = np.fromstring(original, dtype="uint8")
-            #print  len(sequence), self.indices
-            if (sequence[self.indices] == original[self.indices]).min():
-                score = 1
-            else:
-                score = -1
-
-            return ConstraintEvaluation(self, canvas, score)
-
-    def localize(self, window):
-        """Localize the DoNotModify to the overlap of its window and the new.
-        """
-        if self.window is not None:
-            new_window = windows_overlap(self.window, window)
-            if new_window is None:
-                return VoidConstraint(parent_constraint=self)
-            return self.copy_with_changes(window=new_window)
-        else:
-            start, end = window
-            inds = self.indices
-            new_indices = inds[(start <= inds) & (inds <= end)]
-            return self.copy_with_changes(indices=new_indices)
-
-    def __repr__(self):
-        return "DoNotModify(%s)" % str(self.window)
-
-
-class NoHairpinsIDTConstraint(Constraint):
-
-    def __init__(self, stem_size=20, hairpin_window=200):
+    def __init__(self, stem_size=20, hairpin_window=200, boost=1.0):
 
         self.stem_size = stem_size
         self.hairpin_window = hairpin_window
+        self.boost = boost
 
     def evaluate(self, canvas):
         sequence = canvas.sequence
@@ -506,43 +523,24 @@ class NoHairpinsIDTConstraint(Constraint):
                 windows.append([i, i + self.hairpin_window])
         score = -len(windows)
 
-        return ConstraintEvaluation(self, canvas, score, windows=windows)
+        return ObjectiveEvaluation(self, canvas, score, windows=windows)
+
+    def localized(self):
+        # TODO: I'm pretty sure this can be localized
+        return self
 
     def __repr__(self):
-        return "NoHairpinsIDTConstraint(size=%d, window=%d)" % \
+        return "NoHairpinsIDTObjective(size=%d, window=%d)" % \
             (self.stem_size, self.hairpin_window)
 
 
-class TerminalConstraint(Constraint):
+class TerminalGCContent(TerminalObjective):
 
-    def evaluate(self, canvas):
-        sequence = canvas.sequence
-        L = len(sequence)
-        wsize = self.window_size
-        ends_sequences = [
-            ((0, wsize), sequence[:wsize]),
-            ((L - wsize, L), sequence[-wsize:])
-        ]
-        windows = []
-        for window, sequence in ends_sequences:
-            if not self.evaluate_end(sequence):
-                windows.append(window)
-
-        if windows == []:
-            message = "Passed (no breach at the ends)"
-        else:
-            message = "Failed: breaches at ends %s" % str(windows)
-
-        return ConstraintEvaluation(self, canvas, score=len(windows),
-                                    windows=windows, message=message)
-
-
-class TerminalGCContentConstraint(TerminalConstraint):
-
-    def __init__(self, gc_min, gc_max, window_size):
+    def __init__(self, gc_min, gc_max, window_size, boost=1.0):
         self.gc_min = gc_min
         self.gc_max = gc_max
         self.window_size = window_size
+        self.boost = boost
 
     def evaluate_end(self, sequence):
         return (self.gc_min < gc_content(sequence) < self.gc_max)
@@ -552,7 +550,12 @@ class TerminalGCContentConstraint(TerminalConstraint):
             (self.gc_min, self.gc_max, self.window_size)
 
 
-class SequenceLengthConstraint(Constraint):
+class SequenceLengthBounds(Objective):
+    """Checks that the sequence length is between bounds.
+
+    Quite an uncommon objective as it can't really be solved or optimized.
+    But practical at times.
+    """
 
     def __init__(self, min_length=None, max_length=None):
         self.min_length = min_length
@@ -566,13 +569,13 @@ class SequenceLengthConstraint(Constraint):
             score = L >= mini
         else:
             score = (mini <= L <= maxi)
-        return ConstraintEvaluation(self, canvas, score - 1)
+        return ObjectiveEvaluation(self, canvas, score - 1)
 
     def __repr__(self):
         return "Length(%d < L < %d)" % (self.min_length, self.max_length)
 
 
-class NoBlastMatchConstraint(Constraint):
+class AvoidBlastMatches(Objective):
     """Enforce that the given pattern is absent in the sequence.
     """
 
@@ -608,19 +611,19 @@ class NoBlastMatchConstraint(Constraint):
         ])
 
         if windows == []:
-            return ConstraintEvaluation(self, canvas, score=1,
-                                        message="Passed: no BLAST match found")
+            return ObjectiveEvaluation(self, canvas, score=1,
+                                       message="Passed: no BLAST match found")
 
-        return ConstraintEvaluation(self, canvas, score=-len(windows),
-                                    windows=windows,
-                                    message="Failed - matches at %s" % windows)
+        return ObjectiveEvaluation(self, canvas, score=-len(windows),
+                                   windows=windows,
+                                   message="Failed - matches at %s" % windows)
 
     def localized(self, window):
         """Localize the evaluation """
         if self.window is not None:
             new_window = windows_overlap(self.window, window)
             if new_window is None:
-                return VoidConstraint(parent_constraint=self)
+                return VoidObjective(parent_objective=self)
         else:
             start, end = window
             radius = self.min_align_length
@@ -629,24 +632,23 @@ class NoBlastMatchConstraint(Constraint):
         return self.copy_with_changes(window=new_window)
 
     def __repr__(self):
-        return "NoBlastMatchesConstraint%s(%s, %d+ bp, perc %d+)" % (
+        return "NoBlastMatchesObjective%s(%s, %d+ bp, perc %d+)" % (
             self.window, self.blast_db, self.min_align_length,
             self.perc_identity
         )
 
 
-class NoNonuniqueKmerConstraint(Constraint):
+class AvoidNonuniqueKmers(Objective):
     """
-    from dnachisel import *
-    import dnachisel.constraints as cst
-    sequence = random_dna_sequence(50000)
-    canvas = DnaCanvas(
-        sequence,
-        constraints= [cst.NoNonuniqueKmerConstraint(10,
-                                include_reverse_complement=True)]
-    )
-    print canvas.constraints_summary()
-"""
+        from dnachisel import *
+        sequence = random_dna_sequence(50000)
+        canvas = DnaCanvas(
+            sequence,
+            constraints= [AvoidNonuniqueKmers(10,
+                                    include_reverse_complement=True)]
+        )
+        print canvas.constraints_summary()
+    """
 
     def __init__(self, length, window=None, include_reverse_complement=False):
         self.length = length
@@ -678,11 +680,11 @@ class NoNonuniqueKmerConstraint(Constraint):
         ])
 
         if windows == []:
-            return ConstraintEvaluation(
+            return ObjectiveEvaluation(
                 self, canvas, score=1,
                 message="Passed: no nonunique %d-mer found." % self.length)
 
-        return ConstraintEvaluation(
+        return ObjectiveEvaluation(
             self, canvas, score=-len(windows),
             windows=windows,
             message="Failed, the following positions are the first occurences"
@@ -690,3 +692,53 @@ class NoNonuniqueKmerConstraint(Constraint):
 
     def __repr__(self):
         return "NoNonuniqueKmers(%d)" % (self.length)
+
+
+#
+# class GCContentObjective(Objective):
+#     """Objective to obtain the desired global GC content.
+#
+#     Parameters
+#     ----------
+#
+#     gc_content
+#       GC content to target (e.g. ``0.4``)
+#
+#     window
+#       Restrict the GC content observation to a DNA segment (start, end)
+#
+#     """
+#
+#     best_possible_score = 0
+#
+#     def __init__(self, gc_content, exponent=1.0, window=None,  boost=1.0,
+#                  subdivision_window=None):
+#         Objective.__init__(self, boost=boost)
+#         self.gc_content = gc_content
+#         self.exponent = exponent
+#         self.window = window
+#         self.subdivision_window = subdivision_window
+#
+#     def evaluate(self, canvas):
+#         window = (self.window if self.window is not None
+#                   else [0, len(canvas.sequence)])
+#         start, end = window
+#         subsequence = canvas.sequence[start: end]
+#         gc = gc_content(subsequence)
+#         score = -(abs(gc - self.gc_content) ** self.exponent)
+#         if self.subdivision_window is None:
+#             windows = [window]
+#         else:
+#             windows = subdivide_window(window, self.subdivision_window)
+#
+#         return ObjectiveEvaluation(
+#             self, canvas, score=score, windows=windows,
+#             message="scored %.02E. GC content is %.03f (%.03f wanted)" %
+#                     (score, gc, self.gc_content))
+#
+#     def __str__(self):
+#         return "GCContentObj(%.02f, %s)" % (
+#             self.gc_content,
+#             "global" if (self.window is None) else
+#             ("window: %s" % str(self.window))
+#         )

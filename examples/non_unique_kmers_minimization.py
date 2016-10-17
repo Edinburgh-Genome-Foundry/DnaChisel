@@ -17,8 +17,9 @@ to minimize this score, and we use it to optimize a coding sequence.
 """
 
 from collections import Counter
-from dnachisel.objectives import ObjectiveEvaluation, Objective
-from dnachisel import *
+from dnachisel import (EnforceTranslation, ObjectiveEvaluation, Objective,
+                       reverse_translate, random_protein_sequence,
+                       DnaCanvas)
 
 
 class MinimizeNinemersScore(Objective):
@@ -51,16 +52,16 @@ class MinimizeNinemersScore(Objective):
 sequence = reverse_translate(random_protein_sequence(300))
 canvas = DnaCanvas(
     sequence=sequence,
-    constraints=[EnforceTranslationConstraint([0, len(sequence)],
-                                              sequence=sequence)],
+    constraints=[EnforceTranslation([0, len(sequence)],
+                                    sequence=sequence)],
     objectives=[MinimizeNinemersScore()]
 )
 
 print ("\n=== Status before optimization ===")
-canvas.print_objectives_summary()
+print (canvas.objectives_summary())
 
 canvas.maximize_all_objectives_one_by_one()
 
 print ("\n=== Status after optimization ===")
-canvas.print_objectives_summary()
-canvas.print_constraints_summary(failed_only=True)
+print (canvas.objectives_summary())
+print (canvas.constraints_summary(failed_only=True))
