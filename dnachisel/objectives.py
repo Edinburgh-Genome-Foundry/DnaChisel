@@ -43,6 +43,7 @@ class ObjectiveEvaluation:
         self.objective = objective
         self.canvas = canvas
         self.score = score
+        self.passes = score >= 0
         self.windows = windows
         self.message = message
 
@@ -164,6 +165,8 @@ class CodonOptimizationObjective(Objective):
         return "CodonOptimize(%s, %s)" % (str(self.window), self.organism)
 
 def subdivide_window(window, max_span):
+    """Subdivide a window (start, end) into windows of size < max_span
+    (start, i_1), (i_1, i_2), ... (i_n, end)"""
     start, end = window
     inds = list(range(start, end, max_span))+[end]
     return zip(inds, inds[1:])

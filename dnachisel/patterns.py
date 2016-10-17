@@ -2,7 +2,6 @@ import re
 from biotools import dna_pattern_to_regexpr, is_palyndromic, reverse_complement
 from Bio.Restriction.Restriction_Dictionary import rest_dict
 
-
 class SequencePattern:
     """Pattern/ that will be looked for in a DNA sequence.
 
@@ -49,6 +48,7 @@ class SequencePattern:
         self.size = size
         self.name = name
         self.in_both_strands = in_both_strands
+
 
     def find_matches(self, sequence, window=None):
         """Return the locations where the sequence matches the expression.

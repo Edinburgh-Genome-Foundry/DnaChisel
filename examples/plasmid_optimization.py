@@ -93,10 +93,12 @@ canvas = DnaCanvas(
 print ("\n\n=== Initial Status ===")
 print (canvas.constraints_summary(failed_only=True))
 print (canvas.objectives_summary())
+import time
 
 print ("Now solving constraints...")
 canvas.solve_all_constraints_one_by_one()
 print ("Done. Now optimizing objectives...")
+
 canvas.maximize_all_objectives_one_by_one(max_random_iters=2000)
 
 print ("\n\n=== Status after optimization ===")

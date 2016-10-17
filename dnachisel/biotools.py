@@ -267,7 +267,7 @@ def blast_sequence(sequence, blast_db, word_size=4, perc_identity=80,
     p.wait()
     for i in range(3):
         try:
-            with open(xml_name,"r") as f:
+            with open(xml_name, "r") as f:
                 blast_record = NCBIXML.read(f)
             break
         except ValueError:

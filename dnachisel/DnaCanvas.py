@@ -561,7 +561,8 @@ class DnaCanvas:
         ])
         return "\n===> %s\n%s\n" % (message, objectives_texts)
 
-    def maximize_objectives_by_exhaustive_search(self, verbose=False):
+    def maximize_objectives_by_exhaustive_search(self, verbose=False,
+                                                 progress_bar=False):
         """
         """
         if not self.all_constraints_pass():
@@ -573,10 +574,13 @@ class DnaCanvas:
             )
         current_score = self.all_objectives_score_sum()
         current_best_sequence = self.sequence
-        for mutations in self.iter_mutations_space():
+        mutation_space = self.iter_mutations_space()
+        if progress_bar:
+            mutation_space = tqdm(mutation_space, desc="Mutation", leave=False)
+        for mutations in mutation_space:
             self.mutate_sequence(mutations)
             if self.all_constraints_pass():
-                score = self.all_objectives_score()
+                score = self.all_objectives_score_sum()
                 if score > current_score:
                     current_score = score
                     current_best_sequence = self.sequence
