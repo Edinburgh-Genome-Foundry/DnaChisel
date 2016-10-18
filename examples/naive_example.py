@@ -5,9 +5,10 @@ import numpy
 numpy.random.seed(123)
 
 canvas = DnaCanvas(sequence=random_dna_sequence(10000),
-                   constraints=[AvoidPattern(enzyme_pattern("BsaI")),
-                                EnforceGCContent(gc_min=0.3, gc_max=0.7,
-                                                 gc_window=50)],
+                   constraints=[
+                       AvoidPattern(enzyme_pattern("BsaI")),
+                       EnforceGCContent(gc_min=0.3, gc_max=0.7, gc_window=50)
+                   ],
                    objectives=[EnforceGCContent(gc_objective=0.4)])
 
 print ("\n\n=== Status before optimization ===")

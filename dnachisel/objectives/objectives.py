@@ -2,6 +2,7 @@
 
 import copy
 from collections import Counter, defaultdict
+import itertools
 
 import numpy as np
 
@@ -503,7 +504,8 @@ class EnforceGCContent(Objective):
 
 
 class AvoidIDTHairpins(Objective):
-
+    """
+    """
     best_possible_score = 0
 
     def __init__(self, stem_size=20, hairpin_window=200, boost=1.0):
@@ -525,7 +527,7 @@ class AvoidIDTHairpins(Objective):
 
         return ObjectiveEvaluation(self, canvas, score, windows=windows)
 
-    def localized(self):
+    def localized(self, window):
         # TODO: I'm pretty sure this can be localized
         return self
 
@@ -534,9 +536,28 @@ class AvoidIDTHairpins(Objective):
             (self.stem_size, self.hairpin_window)
 
 
-class TerminalGCContent(TerminalObjective):
+class EnforceTerminalGCContent(TerminalObjective):
+    """Enforce bounds for the GC content at the sequence's terminal ends.
 
-    def __init__(self, gc_min, gc_max, window_size, boost=1.0):
+    Parameters
+    ----------
+
+    window_size
+      Size in basepair of the two terminal ends to consider
+
+    gc_min
+      A float between 0 and 1, minimal proportion of GC that the ends should
+      contain
+
+    gc_max
+      Float between 0 and 1, maximal proportion of GC that the ends should
+      contain
+
+    boost
+      Multiplicatory factor applied to this objective.
+    """
+
+    def __init__(self, window_size, gc_min=0, gc_max=1, boost=1.0):
         self.gc_min = gc_min
         self.gc_max = gc_max
         self.window_size = window_size
@@ -591,6 +612,8 @@ class AvoidBlastMatches(Objective):
         self.window = window
 
     def evaluate(self, canvas):
+        """Return (-M) as a score, where M is the number of BLAST matches found
+        in the BLAST database."""
         window = self.window
         if window is None:
             window = (0, len(canvas.sequence))
@@ -619,7 +642,7 @@ class AvoidBlastMatches(Objective):
                                    message="Failed - matches at %s" % windows)
 
     def localized(self, window):
-        """Localize the evaluation """
+        """Localize the evaluation."""
         if self.window is not None:
             new_window = windows_overlap(self.window, window)
             if new_window is None:
@@ -694,51 +717,73 @@ class AvoidNonuniqueKmers(Objective):
         return "NoNonuniqueKmers(%d)" % (self.length)
 
 
-#
-# class GCContentObjective(Objective):
-#     """Objective to obtain the desired global GC content.
-#
-#     Parameters
-#     ----------
-#
-#     gc_content
-#       GC content to target (e.g. ``0.4``)
-#
-#     window
-#       Restrict the GC content observation to a DNA segment (start, end)
-#
-#     """
-#
-#     best_possible_score = 0
-#
-#     def __init__(self, gc_content, exponent=1.0, window=None,  boost=1.0,
-#                  subdivision_window=None):
-#         Objective.__init__(self, boost=boost)
-#         self.gc_content = gc_content
-#         self.exponent = exponent
-#         self.window = window
-#         self.subdivision_window = subdivision_window
-#
-#     def evaluate(self, canvas):
-#         window = (self.window if self.window is not None
-#                   else [0, len(canvas.sequence)])
-#         start, end = window
-#         subsequence = canvas.sequence[start: end]
-#         gc = gc_content(subsequence)
-#         score = -(abs(gc - self.gc_content) ** self.exponent)
-#         if self.subdivision_window is None:
-#             windows = [window]
-#         else:
-#             windows = subdivide_window(window, self.subdivision_window)
-#
-#         return ObjectiveEvaluation(
-#             self, canvas, score=score, windows=windows,
-#             message="scored %.02E. GC content is %.03f (%.03f wanted)" %
-#                     (score, gc, self.gc_content))
-#
-#     def __str__(self):
-#         return "GCContentObj(%.02f, %s)" % (
-#             self.gc_content,
-#             "global" if (self.window is None) else
-#             ("window: %s" % str(self.window))
-#         )
+
+class EnforceRegionsCompatibility(Objective):
+    max_possible_score = 0
+
+    def __init__(self, regions, compatibility_condition, boost=1.0):
+        self.regions = regions
+        self.compatibility_condition = compatibility_condition
+        self.boost = boost
+
+    def evaluate(self, canvas):
+        incompatible_regions_pairs = []
+        for (r1, r2) in itertools.combinations(self.regions, 2):
+            if not self.compatibility_condition(r1, r2, canvas):
+                incompatible_regions_pairs.append((r1, r2))
+
+        all_regions_with_incompatibility = [
+            region
+            for incompatibles_pair in incompatible_regions_pairs
+            for region in incompatibles_pair
+        ]
+        counter = Counter(all_regions_with_incompatibility)
+        all_regions_with_incompatibility = sorted(
+            list(set(all_regions_with_incompatibility)),
+            key=counter.get
+        )
+
+        score = -len(incompatible_regions_pairs)
+        if score == 0:
+            message = "All compatible !"
+        else:
+            message = "Found the following imcompatibilities: %s" % (
+                incompatible_regions_pairs
+            )
+        return ObjectiveEvaluation(
+            self, canvas,
+            score=score,
+            windows=all_regions_with_incompatibility,
+            message=message
+        )
+
+    def localized(self, window):
+        wstart, wend = window
+        included_regions = [
+            (a, b) for (a, b) in self.regions
+            if wstart <= a <= b <= wend
+        ]
+
+        def evaluate(canvas):
+            """Objective evaluation"""
+            # compute incompatibilities but exclude to
+            # consider pairs of regions that are both
+            # outside the current localization window
+            incompatible_regions = [
+                region
+                for region in self.regions
+                for included_region in included_regions
+                if (region != included_region) and
+                not self.compatibility_condition(
+                    included_region, region, canvas
+                )
+            ]
+            score = -len(incompatible_regions)
+            return ObjectiveEvaluation(
+                self, canvas,
+                score=score
+            )
+        return Objective(evaluate)
+
+    def __repr__(self):
+        return "CompatSeq(%s...)" % str(self.regions[0])

@@ -1,6 +1,7 @@
 """Module with collections of pre-sets objectives"""
 
-from .objectives import (AvoidPattern, EnforceGCContent, TerminalGCContent,
+from .objectives import (AvoidPattern, EnforceGCContent,
+                         EnforceTerminalGCContent,
                          AvoidIDTHairpins)
 from ..biotools import (enzyme_pattern, homopolymer_pattern, repeated_kmers)
 
@@ -19,7 +20,7 @@ PROVIDERS_CONSTRAINTS = {
         EnforceGCContent(0.25, 0.68),
         EnforceGCContent(0.28, 0.76, gc_window=100),
         EnforceGCContent(0.15, 0.90, gc_window=20),
-        TerminalGCContent(0.24, 0.76, window_size=30),
+        EnforceTerminalGCContent(window_size=30, gc_min=0.24, gc_max=0.76),
         AvoidPattern(homopolymer_pattern("A", 13)),
         AvoidPattern(homopolymer_pattern("T", 13)),
         AvoidPattern(homopolymer_pattern("G", 6)),

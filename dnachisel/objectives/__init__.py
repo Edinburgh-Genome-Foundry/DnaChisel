@@ -7,6 +7,7 @@ from .objectives import (
     DoNotModify,
     EnforceGCContent,
     EnforcePattern,
+    EnforceRegionsCompatibility,
     AvoidPattern,
     EnforceTranslation,
     SequenceLengthBounds,

@@ -29,7 +29,7 @@ class ObjectiveEvaluation:
       The Objective that was evaluated.
 
     canvas
-      The canvas that the constraint was evaluated on.
+      The canvas that the objective was evaluated on.
 
     score
       The score associated to the evaluation.
@@ -84,18 +84,19 @@ class Objective:
     best_possible_score = None
     can_be_solved_locally = False
 
-    def __init__(self, boost=1.0):
+    def __init__(self, evaluate, boost=1.0):
         self.boost = boost
+        self.evaluate = evaluate
 
-    def evaluate(self, canvas):
-        """Evaluate the objective on the provided canvas.
-
-        Returns a ``ObjectiveEvaluation`` object indicating whether the
-        objective passed, the score , the windows on which to focus searches
-        in case the constraint failed and a string message
-        summarizing the evaluation (see ``ObjectiveEvaluation``).
-        """
-        pass
+    # def evaluate(self, canvas):
+    #     """Evaluate the objective on the provided canvas.
+    #
+    #     Returns a ``ObjectiveEvaluation`` object indicating whether the
+    #     objective passed, the score , the windows on which to focus searches
+    #     in case the objective failed and a string message
+    #     summarizing the evaluation (see ``ObjectiveEvaluation``).
+    #     """
+    #     pass
 
     def localized(self, window):
         """Return a modified version of the objective for the case where
@@ -105,10 +106,10 @@ class Objective:
         only making local mutations to destroy a restriction site, then we only
         need to check the local GC content around the restriction site after
         each mutation (and not compute it for the whole sequence), so
-        ``GCContentTarget.localised(window)`` will return a constraint
+        ``EnforceGCContent.localized(window)`` will return an objective
         that only looks for GC content around the provided window.
 
-        If a constraint concerns a DNA segment that is completely disjoint from
+        If an objective concerns a DNA segment that is completely disjoint from
         the provided window, this must return a ``VoidConstraint``.
 
         Must return an object of class ``Constraint``.
@@ -116,9 +117,9 @@ class Objective:
         return self
 
     def copy_with_changes(self, **kwargs):
-        new_constraint = copy.deepcopy(self)
-        new_constraint.__dict__.update(kwargs)
-        return new_constraint
+        new_objective = copy.deepcopy(self)
+        new_objective.__dict__.update(kwargs)
+        return new_objective
 
 class VoidObjective(Objective):
     """Void Objectives are a special case of Objectives that always pass.
@@ -148,7 +149,19 @@ class VoidObjective(Objective):
         return "Voided %s" % repr(self.parent_objective)
 
 class PatternObjective(Objective):
-    """Class for Objectives such as presence or absence of a pattern."""
+    """Class for Objectives such as presence or absence of a pattern.
+
+    The particularity of the PatternObjectives is that they will either infer
+    or ask for the length of the associated pattern and use this to localize
+    the objective efficiently when performing local optimization or solving.
+
+    Parameters
+    ----------
+
+    pattern
+
+
+    """
     can_be_solved_locally = False
 
     def __init__(self, pattern, window=None, boost=1.0):
@@ -156,6 +169,8 @@ class PatternObjective(Objective):
         self.window = window
 
     def localized(self, window):
+        """Localize the pattern to the given window. Taking into account the
+        objective's own window, and the size of the pattern."""
         pattern_size = self.pattern.size
         if self.window is not None:
             overlap = windows_overlap(self.window, window)
@@ -166,10 +181,8 @@ class PatternObjective(Objective):
                 ostart, oend = overlap
                 if ostart == start:
                     new_window = [start, min(end, oend + pattern_size)]
-                    # new_window = [start, oend + pattern_size]
-                else:  # oend = end
+                else:
                     new_window = [max(start, ostart - pattern_size), end]
-                    # new_window = [ostart - pattern_size, end]
         else:
             start, end = window
             margin = pattern_size - 1
@@ -178,8 +191,13 @@ class PatternObjective(Objective):
         return self.copy_with_changes(window=new_window)
 
 class TerminalObjective(Objective):
-    """These objectives should have a `window_size` and a `evaluate_end`
-    method"""
+    """Objectives that apply in the same way to both ends of the sequence.
+
+    These are particularly useful for modeling constraints from providers
+    who have terminal-ends constraints.
+
+    Subclasses of these objectives should have a `window_size` and a
+    `evaluate_end` method"""
 
     def evaluate(self, canvas):
         sequence = canvas.sequence
