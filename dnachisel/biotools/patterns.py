@@ -1,5 +1,6 @@
 import re
-from biotools import dna_pattern_to_regexpr, is_palyndromic, reverse_complement
+from .biotools import (dna_pattern_to_regexpr, is_palyndromic,
+                       reverse_complement)
 from Bio.Restriction.Restriction_Dictionary import rest_dict
 
 class SequencePattern:

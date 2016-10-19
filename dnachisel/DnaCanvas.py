@@ -104,11 +104,11 @@ class DnaCanvas:
          position of a single nucleotide, or a list/couple ``(start, end)``
          indicating a whole sub-segment.
         """
-        if hasattr(location, "__iter__"):
+        if np.isscalar(location):
+            return self.sequence[location]
+        else:
             start, end = location
             return self.sequence[start:end]
-        else:
-            return self.sequence[location]
 
     # MUTATIONS
 
@@ -162,21 +162,19 @@ class DnaCanvas:
                     ).nonzero()[0]
 
                     def array_subsequence(seq, inds):
-                        return np.array([seq[i] for i in inds])
+                        return np.array([ord(seq[i]) for i in inds])
+                    def codon_is_compatible(codon):
+                        a1 = array_subsequence(seq_codon,
+                                               local_immutable_unibases)
+                        a2 = array_subsequence(codon,
+                                               local_immutable_unibases)
+                        return (a1 == a2).min() == 1
+
                     if len(local_immutable_unibases):
                         reachable_possible_codons = [
                             codon
                             for codon in possible_codons
-                            if all(
-                                array_subsequence(
-                                    seq_codon,
-                                    local_immutable_unibases
-                                ) ==
-                                array_subsequence(
-                                    codon,
-                                    local_immutable_unibases
-                                )
-                            )
+                            if codon_is_compatible(codon)
                         ]
                         if reachable_possible_codons == []:
                             raise NoSolutionFoundError(
@@ -223,7 +221,7 @@ class DnaCanvas:
         should be modified through mutations of the form
         ``self.sequence[location1] = new_sequence1``.
         """
-        locs = self.possible_mutations.keys()
+        locs = list(self.possible_mutations.keys())
         if n_mutations == 1:
             indices = [np.random.randint(0, len(locs), 1)[0]]
         else:
@@ -252,16 +250,18 @@ class DnaCanvas:
         canvas' sequence should be modified through mutations of the form
         ``self.sequence[location1] = new_sequence1``.
         """
-        sequence_buffer = ctypes.create_string_buffer(self.sequence)
+        sequence_buffer = np.fromstring(self.sequence, dtype=np.uint8)
         for mutation in mutations:
             if mutation is not None:
                 ind, seq = mutation
-                if isinstance(ind, int):
-                    sequence_buffer[ind] = seq
+                if np.isscalar(ind):
+                    sequence_buffer[ind] = ord(str(seq))
                 else:
                     start, end = ind
-                    sequence_buffer[start:end] = seq
-        self.sequence = sequence_buffer.value
+                    sequence_buffer[start:end] = np.fromstring(str(seq),
+                                                               dtype=np.uint8)
+        self.sequence = sequence_buffer.tostring().decode("utf8")
+
 
      # CONSTRAINTS
 
@@ -599,7 +599,7 @@ class DnaCanvas:
             summary = self.constraints_summary()
             raise ValueError(summary + "Optimization can only be done when all"
                              " constraints are verified")
-        mutations_locs = self.possible_mutations.keys()
+        mutations_locs = list(self.possible_mutations.keys())
         score = self.all_objectives_score_sum()
         range_iters = range(max_iter)
         if progress_bar:

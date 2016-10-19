@@ -9,7 +9,7 @@ from Bio.Seq import Seq
 from Bio.Blast.Applications import NcbiblastnCommandline
 from Bio.Blast import NCBIXML
 
-import biotables
+from .biotables import CODONS_SEQUENCES, NUCLEOTIDE_TO_REGEXPR
 
 
 def complement(dna_sequence):
@@ -99,7 +99,7 @@ def reverse_translate(protein_sequence):
     amino-acid (so it is deterministic but no codon-optimization is done).
     """
     return "".join([
-        biotables.CODONS_SEQUENCES[aa][0]
+        CODONS_SEQUENCES[aa][0]
         for aa in protein_sequence
     ])
 
@@ -116,7 +116,7 @@ def dna_pattern_to_regexpr(dna_pattern):
     ``"ATT[A|T|G|C][A|T|G|C]"``.
     """
     return "".join([
-        biotables.NUCLEOTIDE_TO_REGEXPR[n]
+        NUCLEOTIDE_TO_REGEXPR[n]
         for n in dna_pattern
     ])
 
