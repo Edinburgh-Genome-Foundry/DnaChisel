@@ -19,7 +19,7 @@ to minimize this score, and we use it to optimize a coding sequence.
 from collections import Counter
 from dnachisel import (EnforceTranslation, ObjectiveEvaluation, Objective,
                        reverse_translate, random_protein_sequence,
-                       DnaCanvas)
+                       DnaOptimizationProblem)
 
 
 class MinimizeNinemersScore(Objective):
@@ -50,7 +50,7 @@ class MinimizeNinemersScore(Objective):
 
 
 sequence = reverse_translate(random_protein_sequence(300))
-canvas = DnaCanvas(
+canvas = DnaOptimizationProblem(
     sequence=sequence,
     constraints=[EnforceTranslation([0, len(sequence)],
                                     sequence=sequence)],

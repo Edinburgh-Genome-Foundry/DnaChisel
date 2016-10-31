@@ -4,7 +4,7 @@ import numpy
 # We setup the randomizer to always get the same sequence
 numpy.random.seed(123)
 
-canvas = DnaCanvas(sequence=random_dna_sequence(10000),
+canvas = DnaOptimizationProblem(sequence=random_dna_sequence(10000),
                    constraints=[
                        AvoidPattern(enzyme_pattern("BsaI")),
                        EnforceGCContent(gc_min=0.3, gc_max=0.7, gc_window=50)

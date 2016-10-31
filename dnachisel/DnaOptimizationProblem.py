@@ -1,6 +1,6 @@
-"""Define DnaCanvas.
+"""Define the DnaOptimizationProblem class.
 
-DnaCanvas is where the whole problem is defined: sequence,
+DnaOptimizationProblem is where the whole problem is defined: sequence,
 constraints, objectives.
 """
 
@@ -18,13 +18,14 @@ from .objectives.objectives import (DoNotModify, EnforcePattern,
 
 from tqdm import tqdm
 
-
 class NoSolutionFoundError(Exception):
+    """Exception returned when a DnaOptimizationProblem fails at resolving
+    the constraints, possibly because the constraints are unsatisfiable.
+    """
     pass
 
-
-class DnaCanvas:
-    """A DNA Canvas specifies a constrained DNA optimization problem.
+class DnaOptimizationProblem:
+    """Problem specifications: sequence, constraints, optimization objectives.
 
     The original constraints, objectives, and original sequence of the problem
     are stored in the DNA Canvas. This class also has methods to display
@@ -35,7 +36,7 @@ class DnaCanvas:
     --------
 
     >>> from dnachisel import *
-    >>> canvas = DnaCanvas(
+    >>> canvas = DnaOptimizationProblem(
     >>>     sequence = "ATGCGTGTGTGC...",
     >>>     constraints = [constraint1, constraint2, ...],
     >>>     objectives = [objective1, objective2, ...]
@@ -122,10 +123,10 @@ class DnaCanvas:
         """Compute all possible mutations that can be applied to the sequence.
 
         The result of the computations is stored in ``self.possible_mutations``
-        (see ``DnaCanvas`` documentation).
+        (see ``DnaOptimizationProblem`` documentation).
 
         The possible mutations are constrained by the ``constraints`` of the
-        DnaCanvas with respect to the following rules:
+        DnaOptimizationProblem with respect to the following rules:
 
         - ``DoNotModify``  constraints disable mutations for the nucleotides of
           the concerned segments.
@@ -449,7 +450,7 @@ class DnaCanvas:
                     ]
                 else:
                     passing_localized_constraints = []
-                localized_canvas = DnaCanvas(
+                localized_canvas = DnaOptimizationProblem(
                     sequence=self.sequence,
                     constraints=[
                         DoNotModify([0, do_not_modify_window[0]]),
@@ -662,7 +663,7 @@ class DnaCanvas:
                     for _objective in self.objectives
                 ]
 
-            localized_canvas = DnaCanvas(
+            localized_canvas = DnaOptimizationProblem(
                 sequence=self.sequence,
                 constraints=[
                     _constraint.localized(do_not_modify_window)

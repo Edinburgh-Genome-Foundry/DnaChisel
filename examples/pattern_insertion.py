@@ -6,11 +6,11 @@ from dnachisel import *
 protein_sequence = random_protein_sequence(length=300, seed=123)
 dna_sequence = reverse_translate(protein_sequence)
 
-canvas = DnaCanvas(
+canvas = DnaOptimizationProblem(
     sequence=dna_sequence,
     constraints = [
-        NoPatternConstraint(homopolymer_pattern("A",5)),
-        NoPatternConstraint(enzyme_pattern("HindIII")),
+        AvoidPattern(homopolymer_pattern("A",5)),
+        AvoidPattern(enzyme_pattern("HindIII")),
         EnforceTranslationConstraint(window=[0, len(dna_sequence)],
                                      translation=protein_sequence),
     ]

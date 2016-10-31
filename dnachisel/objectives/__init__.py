@@ -11,6 +11,6 @@ from .objectives import (
     AvoidPattern,
     EnforceTranslation,
     SequenceLengthBounds,
-    AvoidNonuniqueKmers,
+    AvoidNonuniqueSegments,
     AvoidBlastMatches,
 )

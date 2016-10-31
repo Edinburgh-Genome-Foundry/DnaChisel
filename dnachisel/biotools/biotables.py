@@ -1,6 +1,4 @@
 """This module provides useful biological tales as Python dictionnaries.
-
-
 """
 
 from collections import defaultdict

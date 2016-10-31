@@ -49,12 +49,12 @@ CDS_list = [
 # DEFINE ALL THE CONSTRAINTS
 
 GEN9_constraints = [
-    NoPatternConstraint(enzyme_pattern("BsaI")),
-    NoPatternConstraint(enzyme_pattern("AarI")),
-    NoPatternConstraint(homopolymer_pattern("A", 9)),
-    NoPatternConstraint(homopolymer_pattern("T", 9)),
-    NoPatternConstraint(homopolymer_pattern("G", 6)),
-    NoPatternConstraint(homopolymer_pattern("C", 9)),
+    AvoidPattern(enzyme_pattern("BsaI")),
+    AvoidPattern(enzyme_pattern("AarI")),
+    AvoidPattern(homopolymer_pattern("A", 9)),
+    AvoidPattern(homopolymer_pattern("T", 9)),
+    AvoidPattern(homopolymer_pattern("G", 6)),
+    AvoidPattern(homopolymer_pattern("C", 9)),
     GCContentConstraint(0.4, 0.65),
     GCContentConstraint(0.25, 0.80, gc_window=50)
 ]
@@ -84,7 +84,7 @@ objectives = [GCContentObjective(0.51, boost=10000)] + [
 
 # DEFINE AND SOLVE THE PROBLEM
 
-canvas = DnaCanvas(
+canvas = DnaOptimizationProblem(
     sequence=sequence,
     constraints=GEN9_constraints + CDS_constraints,
     objectives=objectives
