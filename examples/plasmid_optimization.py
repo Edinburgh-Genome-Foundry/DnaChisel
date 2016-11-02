@@ -82,7 +82,7 @@ objectives = [EnforceGCContent(0.51, boost=10000)] + [
 
 # DEFINE AND SOLVE THE PROBLEM
 
-canvas = DnaCanvas(
+canvas = DnaOptimizationProblem(
     sequence=sequence,
     constraints=GEN9_constraints + CDS_constraints,
     objectives=objectives

@@ -1,8 +1,9 @@
-from .DnaCanvas import DnaCanvas, NoSolutionFoundError
+from .DnaOptimizationProblem import (DnaOptimizationProblem,
+                                     NoSolutionFoundError)
 
 from .objectives import (
     AvoidBlastMatches,
-    AvoidNonuniqueKmers,
+    AvoidNonuniqueSegments,
     AvoidPattern,
     CodonOptimize,
     DoNotModify,

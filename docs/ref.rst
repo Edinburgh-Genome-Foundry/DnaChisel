@@ -3,33 +3,32 @@
 DnaChisel Reference manual
 ==========================
 
-DnaCanvas
----------
+DnaOptimizationProblem
+----------------------
 
-.. autoclass:: dnachisel.DnaCanvas
-   :members:
-
-Constraints
------------
-
-.. automodule:: dnachisel.constraints
+.. autoclass:: dnachisel.DnaOptimizationProblem
    :members:
 
 Objectives
 -----------
 
-.. automodule:: dnachisel.objectives
+.. automodule:: dnachisel.objectives.Objective
    :members:
+
+.. automodule:: dnachisel.objectives.objectives
+   :members:
+
 
 
 Patterns
 ---------
 
-.. automodule:: dnachisel.patterns
+.. automodule:: dnachisel.biotools.patterns
    :members:
 
 
 Biotools
 --------
-.. automodule:: dnachisel.biotools
+
+.. automodule:: dnachisel.biotools.biotools
   :members:

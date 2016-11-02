@@ -14,7 +14,7 @@ class SequencePattern:
     -------
     >>> expression = "A[ATGC]{3,}"
     >>> pattern = SequencePattern(expression)
-    >>> constraint = NoPatternConstraint(pattern)
+    >>> constraint = AvoidPattern(pattern)
 
     Parameters
     ----------
@@ -144,7 +144,7 @@ def enzyme_pattern(enzyme_name):
     --------
 
     >>> pattern = enzyme_pattern("BsaI") # returns DnaNotationPattern("GGTCTC")
-    >>> constraint = NoPatternConstraint(pattern)
+    >>> constraint = AvoidPattern(pattern)
 
     """
     enzyme_site = rest_dict[enzyme_name]["site"]
@@ -158,7 +158,7 @@ def repeated_kmers(kmer_size, n_repeats):
     --------
 
     >>> pattern = repeated_kmers(2, 5) # Result will match e.g. ACACACACAC
-    >>> constraint = NoPatternConstraint(pattern)
+    >>> constraint = AvoidPattern(pattern)
     """
 
     return SequencePattern(

@@ -17,6 +17,31 @@ from .Objective import (Objective, PatternObjective, TerminalObjective,
 
 class AvoidBlastMatches(Objective):
     """Enforce that the given pattern is absent in the sequence.
+
+    Uses NCBI Blast+. Only local BLAST is supported/tested as for now
+
+    Parameters
+    ----------
+
+    blast_db
+      Path to a local BLAST database. These databases can be obtained with
+      NCBI's `makeblastdb`. Omit the extension, e.g. `ecoli_db/ecoli_db`.
+
+    word_size
+      Word size used by the BLAST algorithm
+
+    perc_identity
+      Minimal percentage of identity for BLAST matches. 100 means that only
+      perfect matches are considered.
+
+    num_alignments
+      Number alignments
+
+    num_threads
+      Number of threads/CPU cores to use for the BLAST algorithm.
+
+    min_align_length
+      Minimal length that an alignment should have to be considered.
     """
 
     def __init__(self, blast_db, word_size=4, perc_identity=100,
@@ -80,9 +105,29 @@ class AvoidBlastMatches(Objective):
         )
 
 
+
+
 class AvoidIDTHairpins(Objective):
+    """Avoid Hairpin patterns as defined by the IDT guidelines.
+
+    A hairpin is defined by a sequence segment which has a reverse complement
+    "nearby" in a given window.
+
+    Parameters
+    ----------
+
+    stem_size
+      Size of the stem of a hairpin, i.e. the length of the sequence which
+      should have a reverse complement nearby to be considered a hairpin.
+
+    hairpin_window
+      The window in which the stem's reverse complement should be searched for.
+
+    boost
+      Multiplicative factor, importance of this objective in a multi-objective
+      optimization.
     """
-    """
+
     best_possible_score = 0
 
     def __init__(self, stem_size=20, hairpin_window=200, boost=1.0):
@@ -164,6 +209,80 @@ class AvoidNonuniqueKmers(Objective):
             windows=windows,
             message="Failed, the following positions are the first occurences"
                     "of non-unique kmers %s" % windows)
+
+    def __repr__(self):
+        return "NoNonuniqueKmers(%d)" % (self.length)
+
+
+
+class AvoidNonuniqueSegments(Objective):
+    """Avoid sub-sequence which have repeats elsewhere in the sequence.
+
+    Parameters
+    ----------
+
+    length
+      Minimal length of sequences to be considered repeats
+
+    window
+      Segment of the sequence in which to look for repeats. If None, repeats
+      are searched in the full sequence.
+
+    include_reverse_complement
+      If True, the sequence repeats are also searched for in the reverse
+      complement of the sequence (or sub sequence if `window` is not None).
+
+    Examples
+    --------
+
+    >>> from dnachisel import *
+    >>> sequence = random_dna_sequence(50000)
+    >>> constraint= AvoidNonuniqueSegments(10, include_reverse_complement=True)
+    >>> canvas = DnaOptimizationProblem(sequence, constraints= [contraint])
+    >>> print (canvas.constraints_summary())
+    """
+
+    def __init__(self, length, window=None, include_reverse_complement=False):
+        self.length = length
+        self.window = window
+        self.include_reverse_complement = include_reverse_complement
+
+    def evaluate(self, canvas):
+        """Return 1 if the sequence has no repeats, else -N where N is the
+        number of non-unique segments in the sequence."""
+        window = self.window
+        if window is None:
+            window = (0, len(canvas.sequence))
+        wstart, wend = window
+        sequence = canvas.sequence[wstart:wend]
+        rev_complement = reverse_complement(sequence)
+        kmers_locations = defaultdict(lambda: [])
+        for i in range(len(sequence) - self.length):
+            start, end = i, i + self.length
+            kmers_locations[sequence[start:end]].append((start, end))
+        if self.include_reverse_complement:
+            for i in range(len(sequence) - self.length):
+                start, end = i, i + self.length
+                kmers_locations[rev_complement[start:end]].append(
+                    (len(sequence) - end, len(sequence) - start)
+                )
+
+        windows = sorted([
+            min(positions_list, key=lambda p: p[0])
+            for positions_list in kmers_locations.values()
+            if len(positions_list) > 1
+        ])
+
+        if windows == []:
+            return ObjectiveEvaluation(
+                self, canvas, score=1,
+                message="Passed: no nonunique %d-mer found." % self.length)
+
+        return ObjectiveEvaluation(
+            self, canvas, score=-len(windows),
+            windows=windows,
+            message="Failed, the following positions are the first occurences"
+                    "of non-unique segments %s" % windows)
 
     def __repr__(self):
         return "NoNonuniqueKmers(%d)" % (self.length)
@@ -599,7 +718,6 @@ class EnforceTerminalGCContent(TerminalObjective):
         return "Terminal(%.02f < gc < %.02f, window: %d)" % \
             (self.gc_min, self.gc_max, self.window_size)
 
-
 class EnforceTranslation(Objective):
     """Enforce that the DNA segment sequence translates to a specific
     amino-acid sequence.
@@ -710,6 +828,7 @@ class EnforceTranslation(Objective):
 class MinimizeDifferences(Objective):
     """Objective to minimize the differences to a given sequence.
 
+
     This can be used to enforce "conservative" optimization, in which we try
     to minimize the changes from the original sequence
 
@@ -736,7 +855,7 @@ class MinimizeDifferences(Objective):
     >>> from dnachisel import *
     >>> sequence = random_dna_sequence(length=10000)
     >>> # Fix the sequence's local gc content while minimizing changes.
-    >>> canvas = DnaCanvas(
+    >>> canvas = DnaOptimizationProblem(
     >>>     sequence = sequence,
     >>>     Objectives = [GCContentObjective(0.3,0.6, gc_window=50)],
     >>>     objective = [MinimizeDifferencesObjective(
@@ -744,6 +863,7 @@ class MinimizeDifferences(Objective):
     >>> )
     >>> canvas.solve_all_Objectives_one_by_one()
     >>> canvas.maximize_all_objectives_one_by_one()
+
     """
 
     best_possible_score = 0
@@ -775,23 +895,33 @@ class MinimizeDifferences(Objective):
         )
 
 
+
 class SequenceLengthBounds(Objective):
     """Checks that the sequence length is between bounds.
 
     Quite an uncommon objective as it can't really be solved or optimized.
-    But practical at times.
-    """
+    But practical at times, as part of a list of constraints to verify.
 
-    def __init__(self, min_length=None, max_length=None):
+    Parameters
+    ----------
+
+    min_length
+      Minimal allowed sequence length in nucleotides
+
+    max_length
+      Maximal allowed sequence length in nucleotides. None means no bound.
+    """
+    best_possible_score = 0
+
+    def __init__(self, min_length=0, max_length=None):
         self.min_length = min_length
         self.max_length = max_length
 
     def evaluate(self, canvas):
+        """Return 0 if the sequence length is between the bounds, else -1"""
         L, mini, maxi = len(canvas.sequence), self.min_length, self.max_length
-        if mini is None:
-            score = L <= maxi
-        elif maxi is None:
-            score = L >= mini
+        if maxi is None:
+            score = (L >= mini)
         else:
             score = (mini <= L <= maxi)
         return ObjectiveEvaluation(self, canvas, score - 1)

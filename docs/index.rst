@@ -40,9 +40,9 @@ Here is the Python code to solve the problem with DnaChisel:
 
     # DEFINE THE OPTIMIZATION PROBLEM
 
-    canvas = DnaCanvas(
+    canvas = DnaOptimizationProblem(
         sequence=random_dna_sequence(length=10000),
-        constraints=[ NoPatternConstraint(enzyme_pattern("BsaI")),
+        constraints=[ AvoidPattern(enzyme_pattern("BsaI")),
                       GCContentConstraint(0.3, 0.7, gc_window=50)],
         objectives = [GCContentObjective(0.4)]
     )
@@ -54,8 +54,8 @@ Here is the Python code to solve the problem with DnaChisel:
 
     # PRINT SUMMARIES TO CHECK THE CONSTRAINTS AND OBJECTIVES
 
-    canvas.print_constraints_summary()
-    canvas.print_objectives_summary()
+    print(canvas.constraints_summary())
+    print(canvas.objectives_summary())
 
 This prints the following result, indicating that all constraints pass in the end
 and the objective has been (very well) optimized:
