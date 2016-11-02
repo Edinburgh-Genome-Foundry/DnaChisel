@@ -49,14 +49,14 @@ CDS_list = [
 # DEFINE ALL THE CONSTRAINTS
 
 GEN9_constraints = [
-    NoPatternConstraint(enzyme_pattern("BsaI")),
-    NoPatternConstraint(enzyme_pattern("AarI")),
-    NoPatternConstraint(homopolymer_pattern("A", 9)),
-    NoPatternConstraint(homopolymer_pattern("T", 9)),
-    NoPatternConstraint(homopolymer_pattern("G", 6)),
-    NoPatternConstraint(homopolymer_pattern("C", 9)),
-    GCContentConstraint(0.4, 0.65),
-    GCContentConstraint(0.25, 0.80, gc_window=50)
+    AvoidPattern(enzyme_pattern("BsaI")),
+    AvoidPattern(enzyme_pattern("AarI")),
+    AvoidPattern(homopolymer_pattern("A", 9)),
+    AvoidPattern(homopolymer_pattern("T", 9)),
+    AvoidPattern(homopolymer_pattern("G", 6)),
+    AvoidPattern(homopolymer_pattern("C", 9)),
+    EnforceGCContent(0.4, 0.65),
+    EnforceGCContent(0.25, 0.80, gc_window=50)
 ]
 
 CDS_constraints = []
@@ -65,19 +65,17 @@ for (start, end, strand) in CDS_list:
         promoter_region = (start - 30, start - 1)
     else:
         promoter_region = (end + 1, end + 30)
-    keep_promoter_region = DoNotModifyConstraint(promoter_region)
-    keep_translation = EnforceTranslationConstraint((start, end),
-                                                    sequence=sequence,
-                                                    strand=strand)
+    keep_promoter_region = DoNotModify(promoter_region)
+    keep_translation = EnforceTranslation((start, end),
+                                          sequence=sequence,
+                                          strand=strand)
     CDS_constraints += [keep_promoter_region, keep_translation]
 
 
 # DEFINE ALL THE OBJECTIVES
 
-objectives = [GCContentObjective(0.51, boost=10000)] + [
-    CodonOptimizationObjective("E. coli",
-                               window=(start, end),
-                               strand=strand)
+objectives = [EnforceGCContent(0.51, boost=10000)] + [
+    CodonOptimize("E. coli", window=(start, end), strand=strand)
     for (start, end, strand) in CDS_list
 ]
 

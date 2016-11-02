@@ -4,6 +4,7 @@ from .objectives import (
     AvoidBlastMatches,
     AvoidNonuniqueKmers,
     AvoidPattern,
+    CodonOptimize,
     DoNotModify,
     EnforceGCContent,
     EnforcePattern,
