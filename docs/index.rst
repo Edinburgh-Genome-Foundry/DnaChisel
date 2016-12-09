@@ -1,38 +1,31 @@
-.. raw:: html
 
-    <a href="https://twitter.com/share" class="twitter-share-button"
-    data-text="DnaChisel - A Python module for printing with living matter" data-size="large" data-hashtags="Bioprinting">Tweet
-    </a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
-    if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
-    fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-    </script>
-    <iframe src="http://ghbtns.com/github-btn.html?user=Edinburgh-Genome-Foundry&repo=dnachisel&type=watch&count=true&size=large"
-    allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30px" margin-bottom="30px"></iframe>
 
-DNA Chisel
-==========
 
-Dna Chisel is a Python library to modify the nucleotides of DNA sequences with respect to a set of
-constraints and optimization objectives.
+DNA Chisel Documentation
+=========================
 
-It can be used for many purposes, such as codon-optimizing the genes of a sequence
-for a particular micro-organism, modifying a sequence to meet the constraints of
-a DNA provider while preserving genes and other sensible patterns, or inserting
-a pattern in a sequence using only synonymous mutations.
 
-DNA Chisel takes advantage of libraries from the Python ecosystem,
-in particular the Biopython library which allows to read from and
-write to the most common formats (GenBank, FASTA,...).
+.. image:: _static/images/title.png
+   :width: 500px
+   :align: center
+
+
+Dna Chisel is a Python library to modify the nucleotides of DNA sequences with respect to
+constraints and optimization objectives. Potential use cases include:
+
+- Codon-optimization of a sequence for a particular micro-organism.
+- Modification of a sequence to meet the constraints of a DNA manufacturer.
+- Insertion of patterns in a sequence through non-functionally altering modifications.
+
 
 Example of use
 ---------------
 
-In this basic example we optimize a sequence with respect to the following constraints and objectives:
+Let us optimize a sequence with respect to the following objectives:
 
-- **Constraint 1:** The sequence should contain no restriction site for BsaI (GGTCTC).
-- **Constraint 2:** The local GC content of every 50-nucleotide subsequence should be between 30% and 70%.
-- **Objective 1:** The sequence's  global GC content should be 40% (or as close as possible)
+- The sequence should contain no restriction site for BsaI (GGTCTC).
+- The GC content should be between 30% and 70% on every 50-nucleotide subsequence.
+- The sequence's  global GC content should be 40% (or as close as possible)
 
 Here is the Python code to solve the problem with DnaChisel:
 ::
@@ -43,7 +36,7 @@ Here is the Python code to solve the problem with DnaChisel:
     canvas = DnaOptimizationProblem(
         sequence=random_dna_sequence(length=10000),
         constraints=[ AvoidPattern(enzyme_pattern("BsaI")),
-                      GCContentConstraint(0.3, 0.7, gc_window=50)],
+                      GCContentObjective(0.3, 0.7, gc_window=50)],
         objectives = [GCContentObjective(0.4)]
     )
 
@@ -136,6 +129,19 @@ Contribute
 
 DnaChisel is an open-source library originally written at the Edinburgh Genome Foundry by Zulko_.
 It is released on Github under the MIT licence, everyone is welcome to contribute.
+
+.. raw:: html
+
+       <a href="https://twitter.com/share" class="twitter-share-button"
+       data-text="DnaChisel - A Python module for printing with living matter" data-size="large" data-hashtags="Bioprinting">Tweet
+       </a>
+       <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+       if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
+       fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+       </script>
+       <iframe src="http://ghbtns.com/github-btn.html?user=Edinburgh-Genome-Foundry&repo=dnachisel&type=watch&count=true&size=large"
+       allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30px" margin-bottom="30px"></iframe>
+
 
 
 
