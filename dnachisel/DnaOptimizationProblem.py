@@ -94,12 +94,21 @@ class DnaOptimizationProblem:
 
         self.sequence = sequence
         self.original_sequence = sequence
+        self.possible_mutations_dict = None
         self.constraints = [] if constraints is None else constraints
         self.objectives = [] if objectives is None else objectives
-        self.possible_mutations_dict = None
 
+        self.constraints = [
+            constraint.initialize_problem(self, role="constraint")
+            for constraint in self.constraints
+        ]
+        self.objectives = [
+            objective.initialize_problem(self, role="objective")
+            for objective in self.objective
+        ]
+        
     def extract_subsequence(self, location):
-        """Return the subsequence (a string) atthe given location).
+        """Return the subsequence (a string) at the given location).
 
          The ``location`` can be either an index (an integer) indicating the
          position of a single nucleotide, or a list/couple ``(start, end)``

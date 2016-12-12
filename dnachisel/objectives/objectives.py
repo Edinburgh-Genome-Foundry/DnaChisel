@@ -764,25 +764,30 @@ class EnforceTranslation(Objective):
 
     best_possible_score = 1
 
-    def __init__(self, window, sequence=None, translation=None, strand=1,
-                 boost=1.0):
-
-        self.boost = boost
-        self.window = window
-        if translation is None:
-            start, end = window
-            subsequence = sequence[start:end]
-            if strand == -1:
-                subsequence = reverse_complement(subsequence)
-            translation = translate(subsequence)
-        self.translation = translation
-        self.strand = strand
+    def __init__(self, window, strand=1, translation=None, boost=1.0):
         window_size = window[1] - window[0]
         if window_size != 3 * len(translation):
             raise ValueError(
                 ("Window size (%d bp) incompatible with translation (%d aa)") %
                 (window_size, len(translation))
             )
+
+        self.boost = boost
+        self.window = window
+        self.translation = translation
+        self.strand = strand
+        self.initialize_translation_from_problem = (translation is None)
+
+    def initialize_problem(self, problem, role):
+        if not self.initialize_translation_from_problem:
+            return self
+        start, end = self.window
+        subsequence = problem.sequence[start:end]
+        if self.strand == -1:
+            subsequence = reverse_complement(subsequence)
+        translation = translate(subsequence)
+        return self.copy_with_changes(translation=translation)
+
 
     def evaluate(self, canvas):
         window = self.window
@@ -798,9 +803,6 @@ class EnforceTranslation(Objective):
 
     def localized(self, window):
         """"""
-        # TODO: implement the localization of this one. At the moment
-        # it just voids the Objective in regions that do not overlap at all
-        # with its window.
         if self.window is not None:
             overlap = windows_overlap(window, self.window)
             if overlap is None:
@@ -868,23 +870,28 @@ class MinimizeDifferences(Objective):
 
     best_possible_score = 0
 
-    def __init__(self, window=None, target_sequence=None,
-                 original_sequence=None, boost=1.0):
+    def __init__(self, window=None, target_sequence=None, boost=1.0):
         self.boost = boost
         self.window = window
         if target_sequence is None:
-            target_sequence = (original_sequence if window is None else
-                               original_sequence[window[0]:window[1]])
+            self.window = window
         self.reference_sequence = target_sequence
 
-    def evaluate(self, canvas):
+    def initialize_problem(self, problem, role):
+        if not self.initialize_sequence_from_problem:
+            return self
+        start, end = self.window
+        reference_sequence = problem.sequence[start:end]
+        return self.copy_with_changes(reference_sequence=reference_sequence)
+
+    def evaluate(self, problem):
         window = (self.window if self.window is not None
-                  else [0, len(canvas.sequence)])
+                  else [0, len(problem.sequence)])
         start, end = window
-        subsequence = canvas.sequence[start: end]
+        subsequence = problem.sequence[start: end]
         diffs = - sequences_differences(subsequence, self.reference_sequence)
         return ObjectiveEvaluation(
-            self, canvas, score=-diffs, windows=[window],
+            self, problem, score=-diffs, windows=[window],
             message="Found %d differences with target sequence" % diffs
         )
 

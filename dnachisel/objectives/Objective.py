@@ -121,6 +121,11 @@ class Objective:
         new_objective.__dict__.update(kwargs)
         return new_objective
 
+    def initialize_problem(self, problem, role="constraint"):
+        return self
+
+
+
 class VoidObjective(Objective):
     """Void Objectives are a special case of Objectives that always pass.
 
