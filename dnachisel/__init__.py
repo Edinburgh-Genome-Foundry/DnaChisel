@@ -1,5 +1,6 @@
 from .DnaOptimizationProblem import (DnaOptimizationProblem,
                                      NoSolutionFoundError)
+from .Location import Location
 
 from .objectives import (
     AvoidBlastMatches,

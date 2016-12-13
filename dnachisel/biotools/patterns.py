@@ -1,4 +1,5 @@
 import re
+from ..Location import Location
 from .biotools import (dna_pattern_to_regexpr, is_palyndromic,
                        reverse_complement)
 from Bio.Restriction.Restriction_Dictionary import rest_dict
@@ -51,7 +52,7 @@ class SequencePattern:
         self.in_both_strands = in_both_strands
 
 
-    def find_matches(self, sequence, window=None):
+    def find_matches(self, sequence, location=None):
         """Return the locations where the sequence matches the expression.
 
         Parameters
@@ -60,8 +61,8 @@ class SequencePattern:
         sequence
           A string of "ATGC..."
 
-        window
-          Pair ``(start, end)`` indicating a segment to which to restrict
+        location
+          Location indicating a segment to which to restrict
           the search. Only patterns entirely included in the segment will be
           returned
 
@@ -74,15 +75,14 @@ class SequencePattern:
 
         """
 
-        if window is not None:
-            wstart, wend = window
-            subsequence = sequence[wstart:wend]
+        if location is not None:
+            subsequence = location.extract_sequence(sequence)
             return [
-                (wstart + start, wstart + end)
-                for (start, end) in self.find_matches(subsequence)
+                loc + location.start
+                for loc in self.find_matches(subsequence)
             ]
         matches = [
-            (match.start(), match.end())
+            (match.start(), match.end(), 1)
             for match in re.finditer(self.expression, sequence)
         ]
 
@@ -90,11 +90,14 @@ class SequencePattern:
             reverse = reverse_complement(sequence)
             L = len(sequence)
             matches += [
-                (L - match.end(), L - match.start())
+                (L - match.end(), L - match.start(), -1)
                 for match in re.finditer(self.expression, reverse)
             ]
 
-        return matches
+        return [
+            Location(start, end, strand)
+            for start, end, strand in matches
+        ]
 
     def __str__(self):
         return self.expression + ("" if self.name is None else

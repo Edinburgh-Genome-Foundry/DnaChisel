@@ -4,17 +4,15 @@ DnaOptimizationProblem is where the whole problem is defined: sequence,
 constraints, objectives.
 """
 
-from copy import deepcopy, copy
-import ctypes
 import itertools as itt
 
 import numpy as np
 
-from .biotools.biotools import (translate, reverse_translate, gc_content,
-                                read_fasta, reverse_complement)
+from .biotools.biotools import reverse_complement
 from .biotools.biotables import CODONS_SEQUENCES
-from .objectives.objectives import (DoNotModify, EnforcePattern,
+from .objectives.objectives import (Objective, DoNotModify, EnforcePattern,
                                     EnforceTranslation)
+from .Location import Location
 
 from tqdm import tqdm
 
@@ -104,9 +102,9 @@ class DnaOptimizationProblem:
         ]
         self.objectives = [
             objective.initialize_problem(self, role="objective")
-            for objective in self.objective
+            for objective in self.objectives
         ]
-        
+
     def extract_subsequence(self, location):
         """Return the subsequence (a string) at the given location).
 
@@ -150,14 +148,14 @@ class DnaOptimizationProblem:
         unibase_mutable = np.ones(len(self.sequence))
         for constraint in self.constraints:
             if isinstance(constraint, DoNotModify):
-                if constraint.window is not None:
-                    start, end = constraint.window
-                    unibase_mutable[start:end] = 0
+                if constraint.location is not None:
+                    unibase_mutable[constraint.location.start:
+                                    constraint.location.end] = 0
                 else:
                     unibase_mutable[constraint.indices] = 0
         for constraint in self.constraints:
             if isinstance(constraint, EnforceTranslation):
-                start, end = constraint.window
+                start, end = constraint.location
                 for i, aa in enumerate(constraint.translation):
                     if constraint.strand == 1:
                         cstart, cstop = start + 3 * i, start + 3 * (i + 1)
@@ -434,22 +432,20 @@ class DnaOptimizationProblem:
         if evaluation.passes:
             return
 
-        if evaluation.windows is not None:
+        if evaluation.locations is not None:
 
-            windows = evaluation.windows
+            locations = evaluation.locations
             if progress_bars > 0:
-                windows = tqdm(windows, desc="Window", leave=False)
+                locations = tqdm(locations, desc="Window", leave=False)
 
-            for window in windows:
+            for location in locations:
                 if verbose:
-                    print(window)
-                do_not_modify_window = [
-                    max(0, window[0] - 5),
-                    min(window[1] + 5, len(self.sequence))
-                ]
+                    print(location)
+                do_not_modify_location = location.extended(
+                    5, upper_limit=len(self.sequence))
                 if consider_other_constraints:
                     localized_constraints = [
-                        _constraint.localized(do_not_modify_window)
+                        _constraint.localized(do_not_modify_location)
                         for _constraint in self.constraints
                     ]
                     passing_localized_constraints = [
@@ -462,11 +458,15 @@ class DnaOptimizationProblem:
                 localized_canvas = DnaOptimizationProblem(
                     sequence=self.sequence,
                     constraints=[
-                        DoNotModify([0, do_not_modify_window[0]]),
-                        DoNotModify([do_not_modify_window[1],
-                                     len(self.sequence)]),
+                        DoNotModify(
+                            location=Location(0, do_not_modify_location.start)
+                        ),
+                        DoNotModify(
+                            location=Location(do_not_modify_location.end,
+                                              len(self.sequence))
+                        )
                     ] + [
-                        constraint.localized(do_not_modify_window)
+                        constraint.localized(do_not_modify_location)
                     ] + passing_localized_constraints
                 )
                 if (localized_canvas.mutation_space_size() <
@@ -639,7 +639,7 @@ class DnaOptimizationProblem:
             else:
                 self.sequence = previous_sequence
 
-    def maximize_objective_by_localization(self, objective, windows=None,
+    def maximize_objective_by_localization(self, objective, locations=None,
                                            randomization_threshold=10000,
                                            max_random_iters=1000,
                                            verbose=False,
@@ -647,40 +647,42 @@ class DnaOptimizationProblem:
                                            optimize_independently=False):
         """Maximize the objective via local, targeted mutations."""
 
-        if windows is None:
-            windows = objective.evaluate(self).windows
-            if windows is None:
+        if locations is None:
+            locations = objective.evaluate(self).locations
+            if locations is None:
                 raise ValueError(
                     "max_objective_by_localization requires either that"
-                    " windows be provided or that the objective evaluation"
-                    " returns windows."
+                    " locations be provided or that the objective evaluation"
+                    " returns locations."
                 )
         if progress_bars > 0:
-            windows = tqdm(windows, desc="Window", leave=False)
-        for window in windows:
+            locations = tqdm(locations, desc="Window", leave=False)
+        for location in locations:
             if verbose:
-                print(window)
-            do_not_modify_window = [
-                max(0, window[0] - 5),
-                min(window[1] + 5, len(self.sequence))
-            ]
+                print(location)
+            do_not_modify_location = location.extended(
+                5, upper_limit=len(self.sequence))
             if optimize_independently:
-                objectives = [objective.localized(window)]
+                objectives = [objective.localized(location)]
             else:
                 objectives = [
-                    _objective.localized(window)
+                    _objective.localized(location)
                     for _objective in self.objectives
                 ]
 
             localized_canvas = DnaOptimizationProblem(
                 sequence=self.sequence,
                 constraints=[
-                    _constraint.localized(do_not_modify_window)
+                    _constraint.localized(do_not_modify_location)
                     for _constraint in self.constraints
                 ] + [
-                    DoNotModify([0, do_not_modify_window[0]]),
-                    DoNotModify([do_not_modify_window[1],
-                                 len(self.sequence)]),
+                        DoNotModify(
+                            location=Location(0, do_not_modify_location.start)
+                        ),
+                        DoNotModify(
+                            location=Location(do_not_modify_location.end,
+                                              len(self.sequence))
+                        )
                 ],
                 objectives=objectives
             )
@@ -720,16 +722,15 @@ class DnaOptimizationProblem:
                     optimize_independently=optimize_independently
                 )
 
-    def include_pattern_by_successive_tries(self, pattern, window=None):
-        if window is None:
-            window = [0, len(self.sequence)]
-        constraint = EnforcePattern(pattern, window)
+    def include_pattern_by_successive_tries(self, pattern, location=None):
+        if location is None:
+            location = Location(0, len(self.sequence))
+        constraint = EnforcePattern(pattern, location)
         self.constraints.append(constraint)
-        start, end = window
-        for i in range(start, end - pattern.size):
+        for i in range(location.start, location.end - pattern.size):
             original_sequence = self.sequence
-            window = [i, i + pattern.size]
-            self.mutate_sequence([(window, pattern.pattern)])
+            location = [i, i + pattern.size]
+            self.mutate_sequence([(location, pattern.pattern)])
             try:
                 self.solve_all_constraints_one_by_one()
                 return  # Success !
@@ -737,3 +738,23 @@ class DnaOptimizationProblem:
                 self.sequence = original_sequence
         self.constraints.pop()  # remove the pattern constraint
         raise NoSolutionFoundError("Failed to insert the pattern")
+
+    @staticmethod
+    def from_biopython_record(record, objectives_dict):
+        parameters = dict(
+            sequence=str(record.seq),
+            constraints=[],
+            objectives=[]
+        )
+        for feature in record.features:
+            if feature.type != "misc_feature":
+                continue
+            if "label" not in feature.qualifiers:
+                continue
+            if feature.qualifiers["label"][0] not in "@~":
+                continue
+            role, objective = Objective.from_biopython_feature(feature,
+                                                               objectives_dict)
+            parameters[role+"s"].append(objective)
+
+        return DnaOptimizationProblem(**parameters)

@@ -1,6 +1,4 @@
 """Collection of useful pre-defined objectives/constraints for DnaChisel."""
-
-import copy
 from collections import Counter, defaultdict
 import itertools
 
@@ -8,11 +6,11 @@ import numpy as np
 
 from ..biotools.biotables import CODON_USAGE
 from ..biotools.biotools import (gc_content, reverse_complement,
-                                 sequences_differences, windows_overlap,
-                                 blast_sequence, translate,
-                                 subdivide_window)
+                                 sequences_differences,
+                                 blast_sequence, translate)
 from .Objective import (Objective, PatternObjective, TerminalObjective,
                         ObjectiveEvaluation, VoidObjective)
+from ..Location import Location
 
 
 class AvoidBlastMatches(Objective):
@@ -46,23 +44,22 @@ class AvoidBlastMatches(Objective):
 
     def __init__(self, blast_db, word_size=4, perc_identity=100,
                  num_alignments=1000, num_threads=3, min_align_length=20,
-                 window=None):
+                 location=None):
         self.blast_db = blast_db
         self.word_size = word_size
         self.perc_identity = perc_identity
         self.num_alignments = num_alignments
         self.num_threads = num_threads
         self.min_align_length = min_align_length
-        self.window = window
+        self.location = location
 
-    def evaluate(self, canvas):
+    def evaluate(self, problem):
         """Return (-M) as a score, where M is the number of BLAST matches found
         in the BLAST database."""
-        window = self.window
-        if window is None:
-            window = (0, len(canvas.sequence))
-        wstart, wend = window
-        sequence = canvas.sequence[wstart:wend]
+        location = self.location
+        if location is None:
+            location = Location(0, len(problem.sequence))
+        sequence = location.extract_sequence(problem.sequence)
         blast_record = blast_sequence(
             sequence, blast_db=self.blast_db,
             word_size=self.word_size,
@@ -70,37 +67,39 @@ class AvoidBlastMatches(Objective):
             num_alignments=self.num_alignments,
             num_threads=self.num_threads
         )
-        windows = sorted([
-            sorted((hit.query_start + wstart, hit.query_end + wstart))
+        query_locations = [
+            Location(min(hit.query_start, hit.query_end),
+                     max(hit.query_start, hit.query_end),
+                     1 - 2 * (hit.query_start > hit.query_end))
             for alignment in blast_record.alignments
             for hit in alignment.hsps
-            if abs(hit.query_end - hit.query_start) >= self.min_align_length
+        ]
+        locations = sorted([
+            loc for loc in query_locations
+            if len(location) >= self.min_align_length
         ])
-
-        if windows == []:
-            return ObjectiveEvaluation(self, canvas, score=1,
+        if locations == []:
+            return ObjectiveEvaluation(self, problem, score=1,
                                        message="Passed: no BLAST match found")
 
-        return ObjectiveEvaluation(self, canvas, score=-len(windows),
-                                   windows=windows,
-                                   message="Failed - matches at %s" % windows)
+        return ObjectiveEvaluation(
+            self, problem, score=-len(locations), locations=locations,
+            message="Failed - matches at %s" % locations)
 
-    def localized(self, window):
+    def localized(self, location):
         """Localize the evaluation."""
-        if self.window is not None:
-            new_window = windows_overlap(self.window, window)
-            if new_window is None:
+        if self.location is not None:
+            new_location = self.location.overlap_region(location)
+            if new_location is None:
                 return VoidObjective(parent_objective=self)
         else:
-            start, end = window
-            radius = self.min_align_length
-            new_window = [max(0, start - radius), end + radius]
+            new_location = location.extended(self.min_align_length)
 
-        return self.copy_with_changes(window=new_window)
+        return self.copy_with_changes(location=new_location)
 
     def __repr__(self):
         return "NoBlastMatchesObjective%s(%s, %d+ bp, perc %d+)" % (
-            self.window, self.blast_db, self.min_align_length,
+            self.location, self.blast_db, self.min_align_length,
             self.perc_identity
         )
 
@@ -136,20 +135,20 @@ class AvoidIDTHairpins(Objective):
         self.hairpin_window = hairpin_window
         self.boost = boost
 
-    def evaluate(self, canvas):
-        sequence = canvas.sequence
+    def evaluate(self, problem):
+        sequence = problem.sequence
         reverse = reverse_complement(sequence)
-        windows = []
+        locations = []
         for i in range(len(sequence) - self.hairpin_window):
             word = sequence[i:i + self.stem_size]
             rest = reverse[-(i + self.hairpin_window):-(i + self.stem_size)]
             if word in rest:
-                windows.append([i, i + self.hairpin_window])
-        score = -len(windows)
+                locations.append([i, i + self.hairpin_window])
+        score = -len(locations)
 
-        return ObjectiveEvaluation(self, canvas, score, windows=windows)
+        return ObjectiveEvaluation(self, problem, score, locations=locations)
 
-    def localized(self, window):
+    def localized(self, location):
         # TODO: I'm pretty sure this can be localized
         return self
 
@@ -158,79 +157,22 @@ class AvoidIDTHairpins(Objective):
             (self.stem_size, self.hairpin_window)
 
 
-class AvoidNonuniqueKmers(Objective):
-    """
-        from dnachisel import *
-        sequence = random_dna_sequence(50000)
-        canvas = DnaCanvas(
-            sequence,
-            constraints= [AvoidNonuniqueKmers(10,
-                                    include_reverse_complement=True)]
-        )
-        print canvas.constraints_summary()
-    """
-
-    def __init__(self, length, window=None, include_reverse_complement=False):
-        self.length = length
-        self.window = window
-        self.include_reverse_complement = include_reverse_complement
-
-    def evaluate(self, canvas):
-        window = self.window
-        if window is None:
-            window = (0, len(canvas.sequence))
-        wstart, wend = window
-        sequence = canvas.sequence[wstart:wend]
-        rev_complement = reverse_complement(sequence)
-        kmers_locations = defaultdict(lambda: [])
-        for i in range(len(sequence) - self.length):
-            start, end = i, i + self.length
-            kmers_locations[sequence[start:end]].append((start, end))
-        if self.include_reverse_complement:
-            for i in range(len(sequence) - self.length):
-                start, end = i, i + self.length
-                kmers_locations[rev_complement[start:end]].append(
-                    (len(sequence) - end, len(sequence) - start)
-                )
-
-        windows = sorted([
-            min(positions_list, key=lambda p: p[0])
-            for positions_list in kmers_locations.values()
-            if len(positions_list) > 1
-        ])
-
-        if windows == []:
-            return ObjectiveEvaluation(
-                self, canvas, score=1,
-                message="Passed: no nonunique %d-mer found." % self.length)
-
-        return ObjectiveEvaluation(
-            self, canvas, score=-len(windows),
-            windows=windows,
-            message="Failed, the following positions are the first occurences"
-                    "of non-unique kmers %s" % windows)
-
-    def __repr__(self):
-        return "NoNonuniqueKmers(%d)" % (self.length)
-
-
-
 class AvoidNonuniqueSegments(Objective):
     """Avoid sub-sequence which have repeats elsewhere in the sequence.
 
     Parameters
     ----------
 
-    length
+    min_length
       Minimal length of sequences to be considered repeats
 
-    window
+    location
       Segment of the sequence in which to look for repeats. If None, repeats
       are searched in the full sequence.
 
     include_reverse_complement
       If True, the sequence repeats are also searched for in the reverse
-      complement of the sequence (or sub sequence if `window` is not None).
+      complement of the sequence (or sub sequence if `location` is not None).
 
     Examples
     --------
@@ -238,51 +180,52 @@ class AvoidNonuniqueSegments(Objective):
     >>> from dnachisel import *
     >>> sequence = random_dna_sequence(50000)
     >>> constraint= AvoidNonuniqueSegments(10, include_reverse_complement=True)
-    >>> canvas = DnaOptimizationProblem(sequence, constraints= [contraint])
-    >>> print (canvas.constraints_summary())
+    >>> problem = DnaOptimizationProblem(sequence, constraints= [contraint])
+    >>> print (problem.constraints_summary())
     """
 
-    def __init__(self, length, window=None, include_reverse_complement=False):
-        self.length = length
-        self.window = window
+    def __init__(self, min_length, location=None,
+                 include_reverse_complement=False):
+        self.min_length = min_length
+        self.location = location
         self.include_reverse_complement = include_reverse_complement
 
-    def evaluate(self, canvas):
+    def evaluate(self, problem):
         """Return 1 if the sequence has no repeats, else -N where N is the
         number of non-unique segments in the sequence."""
-        window = self.window
-        if window is None:
-            window = (0, len(canvas.sequence))
-        wstart, wend = window
-        sequence = canvas.sequence[wstart:wend]
+        if self.location is not None:
+            location = self.location
+        else:
+            location = Location(0, len(problem.sequence))
+        sequence = location.extract_sequence(problem.sequence)
         rev_complement = reverse_complement(sequence)
         kmers_locations = defaultdict(lambda: [])
-        for i in range(len(sequence) - self.length):
-            start, end = i, i + self.length
+        for i in range(len(sequence) - self.min_length):
+            start, end = i, i + self.min_length
             kmers_locations[sequence[start:end]].append((start, end))
         if self.include_reverse_complement:
-            for i in range(len(sequence) - self.length):
-                start, end = i, i + self.length
+            for i in range(len(sequence) - self.min_length):
+                start, end = i, i + self.min_length
                 kmers_locations[rev_complement[start:end]].append(
                     (len(sequence) - end, len(sequence) - start)
                 )
 
-        windows = sorted([
-            min(positions_list, key=lambda p: p[0])
+        locations = sorted([
+            Location(*min(positions_list, key=lambda p: p[0]))
             for positions_list in kmers_locations.values()
             if len(positions_list) > 1
         ])
 
-        if windows == []:
+        if locations == []:
             return ObjectiveEvaluation(
-                self, canvas, score=1,
-                message="Passed: no nonunique %d-mer found." % self.length)
+                self, problem, score=1,
+                message="Passed: no nonunique %d-mer found." % self.min_length)
 
         return ObjectiveEvaluation(
-            self, canvas, score=-len(windows),
-            windows=windows,
+            self, problem, score=-len(locations),
+            locations=locations,
             message="Failed, the following positions are the first occurences"
-                    "of non-unique segments %s" % windows)
+                    "of non-unique segments %s" % locations)
 
     def __repr__(self):
         return "NoNonuniqueKmers(%d)" % (self.length)
@@ -292,19 +235,19 @@ class AvoidPattern(PatternObjective):
     """Enforce that the given pattern is absent in the sequence.
     """
 
-    def evaluate(self, canvas):
-        windows = self.pattern.find_matches(canvas.sequence, self.window)
-        score = -len(windows)
+    def evaluate(self, problem):
+        locations = self.pattern.find_matches(problem.sequence, self.location)
+        score = -len(locations)
         if score == 0:
             message = "Passed. Pattern not found !"
         else:
-            message = "Failed. Pattern found at positions %s" % windows
+            message = "Failed. Pattern found at positions %s" % locations
         return ObjectiveEvaluation(
-            self, canvas, score, windows=windows, message=message
+            self, problem, score, locations=locations, message=message
         )
 
     def __repr__(self):
-        return "NoPattern(%s, %s)" % (self.pattern, self.window)
+        return "AvoidPattern(%s, %s)" % (self.pattern, self.location)
 
 
 class CodonOptimize(Objective):
@@ -330,13 +273,12 @@ class CodonOptimize(Objective):
       Note that the organism can be omited if a ``codon_usage_table`` is
       provided instead
 
-    window
+    location
       Pair (start, end) indicating the position of the gene to codon-optimize.
       If not provided, the whole sequence is considered as the gene. Make
-      sure the length of the sequence in the window is a multiple of 3.
-
-    strand
-      Either 1 if the gene is encoded on the (+) strand, or -1 for antisense.
+      sure the length of the sequence in the location is a multiple of 3.
+      The location strand is either 1 if the gene is encoded on the (+) strand,
+      or -1 for antisense.
 
     codon_usage_table
       A dict of the form ``{"TAC": 0.112, "CCT": 0.68}`` giving the RSCU table
@@ -348,18 +290,17 @@ class CodonOptimize(Objective):
 
     >>> objective = CodonOptimizationObjective(
     >>>     organism = "E. coli",
-    >>>     window = (150, 300), # coordinates of a gene
+    >>>     location = (150, 300), # coordinates of a gene
     >>>     strand = -1
     >>> )
 
 
     """
 
-    def __init__(self, organism=None, window=None, strand=1,
+    def __init__(self, organism=None, location=None,
                  codon_usage_table=None, boost=1.0):
         self.boost = boost
-        self.window = window
-        self.strand = strand
+        self.location = location
         self.organism = organism
         if organism is not None:
             codon_usage_table = CODON_USAGE[self.organism]
@@ -368,14 +309,11 @@ class CodonOptimize(Objective):
                              "usage table")
         self.codon_usage_table = codon_usage_table
 
-    def evaluate(self, canvas):
+    def evaluate(self, problem):
 
-        window = (self.window if self.window is not None
-                  else [0, len(canvas.sequence)])
-        start, end = window
-        subsequence = canvas.sequence[start:end]
-        if self.strand == -1:
-            subsequence = reverse_complement(subsequence)
+        location = (self.location if self.location is not None
+                    else Location(0, len(problem.sequence)))
+        subsequence = location.extract_sequence(problem.sequence)
         length = len(subsequence)
         if (length % 3):
             raise ValueError("CodonOptimizationObjective on a window/sequence"
@@ -385,45 +323,46 @@ class CodonOptimize(Objective):
             for i in range(length / 3)
         ])
         return ObjectiveEvaluation(
-            self, canvas, score, windows=[[start, end]],
+            self, problem, score, locations=[location],
             message="Codon opt. on window %s scored %.02E" %
-                    (str(window), score)
+                    (location, score)
         )
 
     def __str__(self):
-        return "CodonOptimize(%s, %s)" % (str(self.window), self.organism)
+        return "CodonOptimize(%s, %s)" % (str(self.location), self.organism)
 
 
 class DoNotModify(Objective):
     """Specify that some locations of the sequence should not be changed.
 
     ``DoNotModify`` Objectives are used to constrain the mutations space
-    of DNA Canvas.
+    of DNA OptimizationProblem.
 
     Parameters
     ----------
 
-    window
-      Couple ``(start, end)`` indicating the position of the segment that
+    location
+      Location object indicating the position of the segment that
       must be left unchanged.
     """
 
     best_possible_score = 1
 
-    def __init__(self, window=None, indices=None, boost=1.0):
-        self.window = window
+    def __init__(self, location=None, indices=None, boost=1.0):
+        self.location = location
         self.indices = np.array(indices)
         self.boost = boost
 
-    def evaluate(self, canvas):
-        sequence = canvas.sequence
-        original = canvas.original_sequence
-        if (self.window is None) and (self.indices is None):
+    def evaluate(self, problem):
+        sequence = problem.sequence
+        original = problem.original_sequence
+        if (self.location is None) and (self.indices is None):
             return ObjectiveEvaluation(sequence == original)
-        elif self.window is not None:
-            start, end = self.window
-            score = 1 if (sequence[start:end] == original[start:end]) else -1
-            return ObjectiveEvaluation(self, canvas, score)
+        elif self.location is not None:
+            subseq, suboriginal = [self.location.extract_sequence(s)
+                                   for s in (sequence, original)]
+            score = 1 if (subseq == suboriginal) else -1
+            return ObjectiveEvaluation(self, problem, score)
         else:
             sequence = np.fromstring(sequence, dtype="uint8")
             original = np.fromstring(original, dtype="uint8")
@@ -432,24 +371,24 @@ class DoNotModify(Objective):
             else:
                 score = -1
 
-            return ObjectiveEvaluation(self, canvas, score)
+            return ObjectiveEvaluation(self, problem, score)
 
-    def localize(self, window):
-        """Localize the DoNotModify to the overlap of its window and the new.
+    def localize(self, location):
+        """Localize the DoNotModify to the overlap of its location and the new.
         """
-        if self.window is not None:
-            new_window = windows_overlap(self.window, window)
-            if new_window is None:
+        if self.location is not None:
+            new_location = self.location.overlap_region(location)
+            if new_location is None:
                 return VoidObjective(parent_objective=self)
-            return self.copy_with_changes(window=new_window)
+            return self.copy_with_changes(location=new_location)
         else:
-            start, end = window
+            start, end = location.start, location.end
             inds = self.indices
             new_indices = inds[(start <= inds) & (inds <= end)]
             return self.copy_with_changes(indices=new_indices)
 
     def __repr__(self):
-        return "DoNotModify(%s)" % str(self.window)
+        return "DoNotModify(%s)" % str(self.location)
 
 
 class EnforceGCContent(Objective):
@@ -478,30 +417,29 @@ class EnforceGCContent(Objective):
       If not provided, the global GC content of the whole sequence is
       considered
 
-    window
-      Couple (start, end) indicating that the Objective only applies to a
+    location
+      Location objet indicating that the Objective only applies to a
       subsegment of the sequence. Make sure it is bigger than ``gc_window``
       if both parameters are provided
 
     """
 
     def __init__(self, gc_min=0, gc_max=1.0, gc_objective=None,
-                 gc_window=None, window=None, boost=1.0):
+                 gc_window=None, location=None, boost=1.0):
         if gc_objective is not None:
             gc_min = gc_max = gc_objective
         self.gc_objective = gc_objective
         self.gc_min = gc_min
         self.gc_max = gc_max
         self.gc_window = gc_window
-        self.window = window
+        self.location = location
         self.boost = boost
 
-    def evaluate(self, canvas):
-        window = self.window
-        if window is None:
-            window = (0, len(canvas.sequence))
-        wstart, wend = window
-        sequence = canvas.sequence[wstart:wend]
+    def evaluate(self, problem):
+        location = (self.location if self.location is not None
+                    else Location(0, len(problem.sequence)))
+        wstart, wend = location.start, location.end
+        sequence = location.extract_sequence(problem.sequence)
         gc = gc_content(sequence, self.gc_window)
         breaches = (np.maximum(0, self.gc_min - gc) +
                     np.maximum(0, gc - self.gc_max))
@@ -509,20 +447,20 @@ class EnforceGCContent(Objective):
         breaches_starts = (breaches > 0).nonzero()[0]
 
         if len(breaches_starts) == 0:
-            breaches_windows = []
+            breaches_locations = []
         elif len(breaches_starts) == 1:
             if self.gc_window is not None:
                 start = breaches_starts[0]
-                breaches_windows = [[start, start + self.gc_window]]
+                breaches_locations = [[start, start + self.gc_window]]
             else:
-                breaches_windows = [[wstart, wend]]
+                breaches_locations = [[wstart, wend]]
         else:
-            breaches_windows = []
+            breaches_locations = []
             current_start = breaches_starts[0]
             last_end = current_start + self.gc_window
             for i in breaches_starts[1:]:
                 if (i > last_end + self.gc_window):
-                    breaches_windows.append([
+                    breaches_locations.append([
                         wstart + current_start, wstart + last_end]
                     )
                     current_start = i
@@ -530,41 +468,43 @@ class EnforceGCContent(Objective):
 
                 else:
                     last_end = i + self.gc_window
-            breaches_windows.append(
+            breaches_locations.append(
                 [wstart + current_start, wstart + last_end])
 
-        if breaches_windows == []:
+        if breaches_locations == []:
             message = "Passed !"
         else:
+            breaches_locations = [Location(*loc) for loc in breaches_locations]
             message = ("Failed: GC content out of bound on segments " +
-                       ", ".join(["%s-%s" % (s[0], s[1])
-                                  for s in breaches_windows]))
-        return ObjectiveEvaluation(self, canvas, score, breaches_windows,
+                       ", ".join([str(l) for l in breaches_locations]))
+        return ObjectiveEvaluation(self, problem, score, breaches_locations,
                                    message=message)
 
-    def localized(self, window):
+    def localized(self, location):
         """Localize the GC content evaluation
 
-        For a window [start, end], the GC content evaluation will be restricted
+        For a location, the GC content evaluation will be restricted
         to [start - gc_window, end + gc_window]
         """
-        if self.window is not None:
-            new_window = windows_overlap(self.window, window)
-            if new_window is None:
+        if self.location is not None:
+            new_location = self.location.overlap_region(location)
+            if new_location is None:
                 return VoidObjective(parent_objective=self)
-        else:
-            start, end = window
-            if self.gc_window is not None:
-                new_window = [max(0, start - self.gc_window),
-                              end + self.gc_window]
             else:
-                new_window = None
-        return self.copy_with_changes(window=new_window)
+                extended_location = location.extended(self.gc_window)
+
+                new_location = self.location.overlap_region(extended_location)
+        else:
+            if self.gc_window is not None:
+                new_location = location.extended(self.gc_window)
+            else:
+                new_location = None
+        return self.copy_with_changes(location=new_location)
 
     def __repr__(self):
         return "GCContent(min %.02f, max %.02f, gc_win %s, window %s)" % (
             self.gc_min, self.gc_max, "global" if (self.gc_window is None) else
-                                      self.gc_window, self.window
+                                      self.gc_window, self.location
         )
 
 
@@ -577,40 +517,38 @@ class EnforcePattern(PatternObjective):
     pattern
       A SequencePattern or DnaNotationPattern
 
-    window
-      A couple (start, end) indicating the segment of DNA to which to restrict
-      the search
+    location
+      Location object
     """
 
-    def __init__(self, pattern, window=None, occurences=1, boost=1.0):
-        PatternObjective.__init__(self, pattern, window)
+    def __init__(self, pattern, location=None, occurences=1, boost=1.0):
+        PatternObjective.__init__(self, pattern, location)
         self.occurences = occurences
         self.boost = boost
 
-    def evaluate(self, canvas):
-        window = self.window
-        if window is None:
-            window = (0, len(canvas.sequence))
-        windows = self.pattern.find_matches(canvas.sequence, window)
-        score = -abs(len(windows) - self.occurences)
+    def evaluate(self, problem):
+        location = (self.location if (self.location is not None) else
+                    Location(0, len(problem.sequence)))
+        locations = self.pattern.find_matches(problem.sequence, location)
+        score = -abs(len(locations) - self.occurences)
 
         if score == 0:
-            message = "Passed. Pattern found at positions %s" % windows
+            message = "Passed. Pattern found at positions %s" % locations
         else:
             if self.occurences == 0:
                 message = "Failed. Pattern not found."
             else:
                 message = ("Failed. Pattern found %d times instead of %d"
-                           " wanted at positions %s") % (len(windows),
+                           " wanted at positions %s") % (len(locations),
                                                          self.occurences,
-                                                         window)
+                                                         location)
         return ObjectiveEvaluation(
-            self, canvas, score, message=message,
-            windows=None if window is None else [window],
+            self, problem, score, message=message,
+            locations=None if location is None else [location],
         )
 
     def __repr__(self):
-        return "EnforcePattern(%s, %s)" % (self.pattern, self.window)
+        return "EnforcePattern(%s, %s)" % (self.pattern, self.location)
 
 
 class EnforceRegionsCompatibility(Objective):
@@ -621,10 +559,10 @@ class EnforceRegionsCompatibility(Objective):
         self.compatibility_condition = compatibility_condition
         self.boost = boost
 
-    def evaluate(self, canvas):
+    def evaluate(self, problem):
         incompatible_regions_pairs = []
         for (r1, r2) in itertools.combinations(self.regions, 2):
-            if not self.compatibility_condition(r1, r2, canvas):
+            if not self.compatibility_condition(r1, r2, problem):
                 incompatible_regions_pairs.append((r1, r2))
 
         all_regions_with_incompatibility = [
@@ -637,6 +575,9 @@ class EnforceRegionsCompatibility(Objective):
             list(set(all_regions_with_incompatibility)),
             key=counter.get
         )
+        all_regions_with_incompatibility = [
+            Location(*r) for r in all_regions_with_incompatibility
+        ]
 
         score = -len(incompatible_regions_pairs)
         if score == 0:
@@ -646,36 +587,38 @@ class EnforceRegionsCompatibility(Objective):
                 incompatible_regions_pairs
             )
         return ObjectiveEvaluation(
-            self, canvas,
+            self, problem,
             score=score,
-            windows=all_regions_with_incompatibility,
+            locations=all_regions_with_incompatibility,
             message=message
         )
 
     def localized(self, window):
+        #FIXME: weird stuff here
         wstart, wend = window
         included_regions = [
             (a, b) for (a, b) in self.regions
             if wstart <= a <= b <= wend
         ]
 
-        def evaluate(canvas):
+        def evaluate(problem):
             """Objective evaluation"""
             # compute incompatibilities but exclude to
             # consider pairs of regions that are both
             # outside the current localization window
+            #FIXME: weird stuff here
             incompatible_regions = [
                 region
                 for region in self.regions
                 for included_region in included_regions
                 if (region != included_region) and
                 not self.compatibility_condition(
-                    included_region, region, canvas
+                    included_region, region, problem
                 )
             ]
             score = -len(incompatible_regions)
             return ObjectiveEvaluation(
-                self, canvas,
+                self, problem,
                 score=score
             )
         return Objective(evaluate, boost=self.boost)
@@ -726,7 +669,7 @@ class EnforceTranslation(Objective):
     Parameters
     -----------
 
-    window
+    location
       A pair (start, end) indicating the segment that is a coding sequence
 
     strand
@@ -739,8 +682,8 @@ class EnforceTranslation(Objective):
 
     sequence
       A sequence of DNA that already encodes the right protein in the given
-      ``window`` (will generally be equal to the sequence provided to
-      the canvas if it already encodes the right protein).
+      ``location`` (will generally be equal to the sequence provided to
+      the problem if it already encodes the right protein).
       Can be provided instead of ``translation`` (the ``translation`` will be
       computed from this ``sequence``)
 
@@ -764,67 +707,65 @@ class EnforceTranslation(Objective):
 
     best_possible_score = 1
 
-    def __init__(self, window, strand=1, translation=None, boost=1.0):
-        window_size = window[1] - window[0]
-        if window_size != 3 * len(translation):
+    def __init__(self, location=None, translation=None, boost=1.0):
+        if (len(location) % 3):
+            raise ValueError(
+                "Location in EnforceTranslation should be multiple of 3")
+
+        if ((translation is not None) and
+            (len(location) != 3 * len(translation))):
             raise ValueError(
                 ("Window size (%d bp) incompatible with translation (%d aa)") %
-                (window_size, len(translation))
+                (len(location), len(translation))
             )
 
         self.boost = boost
-        self.window = window
+        self.location = location
         self.translation = translation
-        self.strand = strand
         self.initialize_translation_from_problem = (translation is None)
+        self.initialize_location_from_problem = (location is None)
 
     def initialize_problem(self, problem, role):
-        if not self.initialize_translation_from_problem:
-            return self
-        start, end = self.window
-        subsequence = problem.sequence[start:end]
-        if self.strand == -1:
-            subsequence = reverse_complement(subsequence)
-        translation = translate(subsequence)
+        if self.initialize_translation_from_problem:
+            subsequence = self.location.extract_sequence(problem.sequence)
+            translation = translate(subsequence)
         return self.copy_with_changes(translation=translation)
 
 
-    def evaluate(self, canvas):
-        window = self.window
-        if window is None:
-            window = (0, len(canvas.sequence))
-        start, end = window
-        subsequence = canvas.sequence[start:end]
-        if self.strand == -1:
-            subsequence = reverse_complement(subsequence)
+    def evaluate(self, problem):
+        location = (self.location if self.location is not None else
+                    Location(0, len(problem.sequence)))
+        subsequence = location.extract_sequence(problem.sequence)
         success = 1 if (translate(subsequence) == self.translation) else -1
-        return ObjectiveEvaluation(self, canvas, success,
+        return ObjectiveEvaluation(self, problem, success,
                                    message="All OK." if success else "Failed.")
 
-    def localized(self, window):
+    def localized(self, location):
         """"""
-        if self.window is not None:
-            overlap = windows_overlap(window, self.window)
+        if self.location is not None:
+            overlap = self.location.overlap_region(location)
             if overlap is None:
                 return VoidObjective(parent_objective=self)
             else:
                 # return self
-                o_start, o_end = overlap
-                w_start, w_end = self.window
+                o_start, o_end = overlap.start, overlap.end
+                w_start, w_end = self.location.start, self.location.end
                 start_codon = int((o_start - w_start) / 3)
                 end_codon = int((o_end - w_start) / 3)
 
-                new_window = (w_start + 3 * start_codon,
-                              min(w_end, w_start + 3 * (end_codon + 1)))
+                new_location = Location(
+                    start=w_start + 3 * start_codon,
+                    end=min(w_end, w_start + 3 * (end_codon + 1)),
+                    strand=self.strand
+                )
                 new_translation = self.translation[start_codon:end_codon + 1]
-                return EnforceTranslation(new_window,
+                return EnforceTranslation(new_location,
                                           translation=new_translation,
-                                          strand=self.strand,
                                           boost=self.boost)
         return self
 
     def __repr__(self):
-        return "EnforceTranslation(%s)" % str(self.window)
+        return "EnforceTranslation(%s)" % str(self.location)
 
 
 class MinimizeDifferences(Objective):
@@ -837,17 +778,17 @@ class MinimizeDifferences(Objective):
     Parameters
     ----------
 
-    window
+    location
       Pair (start, end) indicating the segment of the sequence. If none
       provided, the whole sequence is considered.
 
     target_sequence
-      The DNA sequence that the canvas' sequence (or subsequence) should equal.
+      The DNA sequence that the problem' sequence (or subsequence) should equal.
       Can be omitted if ``original_sequence`` is provided instead
 
     original_sequence
-      A DNA sequence (will generally be the canvas' sequence itself) with
-      already the right sequence at the given ``window``. Only provide if
+      A DNA sequence (will generally be the problem' sequence itself) with
+      already the right sequence at the given ``location``. Only provide if
       you are not providing a ``target_sequence``
 
 
@@ -857,47 +798,47 @@ class MinimizeDifferences(Objective):
     >>> from dnachisel import *
     >>> sequence = random_dna_sequence(length=10000)
     >>> # Fix the sequence's local gc content while minimizing changes.
-    >>> canvas = DnaOptimizationProblem(
+    >>> problem = DnaOptimizationProblem(
     >>>     sequence = sequence,
-    >>>     Objectives = [GCContentObjective(0.3,0.6, gc_window=50)],
+    >>>     Objectives = [GCContentObjective(0.3,0.6, gc_location=50)],
     >>>     objective = [MinimizeDifferencesObjective(
     >>>                     original_sequence=sequence)]
     >>> )
-    >>> canvas.solve_all_Objectives_one_by_one()
-    >>> canvas.maximize_all_objectives_one_by_one()
+    >>> problem.solve_all_Objectives_one_by_one()
+    >>> problem.maximize_all_objectives_one_by_one()
 
     """
 
     best_possible_score = 0
 
-    def __init__(self, window=None, target_sequence=None, boost=1.0):
+    def __init__(self, location=None, target_sequence=None, boost=1.0):
         self.boost = boost
-        self.window = window
-        if target_sequence is None:
-            self.window = window
+        self.location = location
+        self.target_sequence = target_sequence
+        self.initialize_sequence_from_problem = (target_sequence is None)
         self.reference_sequence = target_sequence
 
     def initialize_problem(self, problem, role):
         if not self.initialize_sequence_from_problem:
             return self
-        start, end = self.window
-        reference_sequence = problem.sequence[start:end]
+        if self.location is None:
+            self.location = Location(0, len(problem.sequence))
+        reference_sequence = self.location.extract_sequence(problem.sequence)
         return self.copy_with_changes(reference_sequence=reference_sequence)
 
     def evaluate(self, problem):
-        window = (self.window if self.window is not None
+        location = (self.location if self.location is not None
                   else [0, len(problem.sequence)])
-        start, end = window
-        subsequence = problem.sequence[start: end]
+        subsequence = location.extract_sequence(problem.sequence)
         diffs = - sequences_differences(subsequence, self.reference_sequence)
         return ObjectiveEvaluation(
-            self, problem, score=-diffs, windows=[window],
+            self, problem, score=-diffs, locations=[location],
             message="Found %d differences with target sequence" % diffs
         )
 
     def __str__(self):
         return "MinimizeDifferencesObj(%s, %s...)" % (
-            "global" if self.window is None else str(self.window),
+            "global" if self.location is None else str(self.location),
             self.sequence[:7]
         )
 
@@ -924,14 +865,14 @@ class SequenceLengthBounds(Objective):
         self.min_length = min_length
         self.max_length = max_length
 
-    def evaluate(self, canvas):
+    def evaluate(self, problem):
         """Return 0 if the sequence length is between the bounds, else -1"""
-        L, mini, maxi = len(canvas.sequence), self.min_length, self.max_length
+        L, mini, maxi = len(problem.sequence), self.min_length, self.max_length
         if maxi is None:
             score = (L >= mini)
         else:
             score = (mini <= L <= maxi)
-        return ObjectiveEvaluation(self, canvas, score - 1)
+        return ObjectiveEvaluation(self, problem, score - 1)
 
     def __repr__(self):
         return "Length(%d < L < %d)" % (self.min_length, self.max_length)

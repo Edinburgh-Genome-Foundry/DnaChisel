@@ -66,9 +66,7 @@ for (start, end, strand) in CDS_list:
     else:
         promoter_region = (end + 1, end + 30)
     keep_promoter_region = DoNotModify(promoter_region)
-    keep_translation = EnforceTranslation((start, end),
-                                          sequence=sequence,
-                                          strand=strand)
+    keep_translation = EnforceTranslation(Location(start, end, strand))
     CDS_constraints += [keep_promoter_region, keep_translation]
 
 
