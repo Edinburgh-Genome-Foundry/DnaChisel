@@ -1,13 +1,14 @@
 import tempfile
-import re
 import os
 import subprocess
 import time
 
 import numpy as np
 from Bio.Seq import Seq
-from Bio.Blast.Applications import NcbiblastnCommandline
 from Bio.Blast import NCBIXML
+from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
+from Bio.Alphabet import DNAAlphabet
 
 from .biotables import CODONS_SEQUENCES, NUCLEOTIDE_TO_REGEXPR
 
@@ -294,3 +295,6 @@ def subdivide_window(window, max_span):
     start, end = window
     inds = list(range(start, end, max_span)) + [end]
     return zip(inds, inds[1:])
+
+def sequence_to_biopython_record(sequence, features):
+    return SeqRecord(Seq(sequence, alphabet=DNAAlphabet()), features=features)

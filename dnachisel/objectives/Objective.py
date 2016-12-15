@@ -3,6 +3,7 @@ import re
 
 from ..biotools import DnaNotationPattern, enzyme_pattern
 from ..Location import Location
+from Bio.SeqFeature import SeqFeature
 
 
 class ObjectiveEvaluation:
@@ -65,6 +66,14 @@ class ObjectiveEvaluation:
             "score: %.02E, locations: %s" % (self.score, str(self.locations))
         )
 
+    def to_biopython_features(self, feature_type="misc_feature"):
+        return [
+            SeqFeature(location.to_biopython_location(), type=feature_type,
+                       qualifiers={"label": str(self.objective)})
+            for location in self.locations
+        ]
+
+
 
 class Objective:
     """General class to define objectives to optimize.
@@ -124,6 +133,8 @@ class Objective:
     @staticmethod
     def from_biopython_feature(feature, objectives_dict):
         label = feature.qualifiers["label"]
+        if isinstance(label, list):
+            label = label[0]
         if not label.endswith(")"):
             label += "()"
         pattern = "([@~])(\S+)(\(.*\))"
@@ -202,6 +213,7 @@ class PatternObjective(Objective):
         self.location = location
         self.dna_pattern = dna_pattern
         self.enzyme = enzyme
+        self.boost = boost
 
     def localized(self, location):
         """Localize the pattern to the given location. Taking into account the
@@ -213,8 +225,9 @@ class PatternObjective(Objective):
             if self.location.overlap_region(location) is None:
                 return VoidObjective(parent_objective=self)
             else:
-                extended_location = location.extended(pattern_size)
+                extended_location = location.extended(pattern_size - 1)
                 new_location = self.location.overlap_region(extended_location)
+
 
         return self.copy_with_changes(location=new_location)
 

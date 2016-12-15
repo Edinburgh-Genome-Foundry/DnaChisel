@@ -17,7 +17,7 @@ class Location:
 
         if self.start <= other_location.start <= self.end:
             start = other_location.start
-            end = min(self.end, other_location.start)
+            end = min(self.end, other_location.end)
             strand = self.strand
             return Location(start, end, strand)
         else:

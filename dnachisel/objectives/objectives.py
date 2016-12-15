@@ -232,8 +232,8 @@ class AvoidNonuniqueSegments(Objective):
 
 
 class AvoidPattern(PatternObjective):
-    """Enforce that the given pattern is absent in the sequence.
-    """
+    """Enforce that the given pattern is absent in the sequence."""
+    best_possible_score = 0
 
     def evaluate(self, problem):
         locations = self.pattern.find_matches(problem.sequence, self.location)
@@ -357,12 +357,14 @@ class DoNotModify(Objective):
         sequence = problem.sequence
         original = problem.original_sequence
         if (self.location is None) and (self.indices is None):
-            return ObjectiveEvaluation(sequence == original)
+            return ObjectiveEvaluation(sequence == original,
+                                       locations=[self.location])
         elif self.location is not None:
             subseq, suboriginal = [self.location.extract_sequence(s)
                                    for s in (sequence, original)]
             score = 1 if (subseq == suboriginal) else -1
-            return ObjectiveEvaluation(self, problem, score)
+            return ObjectiveEvaluation(self, problem, score,
+                                       locations=[self.location])
         else:
             sequence = np.fromstring(sequence, dtype="uint8")
             original = np.fromstring(original, dtype="uint8")
@@ -371,7 +373,8 @@ class DoNotModify(Objective):
             else:
                 score = -1
 
-            return ObjectiveEvaluation(self, problem, score)
+            return ObjectiveEvaluation(self, problem, score,
+                                       locations=[self.location])
 
     def localize(self, location):
         """Localize the DoNotModify to the overlap of its location and the new.
@@ -491,7 +494,8 @@ class EnforceGCContent(Objective):
             if new_location is None:
                 return VoidObjective(parent_objective=self)
             else:
-                extended_location = location.extended(self.gc_window)
+                extension = 0 if self.gc_window is None else self.gc_window-1
+                extended_location = location.extended(extension)
 
                 new_location = self.location.overlap_region(extended_location)
         else:
@@ -729,7 +733,9 @@ class EnforceTranslation(Objective):
         if self.initialize_translation_from_problem:
             subsequence = self.location.extract_sequence(problem.sequence)
             translation = translate(subsequence)
-        return self.copy_with_changes(translation=translation)
+            return self.copy_with_changes(translation=translation)
+        else:
+            return self
 
 
     def evaluate(self, problem):
@@ -738,6 +744,7 @@ class EnforceTranslation(Objective):
         subsequence = location.extract_sequence(problem.sequence)
         success = 1 if (translate(subsequence) == self.translation) else -1
         return ObjectiveEvaluation(self, problem, success,
+                                   locations=[self.location],
                                    message="All OK." if success else "Failed.")
 
     def localized(self, location):
@@ -756,7 +763,7 @@ class EnforceTranslation(Objective):
                 new_location = Location(
                     start=w_start + 3 * start_codon,
                     end=min(w_end, w_start + 3 * (end_codon + 1)),
-                    strand=self.strand
+                    strand=self.location.strand
                 )
                 new_translation = self.translation[start_codon:end_codon + 1]
                 return EnforceTranslation(new_location,

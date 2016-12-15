@@ -8,7 +8,7 @@ import itertools as itt
 
 import numpy as np
 
-from .biotools.biotools import reverse_complement
+from .biotools.biotools import reverse_complement, sequence_to_biopython_record
 from .biotools.biotables import CODONS_SEQUENCES
 from .objectives.objectives import (Objective, DoNotModify, EnforcePattern,
                                     EnforceTranslation)
@@ -455,7 +455,7 @@ class DnaOptimizationProblem:
                     ]
                 else:
                     passing_localized_constraints = []
-                localized_canvas = DnaOptimizationProblem(
+                localized_problem = DnaOptimizationProblem(
                     sequence=self.sequence,
                     constraints=[
                         DoNotModify(
@@ -469,16 +469,16 @@ class DnaOptimizationProblem:
                         constraint.localized(do_not_modify_location)
                     ] + passing_localized_constraints
                 )
-                if (localized_canvas.mutation_space_size() <
+                if (localized_problem.mutation_space_size() <
                         randomization_threshold):
-                    localized_canvas.solve_all_constraints_by_exhaustive_search(
+                    localized_problem.solve_all_constraints_by_exhaustive_search(
                         verbose=verbose, progress_bar=progress_bars > 1)
-                    self.sequence = localized_canvas.sequence
+                    self.sequence = localized_problem.sequence
                 else:
-                    localized_canvas.solve_all_constraints_by_random_mutations(
+                    localized_problem.solve_all_constraints_by_random_mutations(
                         max_iter=max_random_iters, n_mutations=n_mutations,
                         verbose=verbose, progress_bar=progress_bars > 1)
-                    self.sequence = localized_canvas.sequence
+                    self.sequence = localized_problem.sequence
 
     def solve_all_constraints_one_by_one(self, max_loops=1,
                                          randomization_threshold=10000,
@@ -646,15 +646,19 @@ class DnaOptimizationProblem:
                                            progress_bars=False,
                                            optimize_independently=False):
         """Maximize the objective via local, targeted mutations."""
-
         if locations is None:
-            locations = objective.evaluate(self).locations
+            evaluation = objective.evaluate(self)
+            locations = evaluation.locations
+            if ((objective.best_possible_score is not None) and
+                (evaluation.score == objective.best_possible_score)):
+                return
             if locations is None:
-                raise ValueError(
+                raise ValueError(("With %s:" % objective) +
                     "max_objective_by_localization requires either that"
                     " locations be provided or that the objective evaluation"
                     " returns locations."
                 )
+
         if progress_bars > 0:
             locations = tqdm(locations, desc="Window", leave=False)
         for location in locations:
@@ -670,7 +674,7 @@ class DnaOptimizationProblem:
                     for _objective in self.objectives
                 ]
 
-            localized_canvas = DnaOptimizationProblem(
+            localized_problem = DnaOptimizationProblem(
                 sequence=self.sequence,
                 constraints=[
                     _constraint.localized(do_not_modify_location)
@@ -687,15 +691,15 @@ class DnaOptimizationProblem:
                 objectives=objectives
             )
 
-            if (localized_canvas.mutation_space_size() <
+            if (localized_problem.mutation_space_size() <
                     randomization_threshold):
-                localized_canvas.maximize_objectives_by_exhaustive_search(
+                localized_problem.maximize_objectives_by_exhaustive_search(
                     verbose=verbose, progress_bar=progress_bars > 1)
             else:
-                localized_canvas.maximize_objectives_by_random_mutations(
+                localized_problem.maximize_objectives_by_random_mutations(
                     max_iter=max_random_iters, n_mutations=1,
                     verbose=verbose, progress_bar=progress_bars > 1)
-            self.sequence = localized_canvas.sequence
+            self.sequence = localized_problem.sequence
 
     def maximize_all_objectives_one_by_one(self, n_loops=1,
                                            randomization_threshold=10000,
@@ -751,10 +755,25 @@ class DnaOptimizationProblem:
                 continue
             if "label" not in feature.qualifiers:
                 continue
-            if feature.qualifiers["label"][0] not in "@~":
+            label = feature.qualifiers["label"]
+            if isinstance(label, list):
+                label = label[0]
+            if label[0] not in "@~":
                 continue
             role, objective = Objective.from_biopython_feature(feature,
                                                                objectives_dict)
             parameters[role+"s"].append(objective)
 
         return DnaOptimizationProblem(**parameters)
+
+    def constraints_breaches_as_biopython_record(self,
+                                                 feature_type="misc_feature"):
+        features = []
+        for constraint in self.constraints:
+            ev = constraint.evaluate(self)
+            if not ev.passes:
+                print constraint
+                new_features =ev.to_biopython_features(
+                    feature_type=feature_type)
+                features += new_features
+        return sequence_to_biopython_record(self.sequence, features=features)

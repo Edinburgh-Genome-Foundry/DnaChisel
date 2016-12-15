@@ -7,8 +7,8 @@ from ..biotools import (enzyme_pattern, homopolymer_pattern, repeated_kmers)
 
 PROVIDERS_CONSTRAINTS = {
     "Gen9": [
-        AvoidPattern(enzyme_pattern("BsaI")),
-        AvoidPattern(enzyme_pattern("AarI")),
+        AvoidPattern(enzyme="BsaI"),
+        AvoidPattern(enzyme="AarI"),
         AvoidPattern(homopolymer_pattern("A", 9)),
         AvoidPattern(homopolymer_pattern("T", 9)),
         AvoidPattern(homopolymer_pattern("G", 6)),
