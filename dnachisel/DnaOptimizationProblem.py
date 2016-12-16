@@ -772,8 +772,7 @@ class DnaOptimizationProblem:
         for constraint in self.constraints:
             ev = constraint.evaluate(self)
             if not ev.passes:
-                print constraint
-                new_features =ev.to_biopython_features(
+                new_features = ev.to_biopython_features(
                     feature_type=feature_type)
                 features += new_features
         return sequence_to_biopython_record(self.sequence, features=features)

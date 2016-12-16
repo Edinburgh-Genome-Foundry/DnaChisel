@@ -2,6 +2,7 @@ import tempfile
 import os
 import subprocess
 import time
+from copy import deepcopy
 
 import numpy as np
 from Bio.Seq import Seq
@@ -295,6 +296,12 @@ def subdivide_window(window, max_span):
     start, end = window
     inds = list(range(start, end, max_span)) + [end]
     return zip(inds, inds[1:])
+
+def change_biopython_record_sequence(record, new_seq):
+    """Return a version of the record with the sequence set to new_seq"""
+    new_record = deepcopy(record)
+    new_record.seq = Seq(new_seq, alphabet=record.seq.alphabet)
+    return new_record
 
 def sequence_to_biopython_record(sequence, features):
     return SeqRecord(Seq(sequence, alphabet=DNAAlphabet()), features=features)

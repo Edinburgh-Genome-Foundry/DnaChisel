@@ -7,7 +7,8 @@ from .biotools import (
     reverse_translate,
     sequences_differences,
     translate,
-    windows_overlap
+    windows_overlap,
+    change_biopython_record_sequence
 )
 
 from .patterns import (

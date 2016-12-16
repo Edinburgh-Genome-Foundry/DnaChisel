@@ -837,7 +837,7 @@ class MinimizeDifferences(Objective):
         location = (self.location if self.location is not None
                   else [0, len(problem.sequence)])
         subsequence = location.extract_sequence(problem.sequence)
-        diffs = - sequences_differences(subsequence, self.reference_sequence)
+        diffs = sequences_differences(subsequence, self.reference_sequence)
         return ObjectiveEvaluation(
             self, problem, score=-diffs, locations=[location],
             message="Found %d differences with target sequence" % diffs

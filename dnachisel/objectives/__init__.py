@@ -13,5 +13,6 @@ from .objectives import (
     EnforcePattern,
     EnforceTranslation,
     EnforceRegionsCompatibility,
+    MinimizeDifferences,
     SequenceLengthBounds
 )

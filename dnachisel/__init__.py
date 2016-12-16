@@ -1,6 +1,7 @@
 from .DnaOptimizationProblem import (DnaOptimizationProblem,
                                      NoSolutionFoundError)
 from .Location import Location
+import inspect
 
 from .objectives import (
     AvoidBlastMatches,
@@ -18,6 +19,7 @@ from .objectives import (
     PROVIDERS_CONSTRAINTS,
     SequenceLengthBounds,
     VoidObjective,
+    MinimizeDifferences
 )
 
 from .biotools import (
@@ -31,7 +33,14 @@ from .biotools import (
     reverse_translate,
     sequences_differences,
     translate,
+    change_biopython_record_sequence
 )
+
+objectives_dict = {
+   k: v
+   for (k, v) in locals().items()
+   if inspect.isclass(v) and issubclass(v, Objective)
+}
 
 from .utils import random_compatible_dna_sequence
 
