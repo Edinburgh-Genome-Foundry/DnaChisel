@@ -9,7 +9,6 @@ import itertools as itt
 import numpy as np
 
 from .biotools.biotools import reverse_complement, sequence_to_biopython_record
-from .biotools.biotables import CODONS_SEQUENCES
 from .objectives.objectives import (Objective, DoNotModify, EnforcePattern,
                                     EnforceTranslation)
 from .Location import Location
@@ -155,16 +154,16 @@ class DnaOptimizationProblem:
                     unibase_mutable[constraint.indices] = 0
         for constraint in self.constraints:
             if isinstance(constraint, EnforceTranslation):
-                start, end = constraint.location
+                start, end = constraint.location.start, constraint.location.end
                 for i, aa in enumerate(constraint.translation):
-                    if constraint.strand == 1:
+                    if constraint.location.strand == 1:
                         cstart, cstop = start + 3 * i, start + 3 * (i + 1)
                         seq_codon = self.sequence[cstart:cstop]
                     else:
                         cstart, cstop = end - 3 * (i + 1), end - 3 * i
                         seq_codon = reverse_complement(
                             self.sequence[cstart:cstop])
-                    possible_codons = CODONS_SEQUENCES[aa][:]
+                    possible_codons = constraint.codons_sequences[aa][:]
                     local_immutable_unibases = (
                         unibase_mutable[cstart:cstop] == 0
                     ).nonzero()[0]
@@ -187,10 +186,11 @@ class DnaOptimizationProblem:
                         if reachable_possible_codons == []:
                             raise NoSolutionFoundError(
                                 "An EnforceTranslation constraint seems to"
-                                " clash with a DoNotTouch constraint."
+                                " clash with a DoNotTouch constraint: %s" %
+                                constraint
                             )
                         possible_codons = reachable_possible_codons
-                    if constraint.strand == -1:
+                    if constraint.location.strand == -1:
                         possible_codons = [
                             reverse_complement(possible_codon)
                             for possible_codon in possible_codons
@@ -314,7 +314,7 @@ class DnaOptimizationProblem:
         return ("\n===> %s\n%s\n" % (message, text_evaluations))
 
     def solve_all_constraints_by_exhaustive_search(self, verbose=False,
-                                                   progress_bar=False):
+        progress_bar=False, raise_exception_on_failure=True):
         """Solve all constraints by exploring the whole search space.
 
         This method iterates over ``self.iter_mutations_space()`` (space of
@@ -335,14 +335,14 @@ class DnaOptimizationProblem:
                 self.sequence = self.original_sequence
 
         summary = self.constraints_summary()
-        raise NoSolutionFoundError(
-            summary +
-            "Exhaustive search failed to satisfy all constraints.")
+        if raise_exception_on_failure:
+            raise NoSolutionFoundError(
+                summary +
+                "Exhaustive search failed to satisfy all constraints.")
 
     def solve_all_constraints_by_random_mutations(self, max_iter=1000,
-                                                  n_mutations=3,
-                                                  verbose=False,
-                                                  progress_bar=False):
+        n_mutations=1, verbose=False, progress_bar=False,
+        raise_exception_on_failure=False):
         """Solve all constraints by successive sets of random mutations.
 
         This method modifies the canvas sequence by applying a number
@@ -390,9 +390,10 @@ class DnaOptimizationProblem:
             else:
                 self.sequence = previous_sequence
         summary = self.constraints_summary()
-        raise NoSolutionFoundError(
-            summary +
-            "Random search hit max_iterations without finding a solution.")
+        if raise_exception_on_failure:
+            raise NoSolutionFoundError(
+                summary +
+                "Random search hit max_iterations without finding a solution.")
 
     def solve_constraint_by_localization(self, constraint,
                                          randomization_threshold=10000,
@@ -577,6 +578,7 @@ class DnaOptimizationProblem:
                                                  progress_bar=False):
         """
         """
+        #print("blublublu")
         if not self.all_constraints_pass():
             summary = self.constraints_summary(failed_only=True)
             raise NoSolutionFoundError(
@@ -584,7 +586,14 @@ class DnaOptimizationProblem:
                 "Optimization can only be done when all constraints are"
                 "verified."
             )
-        current_score = self.all_objectives_score_sum()
+
+        best_possible_score = None
+        if all([hasattr(obj, "best_possible_score")
+               for obj in self.objectives]):
+            best_possible_score = sum([obj.best_possible_score
+                                       for obj in self.objectives])
+
+        current_best_score = self.all_objectives_score_sum()
         current_best_sequence = self.sequence
         mutation_space = self.iter_mutations_space()
         if progress_bar:
@@ -593,14 +602,16 @@ class DnaOptimizationProblem:
             self.mutate_sequence(mutations)
             if self.all_constraints_pass():
                 score = self.all_objectives_score_sum()
-                if score > current_score:
-                    current_score = score
+                if score > current_best_score:
+                    current_best_score = score
                     current_best_sequence = self.sequence
+                    if current_best_score >= best_possible_score:
+                        break
             self.sequence = self.original_sequence
         self.sequence = current_best_sequence
 
     def maximize_objectives_by_random_mutations(self, max_iter=1000,
-                                                n_mutations=3,
+                                                n_mutations=1,
                                                 verbose=False,
                                                 progress_bar=False):
         """
@@ -612,6 +623,7 @@ class DnaOptimizationProblem:
         mutations_locs = list(self.possible_mutations.keys())
         score = self.all_objectives_score_sum()
         range_iters = range(max_iter)
+
         if progress_bar:
             range_iters = tqdm(range_iters, desc="Random mutation",
                                leave=False)
@@ -644,6 +656,7 @@ class DnaOptimizationProblem:
                                            max_random_iters=1000,
                                            verbose=False,
                                            progress_bars=False,
+                                           n_mutations=1,
                                            optimize_independently=False):
         """Maximize the objective via local, targeted mutations."""
         if locations is None:
@@ -667,10 +680,10 @@ class DnaOptimizationProblem:
             do_not_modify_location = location.extended(
                 5, upper_limit=len(self.sequence))
             if optimize_independently:
-                objectives = [objective.localized(location)]
+                objectives = [objective.localized(do_not_modify_location)]
             else:
                 objectives = [
-                    _objective.localized(location)
+                    _objective.localized(do_not_modify_location)
                     for _objective in self.objectives
                 ]
 
@@ -690,6 +703,7 @@ class DnaOptimizationProblem:
                 ],
                 objectives=objectives
             )
+            #print (location, localized_problem.mutation_space_size())
 
             if (localized_problem.mutation_space_size() <
                     randomization_threshold):
@@ -697,7 +711,7 @@ class DnaOptimizationProblem:
                     verbose=verbose, progress_bar=progress_bars > 1)
             else:
                 localized_problem.maximize_objectives_by_random_mutations(
-                    max_iter=max_random_iters, n_mutations=1,
+                    max_iter=max_random_iters, n_mutations=n_mutations,
                     verbose=verbose, progress_bar=progress_bars > 1)
             self.sequence = localized_problem.sequence
 
@@ -706,7 +720,8 @@ class DnaOptimizationProblem:
                                            max_random_iters=1000,
                                            verbose=False,
                                            progress_bars=0,
-                                           optimize_independently=False):
+                                           optimize_independently=False,
+                                           n_mutations=1):
 
         range_loops = range(n_loops)
         if progress_bars > 0:
@@ -723,6 +738,7 @@ class DnaOptimizationProblem:
                     max_random_iters=max_random_iters,
                     verbose=verbose,
                     progress_bars=(progress_bars - 2),
+                    n_mutations=n_mutations,
                     optimize_independently=optimize_independently
                 )
 

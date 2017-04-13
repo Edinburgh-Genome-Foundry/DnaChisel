@@ -94,16 +94,6 @@ class Objective:
         self.boost = boost
         self.evaluate = evaluate
 
-    # def evaluate(self, problem):
-    #     """Evaluate the objective on the provided problem.
-    #
-    #     Returns a ``ObjectiveEvaluation`` object indicating whether the
-    #     objective passed, the score , the locations on which to focus
-    #     searches in case the objective failed and a string message
-    #     summarizing the evaluation (see ``ObjectiveEvaluation``).
-    #     """
-    #     pass
-
     def localized(self, location):
         """Return a modified version of the objective for the case where
         sequence modifications are only performed inside the provided location.
@@ -141,7 +131,7 @@ class Objective:
         match = re.match(pattern, label)
         role, objective, parameters = match.groups()
         role = {"@": "constraint", "~": "objective"}[role]
-        kwargs=dict(e.split('=') for e in parameters[1:-1].split(', ')
+        kwargs = dict(e.split('=') for e in parameters[1:-1].split(', ')
                     if ("=" in e))
         for k, v in kwargs.items():
             match = re.match(r"'(.*)'", v)
@@ -168,12 +158,18 @@ class VoidObjective(Objective):
     of a DNA segment, the Objective EnforceTranslation([300,500]) does not
     apply as it concerns a Gene that is in a completely different segment.
     Therefore the localized version of EnforceTranslation will be void.
-    """
 
-    def __init__(self, parent_objective=None, boost=1.0):
+    Note: the initializer accepts starred arguments/keyword arguments to make
+    it easy to void any other objective by replacing the class to Void.
+    Particularly useful when importing an optimization problem from genbank.
+    """
+    best_possible_score = 0
+
+
+
+    def __init__(self, parent_objective=None, boost=1.0, *a, **kw):
         self.parent_objective = parent_objective
-        self.message = ("Pass (not relevant in this context)"
-                        % parent_objective)
+        self.message = ("Pass (not relevant in this context)")
         self.boost = boost
 
     def evaluate(self, problem):
@@ -201,7 +197,6 @@ class PatternObjective(Objective):
 
 
     """
-    can_be_solved_locally = False
 
     def __init__(self, pattern=None, location=None, boost=1.0, enzyme=None,
                  dna_pattern=None):
@@ -227,7 +222,6 @@ class PatternObjective(Objective):
             else:
                 extended_location = location.extended(pattern_size - 1)
                 new_location = self.location.overlap_region(extended_location)
-
 
         return self.copy_with_changes(location=new_location)
 

@@ -10,6 +10,7 @@ from Bio.Blast import NCBIXML
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import DNAAlphabet
+from Bio.SeqFeature import SeqFeature, FeatureLocation
 
 from .biotables import CODONS_SEQUENCES, NUCLEOTIDE_TO_REGEXPR
 
@@ -106,9 +107,26 @@ def reverse_translate(protein_sequence):
     ])
 
 
-def translate(dna_sequence):
-    """Translate the DNA sequence into an amino-acids sequence "MLKYQT..." """
-    return str(Seq(dna_sequence).translate())
+def translate(dna_sequence, translation_table="Bacterial"):
+    """Translate the DNA sequence into an amino-acids sequence "MLKYQT...".
+    If ``translation_table`` is the name or number of  NCBI genetic table,
+    Biopython will be used. See here for options:
+
+    http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc25
+
+    ``translation_table`` can also be a dictionnary of the form
+    ``{"ATT": "M", "CTC": "X", etc.}`` for more exotic translation tables
+
+
+    """
+    if isinstance(translation_table, dict):
+        return "".join([
+            translation_table[dna_sequence[i:i+3]]
+            for i in range(0, len(dna_sequence), 3)
+        ])
+    else:
+        return str(Seq(dna_sequence).translate(table=translation_table))
+
 
 
 def dna_pattern_to_regexpr(dna_pattern):
@@ -300,8 +318,9 @@ def subdivide_window(window, max_span):
 def change_biopython_record_sequence(record, new_seq):
     """Return a version of the record with the sequence set to new_seq"""
     new_record = deepcopy(record)
-    new_record.seq = Seq(new_seq, alphabet=record.seq.alphabet)
+    new_record.seq = Seq(new_seq, alphabet=DNAAlphabet())
     return new_record
 
-def sequence_to_biopython_record(sequence, features):
-    return SeqRecord(Seq(sequence, alphabet=DNAAlphabet()), features=features)
+def sequence_to_biopython_record(sequence, features=()):
+    return SeqRecord(Seq(sequence, alphabet=DNAAlphabet()),
+                     features=list(features))

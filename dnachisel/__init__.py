@@ -33,8 +33,16 @@ from .biotools import (
     reverse_translate,
     sequences_differences,
     translate,
-    change_biopython_record_sequence
+    change_biopython_record_sequence,
+    annotate_differences,
+    annotate_pattern_occurrences,
+    annotate_record,
+    sequence_to_biopython_record
 )
+
+from .plotting import (GraphicTranslator, make_constraints_breaches_pdf,
+                       plot_local_gc_content, plot_constraints_breaches,
+                       plot_local_gc_with_features)
 
 objectives_dict = {
    k: v

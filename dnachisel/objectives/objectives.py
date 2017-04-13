@@ -4,9 +4,8 @@ import itertools
 
 import numpy as np
 
-from ..biotools.biotables import CODON_USAGE
+from ..biotools.biotables import (CODON_USAGE_TABLES, CODONS_SEQUENCES)
 from ..biotools.biotools import (gc_content, reverse_complement,
-                                 sequences_differences,
                                  blast_sequence, translate)
 from .Objective import (Objective, PatternObjective, TerminalObjective,
                         ObjectiveEvaluation, VoidObjective)
@@ -102,8 +101,6 @@ class AvoidBlastMatches(Objective):
             self.location, self.blast_db, self.min_align_length,
             self.perc_identity
         )
-
-
 
 
 class AvoidIDTHairpins(Objective):
@@ -303,7 +300,7 @@ class CodonOptimize(Objective):
         self.location = location
         self.organism = organism
         if organism is not None:
-            codon_usage_table = CODON_USAGE[self.organism]
+            codon_usage_table = CODON_USAGE_TABLES[self.organism]
         if codon_usage_table is None:
             raise ValueError("Provide either an organism name or a codon "
                              "usage table")
@@ -313,14 +310,15 @@ class CodonOptimize(Objective):
 
         location = (self.location if self.location is not None
                     else Location(0, len(problem.sequence)))
-        subsequence = location.extract_sequence(problem.sequence)
+        subsequence = (location.extract_sequence(problem.sequence)
+                       .replace("T", "U"))
         length = len(subsequence)
         if (length % 3):
             raise ValueError("CodonOptimizationObjective on a window/sequence"
                              "with size %d not multiple of 3)" % length)
         score = sum([
             self.codon_usage_table[subsequence[3 * i:3 * (i + 1)]]
-            for i in range(length / 3)
+            for i in range(int(length / 3))
         ])
         return ObjectiveEvaluation(
             self, problem, score, locations=[location],
@@ -376,7 +374,7 @@ class DoNotModify(Objective):
             return ObjectiveEvaluation(self, problem, score,
                                        locations=[self.location])
 
-    def localize(self, location):
+    def localized(self, location):
         """Localize the DoNotModify to the overlap of its location and the new.
         """
         if self.location is not None:
@@ -490,11 +488,13 @@ class EnforceGCContent(Objective):
         to [start - gc_window, end + gc_window]
         """
         if self.location is not None:
+            if self.gc_window is None:
+                return self
             new_location = self.location.overlap_region(location)
             if new_location is None:
                 return VoidObjective(parent_objective=self)
             else:
-                extension = 0 if self.gc_window is None else self.gc_window-1
+                extension = 0 if self.gc_window is None else self.gc_window - 1
                 extended_location = location.extended(extension)
 
                 new_location = self.location.overlap_region(extended_location)
@@ -506,10 +506,11 @@ class EnforceGCContent(Objective):
         return self.copy_with_changes(location=new_location)
 
     def __repr__(self):
-        return "GCContent(min %.02f, max %.02f, gc_win %s, window %s)" % (
-            self.gc_min, self.gc_max, "global" if (self.gc_window is None) else
-                                      self.gc_window, self.location
-        )
+        return ("EnforceGCContent(min %.02f, max %.02f, gc_win %s, window %s)"
+                % (self.gc_min,
+                   self.gc_max,
+                   "global" if (self.gc_window is None) else self.gc_window,
+                   self.location))
 
 
 class EnforcePattern(PatternObjective):
@@ -524,6 +525,7 @@ class EnforcePattern(PatternObjective):
     location
       Location object
     """
+    best_possible_score = 0
 
     def __init__(self, pattern, location=None, occurences=1, boost=1.0):
         PatternObjective.__init__(self, pattern, location)
@@ -598,7 +600,7 @@ class EnforceRegionsCompatibility(Objective):
         )
 
     def localized(self, window):
-        #FIXME: weird stuff here
+        # FIXME: weird stuff here
         wstart, wend = window
         included_regions = [
             (a, b) for (a, b) in self.regions
@@ -610,7 +612,7 @@ class EnforceRegionsCompatibility(Objective):
             # compute incompatibilities but exclude to
             # consider pairs of regions that are both
             # outside the current localization window
-            #FIXME: weird stuff here
+            # FIXME: weird stuff here
             incompatible_regions = [
                 region
                 for region in self.regions
@@ -669,6 +671,9 @@ class EnforceTranslation(Objective):
     """Enforce that the DNA segment sequence translates to a specific
     amino-acid sequence.
 
+    This class enforces the standard translation, but it is also possible to
+    change the class' `codons_sequences` and `codons_translations`
+    dictionnaries for more exotic kind of translations
 
     Parameters
     -----------
@@ -709,40 +714,66 @@ class EnforceTranslation(Objective):
     >>> )
     """
 
-    best_possible_score = 1
+    best_possible_score = 0
+    codons_sequences = CODONS_SEQUENCES
+    codons_translations = "Bacterial"
 
     def __init__(self, location=None, translation=None, boost=1.0):
-        if (len(location) % 3):
-            raise ValueError(
-                "Location in EnforceTranslation should be multiple of 3")
-
-        if ((translation is not None) and
-            (len(location) != 3 * len(translation))):
-            raise ValueError(
-                ("Window size (%d bp) incompatible with translation (%d aa)") %
-                (len(location), len(translation))
-            )
-
-        self.boost = boost
-        self.location = location
         self.translation = translation
+        self.set_location(location)
+        self.boost = boost
+
         self.initialize_translation_from_problem = (translation is None)
         self.initialize_location_from_problem = (location is None)
 
-    def initialize_problem(self, problem, role):
-        if self.initialize_translation_from_problem:
-            subsequence = self.location.extract_sequence(problem.sequence)
-            translation = translate(subsequence)
-            return self.copy_with_changes(translation=translation)
-        else:
-            return self
+    def set_location(self, location):
+        if location is not None:
+            if len(location) % 3:
+                raise ValueError(
+                    "Location in a Codon Objective should be multiple of 3")
 
+            if ((self.translation is not None) and
+                    (len(location) != 3 * len(self.translation))):
+                raise ValueError(
+                    ("Window size (%d bp) incompatible with translation "
+                     "(%d aa)") % (len(location), len(self.translation))
+                )
+        self.location = location
+
+    def set_translation(self, translation):
+        if (translation is not None) and (self.location is not None):
+            if (len(self.location) != 3 * len(self.translation)):
+                raise ValueError(
+                    ("Window size (%d bp) incompatible with translation "
+                     "(%d aa)") % (len(self.location), len(self.translation))
+                )
+        self.translation = translation
+
+    def initialize_problem(self, problem, role):
+        if self.location is None:
+            location = Location(0, len(problem.sequence), 1)
+            result = self.copy_with_changes()
+            result.set_location(location)
+        else:
+            result = self
+        if self.translation is None:
+            subsequence = result.location.extract_sequence(problem.sequence)
+            translation = translate(subsequence, self.codons_translations)
+
+            result = self.copy_with_changes(translation=translation)
+        return result
 
     def evaluate(self, problem):
         location = (self.location if self.location is not None else
                     Location(0, len(problem.sequence)))
         subsequence = location.extract_sequence(problem.sequence)
-        success = 1 if (translate(subsequence) == self.translation) else -1
+        translation = translate(subsequence, self.codons_translations)
+        errors = [
+            ind
+            for ind in range(len(translation))
+            if translation[ind] != self.translation[ind]
+        ]
+        success = (errors == 0)
         return ObjectiveEvaluation(self, problem, success,
                                    locations=[self.location],
                                    message="All OK." if success else "Failed.")
@@ -757,18 +788,28 @@ class EnforceTranslation(Objective):
                 # return self
                 o_start, o_end = overlap.start, overlap.end
                 w_start, w_end = self.location.start, self.location.end
-                start_codon = int((o_start - w_start) / 3)
-                end_codon = int((o_end - w_start) / 3)
 
-                new_location = Location(
-                    start=w_start + 3 * start_codon,
-                    end=min(w_end, w_start + 3 * (end_codon + 1)),
-                    strand=self.location.strand
-                )
+                if self.location.strand == 1:
+                    start_codon = int((o_start - w_start) / 3)
+                    end_codon = int((o_end - w_start) / 3)
+                    new_location = Location(
+                        start=w_start + 3 * start_codon,
+                        end=min(w_end, w_start + 3 * (end_codon + 1)),
+                        strand=self.location.strand
+                    )
+                else:
+                    start_codon = int((w_end - o_end) / 3)
+                    end_codon = int((w_end - o_start) / 3)
+                    new_location = Location(
+                        start=max(w_start, w_end - 3 * (end_codon + 1)),
+                        end=w_end - 3 * start_codon,
+                        strand=self.location.strand
+                    )
+
                 new_translation = self.translation[start_codon:end_codon + 1]
-                return EnforceTranslation(new_location,
-                                          translation=new_translation,
-                                          boost=self.boost)
+                return self.__class__(new_location,
+                                      translation=new_translation,
+                                      boost=self.boost)
         return self
 
     def __repr__(self):
@@ -831,24 +872,44 @@ class MinimizeDifferences(Objective):
         if self.location is None:
             self.location = Location(0, len(problem.sequence))
         reference_sequence = self.location.extract_sequence(problem.sequence)
-        return self.copy_with_changes(reference_sequence=reference_sequence)
+        if self.location.strand == -1:
+            reference_sequence = reverse_complement(reference_sequence)
+        return self.copy_with_changes(
+            reference_sequence=reference_sequence,
+            location=Location(self.location.start, self.location.end, 1)
+        )
 
     def evaluate(self, problem):
-        location = (self.location if self.location is not None
-                  else [0, len(problem.sequence)])
-        subsequence = location.extract_sequence(problem.sequence)
-        diffs = sequences_differences(subsequence, self.reference_sequence)
+        subsequence = self.location.extract_sequence(problem.sequence)
+        locations = [
+            Location(self.location.start + i,
+                     self.location.start + i, 1)
+            for i in range(len(subsequence))
+            if subsequence[i] != self.reference_sequence[i]
+        ]
+
+        diffs = len(locations)
+        #sequences_differences(subsequence, self.reference_sequence)
         return ObjectiveEvaluation(
-            self, problem, score=-diffs, locations=[location],
+            self, problem, score=-diffs, locations=locations,
             message="Found %d differences with target sequence" % diffs
         )
+
+    def localized(self, location):
+        new_location = location.overlap_region(self.location)
+        if new_location is None:
+            return VoidObjective(parent_objective=self)
+        target_start = new_location.start - self.location.start
+        target_end = new_location.end - self.location.end
+        new_target = self.reference_sequence[target_start:target_end]
+        return MinimizeDifferences(location=new_location, boost=self.boost,
+                                   target_sequence=new_target)
 
     def __str__(self):
         return "MinimizeDifferencesObj(%s, %s...)" % (
             "global" if self.location is None else str(self.location),
             self.sequence[:7]
         )
-
 
 
 class SequenceLengthBounds(Objective):

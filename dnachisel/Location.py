@@ -2,6 +2,11 @@ from .biotools import reverse_complement
 from Bio.SeqFeature import FeatureLocation
 
 class Location:
+    """Represent a location on a sequence, with a start, end, and strand.
+
+    This is similar to a Biopython FeatureLocation, but with different
+    methods.
+    """
 
     def __init__(self, start, end, strand=None):
         self.start = start
@@ -57,10 +62,19 @@ class Location:
 
     @staticmethod
     def from_biopython_location(location):
-        return Location(location.start, location.end, location.strand)
+        """Return a DnaChisel Location from a Biopython location."""
+        start, end, strand = [
+            None if e is None else int(e)
+            for e in [location.start, location.end, location.strand]
+        ]
+        return Location(start, end, strand)
 
     def to_biopython_location(self):
-        return FeatureLocation(self.start, self.end, self.strand)
+        start, end, strand = [
+            None if e is None else int(e)
+            for e in [self.start, self.end, self.strand]
+        ]
+        return FeatureLocation(start, end, strand)
 
 
 class MultiLocation:

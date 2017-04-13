@@ -8,7 +8,15 @@ from .biotools import (
     sequences_differences,
     translate,
     windows_overlap,
-    change_biopython_record_sequence
+    change_biopython_record_sequence,
+    sequence_to_biopython_record
+
+)
+
+from .features_annotations import (
+    annotate_record,
+    annotate_differences,
+    annotate_pattern_occurrences
 )
 
 from .patterns import (
@@ -17,3 +25,5 @@ from .patterns import (
     enzyme_pattern,
     repeated_kmers
 )
+
+from .biotables import CODONS_SEQUENCES, CODONS_TRANSLATIONS
