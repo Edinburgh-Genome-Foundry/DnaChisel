@@ -334,8 +334,9 @@ class DnaOptimizationProblem:
             else:
                 self.sequence = self.original_sequence
 
-        summary = self.constraints_summary()
+
         if raise_exception_on_failure:
+            summary = self.constraints_summary()
             raise NoSolutionFoundError(
                 summary +
                 "Exhaustive search failed to satisfy all constraints.")

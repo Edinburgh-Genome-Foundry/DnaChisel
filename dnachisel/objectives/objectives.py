@@ -773,8 +773,8 @@ class EnforceTranslation(Objective):
             for ind in range(len(translation))
             if translation[ind] != self.translation[ind]
         ]
-        success = (errors == 0)
-        return ObjectiveEvaluation(self, problem, success,
+        success = (len(errors) == 0)
+        return ObjectiveEvaluation(self, problem, score=-len(errors),
                                    locations=[self.location],
                                    message="All OK." if success else "Failed.")
 
