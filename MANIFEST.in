@@ -1,0 +1,5 @@
+include *.txt
+recursive-include docs *
+recursive-include dnachisel/biotools/data *
+include *.rst
+include ez_setup.py
