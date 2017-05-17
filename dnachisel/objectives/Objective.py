@@ -197,6 +197,7 @@ class PatternObjective(Objective):
 
 
     """
+    shrink_when_localized = True
 
     def __init__(self, pattern=None, location=None, boost=1.0, enzyme=None,
                  dna_pattern=None):
@@ -220,6 +221,8 @@ class PatternObjective(Objective):
             if self.location.overlap_region(location) is None:
                 return VoidObjective(parent_objective=self)
             else:
+                if not self.shrink_when_localized:
+                   return self
                 extended_location = location.extended(pattern_size - 1)
                 new_location = self.location.overlap_region(extended_location)
 

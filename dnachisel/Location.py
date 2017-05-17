@@ -48,6 +48,9 @@ class Location:
     def __geq__(self, other):
         return self.to_tuple() >= other.to_tuple()
 
+    def __lt__(self, other):
+        return self.to_tuple() < other.to_tuple()
+
     def __add__(self, number):
         return Location(self.start + number, self.end + number, self.strand)
 

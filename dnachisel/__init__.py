@@ -5,6 +5,7 @@ import inspect
 
 from .objectives import (
     AvoidBlastMatches,
+    AvoidIDTHairpins,
     AvoidNonuniqueSegments,
     AvoidPattern,
     CodonOptimize,
@@ -29,6 +30,7 @@ from .biotools import (
     homopolymer_pattern,
     random_dna_sequence,
     random_protein_sequence,
+    repeated_kmers,
     reverse_complement,
     reverse_translate,
     sequences_differences,
@@ -42,7 +44,10 @@ from .biotools import (
 
 from .plotting import (GraphicTranslator, make_constraints_breaches_pdf,
                        plot_local_gc_content, plot_constraints_breaches,
-                       plot_local_gc_with_features)
+                       plot_constraint_breaches,
+                       plot_local_gc_with_features,
+                       plot_gc_content_breaches,
+                       plot_sequence_manufacturability_difficulties)
 
 objectives_dict = {
    k: v

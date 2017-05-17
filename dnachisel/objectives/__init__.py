@@ -5,6 +5,7 @@ from .objectives_sets import PROVIDERS_CONSTRAINTS
 
 from .objectives import (
     AvoidBlastMatches,
+    AvoidIDTHairpins,
     AvoidNonuniqueSegments,
     AvoidPattern,
     CodonOptimize,

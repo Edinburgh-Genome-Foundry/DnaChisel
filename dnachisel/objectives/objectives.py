@@ -143,6 +143,8 @@ class AvoidIDTHairpins(Objective):
                 locations.append([i, i + self.hairpin_window])
         score = -len(locations)
 
+        locations = sorted([Location(l[0], l[1]) for l in locations])
+
         return ObjectiveEvaluation(self, problem, score, locations=locations)
 
     def localized(self, location):
@@ -225,7 +227,7 @@ class AvoidNonuniqueSegments(Objective):
                     "of non-unique segments %s" % locations)
 
     def __repr__(self):
-        return "NoNonuniqueKmers(%d)" % (self.length)
+        return "NoNonuniqueKmers(%d)" % (self.min_length)
 
 
 class AvoidPattern(PatternObjective):
@@ -526,9 +528,13 @@ class EnforcePattern(PatternObjective):
       Location object
     """
     best_possible_score = 0
+    shrink_when_localized = False
 
-    def __init__(self, pattern, location=None, occurences=1, boost=1.0):
-        PatternObjective.__init__(self, pattern, location)
+    def __init__(self, pattern=None, dna_pattern=None, enzyme=None,
+                 location=None, occurences=1, boost=1.0):
+        PatternObjective.__init__(self, pattern=pattern, location=location,
+                                  dna_pattern=dna_pattern,
+                                  enzyme=enzyme)
         self.occurences = occurences
         self.boost = boost
 

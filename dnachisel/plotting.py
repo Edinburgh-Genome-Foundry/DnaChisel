@@ -12,6 +12,8 @@ except:
 import numpy as np
 
 from .DnaOptimizationProblem import DnaOptimizationProblem
+from .biotools import gc_content, repeated_kmers, homopolymer_pattern
+from .objectives import EnforceGCContent, AvoidPattern, AvoidIDTHairpins
 
 
 class GraphicTranslator(BiopythonTranslator):
@@ -53,17 +55,19 @@ def plot_local_gc_content(sequence, window_size, ax=None):
     """
     if ax is None:
         fig, ax = plt.subplots(1)
+
     def gc_content(sequence):
-        return 100.0*len([c for c in sequence if c in "GC"]) / len(sequence)
-    yy = [gc_content(sequence[i:i+window_size])
-          for i in range(len(sequence)-window_size)]
-    xx = np.arange(len(sequence)-window_size)+25
+        return 100.0 * len([c for c in sequence if c in "GC"]) / len(sequence)
+    yy = [gc_content(sequence[i:i + window_size])
+          for i in range(len(sequence) - window_size)]
+    xx = np.arange(len(sequence) - window_size) + 25
     ax.fill_between(xx, yy, alpha=0.3)
     for x in range(10, 100, 10):
         ax.axhline(x, lw=0.5, alpha=0.3)
     ax.set_ylabel("GC(%)")
     ax.set_xlim(0, len(sequence))
     ax.set_ylim(ymin=0)
+
 
 def plot_local_gc_with_features(record, window_size, axes=None):
     """Plot the local GC content curve below a plot of the record's features.
@@ -86,6 +90,29 @@ def plot_local_gc_with_features(record, window_size, axes=None):
     graphic_record = BiopythonTranslator().translate_record(record)
     graphic_record.plot(ax=axes[0], with_ruler=False)
     ax = plot_local_gc_content(record.seq, 40, ax=axes[1])
+    return ax
+
+
+def plot_constraint_breaches(constraint, sequence, title=None, ax=None):
+    """Plot breaches for a single constraint"""
+    class MuteTranslator(BiopythonTranslator):
+        """A Biopython record translator for DNA Features Viewer.
+
+        This translator produces label-free plots.
+        """
+        default_feature_color = "#ffaaaa"
+
+        def compute_feature_label(self, f):
+            return None
+    problem = DnaOptimizationProblem(sequence, constraints=[constraint])
+    breaches_record = problem.constraints_breaches_as_biopython_record()
+
+    translator = MuteTranslator()
+    graphic_record = translator.translate_record(breaches_record)
+    ax, _ = graphic_record.plot(ax=ax)
+    ax.set_ylim(-1, 1)
+    if title is not None:
+        ax.set_title(title, fontweight="bold", loc="left")
     return ax
 
 def plot_constraints_breaches(record, constraints, color="red",
@@ -118,7 +145,9 @@ def plot_constraints_breaches(record, constraints, color="red",
     if not DFV_AVAILABLE:
         raise ImportError("Plotting constraint breaches requires "
                           "Matplotlib and dna_features_viewer installed.")
+
     class MyTranslator(BiopythonTranslator):
+
         def compute_feature_color(self, f):
             return color if (f.type == "breach") else "white"
 
@@ -131,6 +160,7 @@ def plot_constraints_breaches(record, constraints, color="red",
     gr_record = MyTranslator().translate_record(new_record)
     ax, _ = gr_record.plot(ax=ax, figure_width=20)
     return ax
+
 
 def make_constraints_breaches_pdf(constraints_sets, record, pdf_path):
     """Plot the record and highlight locations of constraints breaches.
@@ -168,3 +198,81 @@ def make_constraints_breaches_pdf(constraints_sets, record, pdf_path):
             ax.set_title(title, fontsize=16, fontweight="bold")
             pdf.savefig(ax.figure, bbox_inches="tight")
             plt.close(ax.figure)
+
+
+def plot_gc_content_breaches(sequence, window=70, gc_min=0.35, gc_max=0.65,
+                             ax=None, title=None):
+    gc = gc_content(sequence, window_size=window)
+    xx = np.arange(len(gc)) + window / 2
+
+    if ax is None:
+        fig, ax = plt.subplots(1, figsize=(12, 3))
+    gc_inbound = +gc
+    gc_inbound[(gc < gc_min) | (gc > gc_max)] = np.nan
+    ax.plot(xx, gc_inbound, alpha=0.2, c='b')
+
+    for limit, whr in (gc_min, gc < gc_min), (gc_max, gc > gc_max):
+        ax.axhline(limit, c="k", lw=0.5, ls=":")
+        gc_bad = +gc
+        gc_bad[1 - whr] = np.nan
+        ax.plot(xx, gc_bad, alpha=0.1, c='r')
+        ax.fill_between(xx, gc, y2=limit, where=whr, alpha=0.6,
+                        facecolor="r")
+
+    ax.set_xlim(0, len(gc))
+    ax.set_ylim(0, 1)
+    if title is not None:
+        ax.set_title(title, fontweight="bold", loc="left")
+    return ax
+
+
+def plot_sequence_manufacturability_difficulties(sequence):
+    nplots = 7
+    fig, axes = plt.subplots(nplots, 1, figsize=(10, 1.4 * nplots),
+                             sharex=True, facecolor="white")
+
+    gc_min, gc_max, gc_window = 0.25, 0.80, 50
+    plot_gc_content_breaches(
+        sequence, window=gc_window, gc_min=gc_min,
+        gc_max=gc_max, ax=axes[0],
+        title="GC content (window= %d)" % gc_window
+    )
+
+    constraint = EnforceGCContent(gc_min=gc_min, gc_max=gc_max,
+                                  gc_window=gc_window)
+    plot_constraint_breaches(
+        constraint, sequence, ax=axes[1],
+        title="Zones of extreme GC content (Gen9-type short window)"
+    )
+
+    plot_constraint_breaches(
+        AvoidPattern(enzyme="BsmBI"), sequence,
+        title="BsmBI sites", ax=axes[2]
+    )
+
+    plot_constraint_breaches(
+        AvoidPattern(enzyme="BsaI"),
+        sequence, title="BsaI sites", ax=axes[3]
+    )
+
+    for l, n in [("A", 9), ("T", 9), ("G", 6), ("C", 6)]:
+        constraint = AvoidPattern(homopolymer_pattern(l, n))
+        plot_constraint_breaches(
+            constraint, sequence,
+            title="Homopolymers (6+ G or C | 9+ A or T)", ax=axes[4])
+
+    for length, n_repeats in (3, 5), (2, 9):
+        pattern = repeated_kmers(length, n_repeats=n_repeats)
+        constraint = AvoidPattern(pattern)
+        plot_constraint_breaches(
+            constraint, sequence,
+            title="Repeats (5 x 3bp, 9 x 2bp)", ax=axes[5]
+        )
+
+    plot_constraint_breaches(
+        AvoidIDTHairpins(stem_size=20, hairpin_window=200),
+        sequence, title="Hairpins", ax=axes[6]
+    )
+
+    fig.tight_layout()
+    return axes
