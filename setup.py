@@ -24,4 +24,5 @@ setup(name='DnaChisel',
       license='MIT',
       keywords="DNA optimization constraints synthetic biology",
       packages=find_packages(exclude='docs'),
+      include_package_data=True,
       install_requires=["numpy", "Biopython", "tqdm"])
