@@ -4,7 +4,8 @@ import itertools
 
 import numpy as np
 
-from ..biotools.biotables import (CODON_USAGE_TABLES, CODONS_SEQUENCES)
+from ..biotools.biotables import (CODON_USAGE_TABLES, CODONS_SEQUENCES,
+                                  CODONS_TRANSLATIONS)
 from ..biotools.biotools import (gc_content, reverse_complement,
                                  blast_sequence, translate)
 from .Objective import (Objective, PatternObjective, TerminalObjective,
@@ -249,6 +250,7 @@ class AvoidPattern(PatternObjective):
         return "AvoidPattern(%s, %s)" % (self.pattern, self.location)
 
 
+
 class CodonOptimize(Objective):
     """Objective to codon-optimize a coding sequence for a particular organism.
 
@@ -330,6 +332,9 @@ class CodonOptimize(Objective):
 
     def __str__(self):
         return "CodonOptimize(%s, %s)" % (str(self.location), self.organism)
+
+    def __repr__(self):
+        return str(self)
 
 
 class DoNotModify(Objective):
@@ -502,17 +507,17 @@ class EnforceGCContent(Objective):
                 new_location = self.location.overlap_region(extended_location)
         else:
             if self.gc_window is not None:
-                new_location = location.extended(self.gc_window)
+                new_location = location.extended(self.gc_window + 1)
             else:
                 new_location = None
         return self.copy_with_changes(location=new_location)
 
     def __repr__(self):
-        return ("EnforceGCContent(min %.02f, max %.02f, gc_win %s, window %s)"
-                % (self.gc_min,
-                   self.gc_max,
-                   "global" if (self.gc_window is None) else self.gc_window,
-                   self.location))
+        return (
+            "EnforceGCContent(min %.02f, max %.02f, gc_win %s, location %s)" %
+            (self.gc_min, self.gc_max,
+             "global" if (self.gc_window is None) else self.gc_window,
+             self.location))
 
 
 class EnforcePattern(PatternObjective):
@@ -524,8 +529,15 @@ class EnforcePattern(PatternObjective):
     pattern
       A SequencePattern or DnaNotationPattern
 
+    dna_pattern
+      A string of ATGC that will be converted automatically to a DNA pattern
+
+    enzyme
+      Enzyme name, can be provided instead of pattern or dna_pattern
+
     location
-      Location object
+      Location of the DNA segment on which to enforce the pattern e.g.
+      ``Location(10, 45, 1)``
     """
     best_possible_score = 0
     shrink_when_localized = False
@@ -695,13 +707,6 @@ class EnforceTranslation(Objective):
       translate to, eg. "MKY...LL*" ("*" stands for stop codon).
       This parameter can be omited if the ``sequence`` parameter is provided
 
-    sequence
-      A sequence of DNA that already encodes the right protein in the given
-      ``location`` (will generally be equal to the sequence provided to
-      the problem if it already encodes the right protein).
-      Can be provided instead of ``translation`` (the ``translation`` will be
-      computed from this ``sequence``)
-
     Examples
     --------
 
@@ -736,7 +741,9 @@ class EnforceTranslation(Objective):
         if location is not None:
             if len(location) % 3:
                 raise ValueError(
-                    "Location in a Codon Objective should be multiple of 3")
+                    "Location length in Codon Objectives should be a 3x. "
+                    "Location %s has length %d" % (location, len(location))
+                )
 
             if ((self.translation is not None) and
                     (len(location) != 3 * len(self.translation))):
@@ -779,10 +786,20 @@ class EnforceTranslation(Objective):
             for ind in range(len(translation))
             if translation[ind] != self.translation[ind]
         ]
+        errors_locations = [
+            Location(3 * ind, 3 * (ind + 1)) if self.location.strand >= 0 else
+            Location(self.location.end - 3 * (ind + 1),
+                     self.location.end - 3 * ind)
+            for ind in errors
+        ]
         success = (len(errors) == 0)
         return ObjectiveEvaluation(self, problem, score=-len(errors),
-                                   locations=[self.location],
-                                   message="All OK." if success else "Failed.")
+                                   locations=errors_locations,
+                                   # self.location],
+                                   message="All OK." if success else
+                                   "Wrong translation at indices %s"
+                                   % errors)
+
 
     def localized(self, location):
         """"""
@@ -820,6 +837,25 @@ class EnforceTranslation(Objective):
 
     def __repr__(self):
         return "EnforceTranslation(%s)" % str(self.location)
+
+
+class AvoidStopCodon(EnforceTranslation):
+    """Objective: do not introduce any new stop codon in that frame."""
+    codons_translations = {
+        codon: "*" if (translation == '*') else "_"
+        for codon, translation in CODONS_TRANSLATIONS.items()
+    }
+    codons_sequences = None
+
+    def __str__(self):
+        return "AvoidStopCodon(%s)" % self.location
+
+    def __init__(self, location, translation=None, boost=1.0):
+        if (len(location) % 3) != 0:
+            raise ValueError("Loc. %s for AvoidStopCodon is not 3x" % location)
+        self.translation = '_' * int(len(location) / 3)
+        self.boost = boost
+        self.location = location
 
 
 class MinimizeDifferences(Objective):

@@ -7,10 +7,8 @@ from copy import deepcopy
 import numpy as np
 from Bio.Seq import Seq
 from Bio.Blast import NCBIXML
-from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import DNAAlphabet
-from Bio.SeqFeature import SeqFeature, FeatureLocation
 
 from .biotables import CODONS_SEQUENCES, NUCLEOTIDE_TO_REGEXPR
 
@@ -324,3 +322,14 @@ def change_biopython_record_sequence(record, new_seq):
 def sequence_to_biopython_record(sequence, features=()):
     return SeqRecord(Seq(sequence, alphabet=DNAAlphabet()),
                      features=list(features))
+
+def find_objective_in_feature(feature):
+    for labelfield in ["label", "note"]:
+        if labelfield not in feature.qualifiers:
+            continue
+        potential_label = feature.qualifiers.get(labelfield, "_")
+        if isinstance(potential_label, list):
+            potential_label = potential_label[0]
+        if potential_label[0] in "@~":
+            return potential_label
+    return None

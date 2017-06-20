@@ -25,4 +25,5 @@ setup(name='DnaChisel',
       keywords="DNA optimization constraints synthetic biology",
       packages=find_packages(exclude='docs'),
       include_package_data=True,
+      scripts=['dnachisel/dnachisel-cli']],
       install_requires=["numpy", "Biopython", "tqdm"])

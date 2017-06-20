@@ -1,78 +1,11 @@
 import copy
 import re
 
-from ..biotools import DnaNotationPattern, enzyme_pattern
+from ..biotools import (DnaNotationPattern, enzyme_pattern,
+                        find_objective_in_feature)
 from ..Location import Location
+from .ObjectiveEvaluation import ObjectiveEvaluation
 from Bio.SeqFeature import SeqFeature
-
-
-class ObjectiveEvaluation:
-    """Store relevant infos about the evaluation of an objective on a problem
-
-    Examples
-    --------
-
-    >>> evaluation_result = ConstraintEvaluation(
-    >>>     objective=objective,
-    >>>     problem = problem,
-    >>>     score= evaluation_score, # float
-    >>>     locations=[(w1_start, w1_end), (w2_start, w2_end)...],
-    >>>     message = "Score: 42 (found 42 sites)"
-    >>> )
-
-    Parameters
-    ----------
-
-    objective
-      The Objective that was evaluated.
-
-    problem
-      The problem that the objective was evaluated on.
-
-    score
-      The score associated to the evaluation.
-
-    locations
-      A list of couples (start, end) indicating the locations on which the
-      the optimization shoul be localized to improve the objective.
-
-    message
-      A message that will be returned by ``str(evaluation)``. It will notably
-      be displayed by ``problem.print_objectives_summaries``.
-
-    """
-
-    def __init__(self, objective, problem, score, locations=None, message=None):
-        self.objective = objective
-        self.problem = problem
-        self.score = score
-        self.passes = score >= 0
-        self.locations = locations
-        self.message = message
-
-    def __repr__(self):
-        return (
-            str((
-                "Passes" if self.passes else "Fails",
-                "score : %.02f" % self.score,
-                self.locations
-            )) +
-            (self.message if (self.message is not None) else "")
-        )
-
-    def __str__(self):
-        return (
-            self.message if (self.message is not None) else
-            "score: %.02E, locations: %s" % (self.score, str(self.locations))
-        )
-
-    def to_biopython_features(self, feature_type="misc_feature"):
-        return [
-            SeqFeature(location.to_biopython_location(), type=feature_type,
-                       qualifiers={"label": str(self.objective)})
-            for location in self.locations
-        ]
-
 
 
 class Objective:
@@ -90,9 +23,10 @@ class Objective:
     best_possible_score = None
     can_be_solved_locally = False
 
-    def __init__(self, evaluate, boost=1.0):
+    def __init__(self, evaluate=None, boost=1.0):
         self.boost = boost
-        self.evaluate = evaluate
+        if evaluate is not None:
+            self.evaluate = evaluate
 
     def localized(self, location):
         """Return a modified version of the objective for the case where
@@ -122,7 +56,7 @@ class Objective:
 
     @staticmethod
     def from_biopython_feature(feature, objectives_dict):
-        label = feature.qualifiers["label"]
+        label = find_objective_in_feature(feature)
         if isinstance(label, list):
             label = label[0]
         if not label.endswith(")"):
@@ -142,11 +76,26 @@ class Objective:
                     kwargs[k] = int(v)
                 except ValueError:
                     try:
-                        kwargs[k] = int(v)
+                        kwargs[k] = float(v)
                     except:
                         pass
         kwargs["location"] = Location.from_biopython_location(feature.location)
         return role, objectives_dict[objective](**kwargs)
+
+    def to_biopython_feature(self, feature_type="misc_feature",
+                             role="constraint", colors_dict=None,
+                             **qualifiers):
+        if colors_dict is None:
+            colors_dict = {"constraint": "#61a8f9", "objective": "#f9cd60"}
+        qualifiers["role"] = role
+        if "label" not in qualifiers:
+            qualifiers['label'] = self.__repr__()
+
+        if "color" not in qualifiers:
+            qualifiers['color'] = colors_dict[role]
+        return SeqFeature(self.location.to_biopython_location(),
+                          type=feature_type,
+                          qualifiers=qualifiers)
 
 
 
@@ -194,6 +143,17 @@ class PatternObjective(Objective):
     ----------
 
     pattern
+      A SequencePattern or DnaNotationPattern
+
+    dna_pattern
+      A string of ATGC that will be converted automatically to a DNA pattern
+
+    enzyme
+      Enzyme name, can be provided instead of pattern or dna_pattern
+
+    location
+      Location of the DNA segment on which to enforce the pattern e.g.
+      ``Location(10, 45, 1)``
 
 
     """
@@ -222,7 +182,7 @@ class PatternObjective(Objective):
                 return VoidObjective(parent_objective=self)
             else:
                 if not self.shrink_when_localized:
-                   return self
+                    return self
                 extended_location = location.extended(pattern_size - 1)
                 new_location = self.location.overlap_region(extended_location)
 

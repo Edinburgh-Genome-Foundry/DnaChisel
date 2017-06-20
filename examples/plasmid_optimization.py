@@ -62,9 +62,9 @@ GEN9_constraints = [
 CDS_constraints = []
 for (start, end, strand) in CDS_list:
     if strand == 1:
-        promoter_region = (start - 30, start - 1)
+        promoter_region = Location(start - 30, start - 1)
     else:
-        promoter_region = (end + 1, end + 30)
+        promoter_region = Location(end + 1, end + 30)
     keep_promoter_region = DoNotModify(promoter_region)
     keep_translation = EnforceTranslation(Location(start, end, strand))
     CDS_constraints += [keep_promoter_region, keep_translation]
@@ -73,36 +73,39 @@ for (start, end, strand) in CDS_list:
 # DEFINE ALL THE OBJECTIVES
 
 objectives = [EnforceGCContent(0.51, boost=10000)] + [
-    CodonOptimize("E. coli", window=(start, end), strand=strand)
+    CodonOptimize("e_coli", location=Location(start, end, strand=strand))
     for (start, end, strand) in CDS_list
 ]
 
 
 # DEFINE AND SOLVE THE PROBLEM
 
-canvas = DnaOptimizationProblem(
+problem = DnaOptimizationProblem(
     sequence=sequence,
     constraints=GEN9_constraints + CDS_constraints,
     objectives=objectives
 )
 
 print ("\n\n=== Initial Status ===")
-print (canvas.constraints_summary(failed_only=True))
-print (canvas.objectives_summary())
+print (problem.constraints_text_summary(failed_only=True))
+print (problem.objectives_text_summary())
 import time
 
 print ("Now solving constraints...")
-canvas.solve_all_constraints_one_by_one()
-print ("Done. Now optimizing objectives...")
+problem.solve_all_constraints_one_by_one()
+print (problem.constraints_text_summary(failed_only=True))
 
-canvas.maximize_all_objectives_one_by_one(max_random_iters=2000)
+print ("Now optimizing objectives...")
 
-print ("\n\n=== Status after optimization ===")
-print (canvas.constraints_summary(failed_only=True))
-print (canvas.objectives_summary())
+problem.maximize_all_objectives_one_by_one(max_random_iters=2000)
+
+print ("\n\n=== Status after optimization ===\n\n")
+print (problem.objectives_text_summary())
+print ("Let us check again on the constraints:")
+print (problem.constraints_text_summary(failed_only=True))
 
 # Write the final sequence back to GENBANK (annotations are conserved)
 
-annotated_sequence.seq = Seq.Seq(canvas.sequence,
+annotated_sequence.seq = Seq.Seq(problem.sequence,
                                  annotated_sequence.seq.alphabet)
 SeqIO.write(annotated_sequence, open("result.gb", "w+"), "genbank")

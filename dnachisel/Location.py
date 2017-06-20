@@ -1,5 +1,5 @@
 from .biotools import reverse_complement
-from Bio.SeqFeature import FeatureLocation
+from Bio.SeqFeature import SeqFeature, FeatureLocation
 
 class Location:
     """Represent a location on a sequence, with a start, end, and strand.
@@ -78,6 +78,11 @@ class Location:
             for e in [self.start, self.end, self.strand]
         ]
         return FeatureLocation(start, end, strand)
+
+    def to_biopython_feature(self, feature_type="misc_feature", **qualifiers):
+        return SeqFeature(self.to_biopython_location(),
+                          type=feature_type,
+                          qualifiers=qualifiers)
 
 
 class MultiLocation:

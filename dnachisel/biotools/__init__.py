@@ -9,7 +9,8 @@ from .biotools import (
     translate,
     windows_overlap,
     change_biopython_record_sequence,
-    sequence_to_biopython_record
+    sequence_to_biopython_record,
+    find_objective_in_feature
 
 )
 

@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+
+"""
+DnaChisel Command Line Interface
+
+Usage:
+  dnachisel-cli <source> <target>
+
+Where ``source`` is a fasta or Genbank file, and target can be one of:
+- A genbank file (extension .gb), where to write the solved sequence.
+- A folder name or a zip name (extension .zip). In this case a complete report
+  along with the sequence will be generated.
+"""
+
+from docopt import docopt
+from dnachisel import DnaOptimizationProblem
+import dnachisel
+from Bio import SeqIO
+
+def main(source, target, report):
+    if source.lower().endswith([".fa", ".fasta"):
+        record = SeqIO.read(source, 'fasta')
+    elif source.lower().endswith([".gb", ".gbk"):
+        record = SeqIO.read(source, 'genbank')
+
+    arguments = docopt(__doc__, version="DnaChisel CLI 1.0")
+    record = SeqIO.read(arguments["input"])
+    problem = DnaOptimizationProblem(str(record.sequence))
+
+
+def time_from_secs(secs):
+    hours = int(secs/3600)
+    secs = secs - 3600 * hours
+    mins = int(secs/60)
+    secs = secs - 60 * mins
+    return "%02d:%02d:%02d" % (hours, mins, secs)
+
+if __name__ == "__main__":
+    start_time = time.time()
+    params = docopt(__doc__)
+    print (params)
+    source = params["<sequence>"]
+    preview = params["--pdf-report"]
+    main(sequences, blast_db, report_path, preview)
+    total_time = time.time() - start_time
+    print ("Finished in %s" % time_from_secs(total_time))

@@ -8,10 +8,20 @@ import itertools as itt
 
 import numpy as np
 
-from .biotools.biotools import reverse_complement, sequence_to_biopython_record
-from .objectives.objectives import (Objective, DoNotModify, EnforcePattern,
-                                    EnforceTranslation)
+from .biotools.biotools import (reverse_complement,
+                                sequence_to_biopython_record,
+                                find_objective_in_feature)
+from .objectives import (Objective, DoNotModify, EnforcePattern,
+                                    EnforceTranslation,
+                                    ProblemObjectivesEvaluations,
+                                    ProblemConstraintsEvaluations,
+                                    DEFAULT_OBJECTIVES_DICT)
+
 from .Location import Location
+from Bio.SeqRecord import SeqRecord
+from Bio.Seq import Seq
+from Bio import SeqIO
+
 
 from tqdm import tqdm
 
@@ -40,7 +50,7 @@ class DnaOptimizationProblem:
     >>> )
     >>> canvas.solve_all_constraints_one_by_one()
     >>> canvas.maximize_all_objectives_one_by_one()
-    >>> print(canvas.constraints_summary())
+    >>> print(canvas.constraints_text_summary())
     >>> print(canvas.objectives_summary())
 
 
@@ -88,9 +98,13 @@ class DnaOptimizationProblem:
     """
 
     def __init__(self, sequence, constraints=None, objectives=None):
-
-        self.sequence = sequence
-        self.original_sequence = sequence
+        if isinstance(sequence, SeqRecord):
+            self.record = sequence
+            self.sequence = str(sequence.seq)
+        else:
+            self.record = None
+            self.sequence = sequence
+        self.original_sequence = self.sequence
         self.possible_mutations_dict = None
         self.constraints = [] if constraints is None else constraints
         self.objectives = [] if objectives is None else objectives
@@ -103,6 +117,30 @@ class DnaOptimizationProblem:
             objective.initialize_problem(self, role="objective")
             for objective in self.objectives
         ]
+
+    def constraints_evaluations(self):
+        """Return a list of the evaluations of each constraint of the canvas.
+        """
+        return ProblemConstraintsEvaluations.from_problem(self)
+
+    def all_constraints_pass(self):
+        return self.constraints_evaluations().all_evaluations_pass()
+
+    def constraints_text_summary(self, failed_only=False):
+        evals = self.constraints_evaluations()
+        if failed_only:
+            evals = evals.filter("failing")
+        return evals.to_text()
+
+    def objectives_evaluations(self):
+        """Return a list of the evaluation of each objective of the canvas"""
+        return ProblemObjectivesEvaluations.from_problem(self)
+
+    def all_objectives_scores_sum(self):
+        return self.objectives_evaluations().scores_sum()
+
+    def objectives_text_summary(self):
+        return self.objectives_evaluations().to_text()
 
     def extract_subsequence(self, location):
         """Return the subsequence (a string) at the given location).
@@ -153,7 +191,8 @@ class DnaOptimizationProblem:
                 else:
                     unibase_mutable[constraint.indices] = 0
         for constraint in self.constraints:
-            if isinstance(constraint, EnforceTranslation):
+            if (isinstance(constraint, EnforceTranslation) and
+                (constraint.codons_sequences is not None)):
                 start, end = constraint.location.start, constraint.location.end
                 for i, aa in enumerate(constraint.translation):
                     if constraint.location.strand == 1:
@@ -170,6 +209,7 @@ class DnaOptimizationProblem:
 
                     def array_subsequence(seq, inds):
                         return np.array([ord(seq[i]) for i in inds])
+
                     def codon_is_compatible(codon):
                         a1 = array_subsequence(seq_codon,
                                                local_immutable_unibases)
@@ -271,47 +311,37 @@ class DnaOptimizationProblem:
         self.sequence = sequence_buffer.tostring().decode("utf8")
 
 
-     # CONSTRAINTS
+     # CONSTRAINTs
 
-    def all_constraints_evaluations(self):
-        """Return a list of the evaluations of each constraint of the canvas.
-
-        Returns ``[c.evaluate(self) for c in self.constraints]``
-        """
-        return [
-            constraint.evaluate(self)
-            for constraint in self.constraints
-        ]
-
-    def all_constraints_pass(self):
-        """Return True if and only if the canvas meet all its constraints."""
-        return all([
-            evaluation.passes
-            for evaluation in self.all_constraints_evaluations()
-        ])
-
-    def constraints_summary(self, failed_only=False, failed_last=True):
-        """Print each constraint with a summary of its evaluation.
-
-        This method is meant for interactive use in a terminal or IPython
-        notebook.
-        """
-        evaluations = self.all_constraints_evaluations()
-        failed_evaluations = [e for e in evaluations if not e.passes]
-        if failed_only:
-            evaluations = failed_evaluations
-        if failed_last:
-            evaluations = sorted(evaluations, key=lambda e: not e.passes)
-        if failed_evaluations == []:
-            message = "SUCCESS - all constraints evaluations pass"
-        else:
-            message = ("FAILURE: %d constraints evaluations failed" %
-                       len(failed_evaluations))
-        text_evaluations = "\n".join([
-            "%s %s" % (evaluation.objective, evaluation)
-            for evaluation in evaluations
-        ])
-        return ("\n===> %s\n%s\n" % (message, text_evaluations))
+    # def all_constraints_pass(self):
+    #     """Return True if and only if the canvas meet all its constraints."""
+    #     return all([
+    #         evaluation.passes
+    #         for evaluation in self.constraints_evaluations()
+    #     ])
+    #
+    # def constraints_text_summary(self, failed_only=False, failed_last=True):
+    #     """Print each constraint with a summary of its evaluation.
+    #
+    #     This method is meant for interactive use in a terminal or IPython
+    #     notebook.
+    #     """
+    #     evaluations = self.constraints_evaluations()
+    #     failed_evaluations = [e for e in evaluations if not e.passes]
+    #     if failed_only:
+    #         evaluations = failed_evaluations
+    #     if failed_last:
+    #         evaluations = sorted(evaluations, key=lambda e: not e.passes)
+    #     if failed_evaluations == []:
+    #         message = "SUCCESS - all constraints evaluations pass"
+    #     else:
+    #         message = ("FAILURE: %d constraints evaluations failed" %
+    #                    len(failed_evaluations))
+    #     text_evaluations = "\n".join([
+    #         "%s %s" % (evaluation.objective, evaluation)
+    #         for evaluation in evaluations
+    #     ])
+    #     return ("\n===> %s\n%s\n" % (message, text_evaluations))
 
     def solve_all_constraints_by_exhaustive_search(self, verbose=False,
         progress_bar=False, raise_exception_on_failure=True):
@@ -328,7 +358,7 @@ class DnaOptimizationProblem:
         for mutations in mutation_space:
             self.mutate_sequence(mutations)
             if verbose:
-                print(self.constraints_summary())
+                print(self.constraints_text_summary())
             if self.all_constraints_pass():
                 return
             else:
@@ -336,13 +366,13 @@ class DnaOptimizationProblem:
 
 
         if raise_exception_on_failure:
-            summary = self.constraints_summary()
+            summary = self.constraints_text_summary()
             raise NoSolutionFoundError(
                 summary +
                 "Exhaustive search failed to satisfy all constraints.")
 
-    def solve_all_constraints_by_random_mutations(self, max_iter=1000,
-        n_mutations=1, verbose=False, progress_bar=False,
+    def solve_all_constraints_by_random_mutations(
+        self, max_iter=1000, n_mutations=1, verbose=False, progress_bar=False,
         raise_exception_on_failure=False):
         """Solve all constraints by successive sets of random mutations.
 
@@ -361,7 +391,7 @@ class DnaOptimizationProblem:
 
         """
 
-        evaluations = self.all_constraints_evaluations()
+        evaluations = self.constraints_evaluations()
         score = sum([
             e.score
             for e in evaluations
@@ -375,11 +405,11 @@ class DnaOptimizationProblem:
                 return
             mutations = self.get_random_mutations(n_mutations)
             if verbose:
-                print(self.constraints_summary())
+                print(self.constraints_text_summary())
             previous_sequence = self.sequence
             self.mutate_sequence(mutations)
 
-            evaluations = self.all_constraints_evaluations()
+            evaluations = self.constraints_evaluations()
             new_score = sum([
                 e.score
                 for e in evaluations
@@ -390,7 +420,7 @@ class DnaOptimizationProblem:
                 score = new_score
             else:
                 self.sequence = previous_sequence
-        summary = self.constraints_summary()
+        summary = self.constraints_text_summary()
         if raise_exception_on_failure:
             raise NoSolutionFoundError(
                 summary +
@@ -522,7 +552,7 @@ class DnaOptimizationProblem:
         if progress_bars > 0:
             range_loops = tqdm(range_loops, desc="Loop", leave=False)
         for iteration in range_loops:
-            evaluations = self.all_constraints_evaluations()
+            evaluations = self.constraints_evaluations()
             failed_evaluations = [
                 evaluation
                 for evaluation in evaluations
@@ -543,7 +573,7 @@ class DnaOptimizationProblem:
                     consider_other_constraints=not solve_independently
                 )
         if not self.all_constraints_pass():
-            summary = self.constraints_summary(failed_only=True)
+            summary = self.constraints_text_summary(failed_only=True)
             raise NoSolutionFoundError(
                 summary +
                 "One-by-one could not solve all constraints before max_loops."
@@ -551,50 +581,34 @@ class DnaOptimizationProblem:
 
     # OBJECTIVES
 
-    def all_objectives_evaluations(self):
-        """Return a list of the evaluation of each objective of the canvas"""
-        return [
-            objective.evaluate(self)
-            for objective in self.objectives
-        ]
-
-    def all_objectives_score_sum(self):
-        """Return the total sum of all objective evaluation's score"""
-        return sum([
-            objective.boost * objective.evaluate(self).score
-            for objective in self.objectives
-        ])
-
-    def objectives_summary(self, failed_only=False):
-        """Return a string summarizing the evaluation of all objectives"""
-        score = self.all_objectives_score_sum()
-        message = "TOTAL OBJECTIVES SCORE: %.02f" % score
-        objectives_texts = "\n".join([
-            "%s: %s" % (evaluation.objective, evaluation)
-            for evaluation in self.all_objectives_evaluations()
-        ])
-        return "\n===> %s\n%s\n" % (message, objectives_texts)
+    # def all_objectives_score_sum(self):
+    #     """Return the total sum of all objective evaluation's score"""
+    #     return sum([
+    #         objective.boost * objective.evaluate(self).score
+    #         for objective in self.objectives
+    #     ])
 
     def maximize_objectives_by_exhaustive_search(self, verbose=False,
                                                  progress_bar=False):
         """
         """
-        #print("blublublu")
         if not self.all_constraints_pass():
-            summary = self.constraints_summary(failed_only=True)
+            summary = self.constraints_text_summary(failed_only=True)
             raise NoSolutionFoundError(
                 summary +
                 "Optimization can only be done when all constraints are"
                 "verified."
             )
 
-        best_possible_score = None
-        if all([hasattr(obj, "best_possible_score")
-               for obj in self.objectives]):
+
+        if all([obj.best_possible_score is not None
+                for obj in self.objectives]):
             best_possible_score = sum([obj.best_possible_score
                                        for obj in self.objectives])
+        else:
+            best_possible_score = None
 
-        current_best_score = self.all_objectives_score_sum()
+        current_best_score = self.all_objectives_scores_sum()
         current_best_sequence = self.sequence
         mutation_space = self.iter_mutations_space()
         if progress_bar:
@@ -602,14 +616,16 @@ class DnaOptimizationProblem:
         for mutations in mutation_space:
             self.mutate_sequence(mutations)
             if self.all_constraints_pass():
-                score = self.all_objectives_score_sum()
+                score = self.all_objectives_scores_sum()
                 if score > current_best_score:
                     current_best_score = score
                     current_best_sequence = self.sequence
-                    if current_best_score >= best_possible_score:
+                    if ((best_possible_score is not None) and
+                        (current_best_score >= best_possible_score)):
                         break
             self.sequence = self.original_sequence
         self.sequence = current_best_sequence
+        assert self.all_constraints_pass()
 
     def maximize_objectives_by_random_mutations(self, max_iter=1000,
                                                 n_mutations=1,
@@ -618,12 +634,19 @@ class DnaOptimizationProblem:
         """
         """
         if not self.all_constraints_pass():
-            summary = self.constraints_summary()
+            summary = self.constraints_text_summary()
             raise ValueError(summary + "Optimization can only be done when all"
                              " constraints are verified")
         mutations_locs = list(self.possible_mutations.keys())
-        score = self.all_objectives_score_sum()
+        score = self.all_objectives_scores_sum()
         range_iters = range(max_iter)
+
+        if all([obj.best_possible_score is not None
+                for obj in self.objectives]):
+            best_possible_score = sum([obj.best_possible_score
+                                       for obj in self.objectives])
+        else:
+            best_possible_score = None
 
         if progress_bar:
             range_iters = tqdm(range_iters, desc="Random mutation",
@@ -640,17 +663,22 @@ class DnaOptimizationProblem:
                 for ind in random_mutations_inds
             ]
             if verbose:
-                print(self.constraints_summary())
+                print(self.constraints_text_summary())
             previous_sequence = self.sequence
             self.mutate_sequence(mutations)
             if self.all_constraints_pass():
-                new_score = self.all_objectives_score_sum()
+                new_score = self.all_objectives_scores_sum()
                 if new_score > score:
                     score = new_score
                 else:
                     self.sequence = previous_sequence
             else:
                 self.sequence = previous_sequence
+
+            if ((best_possible_score is not None) and
+                (score >= best_possible_score)):
+                break
+        assert self.all_constraints_pass()
 
     def maximize_objective_by_localization(self, objective, locations=None,
                                            randomization_threshold=10000,
@@ -704,7 +732,6 @@ class DnaOptimizationProblem:
                 ],
                 objectives=objectives
             )
-            #print (location, localized_problem.mutation_space_size())
 
             if (localized_problem.mutation_space_size() <
                     randomization_threshold):
@@ -743,39 +770,53 @@ class DnaOptimizationProblem:
                     optimize_independently=optimize_independently
                 )
 
-    def include_pattern_by_successive_tries(self, pattern, location=None):
+    def include_pattern_by_successive_tries(self, pattern, location=None,
+                                            paste_pattern_in=True,
+                                            aim_at_location_centre=True):
         if location is None:
             location = Location(0, len(self.sequence))
-        constraint = EnforcePattern(pattern, location)
+        constraint = EnforcePattern(pattern=pattern, location=location)
         self.constraints.append(constraint)
-        for i in range(location.start, location.end - pattern.size):
+
+        indices = list(range(location.start, location.end - pattern.size))
+        if aim_at_location_centre:
+            center = 0.5 * (location.start + location.end - pattern.size)
+            indices = sorted(indices, key=lambda i: abs(i - center))
+
+        for i in indices:
             original_sequence = self.sequence
-            location = [i, i + pattern.size]
-            self.mutate_sequence([(location, pattern.pattern)])
+            if paste_pattern_in:
+                location = [i, i + pattern.size]
+                self.mutate_sequence([(location, pattern.pattern)])
             try:
                 self.solve_all_constraints_one_by_one()
-                return  # Success !
+                return i # success
             except NoSolutionFoundError:
                 self.sequence = original_sequence
         self.constraints.pop()  # remove the pattern constraint
         raise NoSolutionFoundError("Failed to insert the pattern")
 
     @staticmethod
-    def from_biopython_record(record, objectives_dict):
+    def from_record(record, objectives_dict="default"):
+        if isinstance(record, str):
+            if record.lower().endswith((".fa", ".fasta")):
+                record = SeqIO.read(record, 'fasta')
+            elif record.lower().endswith((".gb", ".gbk")):
+                record = SeqIO.read(record, 'genbank')
+            else:
+                raise ValueError("Record is either a Biopython record or a "
+                                 "file path ending in .gb, .gbk, .fa, .fasta.")
+        if objectives_dict == "default":
+            objectives_dict = DEFAULT_OBJECTIVES_DICT
         parameters = dict(
-            sequence=str(record.seq),
+            sequence=record,
             constraints=[],
             objectives=[]
         )
         for feature in record.features:
             if feature.type != "misc_feature":
                 continue
-            if "label" not in feature.qualifiers:
-                continue
-            label = feature.qualifiers["label"]
-            if isinstance(label, list):
-                label = label[0]
-            if label[0] not in "@~":
+            if find_objective_in_feature(feature) is None:
                 continue
             role, objective = Objective.from_biopython_feature(feature,
                                                                objectives_dict)
@@ -783,13 +824,47 @@ class DnaOptimizationProblem:
 
         return DnaOptimizationProblem(**parameters)
 
-    def constraints_breaches_as_biopython_record(self,
-                                                 feature_type="misc_feature"):
-        features = []
-        for constraint in self.constraints:
-            ev = constraint.evaluate(self)
-            if not ev.passes:
-                new_features = ev.to_biopython_features(
-                    feature_type=feature_type)
-                features += new_features
-        return sequence_to_biopython_record(self.sequence, features=features)
+    def to_record(self, filepath=None, features_type="misc_feature",
+                  with_original_features=True,
+                  with_constraints=True,
+                  with_objectives=True,
+                  colors_dict=None):
+        record = sequence_to_biopython_record(self.sequence)
+
+        record.features = []
+        if with_constraints:
+            record.features += [
+                cst.to_biopython_feature(role="constraint",
+                                         feature_type=features_type,
+                                         colors_dict=colors_dict)
+                for cst in self.constraints
+            ]
+        if with_objectives:
+            record.features += [
+                obj.to_biopython_feature(role="objective",
+                                         feature_type=features_type,
+                                         colors_dict=colors_dict)
+                for obj in self.objectives
+            ]
+        if with_original_features and (self.record is not None):
+             record.features += self.record.features
+
+        if filepath is not None:
+            SeqIO.write(record, filepath, "genbank")
+        else:
+            return record
+
+    def sequence_edits_as_features(self, feature_type="misc_feature"):
+        def sequences_differences_segments(seq1, seq2):
+            arr1 = np.fromstring(seq1, dtype="uint8")
+            arr2 = np.fromstring(seq2, dtype="uint8")
+            arr = 1 * (arr1 != arr2)
+            diffs = np.diff([0] + list(arr) + [0]).nonzero()[0]
+            half = int(len(diffs)/2)
+            return [(diffs[2*i], diffs[2*i+1]) for i in range(half)]
+        segments = sequences_differences_segments(self.sequence,
+                                                  self.original_sequence)
+        return [
+            Location(start, end).to_biopython_feature()
+            for start, end in segments
+        ]

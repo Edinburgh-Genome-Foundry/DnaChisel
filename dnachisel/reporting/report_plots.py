@@ -11,91 +11,20 @@ except:
     DFV_AVAILABLE = False
 import numpy as np
 
-from .DnaOptimizationProblem import DnaOptimizationProblem
-from .biotools import gc_content, repeated_kmers, homopolymer_pattern
-from .objectives import EnforceGCContent, AvoidPattern, AvoidIDTHairpins
+from ..DnaOptimizationProblem import DnaOptimizationProblem
+from ..biotools import gc_content, repeated_kmers, homopolymer_pattern
+from ..objectives import EnforceGCContent, AvoidPattern, AvoidIDTHairpins
+
+from Bio.SeqRecord import SeqRecord
 
 
-class GraphicTranslator(BiopythonTranslator):
-    """Translator of DnaChisel feature-constraints for DNA Features Viewer"""
-    @staticmethod
-    def compute_feature_color(f):
-        if f.type == "misc_feature":
-            label = BiopythonTranslator.compute_feature_label(f)
-            return {
-                "@": "#ce5454",
-                "~": "#e5be54",
-                "#": "#8edfff",
-                "!": "#fcff75",
-
-            }.get(label[0], "#f4df42")
-        else:
-            return "#d9e0fc"
-
-    @staticmethod
-    def compute_feature_label(f):
-        default = BiopythonTranslator.compute_feature_label(f)
-        return None if (f.type != "misc_feature") else default
 
 
-def plot_local_gc_content(sequence, window_size, ax=None):
-    """Plot the local (windowed) GC content of the sequence
 
-    Parameters
-    ----------
-
-    sequence
-      An ATGC string of a sequence
-
-    window_size
-      Size of the GC window
-
-    ax
-      Matplotlib ax on which to plot. If none is provided, one is created.
-    """
-    if ax is None:
-        fig, ax = plt.subplots(1)
-
-    def gc_content(sequence):
-        return 100.0 * len([c for c in sequence if c in "GC"]) / len(sequence)
-    yy = [gc_content(sequence[i:i + window_size])
-          for i in range(len(sequence) - window_size)]
-    xx = np.arange(len(sequence) - window_size) + 25
-    ax.fill_between(xx, yy, alpha=0.3)
-    for x in range(10, 100, 10):
-        ax.axhline(x, lw=0.5, alpha=0.3)
-    ax.set_ylabel("GC(%)")
-    ax.set_xlim(0, len(sequence))
-    ax.set_ylim(ymin=0)
-
-
-def plot_local_gc_with_features(record, window_size, axes=None):
-    """Plot the local GC content curve below a plot of the record's features.
-
-    Parameters
-    ----------
-
-    record
-      A biopython record
-
-    window_size
-      Size of the GC window
-
-    axes
-      A tuple of two matplotlib axes. If none provided, they will be created.
-
-    """
-    if axes is None:
-        fig, axes = plt.subplots(2, figsize=(20, 5.5), sharex=True)
-    graphic_record = BiopythonTranslator().translate_record(record)
-    graphic_record.plot(ax=axes[0], with_ruler=False)
-    ax = plot_local_gc_content(record.seq, 40, ax=axes[1])
-    return ax
-
-
-def plot_constraint_breaches(constraint, sequence, title=None, ax=None):
+def plot_constraint_breaches(constraint, sequence, title=None, ax=None,
+                             show_locations=False, show_feature_labels=False):
     """Plot breaches for a single constraint"""
-    class MuteTranslator(BiopythonTranslator):
+    class Translator(BiopythonTranslator):
         """A Biopython record translator for DNA Features Viewer.
 
         This translator produces label-free plots.
@@ -103,14 +32,34 @@ def plot_constraint_breaches(constraint, sequence, title=None, ax=None):
         default_feature_color = "#ffaaaa"
 
         def compute_feature_label(self, f):
-            return None
+            if f.type != "original" and show_locations:
+                return str(int(f.location.start))
+            elif show_feature_labels and f.type == "original":
+                return BiopythonTranslator.compute_feature_label(f)
+            else:
+                return None
+
+        def compute_feature_color(self, f):
+            return "#ffffff" if f.type == "original" else "#ff9999"
+
+    if isinstance(sequence, SeqRecord):
+        record = sequence
+        sequence = str(sequence.seq).upper()
+    else:
+        record = None
+
     problem = DnaOptimizationProblem(sequence, constraints=[constraint])
     breaches_record = problem.constraints_breaches_as_biopython_record()
+    if record is not None:
+        for feature in record.features:
+            feature = deepcopy(feature)
+            feature.type = "original"
+            breaches_record.features.append(feature)
 
-    translator = MuteTranslator()
+    translator = Translator()
     graphic_record = translator.translate_record(breaches_record)
     ax, _ = graphic_record.plot(ax=ax)
-    ax.set_ylim(-1, 1)
+    ax.set_ylim(ymin=-1, ymax=min(5, ax.get_ylim()[1]))
     if title is not None:
         ax.set_title(title, fontweight="bold", loc="left")
     return ax
@@ -227,6 +176,20 @@ def plot_gc_content_breaches(sequence, window=70, gc_min=0.35, gc_max=0.65,
 
 
 def plot_sequence_manufacturability_difficulties(sequence):
+    """
+
+    Returns
+    -------
+
+    axes
+      List of the different axes
+    """
+    if isinstance(sequence, SeqRecord):
+        record = sequence
+        sequence = str(sequence.seq).upper()
+    else:
+        record = sequence
+
     nplots = 7
     fig, axes = plt.subplots(nplots, 1, figsize=(10, 1.4 * nplots),
                              sharex=True, facecolor="white")
@@ -241,7 +204,7 @@ def plot_sequence_manufacturability_difficulties(sequence):
     constraint = EnforceGCContent(gc_min=gc_min, gc_max=gc_max,
                                   gc_window=gc_window)
     plot_constraint_breaches(
-        constraint, sequence, ax=axes[1],
+        constraint, record, ax=axes[1],
         title="Zones of extreme GC content (Gen9-type short window)"
     )
 
@@ -252,26 +215,26 @@ def plot_sequence_manufacturability_difficulties(sequence):
 
     plot_constraint_breaches(
         AvoidPattern(enzyme="BsaI"),
-        sequence, title="BsaI sites", ax=axes[3]
+        record, title="BsaI sites", ax=axes[3]
     )
 
     for l, n in [("A", 9), ("T", 9), ("G", 6), ("C", 6)]:
         constraint = AvoidPattern(homopolymer_pattern(l, n))
         plot_constraint_breaches(
-            constraint, sequence,
+            constraint, record,
             title="Homopolymers (6+ G or C | 9+ A or T)", ax=axes[4])
 
     for length, n_repeats in (3, 5), (2, 9):
         pattern = repeated_kmers(length, n_repeats=n_repeats)
         constraint = AvoidPattern(pattern)
         plot_constraint_breaches(
-            constraint, sequence,
+            constraint, record,
             title="Repeats (5 x 3bp, 9 x 2bp)", ax=axes[5]
         )
 
     plot_constraint_breaches(
         AvoidIDTHairpins(stem_size=20, hairpin_window=200),
-        sequence, title="Hairpins", ax=axes[6]
+        record, title="Hairpins", ax=axes[6]
     )
 
     fig.tight_layout()

@@ -1,13 +1,13 @@
 from .DnaOptimizationProblem import (DnaOptimizationProblem,
                                      NoSolutionFoundError)
 from .Location import Location
-import inspect
 
 from .objectives import (
     AvoidBlastMatches,
     AvoidIDTHairpins,
     AvoidNonuniqueSegments,
     AvoidPattern,
+    AvoidStopCodon,
     CodonOptimize,
     DoNotModify,
     EnforceGCContent,
@@ -20,7 +20,8 @@ from .objectives import (
     PROVIDERS_CONSTRAINTS,
     SequenceLengthBounds,
     VoidObjective,
-    MinimizeDifferences
+    MinimizeDifferences,
+    DEFAULT_OBJECTIVES_DICT
 )
 
 from .biotools import (
@@ -42,18 +43,9 @@ from .biotools import (
     sequence_to_biopython_record
 )
 
-from .plotting import (GraphicTranslator, make_constraints_breaches_pdf,
-                       plot_local_gc_content, plot_constraints_breaches,
-                       plot_constraint_breaches,
-                       plot_local_gc_with_features,
-                       plot_gc_content_breaches,
-                       plot_sequence_manufacturability_difficulties)
-
-objectives_dict = {
-   k: v
-   for (k, v) in locals().items()
-   if inspect.isclass(v) and issubclass(v, Objective)
-}
+from .plotting_tools import (ObjectivesAnnotationsTranslator,
+                             plot_local_gc_content,
+                             plot_local_gc_with_features)
 
 from .utils import random_compatible_dna_sequence
 
