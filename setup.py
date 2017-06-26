@@ -16,7 +16,7 @@ from setuptools import setup, find_packages
 
 exec(open('dnachisel/version.py').read())  # loads __version__
 
-setup(name='DnaChisel',
+setup(name='dnachisel',
       version=__version__,
       author='Zulko',
       description='Optimize DNA sequences under constraints.',
@@ -25,5 +25,5 @@ setup(name='DnaChisel',
       keywords="DNA optimization constraints synthetic biology",
       packages=find_packages(exclude='docs'),
       include_package_data=True,
-      scripts=['dnachisel/dnachisel-cli']],
+      scripts=['scripts/dnachisel'],
       install_requires=["numpy", "Biopython", "tqdm"])
