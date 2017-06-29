@@ -13,7 +13,7 @@ import flametree
 from ..biotools import sequence_to_biopython_record, crop_record
 from ..plotting_tools import ObjectivesAnnotationsTranslator
 from ..version import __version__
-from ..DnaOptimizationProblem import NoSolutionError
+from ..DnaOptimizationProblem import NoSolutionError, NoSolutionFoundError
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 TEMPLATES_DIR = os.path.join(THIS_DIR, "templates")
@@ -38,18 +38,18 @@ def optimization_with_report(problem, target, project_name="unnamed",
         message = ("No solution found in zone [%d, %d]: %s" %
                    (start, end, str(error)))
         return False, message, data
-    constraints_evaluations = problem.constraints_evaluations()
-    all_pass = constraints_evaluations.all_evaluations_pass()
-    if all_pass:
-        problem.progress_logger(message="Now optimizing the sequence")
-        problem.maximize_all_objectives_one_by_one()
-        problem.progress_logger(message="Success ! Generating report.")
-    else:
+    except NoSolutionFoundError as error:
         problem.progress_logger(
             message="Failed to solve constraints. Generating report.")
+        data = write_optimization_report(
+            target, problem, project_name=project_name)
+        return False, "No solution found before the end of search.", data
+
+    problem.progress_logger(message="Now optimizing the sequence")
+    problem.maximize_all_objectives_one_by_one()
+    problem.progress_logger(message="Success ! Generating report.")
     data = write_optimization_report(
-        target, problem, project_name=project_name,
-        constraints_evaluations=constraints_evaluations)
+        target, problem, project_name=project_name)
     return True, "Optimization successful", data
 
 
