@@ -1,17 +1,17 @@
 from .biotools import (
     blast_sequence,
+    change_biopython_record_sequence,
+    crop_record,
+    find_objective_in_feature,
     gc_content,
     random_dna_sequence,
     random_protein_sequence,
     reverse_complement,
     reverse_translate,
     sequences_differences,
-    translate,
-    windows_overlap,
-    change_biopython_record_sequence,
     sequence_to_biopython_record,
-    find_objective_in_feature
-
+    translate,
+    windows_overlap
 )
 
 from .features_annotations import (

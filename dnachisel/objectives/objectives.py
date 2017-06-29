@@ -360,7 +360,7 @@ class DoNotModify(Objective):
 
     def evaluate(self, problem):
         sequence = problem.sequence
-        original = problem.original_sequence
+        original = problem.sequence_before
         if (self.location is None) and (self.indices is None):
             return ObjectiveEvaluation(sequence == original,
                                        locations=[self.location])
@@ -874,9 +874,9 @@ class MinimizeDifferences(Objective):
 
     target_sequence
       The DNA sequence that the problem' sequence (or subsequence) should equal.
-      Can be omitted if ``original_sequence`` is provided instead
+      Can be omitted if ``sequence_before`` is provided instead
 
-    original_sequence
+    sequence_before
       A DNA sequence (will generally be the problem' sequence itself) with
       already the right sequence at the given ``location``. Only provide if
       you are not providing a ``target_sequence``
@@ -892,7 +892,7 @@ class MinimizeDifferences(Objective):
     >>>     sequence = sequence,
     >>>     Objectives = [GCContentObjective(0.3,0.6, gc_location=50)],
     >>>     objective = [MinimizeDifferencesObjective(
-    >>>                     original_sequence=sequence)]
+    >>>                     sequence_before=sequence)]
     >>> )
     >>> problem.solve_all_Objectives_one_by_one()
     >>> problem.maximize_all_objectives_one_by_one()

@@ -1,8 +1,11 @@
+"""Classes for Objective Evaluations."""
+
 from Bio.SeqFeature import SeqFeature
 from ..plotting_tools import colors_cycle
 
+
 class ObjectiveEvaluation:
-    """Store relevant infos about the evaluation of an objective on a problem
+    """Store relevant infos about the evaluation of an objective on a problem.
 
     Examples
     --------
@@ -37,7 +40,9 @@ class ObjectiveEvaluation:
 
     """
 
-    def __init__(self, objective, problem, score, locations=None, message=None):
+    def __init__(self, objective, problem, score, locations=None,
+                 message=None):
+        """Initialize."""
         self.objective = objective
         self.problem = problem
         self.score = score
@@ -48,9 +53,11 @@ class ObjectiveEvaluation:
 
     @property
     def default_message(self):
+        """Return the default message for console/reports."""
         return "Score: %.02E. Locations: %s" % (self.score, self.locations)
 
     def to_text(self, role=None):
+        """Return a string representation of the evaluation."""
         if role == "objective":
             return ("{optimal} Scored {self.score:.02E} | {self.objective} | "
                     "{self.message}").format(
@@ -60,13 +67,14 @@ class ObjectiveEvaluation:
             return "{passes} | {self.objective} | {self.message}".format(
                 self=self, passes="PASS" if self.passes else "FAIL")
 
-
     def locations_to_biopython_features(self, feature_type="misc_feature",
-                                        color="red"):
+                                        color="red", label_prefix=None):
         return [
             SeqFeature(location.to_biopython_location(), type=feature_type,
-                       qualifiers={"label": str(self.objective),
-                                   "color": color})
+                       qualifiers=dict(
+                           label=label_prefix + " " + str(self.objective),
+                           color=color
+                       ))
             for location in self.locations
         ]
 
@@ -79,6 +87,9 @@ class ObjectiveEvaluations:
 
     def __iter__(self):
         return self.evaluations.__iter__()
+
+    def __len__(self):
+        return len(self.evaluations)
 
     def all_evaluations_pass(self):
         return all([ev.passes for ev in self.evaluations])
@@ -107,36 +118,51 @@ class ObjectiveEvaluations:
             for e in self.evaluations
         ]) + "\n\n"
 
+    def evaluations_with_locations(self):
+        return [
+            ev for ev in self.evaluations
+            if ev.locations is not None
+        ]
+
     def success_and_failures_as_features(self, feature_type="misc_feature"):
         return [
             ev.objective.to_biopython_feature(
                 feature_type=feature_type,
-                color=self.success_failure_color(ev))
-            for ev in self.evaluations
+                color=self.success_failure_color(ev),
+                passes='true' if ev.passes else 'false',
+                is_optimal='true' if ev.is_optimal else 'false',
+            )
+            for ev in self.evaluations_with_locations()
         ]
 
     def locations_as_features(self, features_type="misc_feature",
-                              with_objectives=True,
+                              with_objectives=True, label_prefix="From",
                               colors="cycle"):
         if colors == "cycle":
             cycle = colors_cycle()
             colors = [next(cycle) for ev in self.evaluations]
 
         features = [
-            location.to_biopython_feature(feature_type="misc_feature",
-                                          color=color)
-            for (ev, color) in zip(self.evaluations, colors)
+            location.to_biopython_feature(
+                feature_type="misc_feature",
+                label=label_prefix + " " + str(ev.objective),
+                color=color
+            )
+            for (ev, color) in zip(self.evaluations_with_locations(), colors)
             for location in ev.locations
         ]
         if with_objectives:
             features += [
                 ev.objective.to_biopython_feature(
-                    feature_type="misc_feature", role=self.objectives_role,
+                    feature_type="misc_feature",
+                    label=str(ev.objective),
+                    role=self.objectives_role,
                     color=color
                 )
-                for ev, color in zip(self.evaluations, colors)
+                for ev, color in zip(self.evaluations_with_locations(), colors)
             ]
         return features
+
 
 class ProblemConstraintsEvaluations(ObjectiveEvaluations):
     objectives_role = "constraint"
@@ -157,6 +183,7 @@ class ProblemConstraintsEvaluations(ObjectiveEvaluations):
             return "SUCCESS - all constraints evaluations pass"
         else:
             return "FAILURE: %d constraints evaluations failed" % len(failed)
+
 
 class ProblemObjectivesEvaluations(ObjectiveEvaluations):
     objectives_role = "objective"

@@ -25,9 +25,24 @@ from Bio import SeqIO
 
 from tqdm import tqdm
 
+
+class NoSolutionError(Exception):
+    """Exception returned when a DnaOptimizationProblem aborts.
+    This means that the constraints are found to be unsatisfiable.
+    """
+    def __init__(self, message, problem, location=None):
+        """Initialize."""
+        Exception.__init__(self, message)
+        self.problem = problem
+        self.location = location
+
+
 class NoSolutionFoundError(Exception):
-    """Exception returned when a DnaOptimizationProblem fails at resolving
-    the constraints, possibly because the constraints are unsatisfiable.
+    """Exception returned when a DnaOptimizationProblem solving fails to find
+    a solution.
+    This means that the search was not long enough or that there was
+    no solution, because in some complex way, some constraints
+    are incompatible.
     """
     pass
 
@@ -104,10 +119,14 @@ class DnaOptimizationProblem:
         else:
             self.record = None
             self.sequence = sequence
-        self.original_sequence = self.sequence
         self.possible_mutations_dict = None
         self.constraints = [] if constraints is None else constraints
         self.objectives = [] if objectives is None else objectives
+
+        self.initialize()
+
+    def initialize(self):
+        """Variables initialization before solving."""
 
         self.constraints = [
             constraint.initialize_problem(self, role="constraint")
@@ -117,6 +136,11 @@ class DnaOptimizationProblem:
             objective.initialize_problem(self, role="objective")
             for objective in self.objectives
         ]
+
+        self.sequence_before = self.sequence
+        self.constraints_before = self.constraints_evaluations()
+        self.objectives_before = self.objectives_evaluations()
+
 
     def constraints_evaluations(self):
         """Return a list of the evaluations of each constraint of the canvas.
@@ -224,10 +248,14 @@ class DnaOptimizationProblem:
                             if codon_is_compatible(codon)
                         ]
                         if reachable_possible_codons == []:
-                            raise NoSolutionFoundError(
+
+                            raise NoSolutionError(
                                 "An EnforceTranslation constraint seems to"
                                 " clash with a DoNotTouch constraint: %s" %
-                                constraint
+                                constraint,
+                                problem=self,
+                                location=Location(cstart, cstop,
+                                                  constraint.location.strand)
                             )
                         possible_codons = reachable_possible_codons
                     if constraint.location.strand == -1:
@@ -310,38 +338,7 @@ class DnaOptimizationProblem:
                                                                dtype=np.uint8)
         self.sequence = sequence_buffer.tostring().decode("utf8")
 
-
-     # CONSTRAINTs
-
-    # def all_constraints_pass(self):
-    #     """Return True if and only if the canvas meet all its constraints."""
-    #     return all([
-    #         evaluation.passes
-    #         for evaluation in self.constraints_evaluations()
-    #     ])
-    #
-    # def constraints_text_summary(self, failed_only=False, failed_last=True):
-    #     """Print each constraint with a summary of its evaluation.
-    #
-    #     This method is meant for interactive use in a terminal or IPython
-    #     notebook.
-    #     """
-    #     evaluations = self.constraints_evaluations()
-    #     failed_evaluations = [e for e in evaluations if not e.passes]
-    #     if failed_only:
-    #         evaluations = failed_evaluations
-    #     if failed_last:
-    #         evaluations = sorted(evaluations, key=lambda e: not e.passes)
-    #     if failed_evaluations == []:
-    #         message = "SUCCESS - all constraints evaluations pass"
-    #     else:
-    #         message = ("FAILURE: %d constraints evaluations failed" %
-    #                    len(failed_evaluations))
-    #     text_evaluations = "\n".join([
-    #         "%s %s" % (evaluation.objective, evaluation)
-    #         for evaluation in evaluations
-    #     ])
-    #     return ("\n===> %s\n%s\n" % (message, text_evaluations))
+    # CONSTRAINTS
 
     def solve_all_constraints_by_exhaustive_search(self, verbose=False,
         progress_bar=False, raise_exception_on_failure=True):
@@ -362,14 +359,12 @@ class DnaOptimizationProblem:
             if self.all_constraints_pass():
                 return
             else:
-                self.sequence = self.original_sequence
-
+                self.sequence = self.sequence_before
 
         if raise_exception_on_failure:
-            summary = self.constraints_text_summary()
-            raise NoSolutionFoundError(
-                summary +
-                "Exhaustive search failed to satisfy all constraints.")
+            raise NoSolutionError(
+                "Exhaustive search failed to satisfy all constraints.",
+                problem=self)
 
     def solve_all_constraints_by_random_mutations(
         self, max_iter=1000, n_mutations=1, verbose=False, progress_bar=False,
@@ -386,7 +381,7 @@ class DnaOptimizationProblem:
         sequence.
 
         This operation is repeated `max_iter` times at most, after which
-        a ``NoSolutionFoundError`` is thrown.
+        a ``NoSolutionError`` is thrown.
 
 
         """
@@ -420,11 +415,11 @@ class DnaOptimizationProblem:
                 score = new_score
             else:
                 self.sequence = previous_sequence
-        summary = self.constraints_text_summary()
         if raise_exception_on_failure:
-            raise NoSolutionFoundError(
-                summary +
-                "Random search hit max_iterations without finding a solution.")
+            raise NoSolutionError(
+                "Random search hit max_iterations without finding a solution.",
+                problem=problem
+            )
 
     def solve_constraint_by_localization(self, constraint,
                                          randomization_threshold=10000,
@@ -501,16 +496,20 @@ class DnaOptimizationProblem:
                         constraint.localized(do_not_modify_location)
                     ] + passing_localized_constraints
                 )
-                if (localized_problem.mutation_space_size() <
-                        randomization_threshold):
-                    localized_problem.solve_all_constraints_by_exhaustive_search(
-                        verbose=verbose, progress_bar=progress_bars > 1)
-                    self.sequence = localized_problem.sequence
-                else:
-                    localized_problem.solve_all_constraints_by_random_mutations(
-                        max_iter=max_random_iters, n_mutations=n_mutations,
-                        verbose=verbose, progress_bar=progress_bars > 1)
-                    self.sequence = localized_problem.sequence
+                try:
+                    if (localized_problem.mutation_space_size() <
+                            randomization_threshold):
+                        localized_problem.solve_all_constraints_by_exhaustive_search(
+                            verbose=verbose, progress_bar=progress_bars > 1)
+                        self.sequence = localized_problem.sequence
+                    else:
+                        localized_problem.solve_all_constraints_by_random_mutations(
+                            max_iter=max_random_iters, n_mutations=n_mutations,
+                            verbose=verbose, progress_bar=progress_bars > 1)
+                        self.sequence = localized_problem.sequence
+                except NoSolutionError as error:
+                    error.location = location
+                    raise error
 
     def solve_all_constraints_one_by_one(self, max_loops=1,
                                          randomization_threshold=10000,
@@ -528,7 +527,7 @@ class DnaOptimizationProblem:
           Number of times that the constraints will be considered one after the
           other. The function may stop sooner, as soon as all constraints pass.
           If after all these loops some constraints are still not passing, a
-          ``NoSolutionFoundError`` is raised.
+          ``NoSolutionError`` is raised.
 
         randomization_threshold
           Local problems with a search space size under this threshold will be
@@ -573,20 +572,11 @@ class DnaOptimizationProblem:
                     consider_other_constraints=not solve_independently
                 )
         if not self.all_constraints_pass():
-            summary = self.constraints_text_summary(failed_only=True)
             raise NoSolutionFoundError(
-                summary +
                 "One-by-one could not solve all constraints before max_loops."
             )
 
     # OBJECTIVES
-
-    # def all_objectives_score_sum(self):
-    #     """Return the total sum of all objective evaluation's score"""
-    #     return sum([
-    #         objective.boost * objective.evaluate(self).score
-    #         for objective in self.objectives
-    #     ])
 
     def maximize_objectives_by_exhaustive_search(self, verbose=False,
                                                  progress_bar=False):
@@ -594,7 +584,7 @@ class DnaOptimizationProblem:
         """
         if not self.all_constraints_pass():
             summary = self.constraints_text_summary(failed_only=True)
-            raise NoSolutionFoundError(
+            raise NoSolutionError(
                 summary +
                 "Optimization can only be done when all constraints are"
                 "verified."
@@ -623,7 +613,7 @@ class DnaOptimizationProblem:
                     if ((best_possible_score is not None) and
                         (current_best_score >= best_possible_score)):
                         break
-            self.sequence = self.original_sequence
+            self.sequence = self.sequence_before
         self.sequence = current_best_sequence
         assert self.all_constraints_pass()
 
@@ -784,17 +774,17 @@ class DnaOptimizationProblem:
             indices = sorted(indices, key=lambda i: abs(i - center))
 
         for i in indices:
-            original_sequence = self.sequence
+            sequence_before = self.sequence
             if paste_pattern_in:
                 location = [i, i + pattern.size]
                 self.mutate_sequence([(location, pattern.pattern)])
             try:
                 self.solve_all_constraints_one_by_one()
                 return i # success
-            except NoSolutionFoundError:
-                self.sequence = original_sequence
+            except NoSolutionError:
+                self.sequence = sequence_before
         self.constraints.pop()  # remove the pattern constraint
-        raise NoSolutionFoundError("Failed to insert the pattern")
+        raise NoSolutionError("Failed to insert the pattern")
 
     @staticmethod
     def from_record(record, objectives_dict="default"):
@@ -826,6 +816,7 @@ class DnaOptimizationProblem:
 
     def to_record(self, filepath=None, features_type="misc_feature",
                   with_original_features=True,
+                  with_original_objective_features=False,
                   with_constraints=True,
                   with_objectives=True,
                   colors_dict=None):
@@ -838,6 +829,7 @@ class DnaOptimizationProblem:
                                          feature_type=features_type,
                                          colors_dict=colors_dict)
                 for cst in self.constraints
+                if cst.__dict__.get('location', False)
             ]
         if with_objectives:
             record.features += [
@@ -847,7 +839,11 @@ class DnaOptimizationProblem:
                 for obj in self.objectives
             ]
         if with_original_features and (self.record is not None):
-             record.features += self.record.features
+            record.features += [
+                f for f in self.record.features
+                if with_original_objective_features or
+                not find_objective_in_feature(f)
+            ]
 
         if filepath is not None:
             SeqIO.write(record, filepath, "genbank")
@@ -863,8 +859,9 @@ class DnaOptimizationProblem:
             half = int(len(diffs)/2)
             return [(diffs[2*i], diffs[2*i+1]) for i in range(half)]
         segments = sequences_differences_segments(self.sequence,
-                                                  self.original_sequence)
+                                                  self.sequence_before)
         return [
-            Location(start, end).to_biopython_feature()
+            Location(start, end).to_biopython_feature(label="edit",
+                                                      is_edit="true")
             for start, end in segments
         ]

@@ -9,6 +9,7 @@ from Bio.Seq import Seq
 from Bio.Blast import NCBIXML
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import DNAAlphabet
+from Bio.SeqFeature import FeatureLocation
 
 from .biotables import CODONS_SEQUENCES, NUCLEOTIDE_TO_REGEXPR
 
@@ -333,3 +334,23 @@ def find_objective_in_feature(feature):
         if potential_label[0] in "@~":
             return potential_label
     return None
+
+def crop_record(record, crop_start, crop_end):
+    features = []
+    for feature in record.features:
+        start, end = sorted([feature.location.start, feature.location.end])
+        new_start, new_end = max(start, crop_start), min(end, crop_end)
+        if new_end <= new_start:
+            continue
+        new_start, new_end = new_start - crop_start, new_end - crop_start
+
+        feature = deepcopy(feature)
+        feature.location = FeatureLocation(new_start, new_end,
+                                           feature.location.strand)
+        label = "".join(feature.qualifiers.get("label", ""))
+        feature.qualifiers["label"] = label + " (part)"
+        features.append(feature)
+
+    new_record = record[crop_start: crop_end]
+    new_record.features = features
+    return new_record

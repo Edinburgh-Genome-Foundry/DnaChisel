@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title> DNA Chisel Optimization report </title>
+</head>
+<body>
+
+<div class="header">
+    <a href='github.com'><img class=header-logo src="logo.png"/></a>
+    <p>
+      version {{dnachisel_version}} <br />
+      Made with &hearts; at the Edinburgh Genome Foundry
+    </p>
+</div>
+
+<h1>
+Project {{project_name}}
+<br />
+Sequence Optimization Report
+<br />
+<span class='outcome-{{outcome.lower()}}'>({{outcome}})</span>
+</h1>
+
+<h2>Summary</h2>
+  <p>
+    <b>{{ problem.constraints_before | length }}</b> constraints,
+    <b>{{problem.objectives_before | length}}</b> objectives
+    on a {{problem.sequence | length }}-bp sequence
+    <small>(seq. hash {{"%0x" % problem.sequence.__hash__()}}) </small>
+  </p>
+
+  <table class='fancy-table summary'>
+    <th>
+      <td>
+        Before
+      </td>
+      <td>
+        After
+      </td>
+    </th>
+
+    <tr>
+      <td>
+        Failing constraints
+      </td>
+      <td>
+        {{problem.constraints_before.filter('failing') | length }}
+      </td>
+      <td>
+        {{ constraints_after.filter('failing') | length}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Total objectives score
+      </td>
+      <td>
+        {{ '%.1E' % problem.objectives_before.scores_sum() }}
+      </td>
+      <td>
+        {{ '%.1E' % objectives_after.scores_sum()}}
+      </td>
+    </tr>
+  </table>
+
+<h2> Constraints </h2>
+
+  <table class='fancy-table'>
+    <th>
+      <td>
+        Before
+      </td>
+      <td>
+        After
+      </td>
+    </th>
+    {% for (before, after) in zip(problem.constraints_before, constraints_after) %}
+    <tr>
+      <td class='first'>
+        {{ before.objective }}
+      </td>
+      {% for eval in [before, after] %}
+        {% if eval.passes %}
+          <td>PASS</td>
+        {% else %}
+          <td class='red'> FAIL ({{ len(eval.locations) }} places)</td>
+        {% endif %}
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+
+  <h2> Objectives </h2>
+
+    <table class='fancy-table'>
+      <th>
+        <td>
+          Before
+        </td>
+        <td>
+          After
+        </td>
+      </th>
+      {% for (before, after) in zip(problem.objectives_before, objectives_after) %}
+      <tr>
+        <td class='first'>
+          {{ before.objective }}
+        </td>
+        {% for eval in [before, after] %}
+          <td class={{'green' if eval.is_optimal else ''}}>
+            {{ ('%.1f' if 0.1 < eval.score < 1000 else '%.1E') % eval.score }}
+          </td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </table>
+
+</body>
+
+<style>
+.header {
+    height:80px;
+}
+
+.header-logo {
+    height:60px;
+    width:auto;
+    position:relative;
+}
+
+.header {
+    text-align:center;
+    font-size:10px;
+    margin-bottom: 5em;
+}
+.header p {
+  text-align:center;
+}
+
+body {
+    width:18cm;
+    margin: 10px auto;
+    font-family: "Open Sans";
+    font-size:14px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom:40px;
+}
+
+
+h2 {
+    margin-top:40px;
+    margin-bottom:20px;
+}
+
+p {
+    text-align: justify;
+}
+
+.overview {
+  border-radius: 25px;
+  border-style: solid;
+  border-color: black;
+  border: 1px solid black;
+  padding: 10px;
+
+}
+table {
+    font-size: 0.8em;
+    width:100%;
+}
+
+
+.fancy-table { margin-bottom: 1.4em; width:100%; }
+.fancy-table th          { font-weight: bold; }
+.fancy-table tr          { border-top: 1px solid black; }
+.fancy-table td.first    { max-width: 300px; }
+.fancy-table thead th    { background: #c3d9ff; }
+.fancy-table th,td,caption { padding: 4px 10px 4px 5px; }
+.fancy-table tbody tr:nth-child(even) td,
+.fancy-table tbody tr.even td  {
+	background: #e5ecf9;
+}
+.fancy-table tbody tr:nth-child(odd) td {
+	background: #f2f4f6;
+}
+.fancy-table tbody tr td.red  {
+	background: #f6cdd0;
+}
+
+
+.fancy-table td {
+    max-width: 300px;
+    text-align:center
+}
+
+.fancy-table a, .sequence-table a {
+    color: #0000aa;
+    text-decoration: none;
+}
+
+.fancy-table th {
+    text-align:center
+}
+
+table.summary {
+  width: 50%;
+  margin-left: 25%;
+}
+
+.outcome-success {
+  color: green;
+}
+.outcome-failure {
+  color: red;
+}
+
+small {
+  font-size: 0.5em
+}
+
+@page {
+    margin: 2cm 0cm;
+
+    @bottom-right {
+        font-family: "Open Sans", Helvetica;
+        padding-right: 20px;
+        content: "Page " counter(page)
+                 " of " counter(pages) }
+}
+</style>
+</html>

@@ -1,5 +1,6 @@
 from .DnaOptimizationProblem import (DnaOptimizationProblem,
-                                     NoSolutionFoundError)
+                                     NoSolutionFoundError,
+                                     NoSolutionError)
 from .Location import Location
 
 from .objectives import (
@@ -27,6 +28,7 @@ from .objectives import (
 from .biotools import (
     blast_sequence,
     DnaNotationPattern,
+    crop_record,
     enzyme_pattern,
     homopolymer_pattern,
     random_dna_sequence,

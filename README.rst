@@ -100,6 +100,9 @@ Alternatively, you can unzip the sources in a folder and type
 ::
     sudo python setup.py install
 
+To be able to generate plots and reports, run
+::
+    sudo pip install dna_features_viewer weasyprint
 
 
 

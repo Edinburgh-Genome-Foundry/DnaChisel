@@ -12,14 +12,21 @@ try:
     from dna_features_viewer import BiopythonTranslator
     DFV_AVAILABLE = True
 except:
-    BiopythonTranslator = object
-    pass
+    class BiopythonTranslator:
+        "Class unavailable. Install DNA Features Viewer."
+        def __init__(self):
+            raise ImportError("BiopythonTranslator unavailable. Install "
+                              "DNA Features Viewer.")
 
 
 def colors_cycle():
     if not MATPLOTLIB_AVAILABLE:
         raise ImportError("colors_cycle requires Matplotlib installed")
-    return itertools.cycle([cm.Paired(0.21 * i % 1.0) for i in range(30)])
+    cycle = itertools.cycle([cm.Paired(0.21 * i % 1.0) for i in range(30)])
+    return (
+        '#%02x%02x%02x' % tuple([int(255 * c) for c in rgb_tuple[:3]])
+        for rgb_tuple in cycle
+    )
 
 
 class ObjectivesAnnotationsTranslator(BiopythonTranslator):
@@ -44,10 +51,13 @@ class ObjectivesAnnotationsTranslator(BiopythonTranslator):
                     "!": "#fcff75",
                 }.get(objective[0], "#f4df42")
         else:
-            return "#d9e0fc"
+            return "#eeeafa"
 
     @staticmethod
     def compute_feature_label(f):
+        is_edit = f.qualifiers.get("is_edit", "false")
+        if "true" in [is_edit, is_edit[0]]:
+            return None
         default = BiopythonTranslator.compute_feature_label(f)
         label = None if (f.type != "misc_feature") else default
         if label == "misc_feature":

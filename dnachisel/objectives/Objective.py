@@ -86,7 +86,7 @@ class Objective:
                              role="constraint", colors_dict=None,
                              **qualifiers):
         if colors_dict is None:
-            colors_dict = {"constraint": "#61a8f9", "objective": "#f9cd60"}
+            colors_dict = {"constraint": "#355c87", "objective": "#f9cd60"}
         qualifiers["role"] = role
         if "label" not in qualifiers:
             qualifiers['label'] = self.__repr__()
