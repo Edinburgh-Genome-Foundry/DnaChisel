@@ -25,7 +25,6 @@ from Bio import SeqIO
 
 from tqdm import tqdm
 
-
 class NoSolutionError(Exception):
     """Exception returned when a DnaOptimizationProblem aborts.
     This means that the constraints are found to be unsatisfiable.
@@ -112,7 +111,8 @@ class DnaOptimizationProblem:
     e.g. for the mutation of a whole codon ``(3,6): ["ATT", "ACT", "AGT"]``.
     """
 
-    def __init__(self, sequence, constraints=None, objectives=None):
+    def __init__(self, sequence, constraints=None, objectives=None,
+                 progress_logger=None):
         if isinstance(sequence, SeqRecord):
             self.record = sequence
             self.sequence = str(sequence.seq)
@@ -122,11 +122,16 @@ class DnaOptimizationProblem:
         self.possible_mutations_dict = None
         self.constraints = [] if constraints is None else constraints
         self.objectives = [] if objectives is None else objectives
-
+        if progress_logger is None:
+            def progress_logger(*a, **k):
+                pass
+        self.progress_logger = progress_logger
         self.initialize()
 
     def initialize(self):
         """Variables initialization before solving."""
+
+        self.progress_logger(message="Initializing...")
 
         self.constraints = [
             constraint.initialize_problem(self, role="constraint")
@@ -460,12 +465,13 @@ class DnaOptimizationProblem:
             return
 
         if evaluation.locations is not None:
-
             locations = evaluation.locations
+            self.progress_logger(n_locations=len(locations))
             if progress_bars > 0:
                 locations = tqdm(locations, desc="Window", leave=False)
 
-            for location in locations:
+            for i, location in enumerate(locations):
+                self.progress_logger(location_ind=i)
                 if verbose:
                     print(location)
                 do_not_modify_location = location.extended(
@@ -550,7 +556,9 @@ class DnaOptimizationProblem:
         range_loops = range(max_loops)
         if progress_bars > 0:
             range_loops = tqdm(range_loops, desc="Loop", leave=False)
+        self.progress_logger(n_iterations=max_loops)
         for iteration in range_loops:
+            self.progress_logger(iteration_ind=iteration)
             evaluations = self.constraints_evaluations()
             failed_evaluations = [
                 evaluation
@@ -559,10 +567,12 @@ class DnaOptimizationProblem:
             ]
             if failed_evaluations == []:
                 return
+            self.progress_logger(n_evaluations=len(failed_evaluations))
             if progress_bars > 1:
                 failed_evaluations = tqdm(failed_evaluations, leave=False,
                                           desc="Failing constraint")
-            for evaluation in failed_evaluations:
+            for i, evaluation in enumerate(failed_evaluations):
+                self.progress_logger(evaluation_ind=i)
                 self.solve_constraint_by_localization(
                     evaluation.objective, randomization_threshold,
                     max_random_iters, verbose=verbose,

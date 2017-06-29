@@ -7,7 +7,8 @@
 <body>
 
 <div class="header">
-    <a href='github.com'><img class=header-logo src="logo.png"/></a>
+    <a href='https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer'>
+      <img class=header-logo src="logo.png"/></a>
     <p>
       version {{dnachisel_version}} <br />
       Made with &hearts; at the Edinburgh Genome Foundry
@@ -24,10 +25,11 @@ Sequence Optimization Report
 
 <h2>Summary</h2>
   <p>
-    <b>{{ problem.constraints_before | length }}</b> constraints,
-    <b>{{problem.objectives_before | length}}</b> objectives
-    on a {{problem.sequence | length }}-bp sequence
-    <small>(seq. hash {{"%0x" % problem.sequence.__hash__()}}) </small>
+
+    The optimization modified <b>{{ edits }}</b> nucleotides out of <b>{{problem.sequence | length }}</b>
+    to satisfy <b>{{ problem.constraints_before | length }}</b> constraints and
+    <b>{{problem.objectives_before | length}}</b> objectives.
+
   </p>
 
   <table class='fancy-table summary'>
@@ -115,7 +117,7 @@ Sequence Optimization Report
       </tr>
       {% endfor %}
     </table>
-
+<small>(seq. hash {{"%0x" % problem.sequence.__hash__()}}) </small>
 </body>
 
 <style>
@@ -136,6 +138,7 @@ Sequence Optimization Report
 }
 .header p {
   text-align:center;
+  margin-top: -10px
 }
 
 body {

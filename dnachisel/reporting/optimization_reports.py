@@ -26,19 +26,27 @@ def optimization_with_report(problem, target, project_name="unnamed",
     Returns
     -------
 
-    success, message, zip_dat
+    success, message, zip_data
     """
     try:
+        problem.progress_logger(message="Solving constraints")
         problem.solve_all_constraints_one_by_one(**solver_parameters)
     except NoSolutionError as error:
+        problem.progress_logger(message="No solution found: making report")
         data = write_no_solution_report(target, problem, error)
         start, end, s = error.location.as_tuple()
         message = ("No solution found in zone [%d, %d]: %s" %
                    (start, end, str(error)))
         return False, message, data
     constraints_evaluations = problem.constraints_evaluations()
-    if constraints_evaluations.all_evaluations_pass():
+    all_pass = constraints_evaluations.all_evaluations_pass()
+    if all_pass:
+        problem.progress_logger(message="Now optimizing the sequence")
         problem.maximize_all_objectives_one_by_one()
+        problem.progress_logger(message="Success ! Generating report.")
+    else:
+        problem.progress_logger(
+            message="Failed to solve constraints. Generating report.")
     data = write_optimization_report(
         target, problem, project_name=project_name,
         constraints_evaluations=constraints_evaluations)
@@ -114,28 +122,6 @@ def write_optimization_report(target, problem, project_name="unnammed",
         objectives_evaluations = problem.objectives_evaluations()
     root = flametree.file_tree(target, replace=True)
     translator = ObjectivesAnnotationsTranslator()
-
-
-    # CREATE PDF REPORT
-
-    jinja_env = jinja2.Environment()
-    jinja_env.globals.update(zip=zip, len=len)
-    template_path = os.path.join(TEMPLATES_DIR, "optimization_report.html")
-    with open(template_path, "r") as f:
-        REPORT_TEMPLATE = jinja_env.from_string(f.read())
-
-    html = REPORT_TEMPLATE.render(
-        dnachisel_version=__version__,
-        project_name="bla",
-        problem=problem,
-        outcome="SUCCESS" if constraints_evaluations.all_evaluations_pass()
-                else "FAIL",
-        constraints_after=constraints_evaluations,
-        objectives_after=objectives_evaluations
-    )
-    weasy_html = weasyprint.HTML(string=html,  base_url=TEMPLATES_DIR)
-    weasy_html.write_pdf(root._file("Report.pdf"))
-
     # CREATE FIGURES AND GENBANKS
 
     with PdfPages(root._file("before_after.pdf").open("wb")) as pdf_io:
@@ -162,7 +148,7 @@ def write_optimization_report(target, problem, project_name="unnammed",
         for (title, record, constraints, objectives, edits) in figures_data:
 
             full_title = (
-                "{title}:\t\t{nfailing} constraints failing"
+                "{title}:        {nfailing} constraints failing"
                 "        Total Score: {score:.01E} {bars}").format(
                 title=title, score=objectives.scores_sum(),
                 nfailing=len(constraints.filter("failing").evaluations),
@@ -206,6 +192,28 @@ def write_optimization_report(target, problem, project_name="unnammed",
                 ax.figure.set_size_inches((figure_width, height))
                 pdf_io.savefig(ax.figure, bbox_inches="tight")
                 plt.close(ax.figure)
+
+    # CREATE PDF REPORT
+
+    jinja_env = jinja2.Environment()
+    jinja_env.globals.update(zip=zip, len=len)
+    template_path = os.path.join(TEMPLATES_DIR, "optimization_report.html")
+    with open(template_path, "r") as f:
+        REPORT_TEMPLATE = jinja_env.from_string(f.read())
+
+    html = REPORT_TEMPLATE.render(
+        dnachisel_version=__version__,
+        project_name="bla",
+        problem=problem,
+        outcome="SUCCESS" if constraints_evaluations.all_evaluations_pass()
+                else "FAIL",
+        constraints_after=constraints_evaluations,
+        objectives_after=objectives_evaluations,
+        edits=sum(len(f) for f in edits)
+    )
+    weasy_html = weasyprint.HTML(string=html,  base_url=TEMPLATES_DIR)
+    weasy_html.write_pdf(root._file("Report.pdf"))
+
 
     problem.to_record(root._file("final_sequence.gb").open("w"),
                       with_constraints=False,
