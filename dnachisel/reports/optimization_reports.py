@@ -204,8 +204,6 @@ def write_optimization_report(target, problem, project_name="unnammed",
                 ax, _ = graphical_record.plot(figure_width=figure_width)
                 ax.set_title(title + ": Constraints breaches locations"
                              + message, loc="left", fontdict=TITLE_FONTDICT)
-                #height = max(ax.figure.get_size_inches()[1], plot_height)
-                #ax.figure.set_size_inches((figure_width, height))
                 pdf_io.savefig(ax.figure, bbox_inches="tight")
                 plt.close(ax.figure)
 
