@@ -74,7 +74,7 @@ class ObjectiveEvaluation:
                        qualifiers=dict(
                            label=label_prefix + " " + str(self.objective),
                            color=color
-                       ))
+            ))
             for location in self.locations
         ]
 
@@ -132,7 +132,8 @@ class ObjectiveEvaluations:
                 passes='true' if ev.passes else 'false',
                 is_optimal='true' if ev.is_optimal else 'false',
             )
-            for ev in self.evaluations_with_locations()
+            for ev in self.evaluations
+            if ev.objective.__dict__.get('location', False)
         ]
 
     def locations_as_features(self, features_type="misc_feature",
@@ -145,7 +146,7 @@ class ObjectiveEvaluations:
         features = [
             location.to_biopython_feature(
                 feature_type="misc_feature",
-                label=label_prefix + " " + str(ev.objective),
+                objective=label_prefix + " " + str(ev.objective),
                 color=color
             )
             for (ev, color) in zip(self.evaluations_with_locations(), colors)
@@ -159,7 +160,8 @@ class ObjectiveEvaluations:
                     role=self.objectives_role,
                     color=color
                 )
-                for ev, color in zip(self.evaluations_with_locations(), colors)
+                for ev, color in zip(self.evaluations, colors)
+                if ev.objective.__dict__.get('location', False)
             ]
         return features
 

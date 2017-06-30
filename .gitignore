@@ -49,3 +49,5 @@ nosetests.xml
 
 *.gb
 *.fasta
+
+examples/reports

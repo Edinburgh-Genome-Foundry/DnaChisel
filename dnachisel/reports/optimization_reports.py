@@ -13,13 +13,16 @@ import flametree
 from ..biotools import sequence_to_biopython_record, crop_record
 from ..plotting_tools import ObjectivesAnnotationsTranslator
 from ..version import __version__
-from ..DnaOptimizationProblem import NoSolutionError, NoSolutionFoundError
+from ..DnaOptimizationProblem import (DnaOptimizationProblem, NoSolutionError,
+                                      NoSolutionFoundError)
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 TEMPLATES_DIR = os.path.join(THIS_DIR, "templates")
 TITLE_FONTDICT = fontdict = dict(size=14, weight="bold")
 
-def optimization_with_report(problem, target, project_name="unnamed",
+def optimization_with_report(target, problem=None, record=None,
+                             project_name="unnamed",
+                             objectives_dict='default',
                              **solver_parameters):
     """
 
@@ -28,6 +31,10 @@ def optimization_with_report(problem, target, project_name="unnamed",
 
     success, message, zip_data
     """
+    if problem is None:
+        problem = DnaOptimizationProblem.from_record(
+            record, objectives_dict=objectives_dict)
+
     try:
         problem.progress_logger(message="Solving constraints")
         problem.solve_all_constraints_one_by_one(**solver_parameters)
@@ -35,7 +42,7 @@ def optimization_with_report(problem, target, project_name="unnamed",
         problem.progress_logger(message="No solution found: making report")
         data = write_no_solution_report(target, problem, error)
         start, end, s = error.location.as_tuple()
-        message = ("No solution found in zone [%d, %d]: %s" %
+        message = ("No solution found in zone [%d, %d]: %s." %
                    (start, end, str(error)))
         return False, message, data
     except NoSolutionFoundError as error:
@@ -50,7 +57,7 @@ def optimization_with_report(problem, target, project_name="unnamed",
     problem.progress_logger(message="Success ! Generating report.")
     data = write_optimization_report(
         target, problem, project_name=project_name)
-    return True, "Optimization successful", data
+    return True, "Optimization successful.", data
 
 
 
@@ -114,7 +121,7 @@ def write_no_solution_report(target, problem, error):
 def write_optimization_report(target, problem, project_name="unnammed",
                               constraints_evaluations=None,
                               objectives_evaluations=None,
-                              figure_width=20):
+                              figure_width=20, max_features_in_plots=300):
     """Write a report with a PDF summary, plots, and genbanks."""
     if constraints_evaluations is None:
         constraints_evaluations = problem.constraints_evaluations()
@@ -148,7 +155,7 @@ def write_optimization_report(target, problem, project_name="unnammed",
         for (title, record, constraints, objectives, edits) in figures_data:
 
             full_title = (
-                "{title}:        {nfailing} constraints failing"
+                "{title}:        {nfailing} constraints failing (in red)"
                 "        Total Score: {score:.01E} {bars}").format(
                 title=title, score=objectives.scores_sum(),
                 nfailing=len(constraints.filter("failing").evaluations),
@@ -185,11 +192,20 @@ def write_optimization_report(target, problem, project_name="unnammed",
             if breaches_locations != []:
                 record.features = breaches_locations
                 graphical_record = translator.translate_record(record)
+                if len(graphical_record.features) > max_features_in_plots:
+                    features = sorted(graphical_record.features,
+                                      key= lambda f: f.start - f.end)
+                    new_ft = features[:max_features_in_plots]
+                    graphical_record.features = new_ft
+                    message = "(only %d features shown)" % \
+                              max_features_in_plots
+                else:
+                    message = ""
                 ax, _ = graphical_record.plot(figure_width=figure_width)
-                ax.set_title(title + ": Constraints breaches locations",
-                             loc="left", fontdict=TITLE_FONTDICT)
-                height = max(ax.figure.get_size_inches()[1], plot_height)
-                ax.figure.set_size_inches((figure_width, height))
+                ax.set_title(title + ": Constraints breaches locations"
+                             + message, loc="left", fontdict=TITLE_FONTDICT)
+                #height = max(ax.figure.get_size_inches()[1], plot_height)
+                #ax.figure.set_size_inches((figure_width, height))
                 pdf_io.savefig(ax.figure, bbox_inches="tight")
                 plt.close(ax.figure)
 

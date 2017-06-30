@@ -49,7 +49,11 @@ def plot_constraint_breaches(constraint, sequence, title=None, ax=None,
         record = None
 
     problem = DnaOptimizationProblem(sequence, constraints=[constraint])
-    breaches_record = problem.constraints_breaches_as_biopython_record()
+    evals = problem.constraints_evaluations().filter("failing")
+    breaches_record = problem.to_record(with_original_features=False,
+                               with_objectives=False, with_constraints=False)
+    breaches_record.features = evals.locations_as_features()
+
     if record is not None:
         for feature in record.features:
             feature = deepcopy(feature)
