@@ -57,7 +57,7 @@ class Location:
     def __repr__(self):
         result = "%d-%d" % (self.start, self.end)
         if self.strand is not None:
-            result += "(%s)" % ({1: "+", -1: "-"}[self.strand])
+            result += "(%s)" % ({1: "+", -1: "-", 0:""}[self.strand])
         return result
 
     def __len__(self):

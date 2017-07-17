@@ -9,6 +9,7 @@ from .biotools import (
     reverse_complement,
     reverse_translate,
     sequences_differences,
+    sequences_differences_segments,
     sequence_to_biopython_record,
     translate,
     windows_overlap

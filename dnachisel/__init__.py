@@ -42,7 +42,8 @@ from .biotools import (
     annotate_differences,
     annotate_pattern_occurrences,
     annotate_record,
-    sequence_to_biopython_record
+    sequence_to_biopython_record,
+    sequences_differences_segments
 )
 
 from .plotting_tools import (ObjectivesAnnotationsTranslator,

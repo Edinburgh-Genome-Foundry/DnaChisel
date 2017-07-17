@@ -10,12 +10,14 @@ import numpy as np
 
 from .biotools.biotools import (reverse_complement,
                                 sequence_to_biopython_record,
-                                find_objective_in_feature)
+                                find_objective_in_feature,
+                                sequences_differences_segments)
+
 from .objectives import (Objective, DoNotModify, EnforcePattern,
-                                    EnforceTranslation,
-                                    ProblemObjectivesEvaluations,
-                                    ProblemConstraintsEvaluations,
-                                    DEFAULT_OBJECTIVES_DICT)
+                         EnforceTranslation,
+                         ProblemObjectivesEvaluations,
+                         ProblemConstraintsEvaluations,
+                         DEFAULT_OBJECTIVES_DICT)
 
 from .Location import Location
 from Bio.SeqRecord import SeqRecord
@@ -471,7 +473,6 @@ class DnaOptimizationProblem:
                 locations = tqdm(locations, desc="Window", leave=False)
 
             for i, location in enumerate(locations):
-                self.progress_logger(location_ind=i)
                 if verbose:
                     print(location)
                 do_not_modify_location = location.extended(
@@ -516,8 +517,9 @@ class DnaOptimizationProblem:
                 except NoSolutionError as error:
                     error.location = location
                     raise error
+                self.progress_logger(location_ind=i+1)
 
-    def solve_all_constraints_one_by_one(self, max_loops=1,
+    def solve_all_constraints_one_by_one(self, max_loops=2,
                                          randomization_threshold=10000,
                                          max_random_iters=1000, verbose=False,
                                          progress_bars=0,
@@ -558,7 +560,7 @@ class DnaOptimizationProblem:
             range_loops = tqdm(range_loops, desc="Loop", leave=False)
         self.progress_logger(n_iterations=max_loops)
         for iteration in range_loops:
-            self.progress_logger(iteration_ind=iteration)
+
             evaluations = self.constraints_evaluations()
             failed_evaluations = [
                 evaluation
@@ -572,7 +574,6 @@ class DnaOptimizationProblem:
                 failed_evaluations = tqdm(failed_evaluations, leave=False,
                                           desc="Failing constraint")
             for i, evaluation in enumerate(failed_evaluations):
-                self.progress_logger(evaluation_ind=i)
                 self.solve_constraint_by_localization(
                     evaluation.objective, randomization_threshold,
                     max_random_iters, verbose=verbose,
@@ -581,6 +582,8 @@ class DnaOptimizationProblem:
                     n_mutations=n_mutations,
                     consider_other_constraints=not solve_independently
                 )
+                self.progress_logger(evaluation_ind=i + 1)
+            self.progress_logger(iteration_ind=iteration + 1)
         if not self.all_constraints_pass():
             raise NoSolutionFoundError(
                 "One-by-one could not solve all constraints before max_loops."
@@ -861,13 +864,7 @@ class DnaOptimizationProblem:
             return record
 
     def sequence_edits_as_features(self, feature_type="misc_feature"):
-        def sequences_differences_segments(seq1, seq2):
-            arr1 = np.fromstring(seq1, dtype="uint8")
-            arr2 = np.fromstring(seq2, dtype="uint8")
-            arr = 1 * (arr1 != arr2)
-            diffs = np.diff([0] + list(arr) + [0]).nonzero()[0]
-            half = int(len(diffs)/2)
-            return [(diffs[2*i], diffs[2*i+1]) for i in range(half)]
+
         segments = sequences_differences_segments(self.sequence,
                                                   self.sequence_before)
         return [

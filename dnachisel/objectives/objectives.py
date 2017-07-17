@@ -252,7 +252,7 @@ class AvoidPattern(PatternObjective):
 
 
 class CodonOptimize(Objective):
-    """Objective to codon-optimize a coding sequence for a particular organism.
+    """Objective to codon-optimize a coding sequence for a particular species.
 
     Several codon-optimization policies exist. At the moment this Objective
     implements a method in which codons are replaced by the most frequent
@@ -261,17 +261,17 @@ class CodonOptimize(Objective):
     (as long as this doesn't break any Objective or lowers the global
     optimization objective)
 
-    Supported organisms are ``E. coli``, ``S. cerevisiae``, ``H. Sapiens``,
+    Supported speciess are ``E. coli``, ``S. cerevisiae``, ``H. Sapiens``,
     ``C. elegans``, ``D. melanogaster``, ``B. subtilis``.
 
     Parameters
     ----------
 
-    organism
-      Name of the organism to codon-optimize for. Supported organisms are
+    species
+      Name of the species to codon-optimize for. Supported speciess are
       ``E. coli``, ``S. cerevisiae``, ``H. Sapiens``, ``C. elegans``,
       ``D. melanogaster``, ``B. subtilis``.
-      Note that the organism can be omited if a ``codon_usage_table`` is
+      Note that the species can be omited if a ``codon_usage_table`` is
       provided instead
 
     location
@@ -283,14 +283,14 @@ class CodonOptimize(Objective):
 
     codon_usage_table
       A dict of the form ``{"TAC": 0.112, "CCT": 0.68}`` giving the RSCU table
-      (relative usage of each codon). Only provide if no ``organism`` name
+      (relative usage of each codon). Only provide if no ``species`` name
       was provided.
 
     Examples
     --------
 
     >>> objective = CodonOptimizationObjective(
-    >>>     organism = "E. coli",
+    >>>     species = "E. coli",
     >>>     location = (150, 300), # coordinates of a gene
     >>>     strand = -1
     >>> )
@@ -298,15 +298,15 @@ class CodonOptimize(Objective):
 
     """
 
-    def __init__(self, organism=None, location=None,
+    def __init__(self, species=None, location=None,
                  codon_usage_table=None, boost=1.0):
         self.boost = boost
         self.location = location
-        self.organism = organism
-        if organism is not None:
-            codon_usage_table = CODON_USAGE_TABLES[self.organism]
+        self.species = species
+        if species is not None:
+            codon_usage_table = CODON_USAGE_TABLES[self.species]
         if codon_usage_table is None:
-            raise ValueError("Provide either an organism name or a codon "
+            raise ValueError("Provide either an species name or a codon "
                              "usage table")
         self.codon_usage_table = codon_usage_table
 
@@ -331,7 +331,7 @@ class CodonOptimize(Objective):
         )
 
     def __str__(self):
-        return "CodonOptimize(%s, %s)" % (str(self.location), self.organism)
+        return "CodonOptimize(%s, %s)" % (str(self.location), self.species)
 
     def __repr__(self):
         return str(self)
@@ -485,7 +485,8 @@ class EnforceGCContent(Objective):
             breaches_locations = [Location(*loc) for loc in breaches_locations]
             message = ("Failed: GC content out of bound on segments " +
                        ", ".join([str(l) for l in breaches_locations]))
-        return ObjectiveEvaluation(self, problem, score, breaches_locations,
+        return ObjectiveEvaluation(self, problem, score,
+                                   locations=breaches_locations,
                                    message=message)
 
     def localized(self, location):

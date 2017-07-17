@@ -320,9 +320,10 @@ def change_biopython_record_sequence(record, new_seq):
     new_record.seq = Seq(new_seq, alphabet=DNAAlphabet())
     return new_record
 
-def sequence_to_biopython_record(sequence, features=()):
+def sequence_to_biopython_record(sequence, id='<unknown id>',
+                                 name='<unknown name>', features=()):
     return SeqRecord(Seq(sequence, alphabet=DNAAlphabet()),
-                     features=list(features))
+                     id=id, name=name, features=list(features))
 
 def find_objective_in_feature(feature):
     for labelfield in ["label", "note"]:
@@ -354,3 +355,11 @@ def crop_record(record, crop_start, crop_end):
     new_record = record[crop_start: crop_end]
     new_record.features = features
     return new_record
+
+def sequences_differences_segments(seq1, seq2):
+    arr1 = np.fromstring(seq1, dtype="uint8")
+    arr2 = np.fromstring(seq2, dtype="uint8")
+    arr = 1 * (arr1 != arr2)
+    diffs = np.diff([0] + list(arr) + [0]).nonzero()[0]
+    half = int(len(diffs)/2)
+    return [(diffs[2*i], diffs[2*i+1]) for i in range(half)]

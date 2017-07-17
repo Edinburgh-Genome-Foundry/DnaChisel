@@ -31,8 +31,16 @@ def colors_cycle():
 
 class ObjectivesAnnotationsTranslator(BiopythonTranslator):
     """Translator of DnaChisel feature-constraints for DNA Features Viewer"""
-    @staticmethod
-    def compute_feature_color(f):
+
+    feature_prefixes_colors = {
+        "@": "#ce5454",
+        "~": "#e5be54",
+        "#": "#8edfff",
+        "!": "#fcff75",
+    }
+
+
+    def compute_feature_color(self, f):
         color = f.qualifiers.get('color', None)
         if color is not None:
             if isinstance(color, list):
@@ -44,12 +52,8 @@ class ObjectivesAnnotationsTranslator(BiopythonTranslator):
             if objective is None:
                 return "#f4df42"
             else:
-                return {
-                    "@": "#ce5454",
-                    "~": "#e5be54",
-                    "#": "#8edfff",
-                    "!": "#fcff75",
-                }.get(objective[0], "#f4df42")
+                return self.feature_prefixes_colors.get(objective[0],
+                                                        "#f4df42")
         else:
             return "#eeeafa"
 
