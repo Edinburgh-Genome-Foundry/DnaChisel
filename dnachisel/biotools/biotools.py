@@ -336,7 +336,24 @@ def find_objective_in_feature(feature):
             return potential_label
     return None
 
-def crop_record(record, crop_start, crop_end):
+def crop_record(record, crop_start, crop_end, features_suffix=" (part)"):
+    """Return the cropped record with possibly cropped features.
+
+    Note that this differs from ``record[start:end]`` in that in the latter
+    expression, cropped features are discarded.
+
+    Parameters
+    ----------
+
+    record
+      A Biopython record
+
+    crop_start, crop_end
+      Start and end of the segment to be cropped.
+
+    features_suffix
+      All cropped features will have their label appended with this suffix.
+    """
     features = []
     for feature in record.features:
         start, end = sorted([feature.location.start, feature.location.end])
@@ -349,7 +366,7 @@ def crop_record(record, crop_start, crop_end):
         feature.location = FeatureLocation(new_start, new_end,
                                            feature.location.strand)
         label = "".join(feature.qualifiers.get("label", ""))
-        feature.qualifiers["label"] = label + " (part)"
+        feature.qualifiers["label"] = label + features_suffix
         features.append(feature)
 
     new_record = record[crop_start: crop_end]
@@ -357,9 +374,53 @@ def crop_record(record, crop_start, crop_end):
     return new_record
 
 def sequences_differences_segments(seq1, seq2):
+    """Return the list of segments on which sequence seq1 differs from seq2.
+
+    The list is of the form [(start1, end1), (start2, end2), etc.]
+
+    Parameters
+    ----------
+
+    seq1, seq2
+      ATGC sequences to be compared
+    """
     arr1 = np.fromstring(seq1, dtype="uint8")
     arr2 = np.fromstring(seq2, dtype="uint8")
     arr = 1 * (arr1 != arr2)
     diffs = np.diff([0] + list(arr) + [0]).nonzero()[0]
     half = int(len(diffs)/2)
     return [(diffs[2*i], diffs[2*i+1]) for i in range(half)]
+
+def annotate_record(seqrecord, location="full", feature_type="misc_feature",
+                    margin=0, **qualifiers):
+    """Add a feature to a Biopython SeqRecord.
+
+    Parameters
+    ----------
+
+    seqrecord
+      The biopython seqrecord to be annotated.
+
+    location
+      Either (start, end) or (start, end, strand). (strand defaults to +1)
+
+    feature_type
+      The type associated with the feature
+
+    margin
+      Number of extra bases added on each side of the given location.
+
+    qualifiers
+      Dictionnary that will be the Biopython feature's `qualifiers` attribute.
+    """
+    if location == "full":
+        location = (margin, len(seqrecord)-margin)
+
+    strand = location[2] if len(location) == 3 else 1
+    seqrecord.features.append(
+        SeqFeature(
+            FeatureLocation(location[0], location[1], strand),
+            qualifiers=qualifiers,
+            type=feature_type
+        )
+    )

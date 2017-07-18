@@ -468,7 +468,7 @@ class DnaOptimizationProblem:
 
         if evaluation.locations is not None:
             locations = evaluation.locations
-            self.progress_logger(n_locations=len(locations))
+            self.progress_logger(n_locations=len(locations), location_ind=0)
             if progress_bars > 0:
                 locations = tqdm(locations, desc="Window", leave=False)
 
@@ -558,7 +558,7 @@ class DnaOptimizationProblem:
         range_loops = range(max_loops)
         if progress_bars > 0:
             range_loops = tqdm(range_loops, desc="Loop", leave=False)
-        self.progress_logger(n_iterations=max_loops)
+        self.progress_logger(iteration_ind=0, n_iterations=max_loops)
         for iteration in range_loops:
 
             evaluations = self.constraints_evaluations()
@@ -569,7 +569,8 @@ class DnaOptimizationProblem:
             ]
             if failed_evaluations == []:
                 return
-            self.progress_logger(n_evaluations=len(failed_evaluations))
+            self.progress_logger(n_evaluations=len(failed_evaluations),
+                                 evaluation_ind=0)
             if progress_bars > 1:
                 failed_evaluations = tqdm(failed_evaluations, leave=False,
                                           desc="Failing constraint")
