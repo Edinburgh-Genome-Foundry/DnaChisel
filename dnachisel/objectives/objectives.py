@@ -5,8 +5,8 @@ import itertools
 import numpy as np
 
 from ..biotools.biotables import (CODON_USAGE_TABLES, CODONS_SEQUENCES,
-                                  CODONS_TRANSLATIONS)
-from ..biotools.biotools import (gc_content, reverse_complement,
+                                  CODONS_TRANSLATIONS, IUPAC_NOTATION)
+from ..biotools.biotools import (gc_content, reverse_complement, complement,
                                  blast_sequence, translate)
 from .Objective import (Objective, PatternObjective, TerminalObjective,
                         ObjectiveEvaluation, VoidObjective)
@@ -102,6 +102,77 @@ class AvoidBlastMatches(Objective):
             self.location, self.blast_db, self.min_align_length,
             self.perc_identity
         )
+
+
+class AvoidChanges(Objective):
+    """Specify that some locations of the sequence should not be changed.
+
+    ``AvoidChanges`` Objectives are used to constrain the mutations space
+    of DNA OptimizationProblem.
+
+    Parameters
+    ----------
+
+    location
+      Location object indicating the position of the segment that
+      must be left unchanged.
+    """
+
+    best_possible_score = 1
+
+    def __init__(self, location=None, indices=None, boost=1.0):
+        self.location = location
+        self.indices = np.array(indices)
+        self.boost = boost
+
+    def evaluate(self, problem):
+        sequence = problem.sequence
+        original = problem.sequence_before
+        if (self.location is None) and (self.indices is None):
+            return ObjectiveEvaluation(sequence == original,
+                                       locations=[self.location])
+        elif self.location is not None:
+            subseq, suboriginal = [self.location.extract_sequence(s)
+                                   for s in (sequence, original)]
+            score = 1 if (subseq == suboriginal) else -1
+            return ObjectiveEvaluation(self, problem, score,
+                                       locations=[self.location])
+        else:
+            sequence = np.fromstring(sequence, dtype="uint8")
+            original = np.fromstring(original, dtype="uint8")
+            if (sequence[self.indices] == original[self.indices]).min():
+                score = 1
+            else:
+                score = -1
+
+            return ObjectiveEvaluation(self, problem, score,
+                                       locations=[self.location])
+
+    def localized(self, location):
+        """Localize the AvoidChanges to the overlap of its location and the new.
+        """
+        if self.location is not None:
+            new_location = self.location.overlap_region(location)
+            if new_location is None:
+                return VoidObjective(parent_objective=self)
+            return self.copy_with_changes(location=new_location)
+        else:
+            start, end = location.start, location.end
+            inds = self.indices
+            new_indices = inds[(start <= inds) & (inds <= end)]
+            return self.copy_with_changes(indices=new_indices)
+
+    def restrict_nucleotides(self, sequence, location=None):
+        if location is not None:
+            start = max(location.start, self.location.start)
+            end = min(location.end, self.location.end)
+        else:
+            start, end = self.location.start, self.location.end
+
+        return [(i, set(sequence[i])) for i in range(start, end)]
+
+    def __repr__(self):
+        return "AvoidChanges(%s)" % str(self.location)
 
 
 class AvoidHairpins(Objective):
@@ -250,7 +321,6 @@ class AvoidPattern(PatternObjective):
         return "AvoidPattern(%s, %s)" % (self.pattern, self.location)
 
 
-
 class CodonOptimize(Objective):
     """Objective to codon-optimize a coding sequence for a particular species.
 
@@ -335,68 +405,6 @@ class CodonOptimize(Objective):
 
     def __repr__(self):
         return str(self)
-
-
-class AvoidChanges(Objective):
-    """Specify that some locations of the sequence should not be changed.
-
-    ``AvoidChanges`` Objectives are used to constrain the mutations space
-    of DNA OptimizationProblem.
-
-    Parameters
-    ----------
-
-    location
-      Location object indicating the position of the segment that
-      must be left unchanged.
-    """
-
-    best_possible_score = 1
-
-    def __init__(self, location=None, indices=None, boost=1.0):
-        self.location = location
-        self.indices = np.array(indices)
-        self.boost = boost
-
-    def evaluate(self, problem):
-        sequence = problem.sequence
-        original = problem.sequence_before
-        if (self.location is None) and (self.indices is None):
-            return ObjectiveEvaluation(sequence == original,
-                                       locations=[self.location])
-        elif self.location is not None:
-            subseq, suboriginal = [self.location.extract_sequence(s)
-                                   for s in (sequence, original)]
-            score = 1 if (subseq == suboriginal) else -1
-            return ObjectiveEvaluation(self, problem, score,
-                                       locations=[self.location])
-        else:
-            sequence = np.fromstring(sequence, dtype="uint8")
-            original = np.fromstring(original, dtype="uint8")
-            if (sequence[self.indices] == original[self.indices]).min():
-                score = 1
-            else:
-                score = -1
-
-            return ObjectiveEvaluation(self, problem, score,
-                                       locations=[self.location])
-
-    def localized(self, location):
-        """Localize the AvoidChanges to the overlap of its location and the new.
-        """
-        if self.location is not None:
-            new_location = self.location.overlap_region(location)
-            if new_location is None:
-                return VoidObjective(parent_objective=self)
-            return self.copy_with_changes(location=new_location)
-        else:
-            start, end = location.start, location.end
-            inds = self.indices
-            new_indices = inds[(start <= inds) & (inds <= end)]
-            return self.copy_with_changes(indices=new_indices)
-
-    def __repr__(self):
-        return "AvoidChanges(%s)" % str(self.location)
 
 
 class EnforceGCContent(Objective):
@@ -652,6 +660,31 @@ class EnforceRegionsCompatibility(Objective):
         return "CompatSeq(%s...)" % str(self.regions[0])
 
 
+class EnforceSequence(dc.Objective):
+    """WORK IN PROGRESS. Enforces a degenerate sequence."""
+
+    def __init__(self, sequence, location=None):
+        self.sequence = sequence
+        self.location = location
+
+    def restrict_nucleotides(self, sequence):
+        strand = 1 if self.location is None else self.location.strand
+        start = 0 if self.location is None else self.location.start
+        end = len(sequence) if self.location is None else self.location.end
+        if strand == 1:
+            return [
+                (i, IUPAC_NOTATION[self.sequence[i - start]])
+                for i in range(start, end)
+            ]
+        else:
+
+            return [
+                (i, set(complement(n)
+                        for n in IUPAC_NOTATION[self.sequence[end - i]]))
+                for i in range(end, start, -1)
+            ]
+
+
 class EnforceTerminalGCContent(TerminalObjective):
     """Enforce bounds for the GC content at the sequence's terminal ends.
 
@@ -685,6 +718,7 @@ class EnforceTerminalGCContent(TerminalObjective):
     def __repr__(self):
         return "Terminal(%.02f < gc < %.02f, window: %d)" % \
             (self.gc_min, self.gc_max, self.window_size)
+
 
 class EnforceTranslation(Objective):
     """Enforce that the DNA segment sequence translates to a specific
@@ -801,7 +835,6 @@ class EnforceTranslation(Objective):
                                    "Wrong translation at indices %s"
                                    % errors)
 
-
     def localized(self, location):
         """"""
         if self.location is not None:
@@ -835,6 +868,37 @@ class EnforceTranslation(Objective):
                                       translation=new_translation,
                                       boost=self.boost)
         return self
+
+    def restrict_nucleotides(self, sequence, location=None):
+        if self.codons_sequences is None:
+            return []
+        # if location is not None:
+        #     bound_start = location.start - 3
+        #     bound_end = location.end + 3
+
+        strand = 1 if self.location is None else self.location.strand
+        start = 0 if self.location is None else self.location.start
+        end = len(sequence) if self.location is None else self.location.end
+
+        if strand == 1:
+            return [
+                ((i, i + 3), set(self.codons_sequences[
+                    self.translation[int((i - start) / 3)]
+                ]))
+                for i in range(start, end, 3)
+                # if location is None or (location.start < i <= location.start)
+
+            ]
+        else:
+            return [
+                ((i, i + 3), set(
+                    reverse_complement(n)
+                    for n in self.codons_sequences[
+                        self.translation[-int((i - start) / 3) - 1]
+                    ]
+                ))
+                for i in range(start, end, 3)
+            ]
 
     def __repr__(self):
         return "EnforceTranslation(%s)" % str(self.location)

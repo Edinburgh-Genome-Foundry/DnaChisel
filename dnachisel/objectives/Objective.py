@@ -97,6 +97,15 @@ class Objective:
                           type=feature_type,
                           qualifiers=qualifiers)
 
+    def restrict_nucleotides(self, sequence, location=None):
+        """Restrict the possible nucleotides mutations in a sequence to speed
+        up optimization.
+
+        This method has no effect unless a special heuristic is implemented
+        for it.
+        """
+        return []
+
 
 
 class VoidObjective(Objective):

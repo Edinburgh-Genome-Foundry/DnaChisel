@@ -55,4 +55,9 @@ NUCLEOTIDE_TO_REGEXPR = dict_from_csv(
 CODONS_TRANSLATIONS = dict_from_csv(
     os.path.join(data_dir, "codons_translations.csv"))
 
+IUPAC_NOTATION = {
+    k: set(v)
+    for k, v in dict_from_csv(os.path.join(data_dir, "iupac_notation")).items()
+}
+
 CODONS_SEQUENCES = reverse_table(CODONS_TRANSLATIONS)
