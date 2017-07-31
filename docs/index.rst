@@ -83,7 +83,7 @@ DnaChisel uses the following strategies to avoid exploring the whole search spac
 
 - **Constraining of the mutation space:** Prior to searching, DnaChisel trims the
   possible mutations by analyzing the constraints of the problem. For instance
-  a ``DoNotModify(segment)`` constraint makes it impossible to mutate the nucleotides
+  a ``AvoidChanges(segment)`` constraint makes it impossible to mutate the nucleotides
   of the concerned DNA segment, and in segments subject to an
   ``EnforceTranslation`` constraint, only synonymous mutations of the codons are
   allowed.

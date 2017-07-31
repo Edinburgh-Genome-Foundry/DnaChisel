@@ -60,7 +60,7 @@ possible to solve a DNA optimization problem through an exhaustive.
 DnaChisel uses the following strategies to avoid exploring the whole search space:
 
 - **Constraining of the mutation space:** no mutation can be done in segments of the sequence
-  subject to a ``DoNotModify`` constraint, and in segments subject to an
+  subject to a ``AvoidChanges`` constraint, and in segments subject to an
   ``EnforceTranslation`` constraint only synonymous mutations of the codons are
   allowed.
 

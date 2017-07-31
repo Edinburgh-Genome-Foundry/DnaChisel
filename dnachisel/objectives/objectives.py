@@ -104,7 +104,7 @@ class AvoidBlastMatches(Objective):
         )
 
 
-class AvoidIDTHairpins(Objective):
+class AvoidHairpins(Objective):
     """Avoid Hairpin patterns as defined by the IDT guidelines.
 
     A hairpin is defined by a sequence segment which has a reverse complement
@@ -337,10 +337,10 @@ class CodonOptimize(Objective):
         return str(self)
 
 
-class DoNotModify(Objective):
+class AvoidChanges(Objective):
     """Specify that some locations of the sequence should not be changed.
 
-    ``DoNotModify`` Objectives are used to constrain the mutations space
+    ``AvoidChanges`` Objectives are used to constrain the mutations space
     of DNA OptimizationProblem.
 
     Parameters
@@ -382,7 +382,7 @@ class DoNotModify(Objective):
                                        locations=[self.location])
 
     def localized(self, location):
-        """Localize the DoNotModify to the overlap of its location and the new.
+        """Localize the AvoidChanges to the overlap of its location and the new.
         """
         if self.location is not None:
             new_location = self.location.overlap_region(location)
@@ -396,7 +396,7 @@ class DoNotModify(Objective):
             return self.copy_with_changes(indices=new_indices)
 
     def __repr__(self):
-        return "DoNotModify(%s)" % str(self.location)
+        return "AvoidChanges(%s)" % str(self.location)
 
 
 class EnforceGCContent(Objective):

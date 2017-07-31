@@ -1,6 +1,7 @@
 from .biotools import (
     blast_sequence,
     change_biopython_record_sequence,
+    complement,
     crop_record,
     find_objective_in_feature,
     gc_content,

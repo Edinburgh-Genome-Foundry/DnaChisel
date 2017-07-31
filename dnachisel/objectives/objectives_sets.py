@@ -2,7 +2,7 @@
 
 from .objectives import (AvoidPattern, EnforceGCContent,
                          EnforceTerminalGCContent,
-                         AvoidIDTHairpins)
+                         AvoidHairpins)
 from ..biotools import (homopolymer_pattern, repeated_kmers)
 
 PROVIDERS_CONSTRAINTS = {
@@ -27,7 +27,7 @@ PROVIDERS_CONSTRAINTS = {
         AvoidPattern(homopolymer_pattern("C", 6)),
         AvoidPattern(repeated_kmers(3, n_repeats=5)),
         AvoidPattern(repeated_kmers(2, n_repeats=9)),
-        AvoidIDTHairpins(stem_size=20, hairpin_window=200)
+        AvoidHairpins(stem_size=20, hairpin_window=200)
     ],
     "Twist": [
         EnforceGCContent(0.4, 0.65),

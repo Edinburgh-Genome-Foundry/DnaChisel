@@ -34,7 +34,7 @@ FEATURES             Location/Qualifiers
                      /note="Gene barK"
                      /note="color: #c0c0c0; direction: RIGHT"
      misc_feature    1805..1834
-                     /label=@DoNotModify
+                     /label=@AvoidChanges
                      /note="color: #000080"
      promoter        1805..1834
                      /label=kanR promoter

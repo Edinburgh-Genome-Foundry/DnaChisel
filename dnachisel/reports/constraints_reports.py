@@ -13,7 +13,7 @@ import numpy as np
 
 from ..DnaOptimizationProblem import DnaOptimizationProblem
 from ..biotools import gc_content, repeated_kmers, homopolymer_pattern
-from ..objectives import EnforceGCContent, AvoidPattern, AvoidIDTHairpins
+from ..objectives import EnforceGCContent, AvoidPattern, AvoidHairpins
 
 from Bio.SeqRecord import SeqRecord
 
@@ -237,7 +237,7 @@ def plot_sequence_manufacturability_difficulties(sequence):
         )
 
     plot_constraint_breaches(
-        AvoidIDTHairpins(stem_size=20, hairpin_window=200),
+        AvoidHairpins(stem_size=20, hairpin_window=200),
         record, title="Hairpins", ax=axes[6]
     )
 

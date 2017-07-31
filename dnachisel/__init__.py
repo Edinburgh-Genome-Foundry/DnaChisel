@@ -5,12 +5,12 @@ from .Location import Location
 
 from .objectives import (
     AvoidBlastMatches,
-    AvoidIDTHairpins,
+    AvoidHairpins,
     AvoidNonuniqueSegments,
     AvoidPattern,
     AvoidStopCodon,
     CodonOptimize,
-    DoNotModify,
+    AvoidChanges,
     EnforceGCContent,
     EnforcePattern,
     EnforceRegionsCompatibility,
@@ -27,6 +27,7 @@ from .objectives import (
 
 from .biotools import (
     blast_sequence,
+    complement,
     DnaNotationPattern,
     crop_record,
     enzyme_pattern,

@@ -59,7 +59,7 @@ problem = DnaOptimizationProblem(
 print ("\n=== Status before optimization ===")
 print (problem.objectives_text_summary())
 
-problem.maximize_all_objectives_one_by_one()
+problem.maximize_objectives()
 
 print ("\n=== Status after optimization ===")
 print (problem.objectives_text_summary())

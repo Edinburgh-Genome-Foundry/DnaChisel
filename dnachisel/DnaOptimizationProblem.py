@@ -13,7 +13,7 @@ from .biotools.biotools import (reverse_complement,
                                 find_objective_in_feature,
                                 sequences_differences_segments)
 
-from .objectives import (Objective, DoNotModify, EnforcePattern,
+from .objectives import (Objective, AvoidChanges, EnforcePattern,
                          EnforceTranslation,
                          ProblemObjectivesEvaluations,
                          ProblemConstraintsEvaluations,
@@ -47,6 +47,100 @@ class NoSolutionFoundError(Exception):
     """
     pass
 
+
+import dnachisel as dc
+from dnachisel.biotools.biotables import NUCLEOTIDE_TO_REGEXPR, COMPLEMENTS
+from dnachisel import reverse_complement, complement
+
+class AvoidChanges(dc.AvoidChanges):
+
+    def restrict_nucleotides(self, sequence):
+        return [
+            (i, set(sequence[i]))
+            for i in range(self.location.start, self.location.end)
+        ]
+
+class EnforceSequence(dc.Objective):
+
+    def __init__(self, sequence, location=None):
+            self.sequence=sequence
+            self.location=location
+
+    def restrict_nucleotides(self, sequence):
+        strand = 1 if self.location is None else self.location.strand
+        start = 0 if self.location is None else self.location.start
+        end = len(sequence) if self.location is None else self.location.end
+        if strand == 1:
+            return [
+                (i, iupac_notation[self.sequence[i - start]])
+                for i in range(start, end)
+            ]
+        else:
+            return [
+                (i, set(COMPLEMENTS[n] for n in iupac_notation[self.sequence[end - i]]))
+                for i in range(end, start, -1)
+            ]
+class EnforceTranslation(dc.EnforceTranslation):
+    def restrict_nucleotides(self, sequence):
+        strand = 1 if self.location is None else self.location.strand
+        start = 0 if self.location is None else self.location.start
+        end = len(sequence) if self.location is None else self.location.end
+        if strand == 1:
+            return [
+                ((i, i+3), set(CODONS_SEQUENCES[self.translation[int((i-start)/3)]]))
+                for i in range(start, end, 3)
+            ]
+        else:
+            return [
+                ((i, i+3), set(reverse_complement(n)
+                              for n in CODONS_SEQUENCES[self.translation[-int((i-start)/3)-1]]))
+                for i in range(start, end, 3)
+            ]
+
+
+def constraints_to_nucleotides_mutations(constraints, sequence):
+    """test"""
+    all_nucleotides_restrictions = [
+        (loc, mutations_set)
+        for constraint in constraints
+        for (loc, mutations_set) in constraint.restrict_nucleotides(sequence)
+    ]
+    unibase_restrictions = [
+        (loc, mutations_set)
+        for (loc, mutations_set) in all_nucleotides_restrictions
+        if isinstance(loc, int)
+    ]
+
+    def multibase_sorting_score(start_end_set):
+        (start, end), _set = start_end_set
+        return len(_set) / 4**(end - start), start
+
+    multibase_restrictions = sorted(
+        [
+            e for e in all_nucleotides_restrictions
+            if e not in unibase_restrictions
+        ],
+        key=multibase_sorting_score
+    )
+
+    nucleotides_mutations = {
+        i: set("ATGC")
+        for i in range(len(sequence))
+    }
+    for i, _set in unibase_restrictions:
+        nucleotides_mutations[i] = nucleotides_mutations[i].intersection(_set)
+
+    for (start, end), _set in multibase_restrictions:
+        if not all(i in nucleotides_mutations for i in range(start, end)):
+            continue
+        nucleotides = [nucleotides_mutations.pop(i) for i in range(start, end)]
+        valid_subset = [
+            subseq for subseq in _set
+            if all((n in nucls) for (n, nucls) in zip(subseq, nucleotides))
+        ]
+        nucleotides_mutations[(start, end)] = valid_subset
+    return nucleotides_mutations
+
 class DnaOptimizationProblem:
     """Problem specifications: sequence, constraints, optimization objectives.
 
@@ -64,7 +158,7 @@ class DnaOptimizationProblem:
     >>>     constraints = [constraint1, constraint2, ...],
     >>>     objectives = [objective1, objective2, ...]
     >>> )
-    >>> canvas.solve_all_constraints_one_by_one()
+    >>> canvas.solve_constraints_one_by_one()
     >>> canvas.maximize_all_objectives_one_by_one()
     >>> print(canvas.constraints_text_summary())
     >>> print(canvas.objectives_summary())
@@ -203,7 +297,7 @@ class DnaOptimizationProblem:
         The possible mutations are constrained by the ``constraints`` of the
         DnaOptimizationProblem with respect to the following rules:
 
-        - ``DoNotModify``  constraints disable mutations for the nucleotides of
+        - ``AvoidChanges``  constraints disable mutations for the nucleotides of
           the concerned segments.
         - ``EnforceTranlation`` constraints ensure that on the concerned
           segments only codons that translate to the imposed amino-acid will
@@ -215,7 +309,7 @@ class DnaOptimizationProblem:
         self.possible_mutations_dict = {}
         unibase_mutable = np.ones(len(self.sequence))
         for constraint in self.constraints:
-            if isinstance(constraint, DoNotModify):
+            if isinstance(constraint, AvoidChanges):
                 if constraint.location is not None:
                     unibase_mutable[constraint.location.start:
                                     constraint.location.end] = 0
@@ -295,7 +389,7 @@ class DnaOptimizationProblem:
             for k, values in self.possible_mutations.items()
         ])
 
-    def get_random_mutations(self, n_mutations=1):
+    def pick_random_mutations(self, n_mutations=1):
         """Pick a random set of possible mutations.
 
         Returns a list ``[(location1, new_sequence1), ...]`` where location is
@@ -347,7 +441,7 @@ class DnaOptimizationProblem:
 
     # CONSTRAINTS
 
-    def solve_all_constraints_by_exhaustive_search(self, verbose=False,
+    def solve_constraints_by_exhaustive_search(self, verbose=False,
         progress_bar=False, raise_exception_on_failure=True):
         """Solve all constraints by exploring the whole search space.
 
@@ -373,7 +467,7 @@ class DnaOptimizationProblem:
                 "Exhaustive search failed to satisfy all constraints.",
                 problem=self)
 
-    def solve_all_constraints_by_random_mutations(
+    def solve_constraints_by_random_mutations(
         self, max_iter=1000, n_mutations=1, verbose=False, progress_bar=False,
         raise_exception_on_failure=False):
         """Solve all constraints by successive sets of random mutations.
@@ -405,7 +499,7 @@ class DnaOptimizationProblem:
         for iteration in range_iter:
             if score == 0:
                 return
-            mutations = self.get_random_mutations(n_mutations)
+            mutations = self.pick_random_mutations(n_mutations)
             if verbose:
                 print(self.constraints_text_summary())
             previous_sequence = self.sequence
@@ -428,13 +522,13 @@ class DnaOptimizationProblem:
                 problem=problem
             )
 
-    def solve_constraint_by_localization(self, constraint,
-                                         randomization_threshold=10000,
-                                         max_random_iters=1000, verbose=False,
-                                         progress_bars=0,
-                                         evaluation=None,
-                                         n_mutations=1,
-                                         consider_other_constraints=True):
+    def solve_constraints(self, constraints='all',
+                          randomization_threshold=10000,
+                          max_random_iters=1000, verbose=False,
+                          progress_bars=0,
+                          evaluation=None,
+                          n_mutations=1,
+                          final_check=True):
         """Solve a particular constraint using local, targeted searches.
 
         Parameters
@@ -446,149 +540,187 @@ class DnaOptimizationProblem:
         randomization_threshold
           Local problems with a search space size under this threshold will be
           solved using deterministic, exhaustive search of the search space
-          (see ``solve_all_constraints_by_exhaustive_search``)
+          (see ``solve_constraints_by_exhaustive_search``)
           When the space size is above this threshold, local searches will use
           a randomized search algorithm
-          (see ``solve_all_constraints_by_random_mutations``).
+          (see ``solve_constraints_by_random_mutations``).
 
         max_random_iters
           Maximal number of iterations when performing a randomized search
-          (see ``solve_all_constraints_by_random_mutations``).
+          (see ``solve_constraints_by_random_mutations``).
 
         verbose
           If True, each step of each search will print in the console the
           evaluation of each constraint.
 
         """
-        if evaluation is None:
-            evaluation = constraint.evaluate(self)
+        if constraints == 'all':
+            constraints = self.constraints
 
+        if isinstance(constraints, list):
+            iter_constraints = constraints
+            if progress_bars > 0:
+                iter_constraints = tqdm(constraints, desc="Constraint",
+                                        leave=False)
+            self.progress_logger(n_constraints=len(self.constraints),
+                                 constraint_ind=0)
+            for i, constraint in enumerate(iter_constraints):
+                self.solve_constraints(
+                    constraints=constraint,
+                    randomization_threshold=randomization_threshold,
+                    max_random_iters=max_random_iters, verbose=verbose,
+                    progress_bars=progress_bars - 2, n_mutations=n_mutations
+                )
+                self.progress_logger(evaluation_ind=i + 1)
+            if final_check:
+                for cst in constraints:
+                    if not cst.evaluate(self).passes:
+                        raise NoSolutionFoundError(
+                            'The solving of all constraints failed to solve'
+                            ' all constraints, constraint %s is'
+                            ' still failing. This is an unintended behavior,'
+                            ' likely due to a complex problem. Try running the'
+                            ' solver on the same sequence again, or report the'
+                            ' error to the maintainers' % cst)
+
+            return
+
+        constraint = constraints
+        evaluation = constraint.evaluate(self)
         if evaluation.passes:
             return
 
-        if evaluation.locations is not None:
-            locations = evaluation.locations
-            self.progress_logger(n_locations=len(locations), location_ind=0)
-            if progress_bars > 0:
-                locations = tqdm(locations, desc="Window", leave=False)
-
-            for i, location in enumerate(locations):
-                if verbose:
-                    print(location)
-                do_not_modify_location = location.extended(
-                    5, upper_limit=len(self.sequence))
-                if consider_other_constraints:
-                    localized_constraints = [
-                        _constraint.localized(do_not_modify_location)
-                        for _constraint in self.constraints
-                    ]
-                    passing_localized_constraints = [
-                        _constraint
-                        for _constraint in localized_constraints
-                        if _constraint.evaluate(self).passes
-                    ]
-                else:
-                    passing_localized_constraints = []
-                localized_problem = DnaOptimizationProblem(
-                    sequence=self.sequence,
-                    constraints=[
-                        DoNotModify(
-                            location=Location(0, do_not_modify_location.start)
-                        ),
-                        DoNotModify(
-                            location=Location(do_not_modify_location.end,
-                                              len(self.sequence))
-                        )
-                    ] + [
-                        constraint.localized(do_not_modify_location)
-                    ] + passing_localized_constraints
-                )
-                try:
-                    if (localized_problem.mutation_space_size() <
-                            randomization_threshold):
-                        localized_problem.solve_all_constraints_by_exhaustive_search(
-                            verbose=verbose, progress_bar=progress_bars > 1)
-                        self.sequence = localized_problem.sequence
-                    else:
-                        localized_problem.solve_all_constraints_by_random_mutations(
-                            max_iter=max_random_iters, n_mutations=n_mutations,
-                            verbose=verbose, progress_bar=progress_bars > 1)
-                        self.sequence = localized_problem.sequence
-                except NoSolutionError as error:
-                    error.location = location
-                    raise error
-                self.progress_logger(location_ind=i+1)
-
-    def solve_all_constraints_one_by_one(self, max_loops=2,
-                                         randomization_threshold=10000,
-                                         max_random_iters=1000, verbose=False,
-                                         progress_bars=0,
-                                         n_mutations=1,
-                                         solve_independently=False):
-        """Solve each of the canvas' constraints in turn, using local, targeted
-        searches.
-
-        Parameters
-        ----------
-
-        max_loops
-          Number of times that the constraints will be considered one after the
-          other. The function may stop sooner, as soon as all constraints pass.
-          If after all these loops some constraints are still not passing, a
-          ``NoSolutionError`` is raised.
-
-        randomization_threshold
-          Local problems with a search space size under this threshold will be
-          solved using deterministic, exhaustive search of the search space
-          (see ``solve_all_constraints_by_exhaustive_search``)
-          When the space size is above this threshold, local searches will use
-          a randomized search algorithm
-          (see ``solve_all_constraints_by_random_mutations``).
-
-        max_random_iters
-          Maximal number of iterations when performing a randomized search
-          (see ``solve_all_constraints_by_random_mutations``).
-
-        verbose
-          If True, each step of each search will print in the console the
-          evaluation of each constraints.
-
-        """
-
-        range_loops = range(max_loops)
+        locations = evaluation.locations
+        self.progress_logger(n_locations=len(locations), location_ind=0)
         if progress_bars > 0:
-            range_loops = tqdm(range_loops, desc="Loop", leave=False)
-        self.progress_logger(iteration_ind=0, n_iterations=max_loops)
-        for iteration in range_loops:
+            locations = tqdm(locations, desc="Window", leave=False)
 
-            evaluations = self.constraints_evaluations()
-            failed_evaluations = [
-                evaluation
-                for evaluation in evaluations
-                if not evaluation.passes
+        for i, location in enumerate(locations):
+            if verbose:
+                print(location)
+            do_not_modify_location = location.extended(
+                5, upper_limit=len(self.sequence))
+            # if consider_other_constraints:
+            localized_constraints = [
+                _constraint.localized(do_not_modify_location)
+                for _constraint in self.constraints
             ]
-            if failed_evaluations == []:
-                return
-            self.progress_logger(n_evaluations=len(failed_evaluations),
-                                 evaluation_ind=0)
-            if progress_bars > 1:
-                failed_evaluations = tqdm(failed_evaluations, leave=False,
-                                          desc="Failing constraint")
-            for i, evaluation in enumerate(failed_evaluations):
-                self.solve_constraint_by_localization(
-                    evaluation.objective, randomization_threshold,
-                    max_random_iters, verbose=verbose,
-                    progress_bars=progress_bars - 2,
-                    evaluation=evaluation,
-                    n_mutations=n_mutations,
-                    consider_other_constraints=not solve_independently
-                )
-                self.progress_logger(evaluation_ind=i + 1)
-            self.progress_logger(iteration_ind=iteration + 1)
-        if not self.all_constraints_pass():
-            raise NoSolutionFoundError(
-                "One-by-one could not solve all constraints before max_loops."
+            passing_localized_constraints = [
+                _constraint
+                for _constraint in localized_constraints
+                if _constraint.evaluate(self).passes
+            ]
+            # else:
+            # passing_localized_constraints = []
+            local_problem = DnaOptimizationProblem(
+                sequence=self.sequence,
+                constraints=[
+                    AvoidChanges(
+                        location=Location(0, do_not_modify_location.start)
+                    ),
+                    AvoidChanges(
+                        location=Location(do_not_modify_location.end,
+                                          len(self.sequence))
+                    )
+                ] + [
+                    constraint.localized(do_not_modify_location)
+                ] + passing_localized_constraints
             )
+            try:
+                if (local_problem.mutation_space_size() <
+                        randomization_threshold):
+                    local_problem.solve_constraints_by_exhaustive_search(
+                        verbose=verbose, progress_bar=progress_bars > 1)
+                    self.sequence = local_problem.sequence
+                else:
+                    local_problem.solve_constraints_by_random_mutations(
+                        max_iter=max_random_iters, n_mutations=n_mutations,
+                        verbose=verbose, progress_bar=progress_bars > 1)
+                    self.sequence = local_problem.sequence
+            except NoSolutionError as error:
+                error.location = location
+                raise error
+            self.progress_logger(location_ind=i+1)
+
+    # def solve_constraints_one_by_one(self, max_loops=2,
+    #                                      randomization_threshold=10000,
+    #                                      max_random_iters=1000, verbose=False,
+    #                                      progress_bars=0,
+    #                                      n_mutations=1):
+    #     """Solve each of the canvas' constraints in turn, using local, targeted
+    #     searches.
+    #
+    #     Parameters
+    #     ----------
+    #
+    #     max_loops
+    #       Number of times that the constraints will be considered one after the
+    #       other. The function may stop sooner, as soon as all constraints pass.
+    #       If after all these loops some constraints are still not passing, a
+    #       ``NoSolutionError`` is raised.
+    #
+    #     randomization_threshold
+    #       Local problems with a search space size under this threshold will be
+    #       solved using deterministic, exhaustive search of the search space
+    #       (see ``solve_constraints_by_exhaustive_search``)
+    #       When the space size is above this threshold, local searches will use
+    #       a randomized search algorithm
+    #       (see ``solve_constraints_by_random_mutations``).
+    #
+    #     max_random_iters
+    #       Maximal number of iterations when performing a randomized search
+    #       (see ``solve_constraints_by_random_mutations``).
+    #
+    #     verbose
+    #       If True, each step of each search will print in the console the
+    #       evaluation of each constraints.
+    #
+    #     """
+    #
+    #     constraints = self.constraints
+    #     if progress_bars > 0:
+    #         constraints = tqdm(constraints, desc="Constraint", leave=False)
+    #     self.progress_logger(iteration_ind=0, n_iterations=max_loops)
+    #     self.progress_logger(n_constraints=len(self.constraints),
+    #                          constraint_ind=0)
+    #     for i, constraint in enumerate(constraints):
+    #         self.solve_constraint_by_localization(
+    #             constraint=constraint,
+    #             randomization_threshold=randomization_threshold,
+    #             max_random_iters=max_random_iters, verbose=verbose,
+    #             progress_bars=progress_bars - 2, n_mutations=n_mutations
+    #         )
+    #         self.progress_logger(evaluation_ind=i + 1)
+        # for iteration in range_loops:
+        #
+        #     evaluations = self.constraints_evaluations()
+        #     failed_evaluations = [
+        #         evaluation
+        #         for evaluation in evaluations
+        #         if not evaluation.passes
+        #     ]
+        #     if failed_evaluations == []:
+        #         return
+        #     self.progress_logger(n_evaluations=len(failed_evaluations),
+        #                          evaluation_ind=0)
+        #     if progress_bars > 1:
+        #         failed_evaluations = tqdm(failed_evaluations, leave=False,
+        #                                   desc="Failing constraint")
+        #     for i, evaluation in enumerate(failed_evaluations):
+        #         self.solve_constraint_by_localization(
+        #             evaluation.objective, randomization_threshold,
+        #             max_random_iters, verbose=verbose,
+        #             progress_bars=progress_bars - 2,
+        #             evaluation=evaluation,
+        #             n_mutations=n_mutations,
+        #             consider_other_constraints=not solve_independently
+        #         )
+        #         self.progress_logger(evaluation_ind=i + 1)
+        #     self.progress_logger(iteration_ind=iteration + 1)
+        # if not self.all_constraints_pass():
+        #     raise NoSolutionFoundError(
+        #         "One-by-one could not solve all constraints before max_loops."
+        #     )
 
     # OBJECTIVES
 
@@ -603,7 +735,6 @@ class DnaOptimizationProblem:
                 "Optimization can only be done when all constraints are"
                 "verified."
             )
-
 
         if all([obj.best_possible_score is not None
                 for obj in self.objectives]):
@@ -684,26 +815,51 @@ class DnaOptimizationProblem:
                 break
         assert self.all_constraints_pass()
 
-    def maximize_objective_by_localization(self, objective, locations=None,
-                                           randomization_threshold=10000,
-                                           max_random_iters=1000,
-                                           verbose=False,
-                                           progress_bars=False,
-                                           n_mutations=1,
-                                           optimize_independently=False):
+    def maximize_objectives(self, objectives='all', n_mutations=1,
+                            randomization_threshold=10000,
+                            max_random_iters=1000,
+                            optimize_independently=False,
+                            progress_bars=False,
+                            verbose=False):
         """Maximize the objective via local, targeted mutations."""
-        if locations is None:
-            evaluation = objective.evaluate(self)
-            locations = evaluation.locations
-            if ((objective.best_possible_score is not None) and
-                (evaluation.score == objective.best_possible_score)):
-                return
-            if locations is None:
-                raise ValueError(("With %s:" % objective) +
-                    "max_objective_by_localization requires either that"
-                    " locations be provided or that the objective evaluation"
-                    " returns locations."
+
+        if objectives == 'all':
+            objectives = self.objectives
+
+        if isinstance(objectives, list):
+            iter_objectives = objectives
+            if progress_bars > 0:
+                iter_objectives = tqdm(objectives, desc="Objective",
+                                       leave=False)
+            self.progress_logger(n_objectives=len(objectives),
+                                 objective_ind=0)
+            for i, objective in enumerate(iter_objectives):
+                self.maximize_objectives(
+                    objectives=objective,
+                    randomization_threshold=randomization_threshold,
+                    max_random_iters=max_random_iters,
+                    verbose=verbose,
+                    progress_bars=(progress_bars - 2),
+                    n_mutations=n_mutations,
+                    optimize_independently=optimize_independently
                 )
+                self.progress_logger(objective_ind=i + 1)
+
+            return
+
+        objective = objectives
+        evaluation = objective.evaluate(self)
+        locations = evaluation.locations
+        if ((objective.best_possible_score is not None) and
+            (evaluation.score == objective.best_possible_score)):
+            return
+        if locations is None:
+            raise ValueError(
+                ("With %s:" % objective) +
+                "max_objective_by_localization requires either that"
+                " locations be provided or that the objective evaluation"
+                " returns locations."
+            )
 
         if progress_bars > 0:
             locations = tqdm(locations, desc="Window", leave=False)
@@ -720,16 +876,16 @@ class DnaOptimizationProblem:
                     for _objective in self.objectives
                 ]
 
-            localized_problem = DnaOptimizationProblem(
+            local_problem = DnaOptimizationProblem(
                 sequence=self.sequence,
                 constraints=[
                     _constraint.localized(do_not_modify_location)
                     for _constraint in self.constraints
                 ] + [
-                        DoNotModify(
+                        AvoidChanges(
                             location=Location(0, do_not_modify_location.start)
                         ),
-                        DoNotModify(
+                        AvoidChanges(
                             location=Location(do_not_modify_location.end,
                                               len(self.sequence))
                         )
@@ -737,42 +893,42 @@ class DnaOptimizationProblem:
                 objectives=objectives
             )
 
-            if (localized_problem.mutation_space_size() <
+            if (local_problem.mutation_space_size() <
                     randomization_threshold):
-                localized_problem.maximize_objectives_by_exhaustive_search(
+                local_problem.maximize_objectives_by_exhaustive_search(
                     verbose=verbose, progress_bar=progress_bars > 1)
             else:
-                localized_problem.maximize_objectives_by_random_mutations(
+                local_problem.maximize_objectives_by_random_mutations(
                     max_iter=max_random_iters, n_mutations=n_mutations,
                     verbose=verbose, progress_bar=progress_bars > 1)
-            self.sequence = localized_problem.sequence
-
-    def maximize_all_objectives_one_by_one(self, n_loops=1,
-                                           randomization_threshold=10000,
-                                           max_random_iters=1000,
-                                           verbose=False,
-                                           progress_bars=0,
-                                           optimize_independently=False,
-                                           n_mutations=1):
-
-        range_loops = range(n_loops)
-        if progress_bars > 0:
-            range_loops = tqdm(range_loops, desc="Loop", leave=False)
-
-        for iteration in range_loops:
-            objectives = self.objectives
-            if progress_bars > 1:
-                objectives = tqdm(objectives, desc="Objective", leave=False)
-            for objective in objectives:
-                self.maximize_objective_by_localization(
-                    objective,
-                    randomization_threshold=randomization_threshold,
-                    max_random_iters=max_random_iters,
-                    verbose=verbose,
-                    progress_bars=(progress_bars - 2),
-                    n_mutations=n_mutations,
-                    optimize_independently=optimize_independently
-                )
+            self.sequence = local_problem.sequence
+    #
+    # def maximize_objectives(self, n_loops=1,
+    #                                        randomization_threshold=10000,
+    #                                        max_random_iters=1000,
+    #                                        verbose=False,
+    #                                        progress_bars=0,
+    #                                        optimize_independently=False,
+    #                                        n_mutations=1):
+    #
+    #     range_loops = range(n_loops)
+    #     if progress_bars > 0:
+    #         range_loops = tqdm(range_loops, desc="Loop", leave=False)
+    #
+    #     for iteration in range_loops:
+    #         objectives = self.objectives
+    #         if progress_bars > 1:
+    #             objectives = tqdm(objectives, desc="Objective", leave=False)
+    #         for objective in objectives:
+    #             self.maximize_objective_by_localization(
+    #                 objective,
+    #                 randomization_threshold=randomization_threshold,
+    #                 max_random_iters=max_random_iters,
+    #                 verbose=verbose,
+    #                 progress_bars=(progress_bars - 2),
+    #                 n_mutations=n_mutations,
+    #                 optimize_independently=optimize_independently
+    #             )
 
     def include_pattern_by_successive_tries(self, pattern, location=None,
                                             paste_pattern_in=True,
@@ -793,7 +949,7 @@ class DnaOptimizationProblem:
                 location = [i, i + pattern.size]
                 self.mutate_sequence([(location, pattern.pattern)])
             try:
-                self.solve_all_constraints_one_by_one()
+                self.solve_constraints_one_by_one()
                 return i # success
             except NoSolutionError:
                 self.sequence = sequence_before
