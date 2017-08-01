@@ -51,3 +51,5 @@ nosetests.xml
 *.fasta
 
 examples/reports
+
+.cache

@@ -4,7 +4,7 @@ from .Specification import (Specification, VoidSpecification,
 from .SpecEvaluation import (SpecEvaluation,
                              ProblemObjectivesEvaluations,
                              ProblemConstraintsEvaluations)
-from .specifications_sets import PROVIDERS_CONSTRAINTS
+# from .specifications_sets import PROVIDERS_CONSTRAINTS
 
 from .builtin_specifications import (
     AvoidBlastMatches,

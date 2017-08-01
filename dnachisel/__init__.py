@@ -18,7 +18,7 @@ from .specifications import (
     Specification,
     SpecEvaluation,
     PatternSpecification,
-    PROVIDERS_CONSTRAINTS,
+    # PROVIDERS_CONSTRAINTS,
     SequenceLengthBounds,
     VoidSpecification,
     # MinimizeDifferences,

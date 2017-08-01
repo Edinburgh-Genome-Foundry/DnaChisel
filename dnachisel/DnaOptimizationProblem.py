@@ -113,6 +113,7 @@ class DnaOptimizationProblem:
 
     def __init__(self, sequence, constraints=None, objectives=None,
                  progress_logger=None):
+        """Initialize"""
         if isinstance(sequence, SeqRecord):
             self.record = sequence
             self.sequence = str(sequence.seq)
@@ -134,11 +135,11 @@ class DnaOptimizationProblem:
         self.progress_logger(message="Initializing...")
 
         self.constraints = [
-            constraint.initialize_problem(self, role="constraint")
+            constraint.initialize_on_problem(self, role="constraint")
             for constraint in self.constraints
         ]
         self.objectives = [
-            objective.initialize_problem(self, role="objective")
+            objective.initialize_on_problem(self, role="objective")
             for objective in self.objectives
         ]
 
@@ -153,6 +154,8 @@ class DnaOptimizationProblem:
         return ProblemConstraintsEvaluations.from_problem(self)
 
     def all_constraints_pass(self):
+        """Return True iff the current problem sequence passes all constraints.
+        """
         return self.constraints_evaluations().all_evaluations_pass()
 
     def constraints_text_summary(self, failed_only=False):
@@ -199,10 +202,11 @@ class DnaOptimizationProblem:
         (see ``DnaOptimizationProblem`` documentation).
 
         The possible mutations are constrained by the ``constraints`` of the
-        DnaOptimizationProblem with respect to the following rules:
+        DnaOptimizationProblem with respect to rules that are internal
+        to the different constraints, for instance:
 
-        - ``AvoidChanges``  constraints disable mutations for the nucleotides of
-          the concerned segments.
+        - ``AvoidChanges``  constraints disable mutations for the nucleotides
+          of the concerned segments.
         - ``EnforceTranlation`` constraints ensure that on the concerned
           segments only codons that translate to the imposed amino-acid will
           be considered, so a triplet of nucleotides that should code for
@@ -239,6 +243,7 @@ class DnaOptimizationProblem:
         def multibase_sorting_score(start_end_set):
             (start, end), _set = start_end_set
             return 1.0*len(_set) / 4**(end - start), start
+
         multibase_restrictions = sorted(
             [
                 (loc, mutations_set)
@@ -277,6 +282,11 @@ class DnaOptimizationProblem:
         ])
 
     def iter_mutations_space(self):
+        """Iterate through all possible mutations.
+
+        Each mutation is of the form (location, "new_sequence") where location
+        is either a number or a couple (start, end)
+        """
         return itt.product(*[
             [(k, seq) for seq in values]
             for k, values in self.possible_mutations.items()

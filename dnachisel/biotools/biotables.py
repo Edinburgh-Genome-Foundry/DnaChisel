@@ -4,6 +4,7 @@
 from collections import defaultdict
 import os
 
+
 def reverse_table(table):
     """ Return a dictionary {v1: [k1a, k1b,...]} where k1a, k1b are all
     the keys of table such that table[k1]=v1.
@@ -15,12 +16,14 @@ def reverse_table(table):
 
 
 def dict_from_csv(filepath, sep=";"):
+    """Read a CSV and store entries in a dict."""
     with open(filepath, "r") as f:
         return {
             line.split(sep)[0]: line.split(sep)[1].strip("\n")
             for line in f.readlines()
             if line not in ("", "\n")
         }
+
 
 data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
 codons_usage_dir = os.path.join(data_dir, "codon_usage_tables")

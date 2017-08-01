@@ -4,205 +4,14 @@ import itertools
 
 import numpy as np
 
-from ..biotools.biotables import (CODON_USAGE_TABLES, CODONS_SEQUENCES,
+from dnachisel.biotools.biotables import (CODON_USAGE_TABLES, CODONS_SEQUENCES,
                                   CODONS_TRANSLATIONS, IUPAC_NOTATION)
-from ..biotools.biotools import (gc_content, reverse_complement, complement,
+from dnachisel.biotools import (gc_content, reverse_complement, complement,
                                  blast_sequence, translate,
                                  sequences_differences_array)
-from .Specification import (Specification, PatternSpecification, TerminalSpecification,
+from ..Specification import (Specification, PatternSpecification, TerminalSpecification,
                         SpecEvaluation, VoidSpecification)
-from ..Location import Location
-
-
-class AvoidBlastMatches(Specification):
-    """Enforce that the given pattern is absent in the sequence.
-
-    Uses NCBI Blast+. Only local BLAST is supported/tested as for now
-
-    Parameters
-    ----------
-
-    blast_db
-      Path to a local BLAST database. These databases can be obtained with
-      NCBI's `makeblastdb`. Omit the extension, e.g. `ecoli_db/ecoli_db`.
-
-    word_size
-      Word size used by the BLAST algorithm
-
-    perc_identity
-      Minimal percentage of identity for BLAST matches. 100 means that only
-      perfect matches are considered.
-
-    num_alignments
-      Number alignments
-
-    num_threads
-      Number of threads/CPU cores to use for the BLAST algorithm.
-
-    min_align_length
-      Minimal length that an alignment should have to be considered.
-    """
-
-    def __init__(self, blast_db, word_size=4, perc_identity=100,
-                 num_alignments=1000, num_threads=3, min_align_length=20,
-                 location=None):
-        self.blast_db = blast_db
-        self.word_size = word_size
-        self.perc_identity = perc_identity
-        self.num_alignments = num_alignments
-        self.num_threads = num_threads
-        self.min_align_length = min_align_length
-        self.location = location
-
-    def evaluate(self, problem):
-        """Return (-M) as a score, where M is the number of BLAST matches found
-        in the BLAST database."""
-        location = self.location
-        if location is None:
-            location = Location(0, len(problem.sequence))
-        sequence = location.extract_sequence(problem.sequence)
-        blast_record = blast_sequence(
-            sequence, blast_db=self.blast_db,
-            word_size=self.word_size,
-            perc_identity=self.perc_identity,
-            num_alignments=self.num_alignments,
-            num_threads=self.num_threads
-        )
-        query_locations = [
-            Location(min(hit.query_start, hit.query_end),
-                     max(hit.query_start, hit.query_end),
-                     1 - 2 * (hit.query_start > hit.query_end))
-            for alignment in blast_record.alignments
-            for hit in alignment.hsps
-        ]
-        locations = sorted([
-            loc for loc in query_locations
-            if len(location) >= self.min_align_length
-        ])
-        if locations == []:
-            return SpecEvaluation(self, problem, score=1,
-                                       message="Passed: no BLAST match found")
-
-        return SpecEvaluation(
-            self, problem, score=-len(locations), locations=locations,
-            message="Failed - matches at %s" % locations)
-
-    def localized(self, location):
-        """Localize the evaluation."""
-        if self.location is not None:
-            new_location = self.location.overlap_region(location)
-            if new_location is None:
-                return VoidSpecification(parent_specification=self)
-        else:
-            new_location = location.extended(self.min_align_length)
-
-        return self.copy_with_changes(location=new_location)
-
-    def __repr__(self):
-        return "NoBlastMatchesSpecification%s(%s, %d+ bp, perc %d+)" % (
-            self.location, self.blast_db, self.min_align_length,
-            self.perc_identity
-        )
-
-
-class AvoidChanges(Specification):
-    """Specify that some locations of the sequence should not be changed.
-
-    ``AvoidChanges`` Specifications are used to constrain the mutations space
-    of DNA OptimizationProblem.
-
-    Parameters
-    ----------
-
-    location
-      Location object indicating the position of the segment that
-      must be left unchanged.
-    """
-    localization_interval_length = 8
-
-    best_possible_score = 0
-
-    def __init__(self, location=None, indices=None, target_sequence=None,
-                 boost=1.0):
-        self.location = location
-        self.indices = np.array(indices) if (indices is not None) else None
-        self.target_sequence = target_sequence
-        self.boost = boost
-
-    def extract_subsequence(self, sequence):
-        if (self.location is None) and (self.indices is None):
-            return sequence
-        elif self.indices is not None:
-            return "".join(np.array(sequence)[self.indices])
-        else: #self.location is not None:
-            return self.location.extract_sequence(sequence)
-
-
-    def initialize_problem(self, problem, role):
-
-        if self.target_sequence is None:
-            result = self.copy_with_changes()
-            result.target_sequence = self.extract_subsequence(problem.sequence)
-        else:
-            result = self
-        return result
-
-    def evaluate(self, problem):
-        target = self.target_sequence
-        sequence = self.extract_subsequence(problem.sequence)
-        discrepancies = np.nonzero(
-            sequences_differences_array(sequence, target))[0]
-        # if len(discrepancies):
-            # print (discrepancies, sequences_differences_array(sequence, target))
-            # raise ValueError()
-
-        if self.indices is not None:
-            discrepancies = self.indices[discrepancies]
-        elif self.location is not None:
-            if self.location.strand == -1:
-                discrepancies = self.location.end - discrepancies
-            else:
-                discrepancies = discrepancies + self.location.start
-
-        l = self.localization_interval_length
-        intervals = [
-            (l * start, l * (start + 1))
-            for start in sorted(set([int(d / l) for d in discrepancies]))
-        ]
-        locations = [Location(start, end, 1) for start, end in intervals]
-
-        return SpecEvaluation(self, problem, score=-len(discrepancies),
-                              locations=locations)
-
-    def localized(self, location):
-        """Localize the AvoidChanges to the overlap of its location and the new.
-        """
-        start, end = location.start, location.end
-        if self.location is not None:
-            new_location = self.location.overlap_region(location)
-            if new_location is None:
-                return VoidSpecification(parent_specification=self)
-            else:
-                return self
-        elif self.indices is not None:
-            inds = self.indices
-            new_indices = inds[(start <= inds) & (inds <= end)]
-            return self.copy_with_changes(indices=new_indices)
-        else:
-            return self
-
-    def restrict_nucleotides(self, sequence, location=None):
-        if location is not None:
-            start = max(location.start, self.location.start)
-            end = min(location.end, self.location.end)
-        else:
-            start, end = self.location.start, self.location.end
-
-        return [(i, set(sequence[i])) for i in range(start, end)]
-
-    def __repr__(self):
-        return "AvoidChanges(%s)" % str(self.location)
-
+from dnachisel.Location import Location
 
 class AvoidHairpins(Specification):
     """Avoid Hairpin patterns as defined by the IDT guidelines.
@@ -560,6 +369,105 @@ class EnforceGCContent(Specification):
              self.location))
 
 
+class AvoidChanges(Specification):
+    """Specify that some locations of the sequence should not be changed.
+
+    ``AvoidChanges`` Specifications are used to constrain the mutations space
+    of DNA OptimizationProblem.
+
+    Parameters
+    ----------
+
+    location
+      Location object indicating the position of the segment that
+      must be left unchanged.
+    """
+    localization_interval_length = 8
+
+    best_possible_score = 0
+
+    def __init__(self, location=None, indices=None, target_sequence=None,
+                 boost=1.0):
+        self.location = location
+        self.indices = np.array(indices) if (indices is not None) else None
+        self.target_sequence = target_sequence
+        self.boost = boost
+
+    def extract_subsequence(self, sequence):
+        if (self.location is None) and (self.indices is None):
+            return sequence
+        elif self.indices is not None:
+            return "".join(np.array(sequence)[self.indices])
+        else: #self.location is not None:
+            return self.location.extract_sequence(sequence)
+
+
+    def initialize_on_problem(self, problem, role):
+
+        if self.target_sequence is None:
+            result = self.copy_with_changes()
+            result.target_sequence = self.extract_subsequence(problem.sequence)
+        else:
+            result = self
+        return result
+
+    def evaluate(self, problem):
+        target = self.target_sequence
+        sequence = self.extract_subsequence(problem.sequence)
+        discrepancies = np.nonzero(
+            sequences_differences_array(sequence, target))[0]
+        # if len(discrepancies):
+            # print (discrepancies, sequences_differences_array(sequence, target))
+            # raise ValueError()
+
+        if self.indices is not None:
+            discrepancies = self.indices[discrepancies]
+        elif self.location is not None:
+            if self.location.strand == -1:
+                discrepancies = self.location.end - discrepancies
+            else:
+                discrepancies = discrepancies + self.location.start
+
+        l = self.localization_interval_length
+        intervals = [
+            (l * start, l * (start + 1))
+            for start in sorted(set([int(d / l) for d in discrepancies]))
+        ]
+        locations = [Location(start, end, 1) for start, end in intervals]
+
+        return SpecEvaluation(self, problem, score=-len(discrepancies),
+                              locations=locations)
+
+    def localized(self, location):
+        """Localize the AvoidChanges to the overlap of its location and the new.
+        """
+        start, end = location.start, location.end
+        if self.location is not None:
+            new_location = self.location.overlap_region(location)
+            if new_location is None:
+                return VoidSpecification(parent_specification=self)
+            else:
+                return self
+        elif self.indices is not None:
+            inds = self.indices
+            new_indices = inds[(start <= inds) & (inds <= end)]
+            return self.copy_with_changes(indices=new_indices)
+        else:
+            return self
+
+    def restrict_nucleotides(self, sequence, location=None):
+        if location is not None:
+            start = max(location.start, self.location.start)
+            end = min(location.end, self.location.end)
+        else:
+            start, end = self.location.start, self.location.end
+
+        return [(i, set(sequence[i])) for i in range(start, end)]
+
+    def __repr__(self):
+        return "AvoidChanges(%s)" % str(self.location)
+
+
 class EnforcePattern(PatternSpecification):
     """Enforce that the given pattern is present in the sequence.
 
@@ -828,7 +736,7 @@ class EnforceTranslation(Specification):
                 )
         self.translation = translation
 
-    def initialize_problem(self, problem, role):
+    def initialize_on_problem(self, problem, role):
         if self.location is None:
             location = Location(0, len(problem.sequence), 1)
             result = self.copy_with_changes()
@@ -1004,7 +912,7 @@ class AvoidStopCodon(EnforceTranslation):
 #         self.initialize_sequence_from_problem = (target_sequence is None)
 #         self.reference_sequence = target_sequence
 #
-#     def initialize_problem(self, problem, role):
+#     def initialize_on_problem(self, problem, role):
 #         if not self.initialize_sequence_from_problem:
 #             return self
 #         if self.location is None:

@@ -17,12 +17,21 @@ class Specification:
 
     New types of specifications are defined by subclassing ``Specification`` and
     providing a custom ``evaluate`` and ``localized`` methods.
+
+    Parameters
+    -----------
+    evaluate
+      function (sequence) => SpecEvaluation
+    boost
+      Relative importance of the Specification's score in a multi-specification
+      problem.
     """
 
     best_possible_score = None
     can_be_solved_locally = False
 
     def __init__(self, evaluate=None, boost=1.0):
+        """Initialize."""
         self.boost = boost
         if evaluate is not None:
             self.evaluate = evaluate
@@ -46,15 +55,31 @@ class Specification:
         return self
 
     def copy_with_changes(self, **kwargs):
+        """Return a copy of the Specification with modified properties.
+
+        For instance ``new_spec = spec.copy_with_changes(boost=10)``.
+        """
         new_specification = copy.deepcopy(self)
         new_specification.__dict__.update(kwargs)
         return new_specification
 
-    def initialize_problem(self, problem, role="constraint"):
+    def initialize_on_problem(self, problem, role="constraint"):
+        """Complete specification initialization when the sequence gets known.
+
+        Some specifications like to know what their role is and on which
+        sequence they are employed before they complete some values.
+        """
         return self
 
     @staticmethod
     def from_biopython_feature(feature, specifications_dict):
+        """Parse a Biopython feature create an annotation.
+
+        The specifications_dict enables to map specification names to the
+        actual implemented class.
+
+        """
+
         label = find_specification_in_feature(feature)
         if isinstance(label, list):
             label = label[0]
@@ -84,6 +109,12 @@ class Specification:
     def to_biopython_feature(self, feature_type="misc_feature",
                              role="constraint", colors_dict=None,
                              **qualifiers):
+        """Return a Biopython feature representing the specification.
+
+        The feature label is a string representation of the specification,
+        and its location indicates the specification's scope.
+
+        """
         if colors_dict is None:
             colors_dict = {"constraint": "#355c87", "specification": "#f9cd60"}
         qualifiers["role"] = role
@@ -125,6 +156,7 @@ class VoidSpecification(Specification):
 
 
     def __init__(self, parent_specification=None, boost=1.0, *a, **kw):
+        """Initialize."""
         self.parent_specification = parent_specification
         self.message = ("Pass (not relevant in this context)")
         self.boost = boost
@@ -170,6 +202,7 @@ class PatternSpecification(Specification):
 
     def __init__(self, pattern=None, location=None, boost=1.0, enzyme=None,
                  dna_pattern=None):
+        """Initialize."""
         if enzyme is not None:
             pattern = enzyme_pattern(enzyme)
         if dna_pattern is not None:
@@ -207,6 +240,7 @@ class TerminalSpecification(Specification):
     `evaluate_end` method"""
 
     def evaluate(self, problem):
+        """Apply method ``evaluate_end`` to both sides and compile results."""
         sequence = problem.sequence
         L = len(sequence)
         wsize = self.window_size
@@ -221,5 +255,5 @@ class TerminalSpecification(Specification):
         else:
             message = "Failed: breaches at ends %s" % str(locations)
 
-        return SpecEvaluation(self, problem, score=len(locations),
+        return SpecEvaluation(self, problem, score=-len(locations),
                                    locations=locations, message=message)

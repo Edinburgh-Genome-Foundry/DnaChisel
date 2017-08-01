@@ -1,3 +1,5 @@
+"""Biologically-related useful methods."""
+
 from .biotools import (
     blast_sequence,
     change_biopython_record_sequence,
@@ -10,6 +12,7 @@ from .biotools import (
     reverse_complement,
     reverse_translate,
     sequences_differences,
+    sequences_differences_array,
     sequences_differences_segments,
     sequence_to_biopython_record,
     translate,
