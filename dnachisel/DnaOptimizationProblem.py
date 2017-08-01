@@ -15,7 +15,7 @@ from .biotools.biotools import (sequence_to_biopython_record,
 from .specifications import (Specification, AvoidChanges, EnforcePattern,
                              ProblemObjectivesEvaluations,
                              ProblemConstraintsEvaluations,
-                             DEFAULT_OBJECTIVES_DICT)
+                             DEFAULT_SPECIFICATIONS_DICT)
 
 from .Location import Location
 from Bio.SeqRecord import SeqRecord
@@ -555,7 +555,7 @@ class DnaOptimizationProblem:
                 raise error
             self.progress_logger(location_ind=i+1)
 
-    # OBJECTIVES
+    # SPECIFICATIONS
 
     def maximize_objectives_by_exhaustive_search(self, verbose=False,
                                                  progress_bar=False):
@@ -601,6 +601,7 @@ class DnaOptimizationProblem:
                                                 progress_bar=False):
         """
         """
+
         if not self.all_constraints_pass():
             summary = self.constraints_text_summary()
             raise ValueError(summary + "Optimization can only be done when all"
@@ -611,7 +612,7 @@ class DnaOptimizationProblem:
 
         if all([obj.best_possible_score is not None
                 for obj in self.objectives]):
-            best_possible_score = sum([obj.best_possible_score
+            best_possible_score = sum([obj.best_possible_score * obj.boost
                                        for obj in self.objectives])
         else:
             best_possible_score = None
@@ -619,7 +620,12 @@ class DnaOptimizationProblem:
         if progress_bar:
             range_iters = tqdm(range_iters, desc="Random mutation",
                                leave=False)
+
         for iteration in range_iters:
+            if ((best_possible_score is not None) and
+                (score >= best_possible_score)):
+                break
+
             random_mutations_inds = np.random.randint(
                 0, len(mutations_locs), n_mutations)
             mutations = [
@@ -635,18 +641,16 @@ class DnaOptimizationProblem:
             previous_sequence = self.sequence
             self.mutate_sequence(mutations)
             if self.all_constraints_pass():
+
                 new_score = self.all_objectives_scores_sum()
                 if new_score > score:
                     score = new_score
+                    # print("new_best", new_score)
                 else:
                     self.sequence = previous_sequence
             else:
                 self.sequence = previous_sequence
-
-            if ((best_possible_score is not None) and
-                (score >= best_possible_score)):
-                break
-        assert self.all_constraints_pass()
+        #assert self.all_constraints_pass()
 
     def maximize_objectives(self, objectives='all', n_mutations=1,
                             randomization_threshold=10000,
@@ -660,6 +664,7 @@ class DnaOptimizationProblem:
             objectives = self.objectives
 
         if isinstance(objectives, list):
+
             iter_objectives = objectives
             if progress_bars > 0:
                 iter_objectives = tqdm(objectives, desc="Objective",
@@ -696,6 +701,7 @@ class DnaOptimizationProblem:
 
         if progress_bars > 0:
             locations = tqdm(locations, desc="Window", leave=False)
+
         for location in locations:
             if verbose:
                 print(location)
@@ -725,6 +731,7 @@ class DnaOptimizationProblem:
                 ],
                 objectives=objectives
             )
+            #local_problem.sequence_before = self.sequence_before
 
             if (local_problem.mutation_space_size() <
                     randomization_threshold):
@@ -763,7 +770,7 @@ class DnaOptimizationProblem:
         raise NoSolutionError("Failed to insert the pattern")
 
     @staticmethod
-    def from_record(record, objectives_dict="default"):
+    def from_record(record, specifications_dict="default"):
         if isinstance(record, str):
             if record.lower().endswith((".fa", ".fasta")):
                 record = SeqIO.read(record, 'fasta')
@@ -772,8 +779,8 @@ class DnaOptimizationProblem:
             else:
                 raise ValueError("Record is either a Biopython record or a "
                                  "file path ending in .gb, .gbk, .fa, .fasta.")
-        if objectives_dict == "default":
-            objectives_dict = DEFAULT_OBJECTIVES_DICT
+        if specifications_dict == "default":
+            specifications_dict = DEFAULT_SPECIFICATIONS_DICT
         parameters = dict(
             sequence=record,
             constraints=[],
@@ -782,10 +789,10 @@ class DnaOptimizationProblem:
         for feature in record.features:
             if feature.type != "misc_feature":
                 continue
-            if find_objective_in_feature(feature) is None:
+            if find_specification_in_feature(feature) is None:
                 continue
-            role, objective = Specification.from_biopython_feature(feature,
-                                                               objectives_dict)
+            role, objective = Specification.from_biopython_feature(
+                feature, specifications_dict)
             parameters[role+"s"].append(objective)
 
         return DnaOptimizationProblem(**parameters)
@@ -818,7 +825,7 @@ class DnaOptimizationProblem:
             record.features += [
                 f for f in self.record.features
                 if with_original_objective_features or
-                not find_objective_in_feature(f)
+                not find_specification_in_feature(f)
             ]
 
         if filepath is not None:

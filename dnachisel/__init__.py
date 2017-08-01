@@ -22,7 +22,7 @@ from .specifications import (
     SequenceLengthBounds,
     VoidSpecification,
     # MinimizeDifferences,
-    DEFAULT_OBJECTIVES_DICT
+    DEFAULT_SPECIFICATIONS_DICT
 )
 
 from .biotools import (

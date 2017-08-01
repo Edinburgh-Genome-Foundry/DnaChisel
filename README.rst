@@ -1,13 +1,44 @@
-DNA Chisel
-==========
+DnaChisel
+=========
 
-DnaChisel is a Python library to modify the nucleotides of DNA sequences with respect to a set of
-constraints and optimization objectives.
+.. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/BandWagon.svg?branch=master
+   :target: https://travis-ci.org/Edinburgh-Genome-Foundry/BandWagon
+   :alt: Travis CI build status
+
+DnaChisel (full documentation `here
+<http://edinburgh-genome-foundry.github.io/DnaChisel/>`_) is a Python library to optimize
+the nucleotides of DNA sequences with respect to a set of constraints and optimization objectives.
+
 
 It can be used for many purposes, such as codon-optimizing the genes of a sequence
 for a particular micro-organism, modifying a sequence to meet the constraints of
-a DNA provider while preserving genes and other sensible patterns, or inserting
-a pattern in a sequence using only synonymous mutations.
+a DNA provider while preserving genes and other sensible patterns, and makes it
+possible to define your own specifications.
+
+License = MIT
+--------------
+
+Bandwagon is an open-source software originally written at the `Edinburgh Genome Foundry
+<http://edinburgh-genome-foundry.github.io/home.html>`_ by `Zulko <https://github.com/Zulko>`_
+and `released on Github <https://github.com/Edinburgh-Genome-Foundry/Bandwagon>`_ under the MIT licence (¢ Edinburg Genome Foundry).
+
+Everyone is welcome to contribute !
+
+Installation
+--------------
+
+If you have pip installed, just type:
+
+.. code:: python
+
+    (sudo) pip install dnachisel
+
+DnaChisel can be installed by unzipping the source code in one directory and using this command:
+
+.. code:: python
+
+    (sudo) python setup.py install
+
 
 Example of use
 ---------------

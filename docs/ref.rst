@@ -1,4 +1,4 @@
-.. reference ::
+.. _reference ::
 
 DnaChisel Reference manual
 ==========================
@@ -15,22 +15,55 @@ DnaChisel Reference manual
       s --> c
       P -->|solve, optimize| O[Optimized problem.sequence]
 
+Reports
+--------
+
+Optimization reports
+~~~~~~~~~~~~~~~~~~~~
+
+.. mermaid::
+
+   graph TD;
+      o[optimization_with_report] <--> D[DnaOptimizationProblem]
+      o -->|constraints clash| N[write_no_solution_error]
+      o -->|no constraints clash| W[write_optimization_report]
+
+.. automodule:: dnachisel.reports.optimization_reports
+   :members:
+
+
+
+Constraint reports
+~~~~~~~~~~~~~~~~~~
+
+.. automodule:: dnachisel.reports.constraints_reports
+   :members:
+
 DnaOptimizationProblem
 ----------------------
 
-.. autoclass:: dnachisel.DnaOptimizationProblem
+.. automodule:: dnachisel.DnaOptimizationProblem
    :members:
 
 Specification
 -------------
 
+.. automodule:: dnachisel.specifications.Specification
+   :members:
 
 Built-in Specifications
 -----------------------
 
+.. automodule:: dnachisel.specifications.builtin_specifications
+   :members:
+
+
 
 SpecEvaluation
 --------------
+
+
+.. mermaid::
 
    graph TD;
        P[DnaOptimizationProblem] --> SE[SpecEvaluation]
@@ -39,29 +72,31 @@ SpecEvaluation
        SES --- OES[Objective evaluations]
        SES --- CES[Constraints evaluations]
 
-.. automodule:: dnachisel.SpecEvaluation
+.. automodule:: dnachisel.specifications.SpecEvaluation
    :members:
 
-Objectives
------------
-
-.. automodule:: dnachisel.objectives.Objective
-   :members:
-
-.. automodule:: dnachisel.objectives.objectives
-   :members:
-
-
-
-Patterns
----------
-
-.. automodule:: dnachisel.biotools.patterns
-   :members:
 
 
 Biotools
 --------
 
-.. automodule:: dnachisel.biotools.biotools
+Features annotations
+~~~~~~~~~~~~~~~~~~~~~
+
+.. mermaid::
+
+   graph TD;
+     a[annotate_record] -->|used by| d[annotate_differences]
+     a -->|used by| o[annotate_pattern_occurences]
+
+.. automodule:: dnachisel.biotools.features_annotations
   :members:
+
+ .. automodule:: dnachisel.biotools.biotools
+   :members:
+
+SequencePattern
+---------------
+
+.. automodule:: dnachisel.biotools.patterns
+   :members:

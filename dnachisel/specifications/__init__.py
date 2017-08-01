@@ -22,7 +22,7 @@ from .builtin_specifications import (
     SequenceLengthBounds
 )
 
-DEFAULT_OBJECTIVES_DICT = {
+DEFAULT_SPECIFICATIONS_DICT = {
    k: v
    for (k, v) in locals().items()
    if inspect.isclass(v) and issubclass(v, Specification)

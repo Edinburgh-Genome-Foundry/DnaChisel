@@ -4,15 +4,15 @@ import numpy as np
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 
 
-"""Useful function to annotate"""
+"""Useful function to annotate sequences"""
+
 
 def annotate_record(seqrecord, location="full", feature_type="misc_feature",
                     margin=0, **qualifiers):
-    """Add a feature to a Biopython SeqRecord. (also returns that same record)
+    """Add a feature to a Biopython SeqRecord. (also returns that same record).
 
     Parameters
     ----------
-
     seqrecord
       The biopython seqrecord to be annotated.
 
@@ -27,9 +27,10 @@ def annotate_record(seqrecord, location="full", feature_type="misc_feature",
 
     qualifiers
       Dictionnary that will be the Biopython feature's `qualifiers` attribute.
+
     """
     if location == "full":
-        location = (margin, len(seqrecord)-margin)
+        location = (margin, len(seqrecord) - margin)
 
     strand = location[2] if (len(location) == 3) else 1
     seqrecord.features.append(
@@ -41,14 +42,16 @@ def annotate_record(seqrecord, location="full", feature_type="misc_feature",
     )
     return seqrecord
 
+
 def annotate_differences(record, reference, feature_type="misc_feature",
                          prefix="#"):
-    """Return a version of SeqRecord ``record`` where differences with the
-    the references are annotated as new features.
+    """Annotate differences between two records in a new record.
+
+    Returns a version of SeqRecord ``record`` where differences with the
+    references are annotated as new features.
 
     Parameters
     ----------
-
     record
       The SeqRecord to be compared to the reference
 
@@ -60,7 +63,8 @@ def annotate_differences(record, reference, feature_type="misc_feature",
 
     prefix
       Each new feature will be labeled "po" where p is the prefix and o the
-      original sequence at the feature's location.
+      original sequence at the feature's location. For instance "#A" or "#TT".
+
     """
     seq1 = str(record.seq)
     seq2 = str(reference.seq)
@@ -75,14 +79,28 @@ def annotate_differences(record, reference, feature_type="misc_feature",
             locations.append([ind, ind])
     new_record = deepcopy(record)
     for (start, end) in locations:
-        annotate_record(new_record, location=(start, end+1),
+        annotate_record(new_record, location=(start, end + 1),
                         feature_type=feature_type,
-                        label=prefix + seq2[start:end+1])
+                        label=prefix + seq2[start:end + 1])
     return new_record
+
 
 def annotate_pattern_occurrences(record, pattern, feature_type="misc_feature",
                                  prefix="!"):
-    """Test."""
+    """Return a new record annotated w. all occurences of pattern in sequence.
+
+    Parameters
+    -----------
+    record
+      A Biopython record
+
+    pattern
+      A DnaChisel SequencePattern object (such as DnaPAttern)
+
+    feature_type
+      Type of the annotations in the returned record
+
+    """
     new_record = deepcopy(record)
     label = prefix + str(pattern)
     for location in pattern.find_matches(str(record.seq)):

@@ -7,7 +7,8 @@ import numpy as np
 from ..biotools.biotables import (CODON_USAGE_TABLES, CODONS_SEQUENCES,
                                   CODONS_TRANSLATIONS, IUPAC_NOTATION)
 from ..biotools.biotools import (gc_content, reverse_complement, complement,
-                                 blast_sequence, translate)
+                                 blast_sequence, translate,
+                                 sequences_differences_array)
 from .Specification import (Specification, PatternSpecification, TerminalSpecification,
                         SpecEvaluation, VoidSpecification)
 from ..Location import Location
@@ -117,50 +118,78 @@ class AvoidChanges(Specification):
       Location object indicating the position of the segment that
       must be left unchanged.
     """
+    localization_interval_length = 8
 
-    best_possible_score = 1
+    best_possible_score = 0
 
-    def __init__(self, location=None, indices=None, boost=1.0):
+    def __init__(self, location=None, indices=None, target_sequence=None,
+                 boost=1.0):
         self.location = location
-        self.indices = np.array(indices)
+        self.indices = np.array(indices) if (indices is not None) else None
+        self.target_sequence = target_sequence
         self.boost = boost
 
-    def evaluate(self, problem):
-        sequence = problem.sequence
-        original = problem.sequence_before
+    def extract_subsequence(self, sequence):
         if (self.location is None) and (self.indices is None):
-            return SpecEvaluation(sequence == original,
-                                       locations=[self.location])
-        elif self.location is not None:
-            subseq, suboriginal = [self.location.extract_sequence(s)
-                                   for s in (sequence, original)]
-            score = 1 if (subseq == suboriginal) else -1
-            return SpecEvaluation(self, problem, score,
-                                       locations=[self.location])
-        else:
-            sequence = np.fromstring(sequence, dtype="uint8")
-            original = np.fromstring(original, dtype="uint8")
-            if (sequence[self.indices] == original[self.indices]).min():
-                score = 1
-            else:
-                score = -1
+            return sequence
+        elif self.indices is not None:
+            return "".join(np.array(sequence)[self.indices])
+        else: #self.location is not None:
+            return self.location.extract_sequence(sequence)
 
-            return SpecEvaluation(self, problem, score,
-                                       locations=[self.location])
+
+    def initialize_problem(self, problem, role):
+
+        if self.target_sequence is None:
+            result = self.copy_with_changes()
+            result.target_sequence = self.extract_subsequence(problem.sequence)
+        else:
+            result = self
+        return result
+
+    def evaluate(self, problem):
+        target = self.target_sequence
+        sequence = self.extract_subsequence(problem.sequence)
+        discrepancies = np.nonzero(
+            sequences_differences_array(sequence, target))[0]
+        # if len(discrepancies):
+            # print (discrepancies, sequences_differences_array(sequence, target))
+            # raise ValueError()
+
+        if self.indices is not None:
+            discrepancies = self.indices[discrepancies]
+        elif self.location is not None:
+            if self.location.strand == -1:
+                discrepancies = self.location.end - discrepancies
+            else:
+                discrepancies = discrepancies + self.location.start
+
+        l = self.localization_interval_length
+        intervals = [
+            (l * start, l * (start + 1))
+            for start in sorted(set([int(d / l) for d in discrepancies]))
+        ]
+        locations = [Location(start, end, 1) for start, end in intervals]
+
+        return SpecEvaluation(self, problem, score=-len(discrepancies),
+                              locations=locations)
 
     def localized(self, location):
         """Localize the AvoidChanges to the overlap of its location and the new.
         """
+        start, end = location.start, location.end
         if self.location is not None:
             new_location = self.location.overlap_region(location)
             if new_location is None:
                 return VoidSpecification(parent_specification=self)
-            return self.copy_with_changes(location=new_location)
-        else:
-            start, end = location.start, location.end
+            else:
+                return self
+        elif self.indices is not None:
             inds = self.indices
             new_indices = inds[(start <= inds) & (inds <= end)]
             return self.copy_with_changes(indices=new_indices)
+        else:
+            return self
 
     def restrict_nucleotides(self, sequence, location=None):
         if location is not None:
@@ -439,6 +468,8 @@ class EnforceGCContent(Specification):
       if both parameters are provided
 
     """
+
+    best_possible_score = 0.0
 
     def __init__(self, gc_min=0, gc_max=1.0, gc_objective=None,
                  gc_window=None, location=None, boost=1.0):

@@ -1,5 +1,10 @@
-"""Misc. plotting and reporting methods"""
+"""Misc. plotting and reporting methods, some of which are really arbitrary.
+"""
+
 from copy import deepcopy
+
+from Bio.SeqRecord import SeqRecord
+import numpy as np
 
 try:
     import matplotlib.pyplot as plt
@@ -9,27 +14,53 @@ try:
 except:
     BiopythonTranslator = object
     DFV_AVAILABLE = False
-import numpy as np
+
 
 from ..DnaOptimizationProblem import DnaOptimizationProblem
 from ..biotools import gc_content, repeated_kmers, homopolymer_pattern
-from ..builtin_specifications import (EnforceGCContent, AvoidPattern,
-                                      AvoidHairpins)
-
-from Bio.SeqRecord import SeqRecord
-
-
-
+from ..specifications import (EnforceGCContent, AvoidPattern,
+                              AvoidHairpins)
 
 
 def plot_constraint_breaches(constraint, sequence, title=None, ax=None,
                              show_locations=False, show_feature_labels=False):
-    """Plot breaches for a single constraint"""
+    """Plot all breaches in a sequence for a single constraint.
+
+    Parameters
+    -----------
+    constraint
+      A DnaChisel Specification, to be used as a constraint.
+
+    sequence
+      An ATGC string, or a record. If it is a record, its annotations will also
+      be shown in the plot.
+
+    title
+      Title to be added to the plot
+
+    ax
+      Matplotlib ax on which to plot the result. If no ax is provided, one
+      will be created, and it will be returned at the end
+
+    show_locations
+      Whether or not to label the breach features with their coordinates
+
+    show_feature_labels
+      Whether or not to show the labels of all features.
+
+
+    Returns
+    -------
+    ax
+      The matplotlib ax on which the plot was drawn
+
+    """
     class Translator(BiopythonTranslator):
         """A Biopython record translator for DNA Features Viewer.
 
         This translator produces label-free plots.
         """
+
         default_feature_color = "#ffaaaa"
 
         def compute_feature_label(self, f):
@@ -51,8 +82,10 @@ def plot_constraint_breaches(constraint, sequence, title=None, ax=None,
 
     problem = DnaOptimizationProblem(sequence, constraints=[constraint])
     evals = problem.constraints_evaluations().filter("failing")
-    breaches_record = problem.to_record(with_original_features=False,
-                               with_objectives=False, with_constraints=False)
+    breaches_record = problem.to_record(
+        with_original_features=False, with_objectives=False,
+        with_constraints=False
+    )
     breaches_record.features = evals.locations_as_features()
 
     if record is not None:
@@ -77,7 +110,6 @@ def plot_constraints_breaches(record, constraints, color="red",
 
     Parameters
     ----------
-
     record
       A Biopython record
 
@@ -89,11 +121,16 @@ def plot_constraints_breaches(record, constraints, color="red",
       other features will appear in white.
 
     ax
-       Matplotlib ax on which to plot. If none is provided, one is created.
+       Matplotlib ax on which to plot. If none is provided, one is created,
+       and returned at the end.
 
     figure_width
       Width of the final figure in inches, if no ax is provided
 
+    Returns
+    -------
+    ax
+      The matplotlib ax on which the plot was drawn
 
     """
     if not DFV_AVAILABLE:
@@ -117,20 +154,15 @@ def plot_constraints_breaches(record, constraints, color="red",
 
 
 def make_constraints_breaches_pdf(constraints_sets, record, pdf_path):
-    """Plot the record and highlight locations of constraints breaches.
-
-    Requires "DNA Features Viewer" installed.
+    """Plot different constraint breach plots in a multi-page PDF.
 
     Parameters
     ----------
 
+    constraints_set
+      List of DnaChisel Specifications to be used as constraints.
+
     record
-      A Biopython record
-
-    constraints
-      A list or tuple of DnaChisel specifications to use as constraints
-
-    color
       Color for highlighting the constraint breaches in the plot. All
       other features will appear in white.
 
@@ -139,7 +171,6 @@ def make_constraints_breaches_pdf(constraints_sets, record, pdf_path):
 
     figure_width
       Width of the final figure in inches, if no ax is provided
-
 
     """
     if not DFV_AVAILABLE:
@@ -156,6 +187,33 @@ def make_constraints_breaches_pdf(constraints_sets, record, pdf_path):
 
 def plot_gc_content_breaches(sequence, window=70, gc_min=0.35, gc_max=0.65,
                              ax=None, title=None):
+    """Plot a profile of GC content along the sequence.
+    The regions with out-of-bound GC are highlighted.
+
+    Returns the Matplotlib ax on which the figure was plotted.
+
+    Parameters
+    ----------
+    sequence
+      An ATGC string
+
+    window
+      Number of nucleotides to use for local averaging of GC content
+
+    gc_min
+      minimal allowed proportion of gc (between 0 and 1)
+
+    gc_max
+      maximal allowed proportion of gc (between 0 and 1)
+
+    ax
+      Matplotlib ax on which to plot the figure. If none is provided, one
+      is created and returned in the end.
+
+    title
+      Title to be added to the figure.
+
+    """
     gc = gc_content(sequence, window_size=window)
     xx = np.arange(len(gc)) + window / 2
 
@@ -181,13 +239,25 @@ def plot_gc_content_breaches(sequence, window=70, gc_min=0.35, gc_max=0.65,
 
 
 def plot_sequence_manufacturability_difficulties(sequence):
-    """
+    """Plot a series of manufacturability factor checks, on a single figure.
+
+    The factors considered are mostly arbitrary. Most users won't be interested
+    by this function. The function looks for presence of Type IIs restriction
+    sites, homopolymers, hairpins, extreme GC content, repeats.
+    The breaches for each constraint type are plotted on separate axis.
+
+    Parameters
+    ----------
+    sequence
+      An ATGC string or a Biopythn sequence record (at which case the features
+      will be drawn along with the constraints breaches).
 
     Returns
     -------
 
     axes
-      List of the different axes
+      List of the different axes (in a same figure) on which the plots were
+      drawn
     """
     if isinstance(sequence, SeqRecord):
         record = sequence

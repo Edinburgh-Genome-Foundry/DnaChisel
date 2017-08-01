@@ -1,4 +1,5 @@
 """Classes for Objective Evaluations."""
+import textwrap
 
 from Bio.SeqFeature import SeqFeature
 from ..plotting_tools import colors_cycle
@@ -11,10 +12,10 @@ class SpecEvaluation:
     --------
 
     >>> evaluation_result = ConstraintEvaluation(
-    >>>     objective=objective,
+    >>>     specification=specification,
     >>>     problem = problem,
     >>>     score= evaluation_score, # float
-    >>>     locations=[(w1_start, w1_end), (w2_start, w2_end)...],
+    >>>     locations=[Locations list...],
     >>>     message = "Score: 42 (found 42 sites)"
     >>> )
 
@@ -56,8 +57,29 @@ class SpecEvaluation:
         """Return the default message for console/reports."""
         return "Score: %.02E. Locations: %s" % (self.score, self.locations)
 
-    def to_text(self, role=None):
-        """Return a string representation of the evaluation."""
+    def to_text(self, role='constraint', wrapped=True):
+        """Return a string representation of the evaluation.
+
+        Parameters
+        ----------
+        role
+          either 'objective' or 'constraint'
+
+        wrapped
+          Whether to wrap-and-indent the result
+
+        Returns
+        -------
+        message
+          A long string detailing the evaluations's status and regions of
+          breach or suboptimality.
+
+        """
+        if wrapped:
+            result = self.to_text(role=role, wrapped=False)
+            return "\n".join(textwrap.wrap(result, width=80,
+                             subsequent_indent='     '))
+
         if role == "objective":
             return ("{optimal} Scored {self.score:.02E} | {self.specification} | "
                     "{self.message}").format(
@@ -68,7 +90,21 @@ class SpecEvaluation:
                 self=self, passes="PASS" if self.passes else "FAIL")
 
     def locations_to_biopython_features(self, feature_type="misc_feature",
-                                        color="red", label_prefix=None):
+                                        color="red", label_prefix=""):
+        """Return a list of locations (of breach/suboptimality) as annotations.
+
+        Parameters
+        ----------
+        feature_type
+          Genbank type of the annotations
+
+        color
+          Color property attached to the annotations
+
+        label_prefix
+          The locations will be labelled of the form
+          "prefix NameOfSpecification()"
+        """
         return [
             SeqFeature(location.to_biopython_location(), type=feature_type,
                        qualifiers=dict(
@@ -80,27 +116,53 @@ class SpecEvaluation:
 
 
 class SpecEvaluations:
+    """Base class for the collective handling of lists of SpecEvaluations.
+
+    See ProblemObjectivesEvaluations and ProblemConstraintsEvaluations for
+    the useful subclasses.
+
+    Parameters
+    ----------
+    evaluations
+      list of SpecEvaluations
+
+    problem
+      (optional) problem on which the evaluations were carried.
+
+    """
 
     def __init__(self, evaluations, problem=None):
+        """Initialize."""
         self.evaluations = evaluations
         self.problem = problem
 
     def __iter__(self):
+        """Iterate over evaluations."""
         return self.evaluations.__iter__()
 
     def __len__(self):
+        """Number of evaluations."""
         return len(self.evaluations)
 
     def all_evaluations_pass(self):
+        """Return whether all evaluations pass."""
         return all([ev.passes for ev in self.evaluations])
 
     def scores_sum(self):
+        """Return the sum of all evaluations scores, multiplied by their
+        respective boost factor."""
         return sum([
             ev.specification.boost * ev.score
             for ev in self.evaluations
         ])
 
     def filter(self, eval_filter):
+        """Create a new instance with a subset of the evaluations.
+
+        ``eval_filter`` is either a function ``(evaluation) => True/False``
+        or one of "passing", "failing", "optimal", "suboptimal", to obtain the
+        corresponding constraints.
+        """
         if isinstance(eval_filter, str):
             eval_filter = {
                 "passing": lambda e: e.passes,
@@ -113,18 +175,27 @@ class SpecEvaluations:
         ], problem=self.problem)
 
     def to_text(self):
+        """Return a long representation of the evaluations."""
         return "\n".join(["===> %s" % self.text_summary_message()] + [
             e.to_text(role=self.specifications_role)
             for e in self.evaluations
         ]) + "\n\n"
 
     def evaluations_with_locations(self):
+        """Return the list of all evaluations whose location is not None"""
         return [
             ev for ev in self.evaluations
             if ev.locations is not None
         ]
 
     def success_and_failures_as_features(self, feature_type="misc_feature"):
+        """Return all evaluations as Biopython features.
+
+        With color property depending on whether the evaluation is passing,
+        failing, optimal, or suboptimal, the color being determined by
+        ``self.success_failure_color``.
+
+        """
         return [
             ev.specification.to_biopython_feature(
                 feature_type=feature_type,

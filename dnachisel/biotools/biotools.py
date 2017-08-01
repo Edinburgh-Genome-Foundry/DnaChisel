@@ -214,20 +214,6 @@ def gc_content(sequence, window_size=None):
         return 1.0 * (a - b) / window_size
 
 
-def sequences_differences(seq1, seq2):
-    """Return the number of nucleotides that differ in the two sequences.
-
-    Parameters
-    ----------
-
-    seq1, seq2
-      Strings of DNA sequences e.g. "ATGCTGTGC"
-
-    """
-
-    arr1 = np.fromstring(seq1, dtype="uint8")
-    arr2 = np.fromstring(seq2, dtype="uint8")
-    return (arr1 != arr2).sum()
 
 
 def find_orfs(self, minsize=300):
@@ -373,6 +359,24 @@ def crop_record(record, crop_start, crop_end, features_suffix=" (part)"):
     new_record.features = features
     return new_record
 
+def sequences_differences_array(seq1, seq2):
+    arr1 = np.fromstring(seq1, dtype="uint8")
+    arr2 = np.fromstring(seq2, dtype="uint8")
+    return arr1 != arr2
+
+def sequences_differences(seq1, seq2):
+    """Return the number of nucleotides that differ in the two sequences.
+
+    Parameters
+    ----------
+
+    seq1, seq2
+      Strings of DNA sequences e.g. "ATGCTGTGC"
+
+    """
+    return sequences_differences_array(seq1, seq2).sum()
+
+
 def sequences_differences_segments(seq1, seq2):
     """Return the list of segments on which sequence seq1 differs from seq2.
 
@@ -384,9 +388,7 @@ def sequences_differences_segments(seq1, seq2):
     seq1, seq2
       ATGC sequences to be compared
     """
-    arr1 = np.fromstring(seq1, dtype="uint8")
-    arr2 = np.fromstring(seq2, dtype="uint8")
-    arr = 1 * (arr1 != arr2)
+    arr = 1 * sequences_differences_array(seq1, seq2)
     diffs = np.diff([0] + list(arr) + [0]).nonzero()[0]
     half = int(len(diffs)/2)
     return [(diffs[2*i], diffs[2*i+1]) for i in range(half)]

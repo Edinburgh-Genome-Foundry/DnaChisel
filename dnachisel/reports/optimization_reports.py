@@ -1,4 +1,4 @@
-"""Methods to generate reports from optimizations"""
+"""Methods to generate optimization reports."""
 
 import os
 import textwrap
@@ -11,7 +11,7 @@ import weasyprint
 import flametree
 
 from ..biotools import sequence_to_biopython_record, crop_record
-from ..plotting_tools import ObjectivesAnnotationsTranslator
+from ..plotting_tools import SpecAnnotationsTranslator
 from ..version import __version__
 from ..DnaOptimizationProblem import (DnaOptimizationProblem, NoSolutionError,
                                       NoSolutionFoundError)
@@ -20,20 +20,54 @@ THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 TEMPLATES_DIR = os.path.join(THIS_DIR, "templates")
 TITLE_FONTDICT = fontdict = dict(size=14, weight="bold")
 
+
 def optimization_with_report(target, problem=None, record=None,
                              project_name="unnamed",
-                             objectives_dict='default',
+                             specifications_dict='default',
                              **solver_parameters):
-    """
+    """Optimize a sequence and write a multi-file report.
+
+    The report's content may vary depending on the success of the optimization
+
+    Parameters
+    ----------
+    target
+      Either a path to a folder that will containt the report, or a path to
+      a zip archive, or "@memory" to return raw data of a zip archive
+      containing the report.
+
+    problem
+      A DnaOptimizationProblem. A ``record`` can be provided instead
+
+    record
+      Either a Biopython record or the path to a Genbank file, provided to
+      serve as a problem definition. The record should have specifications
+      starting with @ or ~ as explained in the documentation.
+
+    project_name
+      Project name to write on PDF reports
+
+    specifications_dict
+      a dictionnary {'@SpecName': SpecClass} allowing the parser to map
+      specifications found in annotations to implemented specifications
+      classes. By default, the dictionnary contains the built-in objectives
+      of DNA chisel, but an extended dictionary can be provided to support
+      custom specifications.
+
+    **solver_parameters
+      Extra keyword arguments passed to ``problem.solve_constraints()``
 
     Returns
     -------
+    (success, message, zip_data)
+      Triplet where success is True/False, message is a one-line string
+      summary indication whether some clash was found, or some solution, or
+      maybe no solution was found because the random searches were too short
 
-    success, message, zip_data
     """
     if problem is None:
         problem = DnaOptimizationProblem.from_record(
-            record, objectives_dict=objectives_dict)
+            record, specifications_dict=specifications_dict)
 
     try:
         problem.progress_logger(message="Solving constraints")
@@ -60,18 +94,33 @@ def optimization_with_report(target, problem=None, record=None,
     return True, "Optimization successful.", data
 
 
-
-
-
 def write_no_solution_report(target, problem, error):
+    """Write a report on incompatibility found in the problem's constraints.
+
+    The report comprises a PDF of plots of the sequence (global constraints,
+    local constraints around the problem) and an annotated genbank.
+
+    Parameters
+    ----------
+    target
+      Either a path to a folder, or a path to a zip archive, or "@memory" to
+      return raw data of a zip archive containing the report.
+
+    problem
+      A DnaOptimizationProblem
+
+    error
+      A NoSolutionError (carries a message and a location)
+
+    """
     root = flametree.file_tree(target, replace=True)
-    translator = ObjectivesAnnotationsTranslator()
+    translator = SpecAnnotationsTranslator()
     with PdfPages(root._file("plots.pdf").open("wb")) as pdf_io:
 
         # PLOT GLOBAL LOCATION OF ERROR
 
         record = problem.to_record()
-        translator = ObjectivesAnnotationsTranslator()
+        translator = SpecAnnotationsTranslator()
         graphical_record = translator.translate_record(record)
         ax, _ = graphical_record.plot(figure_width=20)
         start, end, strand = error.location.to_tuple()
@@ -117,18 +166,29 @@ def write_no_solution_report(target, problem, error):
         SeqIO.write(record, root._file("constraints breaches.gb").open("w"),
                     "genbank")
 
+    # returns zip data if target == '@memory'
+    return root._close()
+
 
 def write_optimization_report(target, problem, project_name="unnammed",
                               constraints_evaluations=None,
                               objectives_evaluations=None,
                               figure_width=20, max_features_in_plots=300):
-    """Write a report with a PDF summary, plots, and genbanks."""
+    """Write an optimization report with a PDF summary, plots, and genbanks.
+
+    Parameters
+    ----------
+
+
+
+
+    """
     if constraints_evaluations is None:
         constraints_evaluations = problem.constraints_evaluations()
     if objectives_evaluations is None:
         objectives_evaluations = problem.objectives_evaluations()
     root = flametree.file_tree(target, replace=True)
-    translator = ObjectivesAnnotationsTranslator()
+    translator = SpecAnnotationsTranslator()
     # CREATE FIGURES AND GENBANKS
 
     with PdfPages(root._file("before_after.pdf").open("wb")) as pdf_io:
@@ -233,4 +293,5 @@ def write_optimization_report(target, problem, project_name="unnammed",
                       with_constraints=False,
                       with_objectives=False)
 
+    # returns zip data if target == '@memory'
     return root._close()
