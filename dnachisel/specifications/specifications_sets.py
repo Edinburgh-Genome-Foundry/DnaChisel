@@ -1,8 +1,8 @@
 """Module with collections of pre-sets objectives."""
 
-from .objectives import (AvoidPattern, EnforceGCContent,
-                         EnforceTerminalGCContent,
-                         AvoidHairpins)
+from .builtin_specifications import (AvoidPattern, EnforceGCContent,
+                                     EnforceTerminalGCContent,
+                                     AvoidHairpins)
 from ..biotools import (homopolymer_pattern, repeated_kmers)
 
 PROVIDERS_CONSTRAINTS = {

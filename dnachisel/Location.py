@@ -4,8 +4,8 @@ from Bio.SeqFeature import SeqFeature, FeatureLocation
 class Location:
     """Represent a location on a sequence, with a start, end, and strand.
 
-    This is similar to a Biopython FeatureLocation, but with different
-    methods.
+    This is similar to a Biopython's FeatureLocation, but with different
+    methods for different purposes.
     """
 
     def __init__(self, start, end, strand=None):
@@ -86,6 +86,6 @@ class Location:
 
 
 class MultiLocation:
-
+    "TODO: Implement when necessary"
     def __init__(self, locations):
         self.locations = locations

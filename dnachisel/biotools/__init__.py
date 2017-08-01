@@ -3,7 +3,7 @@ from .biotools import (
     change_biopython_record_sequence,
     complement,
     crop_record,
-    find_objective_in_feature,
+    find_specification_in_feature,
     gc_content,
     random_dna_sequence,
     random_protein_sequence,
@@ -22,7 +22,7 @@ from .features_annotations import (
     annotate_pattern_occurrences
 )
 
-from .patterns import (
+from .SequencePattern import (
     DnaNotationPattern,
     homopolymer_pattern,
     enzyme_pattern,

@@ -325,7 +325,7 @@ def sequence_to_biopython_record(sequence, id='<unknown id>',
     return SeqRecord(Seq(sequence, alphabet=DNAAlphabet()),
                      id=id, name=name, features=list(features))
 
-def find_objective_in_feature(feature):
+def find_specification_in_feature(feature):
     for labelfield in ["label", "note"]:
         if labelfield not in feature.qualifiers:
             continue

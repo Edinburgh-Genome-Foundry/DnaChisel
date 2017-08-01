@@ -25,7 +25,8 @@ import sys, os
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo', 'sphinx.ext.viewcode', 'numpydoc']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo',
+              'sphinx.ext.viewcode', 'numpydoc', 'sphinxcontrib.mermaid']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -99,7 +100,7 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
     html_theme = 'sphinx_rtd_theme'
     html_theme_path = sphinx_rtd_theme.get_html_theme_path()
     def setup(app):
-        app.add_stylesheet('css/main.css')  
+        app.add_stylesheet('css/main.css')
 else:
     html_context = {
       'css_files': [

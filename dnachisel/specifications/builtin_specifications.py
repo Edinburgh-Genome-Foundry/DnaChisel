@@ -8,12 +8,12 @@ from ..biotools.biotables import (CODON_USAGE_TABLES, CODONS_SEQUENCES,
                                   CODONS_TRANSLATIONS, IUPAC_NOTATION)
 from ..biotools.biotools import (gc_content, reverse_complement, complement,
                                  blast_sequence, translate)
-from .Objective import (Objective, PatternObjective, TerminalObjective,
-                        ObjectiveEvaluation, VoidObjective)
+from .Specification import (Specification, PatternSpecification, TerminalSpecification,
+                        SpecEvaluation, VoidSpecification)
 from ..Location import Location
 
 
-class AvoidBlastMatches(Objective):
+class AvoidBlastMatches(Specification):
     """Enforce that the given pattern is absent in the sequence.
 
     Uses NCBI Blast+. Only local BLAST is supported/tested as for now
@@ -79,10 +79,10 @@ class AvoidBlastMatches(Objective):
             if len(location) >= self.min_align_length
         ])
         if locations == []:
-            return ObjectiveEvaluation(self, problem, score=1,
+            return SpecEvaluation(self, problem, score=1,
                                        message="Passed: no BLAST match found")
 
-        return ObjectiveEvaluation(
+        return SpecEvaluation(
             self, problem, score=-len(locations), locations=locations,
             message="Failed - matches at %s" % locations)
 
@@ -91,23 +91,23 @@ class AvoidBlastMatches(Objective):
         if self.location is not None:
             new_location = self.location.overlap_region(location)
             if new_location is None:
-                return VoidObjective(parent_objective=self)
+                return VoidSpecification(parent_specification=self)
         else:
             new_location = location.extended(self.min_align_length)
 
         return self.copy_with_changes(location=new_location)
 
     def __repr__(self):
-        return "NoBlastMatchesObjective%s(%s, %d+ bp, perc %d+)" % (
+        return "NoBlastMatchesSpecification%s(%s, %d+ bp, perc %d+)" % (
             self.location, self.blast_db, self.min_align_length,
             self.perc_identity
         )
 
 
-class AvoidChanges(Objective):
+class AvoidChanges(Specification):
     """Specify that some locations of the sequence should not be changed.
 
-    ``AvoidChanges`` Objectives are used to constrain the mutations space
+    ``AvoidChanges`` Specifications are used to constrain the mutations space
     of DNA OptimizationProblem.
 
     Parameters
@@ -129,13 +129,13 @@ class AvoidChanges(Objective):
         sequence = problem.sequence
         original = problem.sequence_before
         if (self.location is None) and (self.indices is None):
-            return ObjectiveEvaluation(sequence == original,
+            return SpecEvaluation(sequence == original,
                                        locations=[self.location])
         elif self.location is not None:
             subseq, suboriginal = [self.location.extract_sequence(s)
                                    for s in (sequence, original)]
             score = 1 if (subseq == suboriginal) else -1
-            return ObjectiveEvaluation(self, problem, score,
+            return SpecEvaluation(self, problem, score,
                                        locations=[self.location])
         else:
             sequence = np.fromstring(sequence, dtype="uint8")
@@ -145,7 +145,7 @@ class AvoidChanges(Objective):
             else:
                 score = -1
 
-            return ObjectiveEvaluation(self, problem, score,
+            return SpecEvaluation(self, problem, score,
                                        locations=[self.location])
 
     def localized(self, location):
@@ -154,7 +154,7 @@ class AvoidChanges(Objective):
         if self.location is not None:
             new_location = self.location.overlap_region(location)
             if new_location is None:
-                return VoidObjective(parent_objective=self)
+                return VoidSpecification(parent_specification=self)
             return self.copy_with_changes(location=new_location)
         else:
             start, end = location.start, location.end
@@ -175,7 +175,7 @@ class AvoidChanges(Objective):
         return "AvoidChanges(%s)" % str(self.location)
 
 
-class AvoidHairpins(Objective):
+class AvoidHairpins(Specification):
     """Avoid Hairpin patterns as defined by the IDT guidelines.
 
     A hairpin is defined by a sequence segment which has a reverse complement
@@ -217,18 +217,18 @@ class AvoidHairpins(Objective):
 
         locations = sorted([Location(l[0], l[1]) for l in locations])
 
-        return ObjectiveEvaluation(self, problem, score, locations=locations)
+        return SpecEvaluation(self, problem, score, locations=locations)
 
     def localized(self, location):
         # TODO: I'm pretty sure this can be localized
         return self
 
     def __repr__(self):
-        return "NoHairpinsIDTObjective(size=%d, window=%d)" % \
+        return "NoHairpinsIDTSpecification(size=%d, window=%d)" % \
             (self.stem_size, self.hairpin_window)
 
 
-class AvoidNonuniqueSegments(Objective):
+class AvoidNonuniqueSegments(Specification):
     """Avoid sub-sequence which have repeats elsewhere in the sequence.
 
     Parameters
@@ -288,11 +288,11 @@ class AvoidNonuniqueSegments(Objective):
         ])
 
         if locations == []:
-            return ObjectiveEvaluation(
+            return SpecEvaluation(
                 self, problem, score=1,
                 message="Passed: no nonunique %d-mer found." % self.min_length)
 
-        return ObjectiveEvaluation(
+        return SpecEvaluation(
             self, problem, score=-len(locations),
             locations=locations,
             message="Failed, the following positions are the first occurences"
@@ -302,7 +302,7 @@ class AvoidNonuniqueSegments(Objective):
         return "NoNonuniqueKmers(%d)" % (self.min_length)
 
 
-class AvoidPattern(PatternObjective):
+class AvoidPattern(PatternSpecification):
     """Enforce that the given pattern is absent in the sequence."""
     best_possible_score = 0
 
@@ -313,7 +313,7 @@ class AvoidPattern(PatternObjective):
             message = "Passed. Pattern not found !"
         else:
             message = "Failed. Pattern found at positions %s" % locations
-        return ObjectiveEvaluation(
+        return SpecEvaluation(
             self, problem, score, locations=locations, message=message
         )
 
@@ -321,14 +321,14 @@ class AvoidPattern(PatternObjective):
         return "AvoidPattern(%s, %s)" % (self.pattern, self.location)
 
 
-class CodonOptimize(Objective):
-    """Objective to codon-optimize a coding sequence for a particular species.
+class CodonOptimize(Specification):
+    """Specification to codon-optimize a coding sequence for a particular species.
 
-    Several codon-optimization policies exist. At the moment this Objective
+    Several codon-optimization policies exist. At the moment this Specification
     implements a method in which codons are replaced by the most frequent
     codon in the species.
 
-    (as long as this doesn't break any Objective or lowers the global
+    (as long as this doesn't break any Specification or lowers the global
     optimization objective)
 
     Supported speciess are ``E. coli``, ``S. cerevisiae``, ``H. Sapiens``,
@@ -359,7 +359,7 @@ class CodonOptimize(Objective):
     Examples
     --------
 
-    >>> objective = CodonOptimizationObjective(
+    >>> objective = CodonOptimizationSpecification(
     >>>     species = "E. coli",
     >>>     location = (150, 300), # coordinates of a gene
     >>>     strand = -1
@@ -388,13 +388,13 @@ class CodonOptimize(Objective):
                        .replace("T", "U"))
         length = len(subsequence)
         if (length % 3):
-            raise ValueError("CodonOptimizationObjective on a window/sequence"
+            raise ValueError("CodonOptimizationSpecification on a window/sequence"
                              "with size %d not multiple of 3)" % length)
         score = sum([
             self.codon_usage_table[subsequence[3 * i:3 * (i + 1)]]
             for i in range(int(length / 3))
         ])
-        return ObjectiveEvaluation(
+        return SpecEvaluation(
             self, problem, score, locations=[location],
             message="Codon opt. on window %s scored %.02E" %
                     (location, score)
@@ -407,16 +407,16 @@ class CodonOptimize(Objective):
         return str(self)
 
 
-class EnforceGCContent(Objective):
-    """Objective on the local or global proportion of G/C nucleotides.
+class EnforceGCContent(Specification):
+    """Specification on the local or global proportion of G/C nucleotides.
 
     Examples
     --------
 
     >>> # Enforce global GC content between 40 and 70 percent.
-    >>> Objective = GCContentObjective(0.4, 0.7)
+    >>> Specification = GCContentSpecification(0.4, 0.7)
     >>> # Enforce 30-80 percent local GC content over 50-nucleotides windows
-    >>> Objective = GCContentObjective(0.3, 0.8, gc_window=50)
+    >>> Specification = GCContentSpecification(0.3, 0.8, gc_window=50)
 
 
     Parameters
@@ -434,7 +434,7 @@ class EnforceGCContent(Objective):
       considered
 
     location
-      Location objet indicating that the Objective only applies to a
+      Location objet indicating that the Specification only applies to a
       subsegment of the sequence. Make sure it is bigger than ``gc_window``
       if both parameters are provided
 
@@ -493,7 +493,7 @@ class EnforceGCContent(Objective):
             breaches_locations = [Location(*loc) for loc in breaches_locations]
             message = ("Failed: GC content out of bound on segments " +
                        ", ".join([str(l) for l in breaches_locations]))
-        return ObjectiveEvaluation(self, problem, score,
+        return SpecEvaluation(self, problem, score,
                                    locations=breaches_locations,
                                    message=message)
 
@@ -508,7 +508,7 @@ class EnforceGCContent(Objective):
                 return self
             new_location = self.location.overlap_region(location)
             if new_location is None:
-                return VoidObjective(parent_objective=self)
+                return VoidSpecification(parent_specification=self)
             else:
                 extension = 0 if self.gc_window is None else self.gc_window - 1
                 extended_location = location.extended(extension)
@@ -529,7 +529,7 @@ class EnforceGCContent(Objective):
              self.location))
 
 
-class EnforcePattern(PatternObjective):
+class EnforcePattern(PatternSpecification):
     """Enforce that the given pattern is present in the sequence.
 
     Parameters
@@ -553,7 +553,7 @@ class EnforcePattern(PatternObjective):
 
     def __init__(self, pattern=None, dna_pattern=None, enzyme=None,
                  location=None, occurences=1, boost=1.0):
-        PatternObjective.__init__(self, pattern=pattern, location=location,
+        PatternSpecification.__init__(self, pattern=pattern, location=location,
                                   dna_pattern=dna_pattern,
                                   enzyme=enzyme)
         self.occurences = occurences
@@ -575,7 +575,7 @@ class EnforcePattern(PatternObjective):
                            " wanted at positions %s") % (len(locations),
                                                          self.occurences,
                                                          location)
-        return ObjectiveEvaluation(
+        return SpecEvaluation(
             self, problem, score, message=message,
             locations=None if location is None else [location],
         )
@@ -584,7 +584,7 @@ class EnforcePattern(PatternObjective):
         return "EnforcePattern(%s, %s)" % (self.pattern, self.location)
 
 
-class EnforceRegionsCompatibility(Objective):
+class EnforceRegionsCompatibility(Specification):
     max_possible_score = 0
 
     def __init__(self, regions, compatibility_condition, boost=1.0):
@@ -619,7 +619,7 @@ class EnforceRegionsCompatibility(Objective):
             message = "Found the following imcompatibilities: %s" % (
                 incompatible_regions_pairs
             )
-        return ObjectiveEvaluation(
+        return SpecEvaluation(
             self, problem,
             score=score,
             locations=all_regions_with_incompatibility,
@@ -635,7 +635,7 @@ class EnforceRegionsCompatibility(Objective):
         ]
 
         def evaluate(problem):
-            """Objective evaluation"""
+            """Specification evaluation"""
             # compute incompatibilities but exclude to
             # consider pairs of regions that are both
             # outside the current localization window
@@ -650,17 +650,17 @@ class EnforceRegionsCompatibility(Objective):
                 )
             ]
             score = -len(incompatible_regions)
-            return ObjectiveEvaluation(
+            return SpecEvaluation(
                 self, problem,
                 score=score
             )
-        return Objective(evaluate, boost=self.boost)
+        return Specification(evaluate, boost=self.boost)
 
     def __repr__(self):
         return "CompatSeq(%s...)" % str(self.regions[0])
 
 
-class EnforceSequence(dc.Objective):
+class EnforceSequence(Specification):
     """WORK IN PROGRESS. Enforces a degenerate sequence."""
 
     def __init__(self, sequence, location=None):
@@ -685,7 +685,7 @@ class EnforceSequence(dc.Objective):
             ]
 
 
-class EnforceTerminalGCContent(TerminalObjective):
+class EnforceTerminalGCContent(TerminalSpecification):
     """Enforce bounds for the GC content at the sequence's terminal ends.
 
     Parameters
@@ -703,7 +703,7 @@ class EnforceTerminalGCContent(TerminalObjective):
       contain
 
     boost
-      Multiplicatory factor applied to this objective.
+      Multiplicatory factor applied to this specification.
     """
 
     def __init__(self, window_size, gc_min=0, gc_max=1, boost=1.0):
@@ -720,7 +720,7 @@ class EnforceTerminalGCContent(TerminalObjective):
             (self.gc_min, self.gc_max, self.window_size)
 
 
-class EnforceTranslation(Objective):
+class EnforceTranslation(Specification):
     """Enforce that the DNA segment sequence translates to a specific
     amino-acid sequence.
 
@@ -747,13 +747,13 @@ class EnforceTranslation(Objective):
 
     >>> from dnachisel import *
     >>> sequence = some_dna_sequence # with a gene in segment 150-300
-    >>> Objective = EnforceTranslationObjective(
+    >>> Specification = EnforceTranslationSpecification(
     >>>     window=(150,300),
     >>>     strand = 1,
     >>>     translation= translate(sequence[150:300]) # "MKKLYQ...YNL*"
     >>> )
     >>> # OR EQUIVALENT IF THE GENE ALREADY ENCODES THE RIGHT PROTEIN:
-    >>> Objective = EnforceTranslationObjective(
+    >>> Specification = EnforceTranslationSpecification(
     >>>     window=(150,300),
     >>>     strand = 1,
     >>>     sequence = sequence
@@ -776,7 +776,7 @@ class EnforceTranslation(Objective):
         if location is not None:
             if len(location) % 3:
                 raise ValueError(
-                    "Location length in Codon Objectives should be a 3x. "
+                    "Location length in Codon Specifications should be a 3x. "
                     "Location %s has length %d" % (location, len(location))
                 )
 
@@ -828,7 +828,7 @@ class EnforceTranslation(Objective):
             for ind in errors
         ]
         success = (len(errors) == 0)
-        return ObjectiveEvaluation(self, problem, score=-len(errors),
+        return SpecEvaluation(self, problem, score=-len(errors),
                                    locations=errors_locations,
                                    # self.location],
                                    message="All OK." if success else
@@ -840,7 +840,7 @@ class EnforceTranslation(Objective):
         if self.location is not None:
             overlap = self.location.overlap_region(location)
             if overlap is None:
-                return VoidObjective(parent_objective=self)
+                return VoidSpecification(parent_specification=self)
             else:
                 # return self
                 o_start, o_end = overlap.start, overlap.end
@@ -905,7 +905,7 @@ class EnforceTranslation(Objective):
 
 
 class AvoidStopCodon(EnforceTranslation):
-    """Objective: do not introduce any new stop codon in that frame."""
+    """Specification: do not introduce any new stop codon in that frame."""
     codons_translations = {
         codon: "*" if (translation == '*') else "_"
         for codon, translation in CODONS_TRANSLATIONS.items()
@@ -922,107 +922,107 @@ class AvoidStopCodon(EnforceTranslation):
         self.boost = boost
         self.location = location
 
+#
+# class MinimizeDifferences(Specification):
+#     """Specification to minimize the differences to a given sequence.
+#
+#
+#     This can be used to enforce "conservative" optimization, in which we try
+#     to minimize the changes from the original sequence
+#
+#     Parameters
+#     ----------
+#
+#     location
+#       Pair (start, end) indicating the segment of the sequence. If none
+#       provided, the whole sequence is considered.
+#
+#     target_sequence
+#       The DNA sequence that the problem' sequence (or subsequence) should equal.
+#       Can be omitted if ``sequence_before`` is provided instead
+#
+#     sequence_before
+#       A DNA sequence (will generally be the problem' sequence itself) with
+#       already the right sequence at the given ``location``. Only provide if
+#       you are not providing a ``target_sequence``
+#
+#
+#     Examples
+#     --------
+#
+#     >>> from dnachisel import *
+#     >>> sequence = random_dna_sequence(length=10000)
+#     >>> # Fix the sequence's local gc content while minimizing changes.
+#     >>> problem = DnaOptimizationProblem(
+#     >>>     sequence = sequence,
+#     >>>     constraints = [GCContentSpecification(0.3,0.6, gc_location=50)],
+#     >>>     objective = [MinimizeDifferencesSpecification(
+#     >>>                     sequence_before=sequence)]
+#     >>> )
+#     >>> problem.solve_all_Specifications_one_by_one()
+#     >>> problem.maximize_all_objectives_one_by_one()
+#
+#     """
+#
+#     best_possible_score = 0
+#
+#     def __init__(self, location=None, target_sequence=None, boost=1.0):
+#         self.boost = boost
+#         self.location = location
+#         self.target_sequence = target_sequence
+#         self.initialize_sequence_from_problem = (target_sequence is None)
+#         self.reference_sequence = target_sequence
+#
+#     def initialize_problem(self, problem, role):
+#         if not self.initialize_sequence_from_problem:
+#             return self
+#         if self.location is None:
+#             self.location = Location(0, len(problem.sequence))
+#         reference_sequence = self.location.extract_sequence(problem.sequence)
+#         if self.location.strand == -1:
+#             reference_sequence = reverse_complement(reference_sequence)
+#         return self.copy_with_changes(
+#             reference_sequence=reference_sequence,
+#             location=Location(self.location.start, self.location.end, 1)
+#         )
+#
+#     def evaluate(self, problem):
+#         subsequence = self.location.extract_sequence(problem.sequence)
+#         locations = [
+#             Location(self.location.start + i,
+#                      self.location.start + i, 1)
+#             for i in range(len(subsequence))
+#             if subsequence[i] != self.reference_sequence[i]
+#         ]
+#
+#         diffs = len(locations)
+#         #sequences_differences(subsequence, self.reference_sequence)
+#         return SpecEvaluation(
+#             self, problem, score=-diffs, locations=locations,
+#             message="Found %d differences with target sequence" % diffs
+#         )
+#
+#     def localized(self, location):
+#         new_location = location.overlap_region(self.location)
+#         if new_location is None:
+#             return VoidSpecification(parent_objective=self)
+#         target_start = new_location.start - self.location.start
+#         target_end = new_location.end - self.location.end
+#         new_target = self.reference_sequence[target_start:target_end]
+#         return MinimizeDifferences(location=new_location, boost=self.boost,
+#                                    target_sequence=new_target)
+#
+#     def __str__(self):
+#         return "MinimizeDifferencesObj(%s, %s...)" % (
+#             "global" if self.location is None else str(self.location),
+#             self.sequence[:7]
+#         )
 
-class MinimizeDifferences(Objective):
-    """Objective to minimize the differences to a given sequence.
 
-
-    This can be used to enforce "conservative" optimization, in which we try
-    to minimize the changes from the original sequence
-
-    Parameters
-    ----------
-
-    location
-      Pair (start, end) indicating the segment of the sequence. If none
-      provided, the whole sequence is considered.
-
-    target_sequence
-      The DNA sequence that the problem' sequence (or subsequence) should equal.
-      Can be omitted if ``sequence_before`` is provided instead
-
-    sequence_before
-      A DNA sequence (will generally be the problem' sequence itself) with
-      already the right sequence at the given ``location``. Only provide if
-      you are not providing a ``target_sequence``
-
-
-    Examples
-    --------
-
-    >>> from dnachisel import *
-    >>> sequence = random_dna_sequence(length=10000)
-    >>> # Fix the sequence's local gc content while minimizing changes.
-    >>> problem = DnaOptimizationProblem(
-    >>>     sequence = sequence,
-    >>>     Objectives = [GCContentObjective(0.3,0.6, gc_location=50)],
-    >>>     objective = [MinimizeDifferencesObjective(
-    >>>                     sequence_before=sequence)]
-    >>> )
-    >>> problem.solve_all_Objectives_one_by_one()
-    >>> problem.maximize_all_objectives_one_by_one()
-
-    """
-
-    best_possible_score = 0
-
-    def __init__(self, location=None, target_sequence=None, boost=1.0):
-        self.boost = boost
-        self.location = location
-        self.target_sequence = target_sequence
-        self.initialize_sequence_from_problem = (target_sequence is None)
-        self.reference_sequence = target_sequence
-
-    def initialize_problem(self, problem, role):
-        if not self.initialize_sequence_from_problem:
-            return self
-        if self.location is None:
-            self.location = Location(0, len(problem.sequence))
-        reference_sequence = self.location.extract_sequence(problem.sequence)
-        if self.location.strand == -1:
-            reference_sequence = reverse_complement(reference_sequence)
-        return self.copy_with_changes(
-            reference_sequence=reference_sequence,
-            location=Location(self.location.start, self.location.end, 1)
-        )
-
-    def evaluate(self, problem):
-        subsequence = self.location.extract_sequence(problem.sequence)
-        locations = [
-            Location(self.location.start + i,
-                     self.location.start + i, 1)
-            for i in range(len(subsequence))
-            if subsequence[i] != self.reference_sequence[i]
-        ]
-
-        diffs = len(locations)
-        #sequences_differences(subsequence, self.reference_sequence)
-        return ObjectiveEvaluation(
-            self, problem, score=-diffs, locations=locations,
-            message="Found %d differences with target sequence" % diffs
-        )
-
-    def localized(self, location):
-        new_location = location.overlap_region(self.location)
-        if new_location is None:
-            return VoidObjective(parent_objective=self)
-        target_start = new_location.start - self.location.start
-        target_end = new_location.end - self.location.end
-        new_target = self.reference_sequence[target_start:target_end]
-        return MinimizeDifferences(location=new_location, boost=self.boost,
-                                   target_sequence=new_target)
-
-    def __str__(self):
-        return "MinimizeDifferencesObj(%s, %s...)" % (
-            "global" if self.location is None else str(self.location),
-            self.sequence[:7]
-        )
-
-
-class SequenceLengthBounds(Objective):
+class SequenceLengthBounds(Specification):
     """Checks that the sequence length is between bounds.
 
-    Quite an uncommon objective as it can't really be solved or optimized.
+    Quite an uncommon specification as it can't really be solved or optimized.
     But practical at times, as part of a list of constraints to verify.
 
     Parameters
@@ -1047,7 +1047,7 @@ class SequenceLengthBounds(Objective):
             score = (L >= mini)
         else:
             score = (mini <= L <= maxi)
-        return ObjectiveEvaluation(self, problem, score - 1)
+        return SpecEvaluation(self, problem, score - 1)
 
     def __repr__(self):
         return "Length(%d < L < %d)" % (self.min_length, self.max_length)

@@ -13,7 +13,8 @@ import numpy as np
 
 from ..DnaOptimizationProblem import DnaOptimizationProblem
 from ..biotools import gc_content, repeated_kmers, homopolymer_pattern
-from ..objectives import EnforceGCContent, AvoidPattern, AvoidHairpins
+from ..builtin_specifications import (EnforceGCContent, AvoidPattern,
+                                      AvoidHairpins)
 
 from Bio.SeqRecord import SeqRecord
 
@@ -81,7 +82,7 @@ def plot_constraints_breaches(record, constraints, color="red",
       A Biopython record
 
     constraints
-      A list or tuple of DnaChisel objectives to use as constraints
+      A list or tuple of DnaChisel specifications to use as constraints
 
     color
       Color for highlighting the constraint breaches in the plot. All
@@ -127,7 +128,7 @@ def make_constraints_breaches_pdf(constraints_sets, record, pdf_path):
       A Biopython record
 
     constraints
-      A list or tuple of DnaChisel objectives to use as constraints
+      A list or tuple of DnaChisel specifications to use as constraints
 
     color
       Color for highlighting the constraint breaches in the plot. All

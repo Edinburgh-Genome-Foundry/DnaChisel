@@ -8,16 +8,14 @@ import itertools as itt
 
 import numpy as np
 
-from .biotools.biotools import (reverse_complement,
-                                sequence_to_biopython_record,
-                                find_objective_in_feature,
+from .biotools.biotools import (sequence_to_biopython_record,
+                                find_specification_in_feature,
                                 sequences_differences_segments)
 
-from .objectives import (Objective, AvoidChanges, EnforcePattern,
-                         EnforceTranslation,
-                         ProblemObjectivesEvaluations,
-                         ProblemConstraintsEvaluations,
-                         DEFAULT_OBJECTIVES_DICT)
+from .specifications import (Specification, AvoidChanges, EnforcePattern,
+                             ProblemObjectivesEvaluations,
+                             ProblemConstraintsEvaluations,
+                             DEFAULT_OBJECTIVES_DICT)
 
 from .Location import Location
 from Bio.SeqRecord import SeqRecord
@@ -77,10 +75,10 @@ class DnaOptimizationProblem:
       A string of ATGC characters (they must be upper case!), e.g. "ATTGTGTA"
 
     constraints
-      A list of objects of type ``Objective``.
+      A list of objects of type ``Specification``.
 
     objectives
-      A list of objects of type ``Objective`` specifying what must be optimized
+      A list of objects of type ``Specification`` specifying what must be optimized
       in the problem. Note that each objective has a float ``boost`` parameter.
       The larger the boost, the more the objective is taken into account during
       the optimization.
@@ -430,7 +428,7 @@ class DnaOptimizationProblem:
         ----------
 
         constraint
-          The ``Objective`` object for which the sequence should be solved
+          The ``Specification`` object for which the sequence should be solved
 
         randomization_threshold
           Local problems with a search space size under this threshold will be
@@ -786,7 +784,7 @@ class DnaOptimizationProblem:
                 continue
             if find_objective_in_feature(feature) is None:
                 continue
-            role, objective = Objective.from_biopython_feature(feature,
+            role, objective = Specification.from_biopython_feature(feature,
                                                                objectives_dict)
             parameters[role+"s"].append(objective)
 

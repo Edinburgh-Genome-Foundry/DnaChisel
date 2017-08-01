@@ -4,7 +4,7 @@ from Bio.SeqFeature import SeqFeature
 from ..plotting_tools import colors_cycle
 
 
-class ObjectiveEvaluation:
+class SpecEvaluation:
     """Store relevant infos about the evaluation of an objective on a problem.
 
     Examples
@@ -40,14 +40,14 @@ class ObjectiveEvaluation:
 
     """
 
-    def __init__(self, objective, problem, score, locations=None,
+    def __init__(self, specification, problem, score, locations=None,
                  message=None):
         """Initialize."""
-        self.objective = objective
+        self.specification = specification
         self.problem = problem
         self.score = score
         self.passes = score >= 0
-        self.is_optimal = (score == objective.best_possible_score)
+        self.is_optimal = (score == specification.best_possible_score)
         self.locations = locations
         self.message = self.default_message if message is None else message
 
@@ -59,12 +59,12 @@ class ObjectiveEvaluation:
     def to_text(self, role=None):
         """Return a string representation of the evaluation."""
         if role == "objective":
-            return ("{optimal} Scored {self.score:.02E} | {self.objective} | "
+            return ("{optimal} Scored {self.score:.02E} | {self.specification} | "
                     "{self.message}").format(
                 self=self, optimal="OPTIMAL  | " if self.is_optimal else ""
             )
         else:
-            return "{passes} | {self.objective} | {self.message}".format(
+            return "{passes} | {self.specification} | {self.message}".format(
                 self=self, passes="PASS" if self.passes else "FAIL")
 
     def locations_to_biopython_features(self, feature_type="misc_feature",
@@ -72,14 +72,14 @@ class ObjectiveEvaluation:
         return [
             SeqFeature(location.to_biopython_location(), type=feature_type,
                        qualifiers=dict(
-                           label=label_prefix + " " + str(self.objective),
+                           label=label_prefix + " " + str(self.specification),
                            color=color
             ))
             for location in self.locations
         ]
 
 
-class ObjectiveEvaluations:
+class SpecEvaluations:
 
     def __init__(self, evaluations, problem=None):
         self.evaluations = evaluations
@@ -96,7 +96,7 @@ class ObjectiveEvaluations:
 
     def scores_sum(self):
         return sum([
-            ev.objective.boost * ev.score
+            ev.specification.boost * ev.score
             for ev in self.evaluations
         ])
 
@@ -114,7 +114,7 @@ class ObjectiveEvaluations:
 
     def to_text(self):
         return "\n".join(["===> %s" % self.text_summary_message()] + [
-            e.to_text(role=self.objectives_role)
+            e.to_text(role=self.specifications_role)
             for e in self.evaluations
         ]) + "\n\n"
 
@@ -126,18 +126,18 @@ class ObjectiveEvaluations:
 
     def success_and_failures_as_features(self, feature_type="misc_feature"):
         return [
-            ev.objective.to_biopython_feature(
+            ev.specification.to_biopython_feature(
                 feature_type=feature_type,
                 color=self.success_failure_color(ev),
                 passes='true' if ev.passes else 'false',
                 is_optimal='true' if ev.is_optimal else 'false',
             )
             for ev in self.evaluations
-            if ev.objective.__dict__.get('location', False)
+            if ev.specification.__dict__.get('location', False)
         ]
 
     def locations_as_features(self, features_type="misc_feature",
-                              with_objectives=True, label_prefix="From",
+                              with_specifications=True, label_prefix="From",
                               colors="cycle"):
         if colors == "cycle":
             cycle = colors_cycle()
@@ -146,34 +146,34 @@ class ObjectiveEvaluations:
         features = [
             location.to_biopython_feature(
                 feature_type="misc_feature",
-                objective=label_prefix + " " + str(ev.objective),
+                specification=label_prefix + " " + str(ev.specification),
                 color=color
             )
             for (ev, color) in zip(self.evaluations_with_locations(), colors)
             for location in ev.locations
         ]
-        if with_objectives:
+        if with_specifications:
             features += [
-                ev.objective.to_biopython_feature(
+                ev.specification.to_biopython_feature(
                     feature_type="misc_feature",
-                    label=str(ev.objective),
-                    role=self.objectives_role,
+                    label=str(ev.specification),
+                    role=self.specifications_role,
                     color=color
                 )
                 for ev, color in zip(self.evaluations, colors)
-                if ev.objective.__dict__.get('location', False)
+                if ev.specification.__dict__.get('location', False)
             ]
         return features
 
 
-class ProblemConstraintsEvaluations(ObjectiveEvaluations):
-    objectives_role = "constraint"
+class ProblemConstraintsEvaluations(SpecEvaluations):
+    specifications_role = "constraint"
 
     @staticmethod
     def from_problem(problem):
         return ProblemConstraintsEvaluations([
-            objective.evaluate(problem)
-            for objective in problem.constraints
+            specification.evaluate(problem)
+            for specification in problem.constraints
         ], problem=problem)
 
     def success_failure_color(self, evaluation):
@@ -187,14 +187,14 @@ class ProblemConstraintsEvaluations(ObjectiveEvaluations):
             return "FAILURE: %d constraints evaluations failed" % len(failed)
 
 
-class ProblemObjectivesEvaluations(ObjectiveEvaluations):
-    objectives_role = "objective"
+class ProblemObjectivesEvaluations(SpecEvaluations):
+    specifications_role = "objective"
 
     @staticmethod
     def from_problem(problem):
         return ProblemObjectivesEvaluations([
-            objective.evaluate(problem)
-            for objective in problem.objectives
+            specification.evaluate(problem)
+            for specification in problem.objectives
         ], problem=problem)
 
     def success_failure_color(self, evaluation):

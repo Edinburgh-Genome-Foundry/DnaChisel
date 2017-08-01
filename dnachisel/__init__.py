@@ -3,7 +3,7 @@ from .DnaOptimizationProblem import (DnaOptimizationProblem,
                                      NoSolutionError)
 from .Location import Location
 
-from .objectives import (
+from .specifications import (
     AvoidBlastMatches,
     AvoidHairpins,
     AvoidNonuniqueSegments,
@@ -15,13 +15,13 @@ from .objectives import (
     EnforcePattern,
     EnforceRegionsCompatibility,
     EnforceTranslation,
-    Objective,
-    ObjectiveEvaluation,
-    PatternObjective,
+    Specification,
+    SpecEvaluation,
+    PatternSpecification,
     PROVIDERS_CONSTRAINTS,
     SequenceLengthBounds,
-    VoidObjective,
-    MinimizeDifferences,
+    VoidSpecification,
+    # MinimizeDifferences,
     DEFAULT_OBJECTIVES_DICT
 )
 
@@ -47,7 +47,7 @@ from .biotools import (
     sequences_differences_segments
 )
 
-from .plotting_tools import (ObjectivesAnnotationsTranslator,
+from .plotting_tools import (SpecAnnotationsTranslator,
                              plot_local_gc_content,
                              plot_local_gc_with_features)
 

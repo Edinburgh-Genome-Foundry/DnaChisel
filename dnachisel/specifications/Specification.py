@@ -2,22 +2,21 @@ import copy
 import re
 
 from ..biotools import (DnaNotationPattern, enzyme_pattern,
-                        find_objective_in_feature)
+                        find_specification_in_feature)
 from ..Location import Location
-from .ObjectiveEvaluation import ObjectiveEvaluation
+from .SpecEvaluation import SpecEvaluation
 from Bio.SeqFeature import SeqFeature
 
 
-class Objective:
-    """General class to define objectives to optimize.
+class Specification:
+    """General class to define specifications to optimize.
 
-    Note that all objective have a ``boost`` attribute that is a multiplicator
-    that will be used when computing the global objective score of a problem
-    with ``problem.all_objectives_score()``.
+    Note that all specifications have a ``boost`` attribute that is a
+    multiplicator that will be used when computing the global specification
+    score of a problem with ``problem.all_objectives_score()``.
 
-    New types of objectives are defined by subclassing ``Objective`` and
+    New types of specifications are defined by subclassing ``Specification`` and
     providing a custom ``evaluate`` and ``localized`` methods.
-
     """
 
     best_possible_score = None
@@ -29,42 +28,42 @@ class Objective:
             self.evaluate = evaluate
 
     def localized(self, location):
-        """Return a modified version of the objective for the case where
+        """Return a modified version of the specification for the case where
         sequence modifications are only performed inside the provided location.
 
-        For instance if an objective concerns local GC content, and we are
+        For instance if an specification concerns local GC content, and we are
         only making local mutations to destroy a restriction site, then we only
         need to check the local GC content around the restriction site after
         each mutation (and not compute it for the whole sequence), so
-        ``EnforceGCContent.localized(location)`` will return an objective
+        ``EnforceGCContent.localized(location)`` will return an specification
         that only looks for GC content around the provided location.
 
-        If an objective concerns a DNA segment that is completely disjoint from
-        the provided location, this must return a ``VoidConstraint``.
+        If an specification concerns a DNA segment that is completely disjoint
+        from the provided location, this must return a ``VoidSpecification``.
 
         Must return an object of class ``Constraint``.
         """
         return self
 
     def copy_with_changes(self, **kwargs):
-        new_objective = copy.deepcopy(self)
-        new_objective.__dict__.update(kwargs)
-        return new_objective
+        new_specification = copy.deepcopy(self)
+        new_specification.__dict__.update(kwargs)
+        return new_specification
 
     def initialize_problem(self, problem, role="constraint"):
         return self
 
     @staticmethod
-    def from_biopython_feature(feature, objectives_dict):
-        label = find_objective_in_feature(feature)
+    def from_biopython_feature(feature, specifications_dict):
+        label = find_specification_in_feature(feature)
         if isinstance(label, list):
             label = label[0]
         if not label.endswith(")"):
             label += "()"
         pattern = "([@~])(\S+)(\(.*\))"
         match = re.match(pattern, label)
-        role, objective, parameters = match.groups()
-        role = {"@": "constraint", "~": "objective"}[role]
+        role, specification, parameters = match.groups()
+        role = {"@": "constraint", "~": "specification"}[role]
         kwargs = dict(e.split('=') for e in parameters[1:-1].split(', ')
                     if ("=" in e))
         for k, v in kwargs.items():
@@ -80,13 +79,13 @@ class Objective:
                     except:
                         pass
         kwargs["location"] = Location.from_biopython_location(feature.location)
-        return role, objectives_dict[objective](**kwargs)
+        return role, specifications_dict[specification](**kwargs)
 
     def to_biopython_feature(self, feature_type="misc_feature",
                              role="constraint", colors_dict=None,
                              **qualifiers):
         if colors_dict is None:
-            colors_dict = {"constraint": "#355c87", "objective": "#f9cd60"}
+            colors_dict = {"constraint": "#355c87", "specification": "#f9cd60"}
         qualifiers["role"] = role
         if "label" not in qualifiers:
             qualifiers['label'] = self.__repr__()
@@ -108,45 +107,46 @@ class Objective:
 
 
 
-class VoidObjective(Objective):
-    """Void Objectives are a special case of Objectives that always pass.
+class VoidSpecification(Specification):
+    """Void Specifications are a special case of Specifications that always pass.
 
-    Void Objectives are generally obtained when a Objective is "made void"
+    Void Specifications are generally obtained when a Specification is "made void"
     by a localization. For instance, if we are optimizing the segment (10,50)
-    of a DNA segment, the Objective EnforceTranslation([300,500]) does not
+    of a DNA segment, the Specification EnforceTranslation([300,500]) does not
     apply as it concerns a Gene that is in a completely different segment.
     Therefore the localized version of EnforceTranslation will be void.
 
     Note: the initializer accepts starred arguments/keyword arguments to make
-    it easy to void any other objective by replacing the class to Void.
+    it easy to void any other specification by replacing the class to Void.
     Particularly useful when importing an optimization problem from genbank.
     """
     best_possible_score = 0
 
 
 
-    def __init__(self, parent_objective=None, boost=1.0, *a, **kw):
-        self.parent_objective = parent_objective
+    def __init__(self, parent_specification=None, boost=1.0, *a, **kw):
+        self.parent_specification = parent_specification
         self.message = ("Pass (not relevant in this context)")
         self.boost = boost
 
     def evaluate(self, problem):
-        """The evaluation of VoidObjectives always passes with score=1.0
-        It returns a message indicating that the parent Objective was voided
+        """The evaluation of VoidSpecifications always passes with score=1.0
+        It returns a message indicating that the parent Specification was voided
         """
-        return ObjectiveEvaluation(self, problem, score=1.0,
+        return SpecEvaluation(self, problem, score=1.0,
                                    message=self.message,
                                    locations=None)
 
     def __repr__(self):
-        return "Voided %s" % repr(self.parent_objective)
+        return "Voided %s" % repr(self.parent_specification)
 
-class PatternObjective(Objective):
-    """Class for Objectives such as presence or absence of a pattern.
+class PatternSpecification(Specification):
+    """Class for Specifications such as presence or absence of a pattern.
 
-    The particularity of the PatternObjectives is that they will either infer
-    or ask for the length of the associated pattern and use this to localize
-    the objective efficiently when performing local optimization or solving.
+    The particularity of the PatternSpecifications is that they will either
+    infer or ask for the length of the associated pattern and use this to
+    localize the specification efficiently when performing local optimization or
+    solving.
 
     Parameters
     ----------
@@ -182,13 +182,13 @@ class PatternObjective(Objective):
 
     def localized(self, location):
         """Localize the pattern to the given location. Taking into account the
-        objective's own location, and the size of the pattern."""
+        specification's own location, and the size of the pattern."""
         pattern_size = self.pattern.size
         if self.location is None:
             new_location = location.extended(pattern_size - 1)
         else:
             if self.location.overlap_region(location) is None:
-                return VoidObjective(parent_objective=self)
+                return VoidSpecification(parent_specification=self)
             else:
                 if not self.shrink_when_localized:
                     return self
@@ -197,13 +197,13 @@ class PatternObjective(Objective):
 
         return self.copy_with_changes(location=new_location)
 
-class TerminalObjective(Objective):
-    """Objectives that apply in the same way to both ends of the sequence.
+class TerminalSpecification(Specification):
+    """Specifications that apply in the same way to both ends of the sequence.
 
     These are particularly useful for modeling constraints from providers
     who have terminal-ends constraints.
 
-    Subclasses of these objectives should have a `location_size` and a
+    Subclasses of these specifications should have a `location_size` and a
     `evaluate_end` method"""
 
     def evaluate(self, problem):
@@ -221,5 +221,5 @@ class TerminalObjective(Objective):
         else:
             message = "Failed: breaches at ends %s" % str(locations)
 
-        return ObjectiveEvaluation(self, problem, score=len(locations),
+        return SpecEvaluation(self, problem, score=len(locations),
                                    locations=locations, message=message)

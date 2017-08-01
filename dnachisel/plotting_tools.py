@@ -1,5 +1,5 @@
 import itertools
-from .biotools import find_objective_in_feature
+from .biotools import find_specification_in_feature
 
 MATPLOTLIB_AVAILABLE = False
 DFV_AVAILABLE = False
@@ -29,7 +29,7 @@ def colors_cycle():
     )
 
 
-class ObjectivesAnnotationsTranslator(BiopythonTranslator):
+class SpecAnnotationsTranslator(BiopythonTranslator):
     """Translator of DnaChisel feature-constraints for DNA Features Viewer"""
 
     feature_prefixes_colors = {
@@ -48,11 +48,11 @@ class ObjectivesAnnotationsTranslator(BiopythonTranslator):
             return color
 
         if f.type == "misc_feature":
-            objective = find_objective_in_feature(f)
-            if objective is None:
+            specification = find_specification_in_feature(f)
+            if specification is None:
                 return "#f4df42"
             else:
-                return self.feature_prefixes_colors.get(objective[0],
+                return self.feature_prefixes_colors.get(specification[0],
                                                         "#f4df42")
         else:
             return "#eeeafa"
