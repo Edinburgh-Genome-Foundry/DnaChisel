@@ -112,6 +112,7 @@ class DnaNotationPattern(SequencePattern):
     """
 
     def __init__(self, pattern, name=None):
+        """Initialize"""
         SequencePattern.__init__(
             self,
             size=len(pattern),
@@ -122,6 +123,7 @@ class DnaNotationPattern(SequencePattern):
         self.pattern = pattern
 
     def __repr__(self):
+        """Represent the pattern as PatternType(name) """
         return self.pattern + ("" if self.name is None else
                                " (%s)" % self.name)
 

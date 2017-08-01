@@ -120,12 +120,11 @@ def translate(dna_sequence, translation_table="Bacterial"):
     """
     if isinstance(translation_table, dict):
         return "".join([
-            translation_table[dna_sequence[i:i+3]]
+            translation_table[dna_sequence[i:i + 3]]
             for i in range(0, len(dna_sequence), 3)
         ])
     else:
         return str(Seq(dna_sequence).translate(table=translation_table))
-
 
 
 def dna_pattern_to_regexpr(dna_pattern):
@@ -214,30 +213,34 @@ def gc_content(sequence, window_size=None):
         return 1.0 * (a - b) / window_size
 
 
-
-
-def find_orfs(self, minsize=300):
-    import tempfile
-    import os
-    import subprocess as sp
-    import regex
-    input_temp = tempfile.mkstemp(suffix=".fa")[1]
-    self.to_fasta(filename=input_temp)
-    outfile = tempfile.mkstemp(suffix=".seq")[1]
-    proc = sp.Popen(["getorf", "-minsize", "%d" % minsize,
-                     "-sequence", input_temp, "-outseq", outfile])
-    proc.wait()
-    with open(outfile, 'r') as f:
-        result = f.read()
-
-    os.remove(outfile)
-    os.remove(input_temp)
-    orfs_coordinates = regex.findall(">(\S+) \[(\d+) - (\d+)\]",
-                                     result)
-    return [
-        (int(start), int(stop), (+1 if int(start) < int(stop) else -1))
-        for (_, start, stop) in orfs_coordinates
-    ]
+# def find_orfs(sequence, minsize=300):
+#     """Return the list of (start, end) of all orfs in a sequence
+#
+#     TODO: This seems to be junk code from a former project. complete it
+#     or bin it.
+#
+#     """
+#     import tempfile
+#     import os
+#     import subprocess as sp
+#     import regex
+#     input_temp = tempfile.mkstemp(suffix=".fa")[1]
+#     self.to_fasta(filename=input_temp)
+#     outfile = tempfile.mkstemp(suffix=".seq")[1]
+#     proc = sp.Popen(["getorf", "-minsize", "%d" % minsize,
+#                      "-sequence", input_temp, "-outseq", outfile])
+#     proc.wait()
+#     with open(outfile, 'r') as f:
+#         result = f.read()
+#
+#     os.remove(outfile)
+#     os.remove(input_temp)
+#     orfs_coordinates = regex.findall(">(\S+) \[(\d+) - (\d+)\]",
+#                                      result)
+#     return [
+#         (int(start), int(stop), (+1 if int(start) < int(stop) else -1))
+#         for (_, start, stop) in orfs_coordinates
+#     ]
 
 
 def blast_sequence(sequence, blast_db, word_size=4, perc_identity=80,
@@ -300,18 +303,27 @@ def subdivide_window(window, max_span):
     inds = list(range(start, end, max_span)) + [end]
     return zip(inds, inds[1:])
 
+
 def change_biopython_record_sequence(record, new_seq):
     """Return a version of the record with the sequence set to new_seq"""
     new_record = deepcopy(record)
     new_record.seq = Seq(new_seq, alphabet=DNAAlphabet())
     return new_record
 
+
 def sequence_to_biopython_record(sequence, id='<unknown id>',
                                  name='<unknown name>', features=()):
+    """Return a SeqRecord of the sequence, ready to be Genbanked."""
     return SeqRecord(Seq(sequence, alphabet=DNAAlphabet()),
                      id=id, name=name, features=list(features))
 
+
 def find_specification_in_feature(feature):
+    """Analyse a Biopython feature to find a DnaChisel Specification in it.
+
+    The specification should start with either "@" or "~", in the feature's
+    field "label" or "note".
+    """
     for labelfield in ["label", "note"]:
         if labelfield not in feature.qualifiers:
             continue
@@ -321,6 +333,7 @@ def find_specification_in_feature(feature):
         if potential_label[0] in "@~":
             return potential_label
     return None
+
 
 def crop_record(record, crop_start, crop_end, features_suffix=" (part)"):
     """Return the cropped record with possibly cropped features.
@@ -359,20 +372,23 @@ def crop_record(record, crop_start, crop_end, features_suffix=" (part)"):
     new_record.features = features
     return new_record
 
+
 def sequences_differences_array(seq1, seq2):
+    """Return an array [0, 0, 1, 0, ...] with 1s for sequence differences.
+
+    seq1, seq2 should both be ATGC strings.
+    """
+    if len(seq1) != len(seq2):
+        raise ValueError("Only use on same-size sequences")
     arr1 = np.fromstring(seq1, dtype="uint8")
     arr2 = np.fromstring(seq2, dtype="uint8")
     return arr1 != arr2
 
+
 def sequences_differences(seq1, seq2):
     """Return the number of nucleotides that differ in the two sequences.
 
-    Parameters
-    ----------
-
-    seq1, seq2
-      Strings of DNA sequences e.g. "ATGCTGTGC"
-
+    seq1, seq2 should be strings of DNA sequences e.g. "ATGCTGTGC"
     """
     return sequences_differences_array(seq1, seq2).sum()
 
@@ -390,8 +406,9 @@ def sequences_differences_segments(seq1, seq2):
     """
     arr = 1 * sequences_differences_array(seq1, seq2)
     diffs = np.diff([0] + list(arr) + [0]).nonzero()[0]
-    half = int(len(diffs)/2)
-    return [(diffs[2*i], diffs[2*i+1]) for i in range(half)]
+    half = int(len(diffs) / 2)
+    return [(diffs[2 * i], diffs[2 * i + 1]) for i in range(half)]
+
 
 def annotate_record(seqrecord, location="full", feature_type="misc_feature",
                     margin=0, **qualifiers):
@@ -416,7 +433,7 @@ def annotate_record(seqrecord, location="full", feature_type="misc_feature",
       Dictionnary that will be the Biopython feature's `qualifiers` attribute.
     """
     if location == "full":
-        location = (margin, len(seqrecord)-margin)
+        location = (margin, len(seqrecord) - margin)
 
     strand = location[2] if len(location) == 3 else 1
     seqrecord.features.append(

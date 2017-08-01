@@ -141,7 +141,7 @@ class SpecEvaluations:
         return self.evaluations.__iter__()
 
     def __len__(self):
-        """Number of evaluations."""
+        """Return the number of evaluations."""
         return len(self.evaluations)
 
     def all_evaluations_pass(self):
@@ -149,8 +149,10 @@ class SpecEvaluations:
         return all([ev.passes for ev in self.evaluations])
 
     def scores_sum(self):
-        """Return the sum of all evaluations scores, multiplied by their
-        respective boost factor."""
+        """Return the sum of all evaluations scores.
+
+        Scores are multiplied by their respective boost factor.
+        """
         return sum([
             ev.specification.boost * ev.score
             for ev in self.evaluations
@@ -182,7 +184,7 @@ class SpecEvaluations:
         ]) + "\n\n"
 
     def evaluations_with_locations(self):
-        """Return the list of all evaluations whose location is not None"""
+        """Return the list of all evaluations whose location is not None."""
         return [
             ev for ev in self.evaluations
             if ev.locations is not None
@@ -210,6 +212,28 @@ class SpecEvaluations:
     def locations_as_features(self, features_type="misc_feature",
                               with_specifications=True, label_prefix="From",
                               colors="cycle"):
+        """Return all locations from all evaluations as biopython features.
+
+        Parameters
+        ----------
+        features_type
+          The Genbank feature type
+
+        with_specifications
+          If True, features are added to the list to indicate the scope of the
+          different specifications. If false, only the specification breaches
+          are returned.
+
+        label_prefix
+          Each breach may be labeled "prefix NameOfSpec(props)", for instance,
+          "From AvoidPattern(100-200)", to indicate where the breach belongs.
+
+        colors
+          Either a list of colors (one for each specification) or "cycle"
+          for cycling through predefined colors. The colors are applied to all
+          breaches.
+
+        """
         if colors == "cycle":
             cycle = colors_cycle()
             colors = [next(cycle) for ev in self.evaluations]
@@ -238,19 +262,32 @@ class SpecEvaluations:
 
 
 class ProblemConstraintsEvaluations(SpecEvaluations):
+    """Special multi-evaluation class for all constraints of a same problem.
+
+    See submethod ``.from_problem``
+
+    """
+
     specifications_role = "constraint"
 
     @staticmethod
     def from_problem(problem):
+        """Create an instance by evaluating all constraints in the problem.
+
+        The ``problem`` is a DnaChisel DnaOptimizationProblem.
+
+        """
         return ProblemConstraintsEvaluations([
             specification.evaluate(problem)
             for specification in problem.constraints
         ], problem=problem)
 
     def success_failure_color(self, evaluation):
+        """Return color #60f979 if evaluation.passes else #f96c60."""
         return "#60f979" if evaluation.passes else "#f96c60"
 
     def text_summary_message(self):
+        """Return a global SUCCESS or FAILURE message for all evaluations."""
         failed = [e for e in self.evaluations if not e.passes]
         if failed == []:
             return "SUCCESS - all constraints evaluations pass"
@@ -259,17 +296,30 @@ class ProblemConstraintsEvaluations(SpecEvaluations):
 
 
 class ProblemObjectivesEvaluations(SpecEvaluations):
+    """Special multi-evaluation class for all objectives of a same problem.
+
+    See submethod ``.from_problem``
+
+    """
+
     specifications_role = "objective"
 
     @staticmethod
     def from_problem(problem):
+        """Create an instance by evaluating all objectives in the problem.
+
+        The ``problem`` is a DnaChisel DnaOptimizationProblem.
+
+        """
         return ProblemObjectivesEvaluations([
             specification.evaluate(problem)
             for specification in problem.objectives
         ], problem=problem)
 
     def success_failure_color(self, evaluation):
+        """Return color #cbf960 if evaluation is optimal else #f9a260."""
         return "#cbf960" if evaluation.is_optimal else "#f9a260"
 
     def text_summary_message(self):
+        """Return a TOTAL SCORE message."""
         return "TOTAL OBJECTIVES SCORE: %.02f" % self.scores_sum()
