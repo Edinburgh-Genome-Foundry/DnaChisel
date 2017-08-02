@@ -7,6 +7,7 @@ from .biotools import (
     crop_record,
     find_specification_in_feature,
     gc_content,
+    group_nearby_indices,
     random_dna_sequence,
     random_protein_sequence,
     reverse_complement,
@@ -32,4 +33,5 @@ from .SequencePattern import (
     repeated_kmers
 )
 
-from .biotables import CODONS_SEQUENCES, CODONS_TRANSLATIONS
+from .biotables import (CODONS_SEQUENCES, CODONS_TRANSLATIONS,
+                        CODON_USAGE_TABLES, IUPAC_NOTATION)

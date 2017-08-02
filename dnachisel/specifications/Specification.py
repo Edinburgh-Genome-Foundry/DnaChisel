@@ -29,6 +29,7 @@ class Specification:
 
     best_possible_score = None
     can_be_solved_locally = False
+    is_passive_objective = False
 
     def __init__(self, evaluate=None, boost=1.0):
         """Initialize."""
@@ -136,6 +137,9 @@ class Specification:
         """
         return []
 
+    def as_passive_objective(self):
+        return self.copy_with_changes(is_passive_objective=True)
+
 
 
 class VoidSpecification(Specification):
@@ -155,10 +159,13 @@ class VoidSpecification(Specification):
 
 
 
-    def __init__(self, parent_specification=None, boost=1.0, *a, **kw):
+    def __init__(self, parent_specification=None, message='default', boost=1.0,
+                 *args, **kwargs):
         """Initialize."""
         self.parent_specification = parent_specification
-        self.message = ("Pass (not relevant in this context)")
+        if message == 'default':
+            message = "Pass (not relevant in this context)"
+        self.message = message
         self.boost = boost
 
     def evaluate(self, problem):
@@ -205,7 +212,7 @@ class PatternSpecification(Specification):
         """Initialize."""
         if enzyme is not None:
             pattern = enzyme_pattern(enzyme)
-        if dna_pattern is not None:
+        if isinstance(pattern, str):
             pattern = DnaNotationPattern(dna_pattern)
         self.pattern = pattern
         self.location = location
@@ -257,3 +264,46 @@ class TerminalSpecification(Specification):
 
         return SpecEvaluation(self, problem, score=-len(locations),
                                    locations=locations, message=message)
+
+class CodonSpecification(Specification):
+    """Special class for dealing with codon.
+
+    In particular, this class implements a specific localized method
+
+    """
+
+    def localized(self, location):
+        """Generic localization method for codon specifications.
+
+        Calls the class'  ``.localized_on_window`` method at the end.
+
+        """
+        if self.location is not None:
+            overlap = self.location.overlap_region(location)
+            if overlap is None:
+                return VoidSpecification(parent_specification=self)
+            else:
+                # return self
+                o_start, o_end = overlap.start, overlap.end
+                w_start, w_end = self.location.start, self.location.end
+
+                if self.location.strand == 1:
+                    start_codon = int((o_start - w_start) / 3)
+                    end_codon = int((o_end - w_start) / 3)
+                    new_location = Location(
+                        start=w_start + 3 * start_codon,
+                        end=min(w_end, w_start + 3 * (end_codon + 1)),
+                        strand=self.location.strand
+                    )
+                else:
+                    start_codon = int((w_end - o_end) / 3)
+                    end_codon = int((w_end - o_start) / 3)
+                    new_location = Location(
+                        start=max(w_start, w_end - 3 * (end_codon + 1)),
+                        end=w_end - 3 * start_codon,
+                        strand=self.location.strand
+                    )
+
+                return self.localized_on_window(new_location, start_codon,
+                                                end_codon)
+        return self

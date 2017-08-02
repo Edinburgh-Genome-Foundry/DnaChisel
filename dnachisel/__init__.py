@@ -8,7 +8,6 @@ from .specifications import (
     AvoidHairpins,
     AvoidNonuniqueSegments,
     AvoidPattern,
-    AvoidStopCodon,
     CodonOptimize,
     AvoidChanges,
     EnforceGCContent,
@@ -18,10 +17,8 @@ from .specifications import (
     Specification,
     SpecEvaluation,
     PatternSpecification,
-    # PROVIDERS_CONSTRAINTS,
     SequenceLengthBounds,
     VoidSpecification,
-    # MinimizeDifferences,
     DEFAULT_SPECIFICATIONS_DICT
 )
 

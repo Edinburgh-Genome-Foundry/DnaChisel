@@ -4,7 +4,8 @@ import numpy as np
 
 from ..Specification import Specification, VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
-from dnachisel.biotools import sequences_differences_array
+from dnachisel.biotools import (sequences_differences_array,
+                                group_nearby_indices)
 from dnachisel.Location import Location
 
 
@@ -31,8 +32,9 @@ class AvoidChanges(Specification):
       you're not afraid of side effects.
 
     """
-    localization_interval_length = 8 # used when optimizing the minimize_diffs
+    localization_interval_length = 6 # used when optimizing the minimize_diffs
     best_possible_score = 0
+    enforced_by_mutations_restrictions = True
 
     def __init__(self, location=None, indices=None, target_sequence=None,
                  boost=1.0):
@@ -40,6 +42,7 @@ class AvoidChanges(Specification):
         self.location = location
         self.indices = np.array(indices) if (indices is not None) else None
         self.target_sequence = target_sequence
+        # self.passive_objective = passive_objective
         self.boost = boost
 
     def extract_subsequence(self, sequence):
@@ -52,7 +55,7 @@ class AvoidChanges(Specification):
             return sequence
         elif self.indices is not None:
             return "".join(np.array(sequence)[self.indices])
-        else: #self.location is not None:
+        else:  # self.location is not None:
             return self.location.extract_sequence(sequence)
 
 
@@ -84,11 +87,14 @@ class AvoidChanges(Specification):
                 discrepancies = self.location.end - discrepancies
             else:
                 discrepancies = discrepancies + self.location.start
-
+        # if self.passive_objective or (len(discrepancies) == 0):
+        #     locations = []
+        # else:
         l = self.localization_interval_length
         intervals = [
-            (l * start, l * (start + 1))
-            for start in sorted(set([int(d / l) for d in discrepancies]))
+            (r[0], r[-1])
+            for r in group_nearby_indices(discrepancies,
+                max_group_spread=self.localization_interval_length)
         ]
         locations = [Location(start, end, 1) for start, end in intervals]
 
@@ -105,6 +111,7 @@ class AvoidChanges(Specification):
                 return VoidSpecification(parent_specification=self)
             else:
                 return self
+                # TODO: refine copy_with_changes(target sequence, location)
         elif self.indices is not None:
             inds = self.indices
             new_indices = inds[(start <= inds) & (inds <= end)]
@@ -123,5 +130,9 @@ class AvoidChanges(Specification):
         return [(i, set(sequence[i])) for i in range(start, end)]
 
     def __repr__(self):
+        """Represent."""
+        return "AvoidChanges(%s)" % str(self.location)
+
+    def __str__(self):
         """Represent."""
         return "AvoidChanges(%s)" % str(self.location)

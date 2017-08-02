@@ -9,7 +9,7 @@ from Bio.Seq import Seq
 from Bio.Blast import NCBIXML
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import DNAAlphabet
-from Bio.SeqFeature import FeatureLocation
+from Bio.SeqFeature import SeqFeature, FeatureLocation
 
 from .biotables import CODONS_SEQUENCES, NUCLEOTIDE_TO_REGEXPR
 
@@ -409,6 +409,36 @@ def sequences_differences_segments(seq1, seq2):
     half = int(len(diffs) / 2)
     return [(diffs[2 * i], diffs[2 * i + 1]) for i in range(half)]
 
+def group_nearby_indices(indices, max_gap=None, max_group_spread=None):
+    """Return a list of groups of the different indices.
+
+    Indices are considered from smaller to larger and placed into groups
+
+    Parameters
+    ----------
+    max_gap
+      Maximal allowed difference between two consecutive numbers of a group
+
+    max_group_spread
+      Maximal allowed difference between the smallest and largest elements
+      of a group.
+    """
+    if len(indices) == 0:
+        return []
+    indices = sorted(indices)
+    current_group = [indices[0]]
+    groups = [current_group]
+    for ind in indices[1:]:
+        gap_small_enough = ((max_gap is None) or
+                            (ind - current_group[-1] < max_gap))
+        spread_small_enough = ((max_group_spread is None) or
+                               (ind - current_group[0] < max_group_spread))
+        if gap_small_enough and spread_small_enough:
+            current_group.append(ind)
+        else:
+            current_group = [ind]
+            groups.append(current_group)
+    return groups
 
 def annotate_record(seqrecord, location="full", feature_type="misc_feature",
                     margin=0, **qualifiers):

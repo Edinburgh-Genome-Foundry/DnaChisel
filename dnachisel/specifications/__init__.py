@@ -11,14 +11,13 @@ from .builtin_specifications import (
     AvoidHairpins,
     AvoidNonuniqueSegments,
     AvoidPattern,
-    AvoidStopCodon,
     CodonOptimize,
     AvoidChanges,
     EnforceGCContent,
     EnforcePattern,
     EnforceTranslation,
     EnforceRegionsCompatibility,
-    #MinimizeDifferences,
+    EnforceSequence,
     SequenceLengthBounds
 )
 

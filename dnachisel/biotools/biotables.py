@@ -38,30 +38,42 @@ OTHER_BASES = {
     "C": ["T", "G", "A"],
 }
 
+CODONS_TRANSLATIONS = dict_from_csv(
+    os.path.join(data_dir, "codons_translations.csv"))
+CODONS_SEQUENCES = reverse_table(CODONS_TRANSLATIONS)
+CODONS_SYNONYMS = {
+    codon: CODONS_SEQUENCES[CODONS_TRANSLATIONS[codon]]
+    for codon in CODONS_TRANSLATIONS
+}
+
 CODON_USAGE_TABLES = {}
 for fname in os.listdir(codons_usage_dir):
     if not fname.endswith(".csv"):
         continue
     organism = "_".join(fname[:-4].split("_")[:-1])
     with open(os.path.join(codons_usage_dir, fname), "r") as f:
-        CODON_USAGE_TABLES[organism] = {
+        CODON_USAGE_TABLES[organism] = table = {
             line.split(";")[1]: float(line.split(";")[2].strip("\n"))
             for line in f.readlines()[1:]
             if line not in ("", "\n")
         }
+        for (codon, usage) in list(table.items()):
+            table[codon.replace('U', 'T')] = usage
+        table['best_frequencies'] = {
+            aa: max([table[codon] for codon in CODONS_SEQUENCES[aa]])
+            for aa in CODONS_SEQUENCES
+        }
+
 
 AA_LONG_NAMES = dict_from_csv(os.path.join(data_dir, "aa_long_names.csv"))
 
 NUCLEOTIDE_TO_REGEXPR = dict_from_csv(
     os.path.join(data_dir, "nucleotide_to_regexpr.csv"))
 
-CODONS_TRANSLATIONS = dict_from_csv(
-    os.path.join(data_dir, "codons_translations.csv"))
+
 
 iupac_file = os.path.join(data_dir, "iupac_notation.csv")
 IUPAC_NOTATION = {
     k: set(v)
     for k, v in dict_from_csv(iupac_file).items()
 }
-
-CODONS_SEQUENCES = reverse_table(CODONS_TRANSLATIONS)

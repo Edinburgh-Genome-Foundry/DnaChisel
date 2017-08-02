@@ -531,6 +531,8 @@ class DnaOptimizationProblem:
                 ] + passing_localized_constraints
             )
             mutations = local_problem.possible_mutations
+            # remove the avoidchanges, they have done their work
+            local_problem.constraints = local_problem.constraints[2:]
             for location, _set in list(mutations.items()):
                 if len(_set) == 0:
                     if isinstance(location, int):
@@ -671,7 +673,10 @@ class DnaOptimizationProblem:
         """Maximize the objective via local, targeted mutations."""
 
         if objectives == 'all':
-            objectives = self.objectives
+            objectives = [
+                obj for obj in self.objectives
+                if not obj.is_passive_objective
+            ]
 
         if isinstance(objectives, list):
 
