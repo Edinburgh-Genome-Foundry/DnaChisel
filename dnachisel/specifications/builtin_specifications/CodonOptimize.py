@@ -82,9 +82,7 @@ class CodonOptimize(CodonSpecification):
         Note: no smart localization currently, the sequence is improved via
 
         """
-        location = (self.location if self.location is not None
-                    else Location(0, len(problem.sequence)))
-        subsequence = location.extract_sequence(problem.sequence)
+        subsequence = self.location.extract_sequence(problem.sequence)
         length = len(subsequence)
         if (length % 3):
             raise ValueError(

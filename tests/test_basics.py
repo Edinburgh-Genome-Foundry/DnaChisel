@@ -18,5 +18,5 @@ def test_avoid_pattern_gc_content():
     print(problem.constraints_text_summary())
     print(problem.objectives_text_summary())
 
-    problem.solve_constraints()
+    problem.resolve_constraints()
     assert problem.all_constraints_pass()

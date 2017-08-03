@@ -440,6 +440,38 @@ def group_nearby_indices(indices, max_gap=None, max_group_spread=None):
             groups.append(current_group)
     return groups
 
+def group_nearby_segments(segments, max_start_gap=None, max_start_spread=None):
+    """Return a list of groups of the different indices.
+
+    Indices are considered from smaller to larger and placed into groups
+
+    Parameters
+    ----------
+    max_gap
+      Maximal allowed difference between two consecutive numbers of a group
+
+    max_group_spread
+      Maximal allowed difference between the smallest and largest elements
+      of a group.
+    """
+    if len(segments) == 0:
+        return []
+    segments = sorted(segments)
+    current_group = [segments[0]]
+    groups = [current_group]
+    for seg in segments[1:]:
+        gap_small_enough = ((max_start_gap is None) or
+                            (seg[0] - current_group[-1][0] < max_gap))
+        spread_small_enough = ((max_start_spread is None) or
+                               (seg[0] - current_group[0][0] <
+                                   max_start_spread))
+        if gap_small_enough and spread_small_enough:
+            current_group.append(seg)
+        else:
+            current_group = [seg]
+            groups.append(current_group)
+    return groups
+
 def annotate_record(seqrecord, location="full", feature_type="misc_feature",
                     margin=0, **qualifiers):
     """Add a feature to a Biopython SeqRecord.

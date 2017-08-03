@@ -55,7 +55,7 @@ def optimization_with_report(target, problem=None, record=None,
       custom specifications.
 
     **solver_parameters
-      Extra keyword arguments passed to ``problem.solve_constraints()``
+      Extra keyword arguments passed to ``problem.resolve_constraints()``
 
     Returns
     -------
@@ -71,7 +71,7 @@ def optimization_with_report(target, problem=None, record=None,
 
     try:
         problem.progress_logger(message="Solving constraints")
-        problem.solve_constraints(**solver_parameters)
+        problem.resolve_constraints(**solver_parameters)
     except NoSolutionError as error:
         problem.progress_logger(message="No solution found: making report")
         data = write_no_solution_report(target, problem, error)
@@ -87,7 +87,7 @@ def optimization_with_report(target, problem=None, record=None,
         return False, "No solution found before the end of search.", data
 
     problem.progress_logger(message="Now optimizing the sequence")
-    problem.maximize_objectives()
+    problem.optimize()
     problem.progress_logger(message="Success ! Generating report.")
     data = write_optimization_report(
         target, problem, project_name=project_name)

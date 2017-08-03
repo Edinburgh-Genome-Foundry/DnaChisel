@@ -8,6 +8,7 @@ from .biotools import (
     find_specification_in_feature,
     gc_content,
     group_nearby_indices,
+    group_nearby_segments,
     random_dna_sequence,
     random_protein_sequence,
     reverse_complement,

@@ -62,7 +62,7 @@ class DnaOptimizationProblem:
     >>>     constraints = [constraint1, constraint2, ...],
     >>>     objectives = [objective1, objective2, ...]
     >>> )
-    >>> canvas.solve_constraints_one_by_one()
+    >>> canvas.resolve_constraints_one_by_one()
     >>> canvas.maximize_all_objectives_one_by_one()
     >>> print(canvas.constraints_text_summary())
     >>> print(canvas.objectives_summary())
@@ -346,7 +346,7 @@ class DnaOptimizationProblem:
 
     # CONSTRAINTS
 
-    def solve_constraints_by_exhaustive_search(self, verbose=False,
+    def resolve_constraints_by_exhaustive_search(self, verbose=False,
         progress_bar=False, raise_exception_on_failure=True):
         """Solve all constraints by exploring the whole search space.
 
@@ -372,7 +372,7 @@ class DnaOptimizationProblem:
                 "Exhaustive search failed to satisfy all constraints.",
                 problem=self)
 
-    def solve_constraints_by_random_mutations(
+    def resolve_constraints_by_random_mutations(
         self, max_iter=1000, n_mutations=1, verbose=False, progress_bar=False,
         raise_exception_on_failure=False):
         """Solve all constraints by successive sets of random mutations.
@@ -427,7 +427,7 @@ class DnaOptimizationProblem:
                 problem=problem
             )
 
-    def solve_constraints(self, constraints='all',
+    def resolve_constraints(self, constraints='all',
                           randomization_threshold=10000,
                           max_random_iters=1000, verbose=False,
                           progress_bars=0,
@@ -445,14 +445,14 @@ class DnaOptimizationProblem:
         randomization_threshold
           Local problems with a search space size under this threshold will be
           solved using deterministic, exhaustive search of the search space
-          (see ``solve_constraints_by_exhaustive_search``)
+          (see ``resolve_constraints_by_exhaustive_search``)
           When the space size is above this threshold, local searches will use
           a randomized search algorithm
-          (see ``solve_constraints_by_random_mutations``).
+          (see ``resolve_constraints_by_random_mutations``).
 
         max_random_iters
           Maximal number of iterations when performing a randomized search
-          (see ``solve_constraints_by_random_mutations``).
+          (see ``resolve_constraints_by_random_mutations``).
 
         verbose
           If True, each step of each search will print in the console the
@@ -470,13 +470,13 @@ class DnaOptimizationProblem:
             self.progress_logger(n_constraints=len(self.constraints),
                                  constraint_ind=0)
             for i, constraint in enumerate(iter_constraints):
-                self.solve_constraints(
+                self.resolve_constraints(
                     constraints=constraint,
                     randomization_threshold=randomization_threshold,
                     max_random_iters=max_random_iters, verbose=verbose,
-                    progress_bars=progress_bars - 2, n_mutations=n_mutations
+                    progress_bars=progress_bars - 1, n_mutations=n_mutations
                 )
-                self.progress_logger(evaluation_ind=i + 1)
+                self.progress_logger(constraint_ind=i + 1)
             if final_check:
                 for cst in constraints:
                     if not cst.evaluate(self).passes:
@@ -556,11 +556,11 @@ class DnaOptimizationProblem:
             exhaustive_search = space_size < randomization_threshold
             try:
                 if exhaustive_search:
-                    local_problem.solve_constraints_by_exhaustive_search(
+                    local_problem.resolve_constraints_by_exhaustive_search(
                         verbose=verbose, progress_bar=progress_bars > 1)
                     self.sequence = local_problem.sequence
                 else:
-                    local_problem.solve_constraints_by_random_mutations(
+                    local_problem.resolve_constraints_by_random_mutations(
                         max_iter=max_random_iters, n_mutations=n_mutations,
                         verbose=verbose, progress_bar=progress_bars > 1)
                     self.sequence = local_problem.sequence
@@ -571,7 +571,7 @@ class DnaOptimizationProblem:
 
     # SPECIFICATIONS
 
-    def maximize_objectives_by_exhaustive_search(self, verbose=False,
+    def optimize_by_exhaustive_search(self, verbose=False,
                                                  progress_bar=False):
         """
         """
@@ -609,7 +609,7 @@ class DnaOptimizationProblem:
         self.sequence = current_best_sequence
         assert self.all_constraints_pass()
 
-    def maximize_objectives_by_random_mutations(self, max_iter=1000,
+    def optimize_by_random_mutations(self, max_iter=1000,
                                                 n_mutations=1,
                                                 verbose=False,
                                                 progress_bar=False):
@@ -666,7 +666,7 @@ class DnaOptimizationProblem:
                 self.sequence = previous_sequence
         #assert self.all_constraints_pass()
 
-    def maximize_objectives(self, objectives='all', n_mutations=1,
+    def optimize(self, objectives='all', n_mutations=1,
                             randomization_threshold=10000,
                             max_random_iters=1000,
                             optimize_independently=False,
@@ -689,7 +689,7 @@ class DnaOptimizationProblem:
             self.progress_logger(n_objectives=len(objectives),
                                  objective_ind=0)
             for i, objective in enumerate(iter_objectives):
-                self.maximize_objectives(
+                self.optimize(
                     objectives=objective,
                     randomization_threshold=randomization_threshold,
                     max_random_iters=max_random_iters,
@@ -751,10 +751,10 @@ class DnaOptimizationProblem:
             mutation_space_size = local_problem.mutation_space_size()
             #print local_problem.possible_mutations
             if mutation_space_size < randomization_threshold:
-                local_problem.maximize_objectives_by_exhaustive_search(
+                local_problem.optimize_by_exhaustive_search(
                     verbose=verbose, progress_bar=progress_bars > 1)
             else:
-                local_problem.maximize_objectives_by_random_mutations(
+                local_problem.optimize_by_random_mutations(
                     max_iter=max_random_iters, n_mutations=n_mutations,
                     verbose=verbose, progress_bar=progress_bars > 1)
             self.sequence = local_problem.sequence
@@ -778,7 +778,7 @@ class DnaOptimizationProblem:
                 location = [i, i + pattern.size]
                 self.mutate_sequence([(location, pattern.pattern)])
             try:
-                self.solve_constraints_one_by_one()
+                self.resolve_constraints_one_by_one()
                 return i # success
             except NoSolutionError:
                 self.sequence = sequence_before

@@ -21,9 +21,9 @@ print(problem.constraints_text_summary())
 print(problem.objectives_text_summary())
 
 print ("Now solving constraints...")
-problem.solve_constraints(progress_bars=1)
+problem.resolve_constraints(progress_bars=1)
 print ("Done. Now optimizing objectives...")
-problem.maximize_objectives(max_random_iters=10000)
+problem.optimize(max_random_iters=10000)
 
 print ("\n\n=== Status after optimization ===\n")
 print (problem.constraints_text_summary())
