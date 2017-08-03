@@ -303,7 +303,6 @@ class CodonSpecification(Specification):
                         end=w_end - 3 * start_codon,
                         strand=self.location.strand
                     )
-
                 return self.localized_on_window(new_location, start_codon,
                                                 end_codon)
         return self

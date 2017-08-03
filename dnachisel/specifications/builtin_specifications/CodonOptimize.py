@@ -54,6 +54,7 @@ class CodonOptimize(CodonSpecification):
     """
 
     best_possible_score = 0
+    localization_group_spread = 3
 
     def __init__(self, species=None, location=None,
                  codon_usage_table=None, boost=1.0):
@@ -66,6 +67,14 @@ class CodonOptimize(CodonSpecification):
             raise ValueError("Provide either an species name or a codon "
                              "usage table")
         self.codon_usage_table = codon_usage_table
+
+    def initialize_on_problem(self, problem, role):
+        """Get location from sequence if no location provided."""
+        if self.location is None:
+            location = Location(0, len(problem.sequence), 1)
+            return self.copy_with_changes(location=location)
+        else:
+            return self
 
     def evaluate(self, problem):
         """ Return the sum of all codons frequencies.
@@ -87,21 +96,23 @@ class CodonOptimize(CodonSpecification):
             for i in range(int(length / 3))
         ]
         # the are arrays:
+        CT = CODONS_TRANSLATIONS
         current_usage, optimal_usage = [np.array(e) for e in zip(*[
             (self.codon_usage_table[codon],
-             self.codon_usage_table[CODONS_TRANSLATIONS[codon]])
+             self.codon_usage_table['best_frequencies'][CT[codon]])
             for codon in codons
         ])]
         non_optimality = optimal_usage - current_usage
-        nonoptimal_indices = 3*np.nonzero(non_optimality)
+        nonoptimal_indices = 3 * np.nonzero(non_optimality)[0]
         if self.location.strand == -1:
             nonoptimal_indices = self.location.end - nonoptimal_indices
         else:
             nonoptimal_indices += self.location.start
         locations = [
-            Location(group[0], group[-1], )
-            for group in group_nearby_indices(nonoptimal_indices,
-                                              max_group_spread=20)
+            Location(group[0], group[-1]+2)
+            for group in group_nearby_indices(
+                nonoptimal_indices,
+                max_group_spread=self.localization_group_spread)
         ]
         score = -non_optimality.sum()
         return SpecEvaluation(

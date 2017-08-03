@@ -2,8 +2,11 @@ from dnachisel import *
 import numpy
 
 # We setup the randomizer to always get the same sequence
+from dnachisel import (random_dna_sequence, DnaOptimizationProblem,
+                       AvoidPattern)
 numpy.random.seed(123)
-
+sequence = random_dna_sequence(10000)
+spec = AvoidPattern("CG")
 problem = DnaOptimizationProblem(
     sequence=random_dna_sequence(10000),
     constraints=[

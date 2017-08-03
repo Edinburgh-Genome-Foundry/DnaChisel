@@ -76,11 +76,11 @@ class EnforceTranslation(CodonSpecification):
             result.set_location(location)
         else:
             result = self
-        if self.translation is None:
+        if result.translation is None:
             subsequence = result.location.extract_sequence(problem.sequence)
             translation = translate(subsequence, self.codons_translations)
 
-            result = self.copy_with_changes(translation=translation)
+            result = result.copy_with_changes(translation=translation)
         return result
 
     def evaluate(self, problem):

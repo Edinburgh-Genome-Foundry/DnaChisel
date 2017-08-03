@@ -4,6 +4,9 @@ import numpy
 # We setup the randomizer to always get the same sequence
 numpy.random.seed(123)
 
+
+class NoCpG(AvoidPattern)
+
 problem = DnaOptimizationProblem(
     sequence=random_dna_sequence(10000),
     constraints=[

@@ -5,6 +5,7 @@ from ..SpecEvaluation import SpecEvaluation
 
 from dnachisel.Location import Location
 
+
 class AvoidPattern(PatternSpecification):
     """Enforce that the given pattern is absent in the sequence.
 

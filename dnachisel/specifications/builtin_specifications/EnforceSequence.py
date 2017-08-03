@@ -2,27 +2,27 @@
 
 # TODO: factorize with self.sequence ?
 
+import numpy as np
+
 from dnachisel.biotools import complement, IUPAC_NOTATION
 
-from ..Specification import Specification
+from ..Specification import Specification, VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from dnachisel.Location import Location
-
+from dnachisel.biotools import group_nearby_indices, reverse_complement
 
 
 class EnforceSequence(Specification):
     """WORK IN PROGRESS. Enforces a degenerate sequence."""
-    localization_interval_length = 6 # used when optimizing the minimize_diffs
+    localization_interval_length = 6  # used when optimizing the minimize_diffs
     best_possible_score = 0
     enforced_by_mutations_restrictions = True
 
-
     def __init__(self, sequence, location=None, boost=1.0):
+        """Initialize."""
         self.sequence = sequence
         self.location = location
         self.boost = boost
-
-            return self.location.extract_sequence(sequence)
 
     def initialize_on_problem(self, problem, role):
         """Find out what sequence it is that we are supposed to conserve."""
@@ -62,8 +62,7 @@ class EnforceSequence(Specification):
                               locations=locations)
 
     def localized(self, location):
-        """Localize the spec to the overlap of its location and the new.
-        """
+        """Localize the spec to the overlap of its location and the new."""
         start, end = location.start, location.end
         new_location = self.location.overlap_region(location)
         if new_location is None:
@@ -78,7 +77,7 @@ class EnforceSequence(Specification):
             new_sequence = self.sequence[start:end]
 
             return self.copy_with_changes(location=new_location,
-                                          sequence=new_location)
+                                          sequence=new_sequence)
 
     def restrict_nucleotides(self, sequence, location=None):
         """When localizing, forbid any nucleotide but the one already there."""
@@ -94,7 +93,7 @@ class EnforceSequence(Specification):
                         for i in range(start, end)]
             else:
                 lstart = self.location.start
-                return [(i, IUPAC_NOTATION[self.sequence[i - lstart]]))
+                return [(i, IUPAC_NOTATION[self.sequence[i - lstart]])
                         for i in range(start, end)]
 
     def __repr__(self):

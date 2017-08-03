@@ -111,6 +111,8 @@ class DnaOptimizationProblem:
     e.g. for the mutation of a whole codon ``(3,6): ["ATT", "ACT", "AGT"]``.
     """
 
+    location_extension = 2
+
     def __init__(self, sequence, constraints=None, objectives=None,
                  progress_logger=None):
         """Initialize"""
@@ -692,7 +694,7 @@ class DnaOptimizationProblem:
                     randomization_threshold=randomization_threshold,
                     max_random_iters=max_random_iters,
                     verbose=verbose,
-                    progress_bars=(progress_bars - 2),
+                    progress_bars=(progress_bars - 1),
                     n_mutations=n_mutations,
                     optimize_independently=optimize_independently
                 )
@@ -721,7 +723,7 @@ class DnaOptimizationProblem:
             if verbose:
                 print(location)
             do_not_modify_location = location.extended(
-                5, upper_limit=len(self.sequence))
+                self.location_extension, upper_limit=len(self.sequence))
             if optimize_independently:
                 objectives = [objective.localized(do_not_modify_location)]
             else:
@@ -746,10 +748,9 @@ class DnaOptimizationProblem:
                 ],
                 objectives=objectives
             )
-            #local_problem.sequence_before = self.sequence_before
-
-            if (local_problem.mutation_space_size() <
-                    randomization_threshold):
+            mutation_space_size = local_problem.mutation_space_size()
+            #print local_problem.possible_mutations
+            if mutation_space_size < randomization_threshold:
                 local_problem.maximize_objectives_by_exhaustive_search(
                     verbose=verbose, progress_bar=progress_bars > 1)
             else:
