@@ -854,7 +854,8 @@ class DnaOptimizationProblem:
         segments = sequences_differences_segments(self.sequence,
                                                   self.sequence_before)
         return [
-            Location(start, end).to_biopython_feature(label="edit",
-                                                      is_edit="true")
+            Location(start, end).to_biopython_feature(
+                label="was " + self.sequence_before[start: end],
+                is_edit="true")
             for start, end in segments
         ]

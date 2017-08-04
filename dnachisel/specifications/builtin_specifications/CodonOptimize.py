@@ -116,7 +116,7 @@ class CodonOptimize(CodonSpecification):
         return SpecEvaluation(
             self, problem, score=score, locations=locations,
             message="Codon opt. on window %s scored %.02E" %
-                    (location, score)
+                    (self.location, score)
         )
 
     def localized_on_window(self, new_location, start_codon, end_codon):
