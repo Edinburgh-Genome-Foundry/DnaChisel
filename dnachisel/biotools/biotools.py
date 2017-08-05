@@ -461,7 +461,7 @@ def group_nearby_segments(segments, max_start_gap=None, max_start_spread=None):
     groups = [current_group]
     for seg in segments[1:]:
         gap_small_enough = ((max_start_gap is None) or
-                            (seg[0] - current_group[-1][0] < max_gap))
+                            (seg[0] - current_group[-1][0] < max_start_gap))
         spread_small_enough = ((max_start_spread is None) or
                                (seg[0] - current_group[0][0] <
                                    max_start_spread))

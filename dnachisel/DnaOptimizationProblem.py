@@ -20,14 +20,17 @@ from .specifications import (Specification, AvoidChanges, EnforcePattern,
 from .Location import Location
 from Bio.SeqRecord import SeqRecord
 from Bio import SeqIO
+from .Mutation import MutationSpace
 
 
 from tqdm import tqdm
+
 
 class NoSolutionError(Exception):
     """Exception returned when a DnaOptimizationProblem aborts.
     This means that the constraints are found to be unsatisfiable.
     """
+
     def __init__(self, message, problem, location=None):
         """Initialize."""
         Exception.__init__(self, message)
@@ -78,10 +81,10 @@ class DnaOptimizationProblem:
       A list of objects of type ``Specification``.
 
     objectives
-      A list of objects of type ``Specification`` specifying what must be optimized
-      in the problem. Note that each objective has a float ``boost`` parameter.
-      The larger the boost, the more the objective is taken into account during
-      the optimization.
+      A list of objects of type ``Specification`` specifying what must be
+      optimized in the problem. Note that each objective has a float ``boost``
+      parameter. The larger the boost, the more the objective is taken into
+      account during the optimization.
 
     Attributes
     ----------
@@ -111,10 +114,10 @@ class DnaOptimizationProblem:
     e.g. for the mutation of a whole codon ``(3,6): ["ATT", "ACT", "AGT"]``.
     """
 
-    location_extension = 2
+    # location_extension = 2
 
     def __init__(self, sequence, constraints=None, objectives=None,
-                 progress_logger=None):
+                 progress_logger=None, mutation_space=None):
         """Initialize"""
         if isinstance(sequence, SeqRecord):
             self.record = sequence
@@ -122,13 +125,13 @@ class DnaOptimizationProblem:
         else:
             self.record = None
             self.sequence = sequence
-        self.possible_mutations_dict = None
         self.constraints = [] if constraints is None else constraints
         self.objectives = [] if objectives is None else objectives
         if progress_logger is None:
             def progress_logger(*a, **k):
                 pass
         self.progress_logger = progress_logger
+        self.mutation_space = mutation_space
         self.initialize()
 
     def initialize(self):
@@ -148,7 +151,10 @@ class DnaOptimizationProblem:
         self.sequence_before = self.sequence
         self.constraints_before = self.constraints_evaluations()
         self.objectives_before = self.objectives_evaluations()
-
+        if self.mutation_space is None:
+            self.mutation_space = MutationSpace.from_optimization_problem(self)
+            self.sequence = self.mutation_space.constrain_sequence(
+                self.sequence)
 
     def constraints_evaluations(self):
         """Return a list of the evaluations of each constraint of the canvas.
@@ -189,165 +195,8 @@ class DnaOptimizationProblem:
             start, end = location
             return self.sequence[start:end]
 
-    # MUTATIONS
-
-    @property
-    def possible_mutations(self):
-        if self.possible_mutations_dict is None:
-            self.compute_possible_mutations()
-        return self.possible_mutations_dict
-
-    def compute_possible_mutations(self):
-        """Compute all possible mutations that can be applied to the sequence.
-
-        The result of the computations is stored in ``self.possible_mutations``
-        (see ``DnaOptimizationProblem`` documentation).
-
-        The possible mutations are constrained by the ``constraints`` of the
-        DnaOptimizationProblem with respect to rules that are internal
-        to the different constraints, for instance:
-
-        - ``AvoidChanges``  constraints disable mutations for the nucleotides
-          of the concerned segments.
-        - ``EnforceTranlation`` constraints ensure that on the concerned
-          segments only codons that translate to the imposed amino-acid will
-          be considered, so a triplet of nucleotides that should code for
-          Asparagin will see its choices down to ["AAT", "AAC"], instead of
-          the 64 possible combinations of free triplets.
-
-        """
-
-        free_indices = np.ones(len(self.sequence))
-        for constraint in self.constraints:
-            if isinstance(constraint, AvoidChanges):
-                start = constraint.location.start
-                end = constraint.location.end
-                free_indices[start: end] = 0
-        nonzeros = np.nonzero(free_indices)[0]
-        free_location = Location(max(nonzeros.min() - 2, 0),
-                                 min(nonzeros.max() + 2, len(self.sequence)),
-                                 strand=1)
-
-        all_nucleotides_restrictions = [
-            (loc, mutations_set)
-            for constraint in self.constraints
-            for (loc, mutations_set) in
-            constraint.restrict_nucleotides(self.sequence,
-                                            location=free_location)
-        ]
-
-        unibase_restrictions = [
-            (loc, mutations_set)
-            for (loc, mutations_set) in all_nucleotides_restrictions
-            if isinstance(loc, int)
-        ]
-
-        def multibase_sorting_score(start_end_set):
-            (start, end), _set = start_end_set
-            return 1.0*len(_set) / 4**(end - start), start
-
-        multibase_restrictions = sorted(
-            [
-                (loc, mutations_set)
-                for (loc, mutations_set) in all_nucleotides_restrictions
-                if not isinstance(loc, int)
-            ],
-            key=multibase_sorting_score
-        )
-        self.possible_mutations_dict = mutations = {
-            i: set("ATGC")
-            for i in range(free_location.start, free_location.end)
-        }
-        for i, _set in unibase_restrictions:
-            mutations[i] = mutations[i].intersection(_set)
-
-        for (start, end), _set in multibase_restrictions:
-            if not all(i in mutations for i in range(start, end)):
-                continue
-            nucleotides = [mutations.pop(i) for i in range(start, end)]
-            valid_subset = [
-                subseq for subseq in _set
-                if all((n in nucls) for (n, nucls) in zip(subseq, nucleotides))
-            ]
-            mutations[(start, end)] = valid_subset
-        for loc, _set in mutations.items():
-            mutations[loc] = list(_set)
-
-    def mutation_space_size(self):
-        """Return the total number of possible sequence variants.
-
-        The result is a float.
-        """
-        return np.prod([
-            1.0 * len(mutations_set)
-            for mutations_set in self.possible_mutations.values()
-        ])
-
-    def iter_mutations_space(self):
-        """Iterate through all possible mutations.
-
-        Each mutation is of the form (location, "new_sequence") where location
-        is either a number or a couple (start, end)
-        """
-        return itt.product(*[
-            [(k, seq) for seq in values]
-            for k, values in self.possible_mutations.items()
-        ])
-
-    def pick_random_mutations(self, n_mutations=1):
-        """Pick a random set of possible mutations.
-
-        Returns a list ``[(location1, new_sequence1), ...]`` where location is
-        either an index or a couple ``(start, end)`` and ``new_sequence`` is
-        a DNA string like ``ATGC``, indicating that the canvas' sequence
-        should be modified through mutations of the form
-        ``self.sequence[location1] = new_sequence1``.
-        """
-        locs = list(self.possible_mutations.keys())
-        if n_mutations == 1:
-            indices = [np.random.randint(0, len(locs), 1)[0]]
-        else:
-            indices = np.random.choice(range(0, len(locs)), n_mutations,
-                                       replace=False)
-        mutations = []
-        for index in indices:
-            location = locs[index]
-            subsequence = self.extract_subsequence(location)
-            choices = self.possible_mutations[location]
-            if subsequence in choices:
-                choices.remove(subsequence)
-            if choices == []:
-                mutations.append(None)
-            else:
-                choice = np.random.choice(choices)
-                mutations.append((location, choice))
-        return mutations
-
-    def mutate_sequence(self, mutations):
-        """Modify the canvas's sequence (inplace) through mutations.
-
-        ``mutations`` must be a list ``[(location1, new_sequence1), ...]``
-        where location is either an index or a couple ``(start, end)`` and
-        ``new_sequence`` is a DNA string like ``ATGC``, indicating that the
-        canvas' sequence should be modified through mutations of the form
-        ``self.sequence[location1] = new_sequence1``.
-        """
-        sequence_buffer = np.fromstring(self.sequence, dtype=np.uint8)
-        for mutation in mutations:
-            if mutation is not None:
-                ind, seq = mutation
-                if np.isscalar(ind):
-                    sequence_buffer[ind] = ord(str(seq))
-                else:
-                    start, end = ind
-                    sequence_buffer[start:end] = np.fromstring(str(seq),
-                                                               dtype=np.uint8)
-        self.sequence = sequence_buffer.tostring().decode("utf8")
-
-    # CONSTRAINTS
-
-    def resolve_constraints_by_exhaustive_search(self, verbose=False,
-        progress_bar=False, raise_exception_on_failure=True):
+    def resolve_constraints_by_exhaustive_search(self,
+                                                 progress_bar=False, raise_exception_on_failure=True):
         """Solve all constraints by exploring the whole search space.
 
         This method iterates over ``self.iter_mutations_space()`` (space of
@@ -355,17 +204,16 @@ class DnaOptimizationProblem:
         stops when it finds a sequence which meets all the constraints of the
         canvas.
         """
-        mutation_space = self.iter_mutations_space()
+        sequence_before = self.sequence
+        all_mutations = self.mutation_space.iterate_mutations(self.sequence)
         if progress_bar:
-            mutation_space = tqdm(mutation_space, desc="Mutation", leave=False)
-        for mutations in mutation_space:
-            self.mutate_sequence(mutations)
-            if verbose:
-                print(self.constraints_text_summary())
+            all_mutations = tqdm(all_mutations, desc="Mutation", leave=False,
+                                 total=self.mutation_space.space_size)
+        for mutated_sequence in all_mutations:
+            self.sequence = mutated_sequence
             if self.all_constraints_pass():
                 return
-            else:
-                self.sequence = self.sequence_before
+        self.sequence = sequence_before
 
         if raise_exception_on_failure:
             raise NoSolutionError(
@@ -373,8 +221,8 @@ class DnaOptimizationProblem:
                 problem=self)
 
     def resolve_constraints_by_random_mutations(
-        self, max_iter=1000, n_mutations=1, verbose=False, progress_bar=False,
-        raise_exception_on_failure=False):
+            self, max_iter=1000, n_mutations=1, progress_bar=False,
+            raise_exception_on_failure=False):
         """Solve all constraints by successive sets of random mutations.
 
         This method modifies the canvas sequence by applying a number
@@ -402,13 +250,11 @@ class DnaOptimizationProblem:
         if progress_bar:
             range_iter = tqdm(range_iter, desc="Random Mutation", leave=False)
         for iteration in range_iter:
-            if score == 0:
+            if all(e.passes for e in evaluations):
                 return
-            mutations = self.pick_random_mutations(n_mutations)
-            if verbose:
-                print(self.constraints_text_summary())
             previous_sequence = self.sequence
-            self.mutate_sequence(mutations)
+            self.sequence = self.mutation_space.apply_random_mutations(
+                n_mutations=n_mutations, sequence=self.sequence)
 
             evaluations = self.constraints_evaluations()
             new_score = sum([
@@ -424,16 +270,16 @@ class DnaOptimizationProblem:
         if raise_exception_on_failure:
             raise NoSolutionError(
                 "Random search hit max_iterations without finding a solution.",
-                problem=problem
+                problem=self
             )
 
     def resolve_constraints(self, constraints='all',
-                          randomization_threshold=10000,
-                          max_random_iters=1000, verbose=False,
-                          progress_bars=0,
-                          evaluation=None,
-                          n_mutations=1,
-                          final_check=True):
+                            randomization_threshold=10000,
+                            max_random_iters=1000,
+                            progress_bars=0,
+                            evaluation=None,
+                            n_mutations=1,
+                            final_check=True):
         """Solve a particular constraint using local, targeted searches.
 
         Parameters
@@ -454,10 +300,6 @@ class DnaOptimizationProblem:
           Maximal number of iterations when performing a randomized search
           (see ``resolve_constraints_by_random_mutations``).
 
-        verbose
-          If True, each step of each search will print in the console the
-          evaluation of each constraint.
-
         """
         if constraints == 'all':
             constraints = self.constraints
@@ -473,7 +315,7 @@ class DnaOptimizationProblem:
                 self.resolve_constraints(
                     constraints=constraint,
                     randomization_threshold=randomization_threshold,
-                    max_random_iters=max_random_iters, verbose=verbose,
+                    max_random_iters=max_random_iters,
                     progress_bars=progress_bars - 1, n_mutations=n_mutations
                 )
                 self.progress_logger(constraint_ind=i + 1)
@@ -501,13 +343,10 @@ class DnaOptimizationProblem:
             locations = tqdm(locations, desc="Window", leave=False)
 
         for i, location in enumerate(locations):
-            if verbose:
-                print(location)
-            do_not_modify_location = location.extended(
-                5, upper_limit=len(self.sequence))
-            # if consider_other_constraints:
+            mutation_space = self.mutation_space.localized(location)
+            location = Location(*mutation_space.choices_span)
             localized_constraints = [
-                _constraint.localized(do_not_modify_location)
+                _constraint.localized(location)
                 for _constraint in self.constraints
             ]
             passing_localized_constraints = [
@@ -515,64 +354,33 @@ class DnaOptimizationProblem:
                 for _constraint in localized_constraints
                 if _constraint.evaluate(self).passes
             ]
-            # else:
-            # passing_localized_constraints = []
-
             local_problem = DnaOptimizationProblem(
                 sequence=self.sequence,
-                constraints=[
-                    AvoidChanges(
-                        location=Location(0, do_not_modify_location.start)
-                    ),
-                    AvoidChanges(
-                        location=Location(do_not_modify_location.end,
-                                          len(self.sequence))
-                    )
-                ] + [
-                    constraint.localized(do_not_modify_location)
-                ] + passing_localized_constraints
+                constraints=([constraint.localized(location)] +
+                             passing_localized_constraints),
+                mutation_space=mutation_space
             )
-            mutations = local_problem.possible_mutations
-            # remove the avoidchanges, they have done their work
-            local_problem.constraints = local_problem.constraints[2:]
-            for location, _set in list(mutations.items()):
-                if len(_set) == 0:
-                    if isinstance(location, int):
-                        start, end = location, location
-                    else:
-                        start, end = location
-                    raise NoSolutionError(
-                        "An EnforceTranslation constraint seems to"
-                        " clash with a DoNotTouch constraint: %s" %
-                        constraint,
-                        problem=self,
-                        location=Location(start, end, 1)
-                   )
-                if len(_set) == 1:
-                    mutations.pop(location)
-                    self.mutate_sequence([(location, list(_set)[0])])
 
-            space_size = local_problem.mutation_space_size()
+            space_size = local_problem.mutation_space.space_size
             exhaustive_search = space_size < randomization_threshold
             try:
                 if exhaustive_search:
                     local_problem.resolve_constraints_by_exhaustive_search(
-                        verbose=verbose, progress_bar=progress_bars > 1)
+                        progress_bar=progress_bars > 1)
                     self.sequence = local_problem.sequence
                 else:
                     local_problem.resolve_constraints_by_random_mutations(
                         max_iter=max_random_iters, n_mutations=n_mutations,
-                        verbose=verbose, progress_bar=progress_bars > 1)
+                        progress_bar=progress_bars > 1)
                     self.sequence = local_problem.sequence
             except NoSolutionError as error:
                 error.location = location
                 raise error
-            self.progress_logger(location_ind=i+1)
+            self.progress_logger(location_ind=i + 1)
 
     # SPECIFICATIONS
 
-    def optimize_by_exhaustive_search(self, verbose=False,
-                                                 progress_bar=False):
+    def optimize_by_exhaustive_search(self, progress_bar=False):
         """
         """
         if not self.all_constraints_pass():
@@ -592,27 +400,26 @@ class DnaOptimizationProblem:
 
         current_best_score = self.all_objectives_scores_sum()
         current_best_sequence = self.sequence
-        mutation_space = self.iter_mutations_space()
+        all_mutations = self.mutation_space.iterate_mutations(self.sequence)
         if progress_bar:
-            mutation_space = tqdm(mutation_space, desc="Mutation", leave=False)
-        for mutations in mutation_space:
-            self.mutate_sequence(mutations)
+            all_mutations = tqdm(all_mutations, desc="Mutation", leave=False,
+                                 total=self.mutation_space.space_size)
+        for mutated_sequence in all_mutations:
+            self.sequence = mutated_sequence
             if self.all_constraints_pass():
                 score = self.all_objectives_scores_sum()
                 if score > current_best_score:
                     current_best_score = score
                     current_best_sequence = self.sequence
                     if ((best_possible_score is not None) and
-                        (current_best_score >= best_possible_score)):
+                            (current_best_score >= best_possible_score)):
                         break
             self.sequence = self.sequence_before
         self.sequence = current_best_sequence
         assert self.all_constraints_pass()
 
-    def optimize_by_random_mutations(self, max_iter=1000,
-                                                n_mutations=1,
-                                                verbose=False,
-                                                progress_bar=False):
+    def optimize_by_random_mutations(self, max_iter=1000, n_mutations=1,
+                                     progress_bar=False):
         """
         """
 
@@ -620,9 +427,7 @@ class DnaOptimizationProblem:
             summary = self.constraints_text_summary()
             raise ValueError(summary + "Optimization can only be done when all"
                              " constraints are verified")
-        mutations_locs = list(self.possible_mutations.keys())
         score = self.all_objectives_scores_sum()
-        range_iters = range(max_iter)
 
         if all([obj.best_possible_score is not None
                 for obj in self.objectives]):
@@ -631,47 +436,34 @@ class DnaOptimizationProblem:
         else:
             best_possible_score = None
 
+        range_iters = range(max_iter)
         if progress_bar:
             range_iters = tqdm(range_iters, desc="Random mutation",
                                leave=False)
 
         for iteration in range_iters:
             if ((best_possible_score is not None) and
-                (score >= best_possible_score)):
+                    (score >= best_possible_score)):
                 break
 
-            random_mutations_inds = np.random.randint(
-                0, len(mutations_locs), n_mutations)
-            mutations = [
-                (mutations_locs[ind],
-                 np.random.choice(
-                    self.possible_mutations[mutations_locs[ind]], 1
-                )[0]
-                )
-                for ind in random_mutations_inds
-            ]
-            if verbose:
-                print(self.constraints_text_summary())
             previous_sequence = self.sequence
-            self.mutate_sequence(mutations)
+            self.sequence = self.mutation_space.apply_random_mutations(
+                n_mutations=n_mutations, sequence=self.sequence)
             if self.all_constraints_pass():
-
                 new_score = self.all_objectives_scores_sum()
                 if new_score > score:
                     score = new_score
-                    # print("new_best", new_score)
                 else:
                     self.sequence = previous_sequence
             else:
                 self.sequence = previous_sequence
-        #assert self.all_constraints_pass()
+        #  assert self.all_constraints_pass()
 
     def optimize(self, objectives='all', n_mutations=1,
-                            randomization_threshold=10000,
-                            max_random_iters=1000,
-                            optimize_independently=False,
-                            progress_bars=False,
-                            verbose=False):
+                 randomization_threshold=10000,
+                 max_random_iters=1000,
+                 optimize_independently=False,
+                 progress_bars=False):
         """Maximize the objective via local, targeted mutations."""
 
         if objectives == 'all':
@@ -693,7 +485,6 @@ class DnaOptimizationProblem:
                     objectives=objective,
                     randomization_threshold=randomization_threshold,
                     max_random_iters=max_random_iters,
-                    verbose=verbose,
                     progress_bars=(progress_bars - 1),
                     n_mutations=n_mutations,
                     optimize_independently=optimize_independently
@@ -706,7 +497,7 @@ class DnaOptimizationProblem:
         evaluation = objective.evaluate(self)
         locations = evaluation.locations
         if ((objective.best_possible_score is not None) and
-            (evaluation.score == objective.best_possible_score)):
+                (evaluation.score == objective.best_possible_score)):
             return
         if locations is None:
             raise ValueError(
@@ -720,43 +511,30 @@ class DnaOptimizationProblem:
             locations = tqdm(locations, desc="Window", leave=False)
 
         for location in locations:
-            if verbose:
-                print(location)
-            do_not_modify_location = location.extended(
-                self.location_extension, upper_limit=len(self.sequence))
-            if optimize_independently:
-                objectives = [objective.localized(do_not_modify_location)]
-            else:
-                objectives = [
-                    _objective.localized(do_not_modify_location)
-                    for _objective in self.objectives
-                ]
-
+            mutation_space = self.mutation_space.localized(location)
+            location = Location(*mutation_space.choices_span)
+            localized_constraints = [
+                _constraint.localized(location)
+                for _constraint in self.constraints
+            ]
             local_problem = DnaOptimizationProblem(
                 sequence=self.sequence,
-                constraints=[
-                    _constraint.localized(do_not_modify_location)
-                    for _constraint in self.constraints
-                ] + [
-                        AvoidChanges(
-                            location=Location(0, do_not_modify_location.start)
-                        ),
-                        AvoidChanges(
-                            location=Location(do_not_modify_location.end,
-                                              len(self.sequence))
-                        )
-                ],
-                objectives=objectives
+                constraints=localized_constraints,
+                mutation_space=mutation_space,
+                objectives=[
+                    _objective.localized(location)
+                    for _objective in self.objectives
+                ]
             )
-            mutation_space_size = local_problem.mutation_space_size()
-            #print local_problem.possible_mutations
-            if mutation_space_size < randomization_threshold:
+            space_size = local_problem.mutation_space.space_size
+            exhaustive_search = space_size < randomization_threshold
+            if exhaustive_search:
                 local_problem.optimize_by_exhaustive_search(
-                    verbose=verbose, progress_bar=progress_bars > 1)
+                    progress_bar=progress_bars > 1)
             else:
                 local_problem.optimize_by_random_mutations(
                     max_iter=max_random_iters, n_mutations=n_mutations,
-                    verbose=verbose, progress_bar=progress_bars > 1)
+                    progress_bar=progress_bars > 1)
             self.sequence = local_problem.sequence
 
     def include_pattern_by_successive_tries(self, pattern, location=None,
@@ -779,7 +557,7 @@ class DnaOptimizationProblem:
                 self.mutate_sequence([(location, pattern.pattern)])
             try:
                 self.resolve_constraints_one_by_one()
-                return i # success
+                return i
             except NoSolutionError:
                 self.sequence = sequence_before
         self.constraints.pop()  # remove the pattern constraint
@@ -809,7 +587,7 @@ class DnaOptimizationProblem:
                 continue
             role, objective = Specification.from_biopython_feature(
                 feature, specifications_dict)
-            parameters[role+"s"].append(objective)
+            parameters[role + "s"].append(objective)
 
         return DnaOptimizationProblem(**parameters)
 

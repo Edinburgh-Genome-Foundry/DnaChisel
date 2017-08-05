@@ -51,7 +51,7 @@ class EnforceSequence(Specification):
         else:
             discrepancies = discrepancies + self.location.start
         intervals = [
-            (r[0], r[-1])
+            (r[0], r[-1] + 1)
             for r in group_nearby_indices(
                 discrepancies,
                 max_group_spread=self.localization_interval_length)
@@ -81,6 +81,8 @@ class EnforceSequence(Specification):
 
     def restrict_nucleotides(self, sequence, location=None):
         """When localizing, forbid any nucleotide but the one already there."""
+        if location is None:
+            location = Location(0, len(sequence))
         new_location = self.location.overlap_region(location)
         if new_location is None:
             return []
@@ -98,8 +100,8 @@ class EnforceSequence(Specification):
 
     def __repr__(self):
         """Represent."""
-        return "AvoidChanges(%s)" % str(self.location)
+        return "EnforceSequence(%s)" % str(self.location)
 
     def __str__(self):
         """Represent."""
-        return "AvoidChanges(%s)" % str(self.location)
+        return "EnforceSequence(%s)" % str(self.location)

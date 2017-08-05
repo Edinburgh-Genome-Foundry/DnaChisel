@@ -13,6 +13,7 @@ from .specifications import (
     EnforceGCContent,
     EnforcePattern,
     EnforceRegionsCompatibility,
+    EnforceSequence,
     EnforceTranslation,
     Specification,
     SpecEvaluation,

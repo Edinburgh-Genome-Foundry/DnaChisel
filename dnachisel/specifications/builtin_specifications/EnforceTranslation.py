@@ -35,6 +35,8 @@ class EnforceTranslation(CodonSpecification):
     def __init__(self, location=None, translation=None, boost=1.0):
         """Initialize."""
         self.translation = translation
+        if (location is not None) and (location.strand not in [-1, 1]):
+            location = Location(location.start, location.end, 1)
         self.set_location(location)
         self.boost = boost
 
@@ -116,11 +118,12 @@ class EnforceTranslation(CodonSpecification):
         if self.codons_sequences is None:
             return []
 
-        strand = 1 if self.location is None else self.location.strand
-        start = 0 if self.location is None else self.location.start
-        end = len(sequence) if self.location is None else self.location.end
+        strand = self.location.strand
+        start = self.location.start
+        end = self.location.end
 
         if strand == 1:
+
             return [
                 ((i, i + 3), set(self.codons_sequences[
                     self.translation[int((i - start) / 3)]

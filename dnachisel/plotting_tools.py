@@ -74,7 +74,6 @@ def plot_local_gc_content(sequence, window_size, ax=None):
 
     Parameters
     ----------
-
     sequence
       An ATGC string of a sequence
 
