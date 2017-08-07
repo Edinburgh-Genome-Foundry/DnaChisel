@@ -2,7 +2,7 @@
 import textwrap
 
 from Bio.SeqFeature import SeqFeature
-from ..plotting_tools import colors_cycle
+from .plotting_tools import colors_cycle
 
 
 class SpecEvaluation:

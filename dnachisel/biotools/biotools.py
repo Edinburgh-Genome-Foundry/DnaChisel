@@ -244,7 +244,7 @@ def gc_content(sequence, window_size=None):
 
 
 def blast_sequence(sequence, blast_db, word_size=4, perc_identity=80,
-                   num_alignments=1000, num_threads=3):
+                   num_alignments=1000, ungapped=False, num_threads=3):
     """Return a Biopython BLAST record of the given sequence BLASTed
     against the provided database.
 
@@ -268,16 +268,19 @@ def blast_sequence(sequence, blast_db, word_size=4, perc_identity=80,
     with open(fasta_name, "w+") as f:
         f.write(">seq\n" + sequence)
 
-    p = subprocess.Popen([
-        "blastn", "-out", xml_name,
-        "-outfmt", "5",
-        "-num_alignments", str(num_alignments),
-        "-query", fasta_name,
-        "-db", blast_db,
-        "-word_size", str(word_size),
-        "-num_threads", str(num_threads),
-        "-perc_identity", str(perc_identity)
-    ], close_fds=True)
+    p = subprocess.Popen(
+        [
+            "blastn", "-out", xml_name,
+            "-outfmt", "5",
+            "-num_alignments", str(num_alignments),
+            "-query", fasta_name,
+            "-db", blast_db,
+            "-word_size", str(word_size),
+            "-num_threads", str(num_threads),
+            "-perc_identity", str(perc_identity)
+        ] + (["-ungapped"] if ungapped else []),
+        close_fds=True
+    )
     p.communicate()
     p.wait()
     for i in range(3):

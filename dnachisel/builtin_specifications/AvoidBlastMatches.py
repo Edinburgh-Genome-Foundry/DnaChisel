@@ -36,7 +36,7 @@ class AvoidBlastMatches(Specification):
 
     def __init__(self, blast_db, word_size=4, perc_identity=100,
                  num_alignments=1000, num_threads=3, min_align_length=20,
-                 location=None):
+                 ungapped=True, location=None):
         """Initialize."""
         self.blast_db = blast_db
         self.word_size = word_size
@@ -45,10 +45,12 @@ class AvoidBlastMatches(Specification):
         self.num_threads = num_threads
         self.min_align_length = min_align_length
         self.location = location
+        self.ungapped = ungapped
 
     def evaluate(self, problem):
         """Score as (-total number of blast identities in matches)."""
         location = self.location
+        # print ("location", location)
         if location is None:
             location = Location(0, len(problem.sequence))
         sequence = location.extract_sequence(problem.sequence)
@@ -58,7 +60,8 @@ class AvoidBlastMatches(Specification):
             word_size=self.word_size,
             perc_identity=self.perc_identity,
             num_alignments=self.num_alignments,
-            num_threads=self.num_threads
+            num_threads=self.num_threads,
+            ungapped=self.ungapped
         )
 
         query_hits = [

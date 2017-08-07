@@ -131,6 +131,8 @@ class MutationSpace:
 
     @property
     def choices_span(self):
+        if self.choices == []:
+            return None
         return self.choices_list[0].start, self.choices_list[-1].end
 
     def constrain_sequence(self, sequence):

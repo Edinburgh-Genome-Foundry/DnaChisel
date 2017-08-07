@@ -1,9 +1,9 @@
 import copy
 import re
 
-from ..biotools import (DnaNotationPattern, enzyme_pattern,
-                        find_specification_in_feature)
-from ..Location import Location
+from .biotools import (DnaNotationPattern, enzyme_pattern,
+                       find_specification_in_feature)
+from .Location import Location
 from .SpecEvaluation import SpecEvaluation
 from Bio.SeqFeature import SeqFeature
 
@@ -28,8 +28,10 @@ class Specification:
     """
 
     best_possible_score = None
-    can_be_solved_locally = False
     is_passive_objective = False
+    optimize_passively = True
+    enforced_by_mutations_restrictions = True
+    priority = 1
 
     def __init__(self, evaluate=None, boost=1.0):
         """Initialize."""
@@ -138,7 +140,7 @@ class Specification:
         return []
 
     def as_passive_objective(self):
-        return self.copy_with_changes(is_passive_objective=True)
+        return self.copy_with_changes(optimize_passively=True)
 
 
 

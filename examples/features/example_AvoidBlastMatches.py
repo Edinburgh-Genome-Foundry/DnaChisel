@@ -1,4 +1,4 @@
-"""Example of use for AvoidBLASTMatches
+"""Example of use for AvoidBlastMatches.
 
 In this example we create a 1000bp random sequence, then edit out every match
 with E. coli that is 14bp or longer.
@@ -45,7 +45,7 @@ problem = DnaOptimizationProblem(
     sequence=random_dna_sequence(1000, seed=123),
     constraints=[
         AvoidBlastMatches(blast_db=genome_blastdb, min_align_length=13,
-                          perc_identity=80)
+                          perc_identity=95)
     ]
 )
 

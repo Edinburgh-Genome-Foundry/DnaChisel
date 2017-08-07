@@ -3,7 +3,7 @@ from .DnaOptimizationProblem import (DnaOptimizationProblem,
                                      NoSolutionError)
 from .Location import Location
 
-from .specifications import (
+from .builtin_specifications import (
     AvoidBlastMatches,
     AvoidHairpins,
     AvoidNonuniqueSegments,
@@ -15,12 +15,15 @@ from .specifications import (
     EnforceRegionsCompatibility,
     EnforceSequence,
     EnforceTranslation,
-    Specification,
-    SpecEvaluation,
-    PatternSpecification,
     SequenceLengthBounds,
-    VoidSpecification,
     DEFAULT_SPECIFICATIONS_DICT
+)
+
+from .Specification import (
+    Specification,
+    VoidSpecification,
+    PatternSpecification,
+    SpecEvaluation
 )
 
 from .biotools import (
