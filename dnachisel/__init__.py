@@ -48,10 +48,6 @@ from .biotools import (
     sequences_differences_segments
 )
 
-from .plotting_tools import (SpecAnnotationsTranslator,
-                             plot_local_gc_content,
-                             plot_local_gc_with_features)
-
 from .utils import random_compatible_dna_sequence
 
 from .version import __version__

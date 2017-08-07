@@ -1,9 +1,23 @@
 """Classes for Objective Evaluations."""
 import textwrap
+import itertools
+try:
+    import matplotlib.cm as cm
+    MATPLOTLIB_AVAILABLE = True
+except:
+    MATPLOTLIB_AVAILABLE = False
 
 from Bio.SeqFeature import SeqFeature
-from .plotting_tools import colors_cycle
 
+def colors_cycle():
+    if not MATPLOTLIB_AVAILABLE:
+        raise ImportError("Matplotlib is required !")
+
+    cycle = itertools.cycle([cm.Paired(0.21 * i % 1.0) for i in range(30)])
+    return (
+        '#%02x%02x%02x' % tuple([int(255 * c) for c in rgb_tuple[:3]])
+        for rgb_tuple in cycle
+    )
 
 class SpecEvaluation:
     """Store relevant infos about the evaluation of an objective on a problem.

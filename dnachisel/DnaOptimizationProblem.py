@@ -11,7 +11,6 @@ from tqdm import tqdm
 from .biotools.biotools import (sequence_to_biopython_record,
                                 find_specification_in_feature,
                                 sequences_differences_segments)
-
 from .Specification import Specification
 from .SpecEvaluation import (ProblemObjectivesEvaluations,
                              ProblemConstraintsEvaluations)

@@ -4,22 +4,77 @@ import os
 import textwrap
 
 from Bio import SeqIO
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_pdf import PdfPages
+
 import jinja2
 import weasyprint
 import flametree
 
-from ..biotools import sequence_to_biopython_record, crop_record
-from ..plotting_tools import SpecAnnotationsTranslator
+from ..biotools import (sequence_to_biopython_record, crop_record,
+                        find_specification_in_feature)
 from ..version import __version__
 from ..DnaOptimizationProblem import (DnaOptimizationProblem, NoSolutionError,
                                       NoSolutionFoundError)
+
+try:
+    import matplotlib.cm as cm
+    import matplotlib.pyplot as plt
+    from matplotlib.backends.backend_pdf import PdfPages
+    MATPLOTLIB_AVAILABLE = True
+    from dna_features_viewer import BiopythonTranslator
+    DFV_AVAILABLE = True
+except:
+    class BiopythonTranslator:
+        "Class unavailable. Install DNA Features Viewer."
+        def __init__(self):
+            raise ImportError("BiopythonTranslator unavailable. Install "
+                              "DNA Features Viewer.")
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 TEMPLATES_DIR = os.path.join(THIS_DIR, "templates")
 TITLE_FONTDICT = fontdict = dict(size=14, weight="bold")
 
+
+
+
+
+class SpecAnnotationsTranslator(BiopythonTranslator):
+    """Translator of DnaChisel feature-constraints for DNA Features Viewer"""
+
+    feature_prefixes_colors = {
+        "@": "#ce5454",
+        "~": "#e5be54",
+        "#": "#8edfff",
+        "!": "#fcff75",
+    }
+
+
+    def compute_feature_color(self, f):
+        color = f.qualifiers.get('color', None)
+        if color is not None:
+            if isinstance(color, list):
+                color = color[0]
+            return color
+
+        if f.type == "misc_feature":
+            specification = find_specification_in_feature(f)
+            if specification is None:
+                return "#f4df42"
+            else:
+                return self.feature_prefixes_colors.get(specification[0],
+                                                        "#f4df42")
+        else:
+            return "#eeeafa"
+
+    @staticmethod
+    def compute_feature_label(f):
+        is_edit = f.qualifiers.get("is_edit", "false")
+        if "true" in [is_edit, is_edit[0]]:
+            return None
+        default = BiopythonTranslator.compute_feature_label(f)
+        label = None if (f.type != "misc_feature") else default
+        if label == "misc_feature":
+            label = None
+        return label
 
 def optimization_with_report(target, problem=None, record=None,
                              project_name="unnamed",
