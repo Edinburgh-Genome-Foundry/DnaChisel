@@ -47,12 +47,12 @@ class AvoidBlastMatches(Specification):
         self.location = location
 
     def evaluate(self, problem):
-        """Return (-M) as a score, where M is the number of BLAST matches found
-        in the BLAST database."""
+        """Score as (-total number of blast identities in matches)."""
         location = self.location
         if location is None:
             location = Location(0, len(problem.sequence))
         sequence = location.extract_sequence(problem.sequence)
+
         blast_record = blast_sequence(
             sequence, blast_db=self.blast_db,
             word_size=self.word_size,
@@ -60,23 +60,42 @@ class AvoidBlastMatches(Specification):
             num_alignments=self.num_alignments,
             num_threads=self.num_threads
         )
-        query_locations = [
-            Location(min(hit.query_start, hit.query_end),
-                     max(hit.query_start, hit.query_end),
-                     1 - 2 * (hit.query_start > hit.query_end))
+
+        query_hits = [
+            (
+                min(hit.query_start, hit.query_end) + location.start,
+                max(hit.query_start, hit.query_end) + location.start,
+                1 - 2 * (hit.query_start > hit.query_end),
+                hit.identities
+            )
             for alignment in blast_record.alignments
             for hit in alignment.hsps
         ]
+
         locations = sorted([
-            loc for loc in query_locations
-            if len(location) >= self.min_align_length
+            Location(start, end, strand)
+            for (start, end, strand, ids) in query_hits
+            if (end - start) >= self.min_align_length
         ])
+
+        score = -sum([
+            ids
+            for (start, end, strand, ids) in query_hits
+            if (end - start) >= self.min_align_length
+        ])
+
         if locations == []:
             return SpecEvaluation(self, problem, score=1,
-                                       message="Passed: no BLAST match found")
+                                  message="Passed: no BLAST match found")
+
+        score = -sum([
+            hit.identities
+            for alignment in blast_record.alignments
+            for hit in alignment.hsps
+        ])
 
         return SpecEvaluation(
-            self, problem, score=-len(locations), locations=locations,
+            self, problem, score=score, locations=locations,
             message="Failed - matches at %s" % locations)
 
     def localized(self, location):
@@ -91,7 +110,7 @@ class AvoidBlastMatches(Specification):
         return self.copy_with_changes(location=new_location)
 
     def __repr__(self):
-        return "NoBlastMatchesSpecification%s(%s, %d+ bp, perc %d+)" % (
+        return "NoBlastMatchesSpecification(%s, %s, %d+ bp, perc %d+)" % (
             self.location, self.blast_db, self.min_align_length,
             self.perc_identity
         )

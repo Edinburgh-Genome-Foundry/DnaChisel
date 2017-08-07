@@ -149,12 +149,28 @@ class DnaOptimizationProblem:
         ]
 
         self.sequence_before = self.sequence
-        self.constraints_before = self.constraints_evaluations()
-        self.objectives_before = self.objectives_evaluations()
+        self._constraints_before = None
+        self._objectives_before = None
         if self.mutation_space is None:
             self.mutation_space = MutationSpace.from_optimization_problem(self)
             self.sequence = self.mutation_space.constrain_sequence(
                 self.sequence)
+
+    def constraints_before(self):
+        if self._constraints_before is None:
+            sequence = self.sequence
+            self.sequence = self.sequence_before
+            self._constraints_before = self.constraints_evaluations()
+            self.sequence = sequence
+        return self._constraints_before
+
+    def objectives_before(self):
+        if self._objectives_before is None:
+            sequence = self.sequence
+            self.sequence = self.sequence_before
+            self._obejctives_before = self.objectives_evaluations()
+            self.sequence = sequence
+        return self._objectives_before
 
     def constraints_evaluations(self):
         """Return a list of the evaluations of each constraint of the canvas.

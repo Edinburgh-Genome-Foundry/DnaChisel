@@ -9,6 +9,7 @@ class Location:
     """
 
     def __init__(self, start, end, strand=None):
+        """Initialize."""
         self.start = start
         self.end = end
         self.strand = strand
@@ -29,6 +30,7 @@ class Location:
             return None
 
     def extended(self, extension_length, upper_limit=None):
+        """Extend the location of a few basepairs on each side"""
         lower = max(0, self.start - extension_length)
         upper = self.end + extension_length
         if upper_limit is not None:
@@ -36,6 +38,7 @@ class Location:
         return Location(lower, upper, self.strand)
 
     def extract_sequence(self, sequence):
+        """Return the subsequence read at the given location."""
         result = sequence[self.start:self.end]
         if self.strand == -1:
             return reverse_complement(result)
@@ -43,6 +46,7 @@ class Location:
             return result
 
     def to_tuple(self):
+        """Return (start, end, strand)."""
         return (self.start, self.end, self.strand)
 
     def __geq__(self, other):
@@ -57,7 +61,7 @@ class Location:
     def __repr__(self):
         result = "%d-%d" % (self.start, self.end)
         if self.strand is not None:
-            result += "(%s)" % ({1: "+", -1: "-", 0:""}[self.strand])
+            result += "(%s)" % ({1: "+", -1: "-", 0: ""}[self.strand])
         return result
 
     def __len__(self):

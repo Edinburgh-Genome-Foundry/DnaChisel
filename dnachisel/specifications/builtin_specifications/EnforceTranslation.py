@@ -87,6 +87,7 @@ class EnforceTranslation(CodonSpecification):
 
     def evaluate(self, problem):
         """Score is the number of wrong-translation codons."""
+        # return SpecEvaluation(self, problem, score=0)
         location = (self.location if self.location is not None else
                     Location(0, len(problem.sequence)))
         subsequence = location.extract_sequence(problem.sequence)

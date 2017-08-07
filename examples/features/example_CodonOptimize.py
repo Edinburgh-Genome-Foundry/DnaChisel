@@ -12,7 +12,6 @@ problem = DnaOptimizationProblem(sequence=sequence,
 print ("\nBefore optimization:\n")
 print (problem.objectives_text_summary())
 
-import cProfile
 problem.optimize(progress_bars=2)
 
 print ("\nAfter optimization:\n")

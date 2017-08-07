@@ -193,9 +193,6 @@ class PatternSpecification(Specification):
     pattern
       A SequencePattern or DnaNotationPattern
 
-    dna_pattern
-      A string of ATGC that will be converted automatically to a DNA pattern
-
     enzyme
       Enzyme name, can be provided instead of pattern or dna_pattern
 
@@ -207,16 +204,14 @@ class PatternSpecification(Specification):
     """
     shrink_when_localized = True
 
-    def __init__(self, pattern=None, location=None, boost=1.0, enzyme=None,
-                 dna_pattern=None):
+    def __init__(self, pattern=None, location=None, boost=1.0, enzyme=None):
         """Initialize."""
         if enzyme is not None:
             pattern = enzyme_pattern(enzyme)
         if isinstance(pattern, str):
-            pattern = DnaNotationPattern(dna_pattern)
+            pattern = DnaNotationPattern(pattern)
         self.pattern = pattern
         self.location = location
-        self.dna_pattern = dna_pattern
         self.enzyme = enzyme
         self.boost = boost
 
