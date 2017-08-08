@@ -16,7 +16,7 @@ from .SpecEvaluation import (ProblemObjectivesEvaluations,
                              ProblemConstraintsEvaluations)
 from .builtin_specifications import DEFAULT_SPECIFICATIONS_DICT
 from .Location import Location
-from .Mutation import MutationSpace
+from .MutationSpace import MutationSpace
 from .ProgressLogger import DnaOptimizationProgressBar
 
 
@@ -33,17 +33,6 @@ class NoSolutionError(Exception):
         self.problem = problem
         self.constraint = constraint
         self.location = location
-
-
-class NoSolutionFoundError(Exception):
-    """Exception returned when a DnaOptimizationProblem solving fails to find
-    a solution.
-    This means that the search was not long enough or that there was
-    no solution, because in some complex way, some constraints
-    are incompatible.
-    """
-    pass
-
 
 class DnaOptimizationProblem:
     """Problem specifications: sequence, constraints, optimization objectives.
@@ -114,6 +103,7 @@ class DnaOptimizationProblem:
     randomization_threshold = 10000
     max_random_iters = 1000
     n_mutations = 2
+    local_extensions = (0, 5)
 
     def __init__(self, sequence, constraints=None, objectives=None,
                  progress_logger='bar', mutation_space=None):
@@ -172,7 +162,7 @@ class DnaOptimizationProblem:
         if self._objectives_before is None:
             sequence = self.sequence
             self.sequence = self.sequence_before
-            self._obejctives_before = self.objectives_evaluations()
+            self._objectives_before = self.objectives_evaluations()
             self.sequence = sequence
         return self._objectives_before
 
@@ -211,10 +201,10 @@ class DnaOptimizationProblem:
         canvas.
         """
         sequence_before = self.sequence
-        all_mutations = self.mutation_space.iterate_mutations(self.sequence)
+        all_variants = self.mutation_space.all_variants(self.sequence)
         self.progress_logger(mutation_total=self.mutation_space.space_size)
-        for i, mutated_sequence in enumerate(all_mutations):
-            self.sequence = mutated_sequence
+        for i, variant in enumerate(all_variants):
+            self.sequence = variant
             if self.all_constraints_pass():
                 return
             self.progress_logger(mutation_index=i)
@@ -279,7 +269,64 @@ class DnaOptimizationProblem:
         else:
             self.resolve_constraints_by_random_mutations()
 
-    def resolve_constraints(self, constraints='all', final_check=True):
+    def resolve_constraint(self, constraint):
+        evaluation = constraint.evaluate(self)
+        if evaluation.passes:
+            return
+
+        locations = evaluation.locations
+        self.progress_logger(location_total=len(locations))
+        for i, location in enumerate(locations):
+            for extension in self.local_extensions:
+                location = location.extended(extension)
+                mutation_space = self.mutation_space.localized(location)
+                if mutation_space.space_size == 0:
+                    raise NoSolutionError(
+                       location=location,
+                       message='Constraint breach in frozen region'
+                    )
+                location = Location(*mutation_space.choices_span)
+
+                localized_constraints = [
+                    _constraint.localized(location)
+                    for _constraint in self.constraints
+                    if not _constraint.enforced_by_nucleotide_restrictions
+                ]
+                passing_localized_constraints = [
+                    _constraint
+                    for _constraint in localized_constraints
+                    if _constraint.evaluate(self).passes
+                ]
+                local_problem = self.__class__(
+                    sequence=self.sequence,
+                    constraints=([constraint.localized(location)] +
+                                 passing_localized_constraints),
+                    mutation_space=mutation_space
+                )
+                local_problem.randomization_threshold = \
+                    self.randomization_threshold
+                local_problem.max_random_iters = self.max_random_iters
+                local_problem.n_mutations = self.n_mutations
+                try:
+                    if hasattr(constraint, 'resolution_heurististic'):
+                        constraint.resolution_heuristic(local_problem)
+                    else:
+                        local_problem.resolve_constraints_locally()
+                    self.sequence = local_problem.sequence
+                    break
+                except NoSolutionError as error:
+                    if extension == self.local_extensions[-1]:
+                        error.location = location
+                        error.constraint = constraint
+                        self.progress_logger(location_index=len(locations))
+                        raise error
+                    else:
+                        continue
+
+            self.progress_logger(location_index=i + 1)
+
+
+    def resolve_constraints(self, final_check=True):
         """Solve a particular constraint using local, targeted searches.
 
         Parameters
@@ -288,81 +335,34 @@ class DnaOptimizationProblem:
         constraint
           The ``Specification`` object for which the sequence should be solved
 
-        randomization_threshold
-          Local problems with a search space size under this threshold will be
-          solved using deterministic, exhaustive search of the search space
-          (see ``resolve_constraints_by_exhaustive_search``)
-          When the space size is above this threshold, local searches will use
-          a randomized search algorithm
-          (see ``resolve_constraints_by_random_mutations``).
-
-        max_random_iters
-          Maximal number of iterations when performing a randomized search
-          (see ``resolve_constraints_by_random_mutations``).
-
         """
-        if constraints == 'all':
-            constraints = self.constraints
-
-        if isinstance(constraints, list):
-            constraints = sorted(constraints, key=lambda c: -c.priority)
-            self.progress_logger(constraint_total=len(self.constraints))
-            for i, constraint in enumerate(constraints):
-                self.resolve_constraints(constraints=constraint)
-                self.progress_logger(constraint_index=i + 1)
-            if final_check:
-                for cst in constraints:
-                    if not cst.evaluate(self).passes:
-                        raise NoSolutionFoundError(
-                            'The solving of all constraints failed to solve'
-                            ' all constraints, constraint %s is'
-                            ' still failing. This is an unintended behavior,'
-                            ' likely due to a complex problem. Try running the'
-                            ' solver on the same sequence again, or report the'
-                            ' error to the maintainers' % cst)
+        constraints = [
+            c for c in self.constraints
+            if not c.enforced_by_nucleotide_restrictions
+        ]
+        if len(constraints) == 0:
             return
-
-        constraint = constraints
-        evaluation = constraint.evaluate(self)
-        if evaluation.passes:
-            return
-
-        locations = evaluation.locations
-        self.progress_logger(location_total=len(locations))
-        for i, location in enumerate(locations):
-            mutation_space = self.mutation_space.localized(location)
-            if mutation_space.space_size == 0:
-                raise NoSolutionError(
-                   location=location,
-                   message='Constraint breach in frozen region'
-                )
-            location = Location(*mutation_space.choices_span)
-            localized_constraints = [
-                _constraint.localized(location)
-                for _constraint in self.constraints
-            ]
-            passing_localized_constraints = [
-                _constraint
-                for _constraint in localized_constraints
-                if _constraint.evaluate(self).passes
-            ]
-            local_problem = self.__class__(
-                sequence=self.sequence,
-                constraints=([constraint.localized(location)] +
-                             passing_localized_constraints),
-                mutation_space=mutation_space
-            )
+        constraints = sorted(constraints, key=lambda c: -c.priority)
+        self.progress_logger(constraint_total=len(constraints))
+        for i, constraint in enumerate(constraints):
             try:
-                if hasattr(constraint, 'resolution_heurististic'):
-                    constraint.resolution_heuristic(local_problem)
-                else:
-                    local_problem.resolve_constraints_locally()
-                self.sequence = local_problem.sequence
+                self.resolve_constraint(constraint=constraint)
             except NoSolutionError as error:
-                error.location = location
-                error.constraint = constraint
+                self.progress_logger(constraint_index=len(constraints))
                 raise error
-            self.progress_logger(location_index=i + 1)
+
+            self.progress_logger(constraint_index=i + 1)
+        if final_check:
+            for cst in self.constraints:
+                if not cst.evaluate(self).passes:
+                    raise NoSolutionError(
+                        'The solving of all constraints failed to solve'
+                        ' all constraints, constraint %s is'
+                        ' still failing. This is an unintended behavior,'
+                        ' likely due to a complex problem. Try running the'
+                        ' solver on the same sequence again, or report the'
+                        ' error to the maintainers' % cst)
+
 
 
     # SPECIFICATIONS
@@ -387,10 +387,10 @@ class DnaOptimizationProblem:
 
         current_best_score = self.objective_scores_sum()
         current_best_sequence = self.sequence
-        all_mutations = self.mutation_space.iterate_mutations(self.sequence)
+        all_variants = self.mutation_space.all_variants(self.sequence)
         self.progress_logger(mutation_total=self.mutation_space.space_size)
-        for i, mutated_sequence in enumerate(all_mutations):
-            self.sequence = mutated_sequence
+        for i, variant in enumerate(all_variants):
+            self.sequence = variant
             if self.all_constraints_pass():
                 score = self.objective_scores_sum()
                 if score > current_best_score:
@@ -429,7 +429,7 @@ class DnaOptimizationProblem:
 
             previous_sequence = self.sequence
             self.sequence = self.mutation_space.apply_random_mutations(
-                n_mutations=n_mutations, sequence=self.sequence)
+                n_mutations=self.n_mutations, sequence=self.sequence)
             if self.all_constraints_pass():
                 new_score = self.objective_scores_sum()
                 if new_score > score:
@@ -438,27 +438,11 @@ class DnaOptimizationProblem:
                     self.sequence = previous_sequence
             else:
                 self.sequence = previous_sequence
-            self.progress_logger(mutation_index=i + 1)
+            self.progress_logger(mutation_index=iteration + 1)
         #  assert self.all_constraints_pass()
 
-    def optimize(self, objectives='all'):
-        """Maximize the objective via local, targeted mutations."""
+    def optimize_objective(self, objective):
 
-        if objectives == 'all':
-            objectives = [
-                obj for obj in self.objectives
-                if not obj.optimize_passively
-            ]
-
-        if isinstance(objectives, list):
-
-            self.progress_logger(objective_total=len(objectives))
-            for i, objective in enumerate(objectives):
-                self.optimize(objectives=objective)
-                self.progress_logger(objective_index=i + 1)
-            return
-
-        objective = objectives
         evaluation = objective.evaluate(self)
         locations = evaluation.locations
         if ((objective.best_possible_score is not None) and
@@ -491,6 +475,9 @@ class DnaOptimizationProblem:
                     for _objective in self.objectives
                 ]
             )
+            local_problem.randomization_threshold = self.randomization_threshold
+            local_problem.max_random_iters = self.max_random_iters
+            local_problem.n_mutations = self.n_mutations
             if hasattr(objective, 'optimization_heuristic'):
                 objective.optimization_heuristic(local_problem)
             else:
@@ -502,6 +489,21 @@ class DnaOptimizationProblem:
                     local_problem.optimize_by_random_mutations()
             self.sequence = local_problem.sequence
             self.progress_logger(location_index=i + 1)
+
+    def optimize(self):
+        """Maximize the objective via local, targeted mutations."""
+
+        objectives = [
+            obj for obj in self.objectives
+            if not obj.optimize_passively
+        ]
+        if len(objectives) == 0:
+            return
+        self.progress_logger(objective_total=len(objectives))
+        for i, objective in enumerate(objectives):
+            self.optimize_objective(objective=objective)
+            self.progress_logger(objective_index=i + 1)
+        return
 
     # def include_pattern_by_successive_tries(self, pattern, location=None,
     #                                         paste_pattern_in=True,

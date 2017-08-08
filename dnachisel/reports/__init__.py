@@ -8,4 +8,5 @@ from .constraints_reports import (make_constraints_breaches_pdf,
 
 from .optimization_reports import (write_no_solution_report,
                                    write_optimization_report,
-                                   optimization_with_report)
+                                   optimization_with_report,
+                                   SpecAnnotationsTranslator)

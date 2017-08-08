@@ -11,7 +11,7 @@ numpy.random.seed(123)
 
 def test_basics():
     results = []
-    for boost in (0, 0.1, 1, 10.0):
+    for boost in (0, 0.1, 0.2, 1):
         sequence = random_dna_sequence(1000, seed=123)
         problem = DnaOptimizationProblem(
             sequence=sequence,
@@ -19,10 +19,11 @@ def test_basics():
                 EnforceGCContent(gc_min=0.45, gc_max=0.55, gc_window=80),
                 AvoidChanges(boost=boost).as_passive_objective()])
 
-        problem.optimize(max_random_iters=1000, progress_bars=3)
+        problem.optimize()
         differences = sequences_differences(problem.sequence,
                                             problem.sequence_before)
         results.append(differences)
     assert results[0] > 40
+    print (results)
     assert(results[0] > results[1] > results[2] > results[3])
     assert results[-1] == 0

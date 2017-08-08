@@ -28,10 +28,9 @@ class Specification:
     """
 
     best_possible_score = None
-    is_passive_objective = False
-    optimize_passively = True
-    enforced_by_mutations_restrictions = True
-    priority = 1
+    optimize_passively = False
+    enforced_by_nucleotide_restrictions = False
+    priority = 0
 
     def __init__(self, evaluate=None, boost=1.0):
         """Initialize."""
@@ -93,7 +92,7 @@ class Specification:
         role, specification, parameters = match.groups()
         role = {"@": "constraint", "~": "specification"}[role]
         kwargs = dict(e.split('=') for e in parameters[1:-1].split(', ')
-                    if ("=" in e))
+                      if ("=" in e))
         for k, v in kwargs.items():
             match = re.match(r"'(.*)'", v)
             if match is not None:
@@ -205,9 +204,13 @@ class PatternSpecification(Specification):
 
     """
     shrink_when_localized = True
+    priority = 1 # higher than normal
 
-    def __init__(self, pattern=None, location=None, boost=1.0, enzyme=None):
+    def __init__(self, pattern=None, location=None, boost=1.0, enzyme=None,
+                 dna_pattern=None):
         """Initialize."""
+        if dna_pattern is not None:
+            pattern = dna_pattern
         if enzyme is not None:
             pattern = enzyme_pattern(enzyme)
         if isinstance(pattern, str):

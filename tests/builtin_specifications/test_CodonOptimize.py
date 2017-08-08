@@ -11,6 +11,7 @@ def test_basics():
         constraints=[EnforceTranslation()],
         objectives=[CodonOptimize(species='e_coli')]
     )
+    print (problem.mutation_space.choices)
     assert problem.objective_scores_sum() < 0
-    problem.optimize(progress_bars=2)
+    problem.optimize()
     assert problem.objective_scores_sum() == 0

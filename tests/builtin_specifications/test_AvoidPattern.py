@@ -8,5 +8,5 @@ def test_basics():
         constraints=[AvoidPattern(enzyme="BsaI")]
     )
     assert not problem.all_constraints_pass()
-    problem.resolve_constraints(final_check=False)
+    problem.resolve_constraints()
     assert problem.all_constraints_pass()

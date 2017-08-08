@@ -1,5 +1,4 @@
 from .DnaOptimizationProblem import (DnaOptimizationProblem,
-                                     NoSolutionFoundError,
                                      NoSolutionError)
 from .Location import Location
 

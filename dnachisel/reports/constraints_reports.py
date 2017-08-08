@@ -18,8 +18,8 @@ except:
 
 from ..DnaOptimizationProblem import DnaOptimizationProblem
 from ..biotools import gc_content, repeated_kmers, homopolymer_pattern
-from ..specifications import (EnforceGCContent, AvoidPattern,
-                              AvoidHairpins)
+from ..builtin_specifications import (EnforceGCContent, AvoidPattern,
+                                      AvoidHairpins)
 
 
 def plot_constraint_breaches(constraint, sequence, title=None, ax=None,

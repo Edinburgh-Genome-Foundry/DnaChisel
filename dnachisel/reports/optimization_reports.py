@@ -12,8 +12,7 @@ import flametree
 from ..biotools import (sequence_to_biopython_record, crop_record,
                         find_specification_in_feature)
 from ..version import __version__
-from ..DnaOptimizationProblem import (DnaOptimizationProblem, NoSolutionError,
-                                      NoSolutionFoundError)
+from ..DnaOptimizationProblem import (DnaOptimizationProblem, NoSolutionError)
 
 try:
     import matplotlib.cm as cm
@@ -123,23 +122,26 @@ def optimization_with_report(target, problem=None, record=None,
     if problem is None:
         problem = DnaOptimizationProblem.from_record(
             record, specifications_dict=specifications_dict)
+    for k, v in solver_parameters.items():
+        problem.__dict__[k] = v
 
     try:
         problem.progress_logger(message="Solving constraints")
-        problem.resolve_constraints(**solver_parameters)
+        problem.resolve_constraints()
     except NoSolutionError as error:
+        # if error.location is None:
+        #     problem.progress_logger(
+        #         message="Failed to solve constraints. Generating report.")
+        #     data = write_optimization_report(
+        #         target, problem, project_name=project_name)
+        #     return False, "No solution found before the end of search.", data
+
         problem.progress_logger(message="No solution found: making report")
         data = write_no_solution_report(target, problem, error)
-        start, end, s = error.location.as_tuple()
+        start, end, s = error.location.to_tuple()
         message = ("No solution found in zone [%d, %d]: %s." %
                    (start, end, str(error)))
         return False, message, data
-    except NoSolutionFoundError as error:
-        problem.progress_logger(
-            message="Failed to solve constraints. Generating report.")
-        data = write_optimization_report(
-            target, problem, project_name=project_name)
-        return False, "No solution found before the end of search.", data
 
     problem.progress_logger(message="Now optimizing the sequence")
     problem.optimize()
@@ -260,8 +262,7 @@ def write_optimization_report(target, problem, project_name="unnammed",
                 "After",
                 sequence_to_biopython_record(problem.sequence_before),
                 constraints_evaluations,
-                objectives_evaluations if objectives_evaluations is not None
-                else problem.objectives_evaluations(),
+                objectives_evaluations,
                 problem.sequence_edits_as_features()
             )
         ]

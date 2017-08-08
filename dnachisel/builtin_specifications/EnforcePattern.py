@@ -48,9 +48,9 @@ class EnforcePattern(PatternSpecification):
                 message = "Failed. Pattern not found."
             else:
                 message = ("Failed. Pattern found %d times instead of %d"
-                           " wanted at positions %s") % (len(locations),
-                                                         self.occurences,
-                                                         location)
+                           " wanted, at locations %s") % (len(locations),
+                                                          self.occurences,
+                                                          location)
         return SpecEvaluation(
             self, problem, score, message=message,
             locations=None if location is None else [location],

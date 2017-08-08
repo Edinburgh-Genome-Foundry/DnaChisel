@@ -4,40 +4,21 @@ import itertools
 import numpy as np
 from .biotools import windows_overlap
 
-
-
-class Mutation:
-
-    def __init__(self, segment, subsequence):
-        self.segment = segment
-        self.start, self.end = segment
-        self.subsequence = subsequence
-
-    def __eq__(self, other):
-        return (self.start, self.subsequence) == (other.start,
-                                                  other.subsequence)
-
-    def __hash__(self):
-        return hash((self.start, self.subsequence))
-
-    def __repr__(self):
-        return "Mut(%d-%d %s)" % (self.start, self.end, self.subsequence)
-
-    def __str__(self):
-        return "Mut(%d-%d %s)" % (self.start, self.end, self.subsequence)
-
 class MutationChoice:
+    __slots__ = ['segment', 'start', 'end', 'variants']
 
-    def __init__(self, segment, mutations):
+    def __init__(self, segment, variants):
+        if isinstance(segment, int):
+            segment = (segment, segment + 1)
         self.segment = segment
         self.start, self.end = segment
-        self.mutations = mutations
-        self.possible_subsequences = set(m.subsequence for m in mutations)
+        self.variants = variants
+        # self.possible_subsequences = set(m.subsequence for m in mutations)
 
     def random_mutation(self, sequence):
         subsequence = sequence[self.start: self.end]
-        mutations = [m for m in self.mutations if m.subsequence != subsequence]
-        return mutations[np.random.randint(len(mutations))]
+        variants = [v for v in self.variants if v != subsequence]
+        return variants[np.random.randint(len(variants))]
 
     def percolate_with(self, others):
         """Return a mutation restriction
@@ -57,48 +38,34 @@ class MutationChoice:
         others = sorted(others, key=lambda o: o.start)
         others_start = others[0].start
         final_segment = others_start, others[-1].end
-        final_mutations = set()
-        for candidate in self.mutations:
+        final_variants = set()
+        for candidate in self.variants:
             slots = []
             for other in others:
                 istart, iend = windows_overlap(other.segment, self.segment)
                 slot = []
-                for mutation in other.mutations:
-                    seq = mutation.subsequence
-                    subseq = seq[istart - other.start: iend - other.start]
-                    subcandidate = candidate.subsequence[
-                        istart - self.start: iend - self.start]
+                for variant in other.variants:
+                    subseq = variant[istart - other.start: iend - other.start]
+                    subcandidate = candidate[istart - self.start:
+                                             iend - self.start]
                     if subseq == subcandidate:
-                        slot.append(seq)
+                        slot.append(variant)
                 slots.append(slot)
             for subseqs in itertools.product(*slots):
                 seq = "".join(subseqs)
                 matching_seq = seq[self.start - others_start:
                                    self.end - others_start]
-                if matching_seq == candidate.subsequence:
-                    final_mutations.add(Mutation(segment=final_segment,
-                                                 subsequence=seq))
-
+                if matching_seq == candidate:
+                    final_variants.add(seq)
         return MutationChoice(segment=final_segment,
-                              mutations=final_mutations)
-
-    @staticmethod
-    def from_tuple(segment_mutations):
-        segment, mutations = segment_mutations
-        if isinstance(segment, int):
-            segment = segment, segment + 1
-        mutations = [
-            Mutation(segment=segment, subsequence=subsequence)
-            for subsequence in mutations
-        ]
-        return MutationChoice(segment=segment, mutations=mutations)
+                              variants=final_variants)
 
     def __repr__(self):
-        subsequences = "-".join([m.subsequence for m in self.mutations])
+        subsequences = "-".join(self.variants)
         return "MutChoice(%d-%d %s)" % (self.start, self.end, subsequences)
 
     def __str__(self):
-        subsequences = "-".join([m.subsequence for m in self.mutations])
+        subsequences = "-".join(self.variants)
         return "MutChoice(%d-%d %s)" % (self.start, self.end, subsequences)
 
 
@@ -116,17 +83,17 @@ class MutationSpace:
         self.unsolvable_segments = [
             choice.segment
             for choice in self.choices_list
-            if len(choice.mutations) == 0
+            if len(choice.variants) == 0
         ]
         self.determined_segments = [
-            (choice.segment, list(choice.mutations)[0].subsequence)
+            (choice.segment, list(choice.variants)[0])
             for choice in self.choices_list
-            if len(choice.mutations) == 1
+            if len(choice.variants) == 1
         ]
         self.choices = [
             choice
             for choice in self.choices_list
-            if len(choice.mutations) > 1
+            if len(choice.variants) > 1
         ]
 
     @property
@@ -138,14 +105,14 @@ class MutationSpace:
     def constrain_sequence(self, sequence):
         new_sequence = np.array(list(sequence))
         for choice in self.choices_list:
-            possibilities = choice.possible_subsequences
-            if len(possibilities) == 0:
+            variants = choice.variants
+            if len(choice.variants) == 0:
                 continue
-            elif len(possibilities) == 1:
-                possibilities = list(list(possibilities)[0])
-                new_sequence[choice.start:choice.end] = possibilities
-            elif sequence[choice.start: choice.end] not in possibilities:
-                new_sequence[choice.start:choice.end] = list(possibilities)[0]
+            elif len(variants) == 1:
+                variants = list(list(variants)[0])
+                new_sequence[choice.start:choice.end] = variants
+            elif sequence[choice.start: choice.end] not in variants:
+                new_sequence[choice.start:choice.end] = list(variants)[0]
         return "".join(new_sequence)
 
 
@@ -163,7 +130,7 @@ class MutationSpace:
         if len(self.choices) == 0:
             return 0
         return np.prod([1.0] + [
-            len(choice.mutations)
+            len(choice.variants)
             for choice in self.choices
         ])
 
@@ -172,10 +139,13 @@ class MutationSpace:
         n_mutations = min(len(self.choices), n_mutations)
         if n_mutations == 1:
             choice = self.choices[np.random.randint(len(self.choices))]
-            return [choice.random_mutation(sequence=sequence)]
+            return [
+                (choice.segment,
+                 choice.random_mutation(sequence=sequence))
+            ]
 
         return [
-            choice_.random_mutation(sequence=sequence)
+            (choice_.segment, choice_.random_mutation(sequence=sequence))
             for choice_ in [
                 self.choices[i]
                 for i in np.random.choice(len(self.choices), n_mutations,
@@ -187,22 +157,23 @@ class MutationSpace:
     def apply_random_mutations(self, n_mutations, sequence):
         """Return a sequence with n random mutations applied."""
         new_sequence = bytearray(sequence.encode())
-        for mut in self.pick_random_mutations(n_mutations, sequence):
-            new_sequence[mut.start: mut.end] = mut.subsequence.encode()
+        for segment, seq in self.pick_random_mutations(n_mutations, sequence):
+            start, end = segment
+            new_sequence[start: end] = seq.encode()
         return new_sequence.decode()
 
-    def iterate_mutations(self, sequence):
+    def all_variants(self, sequence):
         new_sequence = bytearray(sequence.encode())
         choice_start, choice_end = self.choices_span
         encoded_segment = sequence[choice_start: choice_end].encode()
-        mutations_slots = [
-             [(choice_, m.subsequence.encode()) for m in choice_.mutations]
+        variants_slots = [
+             [(choice_.segment, v.encode()) for v in choice_.variants]
              for choice_ in self.choices
         ]
-        for mutations in itertools.product(*mutations_slots):
+        for variants in itertools.product(*variants_slots):
             new_sequence[choice_start: choice_end] = encoded_segment
-            for (choice, subsequence) in mutations:
-                new_sequence[choice.start: choice.end] = subsequence
+            for ((start, end), variant) in variants:
+                new_sequence[start: end] = variant
             yield new_sequence.decode()
 
 
@@ -211,14 +182,14 @@ class MutationSpace:
 
         sequence = optimization_problem.sequence
         choice_index = [
-            MutationChoice.from_tuple(((i, i+1), set("ATGC")))
+            MutationChoice((i, i+1), variants=set("ATGC"))
             for i in range(len(sequence))
         ]
 
         mutation_choices = sorted([
             choice
             if isinstance(choice, MutationChoice)
-            else MutationChoice.from_tuple(choice)
+            else MutationChoice(segment=choice[0], variants=set(choice[1]))
             for cst in optimization_problem.constraints
             for choice in cst.restrict_nucleotides(sequence)
         ], key=lambda choice: (choice.end - choice.start, choice.start))

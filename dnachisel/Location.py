@@ -7,6 +7,7 @@ class Location:
     This is similar to a Biopython's FeatureLocation, but with different
     methods for different purposes.
     """
+    __slots__ = ['strand', 'start', 'end']
 
     def __init__(self, start, end, strand=None):
         """Initialize."""

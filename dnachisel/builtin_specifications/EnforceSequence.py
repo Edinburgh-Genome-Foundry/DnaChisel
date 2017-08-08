@@ -16,7 +16,7 @@ class EnforceSequence(Specification):
     """WORK IN PROGRESS. Enforces a degenerate sequence."""
     localization_interval_length = 6  # used when optimizing the minimize_diffs
     best_possible_score = 0
-    enforced_by_mutations_restrictions = True
+    enforced_by_nucleotide_restrictions = True
 
     def __init__(self, sequence, location=None, boost=1.0):
         """Initialize."""

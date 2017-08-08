@@ -20,5 +20,5 @@ def test_basics():
     problem = DnaOptimizationProblem(full_sequence,
                                      constraints=[AvoidHairpins()])
     assert not problem.all_constraints_pass()
-    problem.resolve_constraints(progress_bars=2)
+    problem.resolve_constraints()
     assert problem.all_constraints_pass()

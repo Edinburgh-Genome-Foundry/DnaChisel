@@ -43,7 +43,7 @@ class ProgressBarLogger(ProgressLogger):
     def new_bar(self, bar_id):
         desc, _, total = self.bars_descriptions[bar_id]
         total = self.state[total]
-        self.bars[bar_id] = tqdm(total=total, desc=desc)
+        self.bars[bar_id] = tqdm(total=total, desc=desc, leave=False)
 
     def callback(self, **kw):
 
