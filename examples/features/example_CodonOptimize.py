@@ -12,7 +12,7 @@ problem = DnaOptimizationProblem(sequence=sequence,
 print ("\nBefore optimization:\n")
 print (problem.objectives_text_summary())
 
-problem.optimize(progress_bars=2)
+problem.optimize()
 
 print ("\nAfter optimization:\n")
 print (problem.objectives_text_summary())

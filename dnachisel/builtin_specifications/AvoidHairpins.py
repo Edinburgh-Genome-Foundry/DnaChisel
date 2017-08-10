@@ -1,6 +1,7 @@
 """Implementation of AvoidHairpins."""
 
-from ..Specification import Specification, VoidSpecification
+from ..Specification import Specification
+from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from dnachisel.biotools import reverse_complement, group_nearby_segments
 from dnachisel.Location import Location
@@ -77,12 +78,6 @@ class AvoidHairpins(Specification):
                 self.location.end, new_location.end + self.hairpin_window)
             return self.copy_with_changes(location=new_location)
 
-    def __repr__(self):
-        """Represent."""
-        return "AvoidHairpins(size=%d, window=%d)" % \
-            (self.stem_size, self.hairpin_window)
-
-    def __str__(self):
-        """Represent."""
-        return "AvoidHairpins(size=%d, window=%d)" % \
-            (self.stem_size, self.hairpin_window)
+    def label_parameters(self):
+        return [('stem_size', self.stem_size),
+                ('hairpin_window', self.hairpin_window)]

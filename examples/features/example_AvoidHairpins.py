@@ -20,7 +20,7 @@ problem = DnaOptimizationProblem(full_sequence, constraints=[AvoidHairpins()])
 print ("\nBefore optimization:\n")
 print (problem.constraints_text_summary())
 
-problem.resolve_constraints(progress_bars=2)
+problem.resolve_constraints()
 
 print ("\nAfter optimization:\n")
 

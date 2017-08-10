@@ -1,6 +1,7 @@
 """Implement AvoidPattern"""
 
-from ..Specification import Specification, VoidSpecification
+from ..Specification import Specification
+from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from .EnforceSequence import EnforceSequence
 from ..MutationSpace import MutationSpace
@@ -28,15 +29,18 @@ class EnforcePattern(Specification):
 
     best_possible_score = 0
     priority = -1
+    genbank_args = ('pattern', 'occurences')
 
-    def __init__(self, pattern=None, enzyme=None,
-                 location=None, occurences=1, boost=1.0):
+    def __init__(self, pattern=None, occurences=1, location=None, enzyme=None,
+                 boost=1.0):
         """Initialize."""
         if enzyme is not None:
             pattern = enzyme_pattern(enzyme)
         if isinstance(pattern, str):
             pattern = DnaNotationPattern(pattern)
         self.pattern = pattern
+        if isinstance(location, tuple):
+            location = Location.from_tuple(location)
         self.location = location
         self.enzyme = enzyme
         self.boost = boost
@@ -87,23 +91,16 @@ class EnforcePattern(Specification):
         pattern from 0 to some number
         """
         L = self.pattern.size
-        localized_constraints = [
-            c#.localized(self.location)
-            for c in problem.constraints
-        ]
         for start in range(self.location.start, self.location.end - L):
-            #print (start)
             new_location = Location(start, start + L, self.location.strand)
             new_constraint = EnforceSequence(sequence=self.pattern.sequence,
                                              location=new_location)
             new_space = MutationSpace.from_optimization_problem(
                 problem, new_constraints=[new_constraint])
-            #print ('new_space', new_space.choices)
             if len(new_space.unsolvable_segments) > 0:
-                #print ("bummer unsolvable")
                 continue
             new_sequence = new_space.constrain_sequence(problem.sequence)
-            new_constraints = localized_constraints + [new_constraint]
+            new_constraints = problem.constraints + [new_constraint]
             new_problem = DnaOptimizationProblem(
                 sequence=new_sequence,
                 constraints=new_constraints,
@@ -113,30 +110,33 @@ class EnforcePattern(Specification):
             assert self.evaluate(new_problem).passes
             try:
                 new_problem.resolve_constraints()
-                #print (new_problem.constraints_text_summary())
-                #print (new_problem.mutation_space.choices)
                 problem.sequence = new_problem.sequence
                 return
             except NoSolutionError:
-                # print ("bummer")
                 pass
-        raise NoSolutionError(problem=problem, location=self.location,
+        raise NoSolutionError(
+            problem=problem, location=self.location,
             message='Insertion of pattern %s in %s failed' % (
                 self.pattern.sequence, self.location
-            ))
+            )
+        )
 
     def resolution_heuristic(self, problem):
-        evaluation = self.evaluate(problem)
-        if evaluation.passes:
-            return
-        if len(evaluation.data["matches"]) == self.occurences - 1:
-            self.insert_pattern_in_problem(problem)
-        else:
-            problem.resolve_constraints_locally()  # default resolution method
+        """Resolve using custom instertion if possible."""
+        if isinstance(self.pattern, DnaNotationPattern):
+            evaluation = self.evaluate(problem)
+            if evaluation.passes:
+                return
+            if len(evaluation.data["matches"]) == self.occurences - 1:
+                self.insert_pattern_in_problem(problem)
+                return
+        problem.resolve_constraints_locally()  # default resolution method
 
-
-    def __repr__(self):
-        return "EnforcePattern(%s, %s)" % (self.pattern, self.location)
-
-    def __str__(self):
-        return "EnforcePattern(%s, %s)" % (self.pattern, self.location)
+    def label_parameters(self):
+        result = [('enzyme'. self.enzyme) if (self.enzyme is not None)
+                  else (self.pattern.sequence
+                        if hasattr(self.pattern, 'sequence')
+                        else str(self.pattern))]
+        if self.occurences != 1:
+            result.append('occurence', self.occurences)
+        return result

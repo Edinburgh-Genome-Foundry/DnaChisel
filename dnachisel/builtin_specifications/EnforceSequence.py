@@ -4,7 +4,8 @@
 
 import numpy as np
 
-from ..Specification import Specification, VoidSpecification
+from ..Specification import Specification
+from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from dnachisel.Location import Location
 from dnachisel.biotools import (group_nearby_indices,
@@ -13,7 +14,20 @@ from dnachisel.biotools import (group_nearby_indices,
 
 
 class EnforceSequence(Specification):
-    """WORK IN PROGRESS. Enforces a degenerate sequence."""
+    """Enforces a degenerate sequence.
+
+    Parameters
+    ----------
+
+    sequence
+      An ATGC string representing the wanted sequence, possibly degenerated,
+      for instance ATTCGCGTYTTKWNAA
+
+    location
+      Location of the DNA segment on which to enforce the pattern e.g.
+      ``Location(10, 45, 1)`` or simply ``(10, 45, 1)``
+
+    """
     localization_interval_length = 6  # used when optimizing
     best_possible_score = 0
     enforced_by_nucleotide_restrictions = True
@@ -21,6 +35,8 @@ class EnforceSequence(Specification):
     def __init__(self, sequence, location=None, boost=1.0):
         """Initialize."""
         self.sequence = sequence
+        if isinstance(location, tuple):
+            location = Location.from_tuple(location, default_strand=+1)
         self.location = location
         self.boost = boost
 

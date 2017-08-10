@@ -1,6 +1,7 @@
 """Implementation of AvoidBlastMatches."""
 
-from ..Specification import Specification, VoidSpecification
+from ..Specification import Specification
+from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from dnachisel.biotools import blast_sequence
 from dnachisel.Location import Location
@@ -112,8 +113,5 @@ class AvoidBlastMatches(Specification):
 
         return self.copy_with_changes(location=new_location)
 
-    def __repr__(self):
-        return "NoBlastMatchesSpecification(%s, %s, %d+ bp, perc %d+)" % (
-            self.location, self.blast_db, self.min_align_length,
-            self.perc_identity
-        )
+    def feature_label_parameters(self):
+        return [self.blast_db]

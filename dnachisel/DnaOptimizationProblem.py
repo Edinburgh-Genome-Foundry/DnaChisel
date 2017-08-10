@@ -274,7 +274,6 @@ class DnaOptimizationProblem:
 
         locations = evaluation.locations
         self.progress_logger(location_total=len(locations))
-        #print (constraint, locations)
         for i, location in enumerate(locations):
             for extension in self.local_extensions:
                 new_location = location.extended(extension)
@@ -283,6 +282,7 @@ class DnaOptimizationProblem:
                 if mutation_space.space_size == 0:
                     raise NoSolutionError(
                        location=location,
+                       problem=self,
                        message='Constraint breach in frozen region'
                     )
                 new_location = Location(*mutation_space.choices_span)
@@ -290,8 +290,6 @@ class DnaOptimizationProblem:
                 localized_constraints = [
                     _constraint.localized(new_location)
                     for _constraint in self.constraints
-                    # TODO: solve the situation in EnforcePattern before
-                    # we can uncomment that line for speedup
                     if not _constraint.enforced_by_nucleotide_restrictions
                 ]
                 passing_localized_constraints = [
@@ -316,14 +314,12 @@ class DnaOptimizationProblem:
                     else:
                         local_problem.resolve_constraints_locally()
                     self.sequence = local_problem.sequence
-                    #print (local_problem.constraints_text_summary())
                     break
                 except NoSolutionError as error:
                     if extension == self.local_extensions[-1]:
                         error.location = new_location
                         error.constraint = constraint
                         self.progress_logger(location_index=len(locations))
-                        #print ("WHOOOOO")
                         raise error
                     else:
                         continue
@@ -559,9 +555,9 @@ class DnaOptimizationProblem:
                 continue
             if find_specification_in_feature(feature) is None:
                 continue
-            role, objective = Specification.from_biopython_feature(
+            role, spec = Specification.from_biopython_feature(
                 feature, specifications_dict)
-            parameters[role + "s"].append(objective)
+            parameters[role + "s"].append(spec)
 
         return DnaOptimizationProblem(**parameters)
 

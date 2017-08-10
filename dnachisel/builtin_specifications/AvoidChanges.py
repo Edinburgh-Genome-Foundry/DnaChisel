@@ -2,8 +2,9 @@
 
 import numpy as np
 
-from ..Specification import Specification, VoidSpecification
+from ..Specification import Specification
 from ..SpecEvaluation import SpecEvaluation
+from .VoidSpecification import VoidSpecification
 from dnachisel.biotools import (sequences_differences_array,
                                 group_nearby_indices)
 from dnachisel.Location import Location
@@ -39,6 +40,8 @@ class AvoidChanges(Specification):
     def __init__(self, location=None, indices=None, target_sequence=None,
                  boost=1.0):
         """Initialize."""
+        if isinstance(location, tuple):
+            location = Location.from_tuple(location)
         self.location = location
         self.indices = np.array(indices) if (indices is not None) else None
         self.target_sequence = target_sequence
@@ -128,11 +131,3 @@ class AvoidChanges(Specification):
             start, end = self.location.start, self.location.end
 
         return [(i, set(sequence[i])) for i in range(start, end)]
-
-    def __repr__(self):
-        """Represent."""
-        return "AvoidChanges(%s)" % str(self.location)
-
-    def __str__(self):
-        """Represent."""
-        return "AvoidChanges(%s)" % str(self.location)

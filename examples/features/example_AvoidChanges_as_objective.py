@@ -14,7 +14,7 @@ for boost in (0, 0.1, 1, 10.0):
         objectives=[EnforceGCContent(gc_min=0.45, gc_max=0.55, gc_window=80),
                     AvoidChanges(boost=boost).as_passive_objective()])
 
-    problem.optimize(max_random_iters=1000, progress_bars=3)
+    problem.optimize()
     differences = sequences_differences(problem.sequence,
                                         problem.sequence_before)
 

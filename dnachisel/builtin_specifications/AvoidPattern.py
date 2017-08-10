@@ -1,6 +1,6 @@
 """Implement AvoidPattern"""
 
-from ..Specification import PatternSpecification
+from .PatternSpecification import PatternSpecification
 from ..SpecEvaluation import SpecEvaluation
 
 from dnachisel.Location import Location

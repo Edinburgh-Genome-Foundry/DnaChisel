@@ -5,6 +5,25 @@ import numpy as np
 from .biotools import windows_overlap
 
 class MutationChoice:
+    """Represent a segment of a sequence with several possible variants.
+
+    Parameters
+    ----------
+
+    segment
+      A pair (start, end) indicating the range of nucleotides concerned. We
+      are applying Python range, so
+
+    variants
+      A set of sequence variants, at the given position
+
+    Examples
+    --------
+
+    >>> choice = MutationChoice((70, 73), {})
+
+
+    """
     __slots__ = ['segment', 'start', 'end', 'variants']
 
     def __init__(self, segment, variants):
@@ -15,7 +34,8 @@ class MutationChoice:
         self.variants = variants
         # self.possible_subsequences = set(m.subsequence for m in mutations)
 
-    def random_mutation(self, sequence):
+    def random_variant(self, sequence):
+        """Return one of the variants, randomly."""
         subsequence = sequence[self.start: self.end]
         variants = [v for v in self.variants if v != subsequence]
         return variants[np.random.randint(len(variants))]
@@ -26,13 +46,16 @@ class MutationChoice:
         Example:
         --------
 
-        overlap_sets = [
-            ((0,3),set(['GTA', 'GCT', 'GTT'])),
-            ((3,4), set("ATGC")),
-            ((4,7), set(['ATG', 'ACC', 'CTG']))
-        ]
-        new_restriction = (2, 5), set(['ATT', 'ATA'])
-        returns (0, 7): {'GTATACC', 'GTATATG'}
+        >>> [
+        >>>     ((0, 3), {'GTA', 'GCT', 'GTT'}),
+        >>>     ((3, 4), {'ATGC'}),
+        >>>     ((4, 7), {'ATG', 'ACC', 'CTG'})
+        >>> ]
+
+        percolated with:
+        >>> ((2, 5), {'ATT', 'ATA'})
+        returns
+        >>> (0, 7), {'GTATACC', 'GTATATG'}
 
         """
         others = sorted(others, key=lambda o: o.start)
@@ -61,16 +84,40 @@ class MutationChoice:
                               variants=final_variants)
 
     def __repr__(self):
+        """Represent."""
         subsequences = "-".join(self.variants)
         return "MutChoice(%d-%d %s)" % (self.start, self.end, subsequences)
 
     def __str__(self):
+        """Represent."""
         subsequences = "-".join(self.variants)
         return "MutChoice(%d-%d %s)" % (self.start, self.end, subsequences)
 
 
 class MutationSpace:
+    """Class for mutation space (set of sequence segments and their variants).
 
+    Parameters
+    ----------
+
+    choices_index
+      A list L such that L[i] gives the MutationChoice governing the mutations
+      allowed at position i (ansd possibly around i)
+
+
+    Examples
+    --------
+
+    >>> space = MutationSpace([
+        MutationChoice((0, 2), {'AT', 'TG'}),
+        MutationChoice((0, 2), {'AT', 'TG'}),
+        MutationChoice((2, 5), {'AT', 'TG'}),
+        MutationChoice((2, 5), {'AT', 'TG'}),
+        MutationChoice((2, 5), {'AT', 'TG'}),
+
+
+    ])
+    """
     def __init__(self, choices_index):
         """
 
@@ -108,16 +155,23 @@ class MutationSpace:
 
     @property
     def choices_span(self):
+        """Return (start, end), segment where mutiple choices are possible"""
         if self.multichoices == []:
             return None
         return self.multichoices[0].start, self.multichoices[-1].end
 
     def constrain_sequence(self, sequence):
+        """Return a version of the sequence compatible with the mutation space.
+
+        All nucleotides of the sequence that are incompatible with the
+        mutation space are replaced by nucleotides compatible with the space.
+        """
         new_sequence = bytearray(sequence.encode())
         for choice in self.choices_list:
             variants = choice.variants
             if len(choice.variants) == 0:
-                continue
+                raise ValueError("Cannot constrain a sequence when some "
+                                 "positions are unsolvable")
             elif len(variants) == 1:
                 variant = list(variants)[0]
                 new_sequence[choice.start:choice.end] = variant.encode()
@@ -153,11 +207,11 @@ class MutationSpace:
             choice = self.multichoices[index]
             return [
                 (choice.segment,
-                 choice.random_mutation(sequence=sequence))
+                 choice.random_variant(sequence=sequence))
             ]
 
         return [
-            (choice_.segment, choice_.random_mutation(sequence=sequence))
+            (choice_.segment, choice_.random_variant(sequence=sequence))
             for choice_ in [
                 self.multichoices[i]
                 for i in np.random.choice(len(self.multichoices), n_mutations,
@@ -175,6 +229,7 @@ class MutationSpace:
         return new_sequence.decode()
 
     def all_variants(self, sequence):
+        """Iterate through all sequence variants in this mutation space."""
         new_sequence = bytearray(sequence.encode())
         choice_start, choice_end = self.choices_span
         encoded_segment = sequence[choice_start: choice_end].encode()
@@ -222,9 +277,3 @@ class MutationSpace:
             for i in range(new_choice.start, new_choice.end):
                 choices_index[i] = new_choice
         return MutationSpace(choices_index)
-
-    def unsolvable_nucleotides(self):
-        return [
-            loc for (loc, _set) in self.restrictions.items()
-            if len(_set) == 0
-        ]

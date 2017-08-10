@@ -7,7 +7,6 @@ from .Location import Location
 from .SpecEvaluation import SpecEvaluation
 from Bio.SeqFeature import SeqFeature
 
-
 class Specification:
     """General class to define specifications to optimize.
 
@@ -81,6 +80,18 @@ class Specification:
         actual implemented class.
 
         """
+        def format_value(value):
+            match = re.match(r"'(.*)'", value)
+            if match is not None:
+                return match.groups()[0]
+            else:
+                try:
+                    return int(value)
+                except ValueError:
+                    try:
+                        return float(value)
+                    except:
+                        return value
 
         label = find_specification_in_feature(feature)
         if isinstance(label, list):
@@ -90,23 +101,43 @@ class Specification:
         pattern = "([@~])(\S+)(\(.*\))"
         match = re.match(pattern, label)
         role, specification, parameters = match.groups()
-        role = {"@": "constraint", "~": "specification"}[role]
-        kwargs = dict(e.split('=') for e in parameters[1:-1].split(', ')
-                      if ("=" in e))
-        for k, v in kwargs.items():
-            match = re.match(r"'(.*)'", v)
-            if match is not None:
-                kwargs[k] = match.groups()[0]
+        role = {"@": "constraint", "~": "objective"}[role]
+        args, kwargs = [], {}
+        for arg in parameters[1:-1].split(', '):
+            if "=" in arg:
+                key, value = arg.split('=')
+                kwargs[key] = format_value(value)
             else:
-                try:
-                    kwargs[k] = int(v)
-                except ValueError:
-                    try:
-                        kwargs[k] = float(v)
-                    except:
-                        pass
+                args.append(format_value(arg))
+
         kwargs["location"] = Location.from_biopython_location(feature.location)
-        return role, specifications_dict[specification](**kwargs)
+        return role, specifications_dict[specification](*args, **kwargs)
+
+    def label(self, role=None, with_location=True):
+        prefix = {'constraint': '@', 'objective': '~', None: ''}[role]
+        if with_location and hasattr(self, 'location') and self.location:
+            location = '[%s]' % self.location
+        else:
+            location = ''
+        params = self.label_parameters()
+        if params == []:
+            params = ""
+        else:
+            params = "(%s)" % ", ".join([
+                "=".join(p) if isinstance(p, tuple) else p
+                for p in params
+            ])
+        return "".join([prefix, self.__class__.__name__, location, params])
+
+    def label_parameters(self):
+        return []
+
+    def __str__(self):
+        return self.label()
+
+    def __repr__(self):
+        return self.label()
+
 
     def to_biopython_feature(self, feature_type="misc_feature",
                              role="constraint", colors_dict=None,
@@ -118,10 +149,10 @@ class Specification:
 
         """
         if colors_dict is None:
-            colors_dict = {"constraint": "#355c87", "specification": "#f9cd60"}
+            colors_dict = {"constraint": "#355c87", "objective": "#f9cd60"}
         qualifiers["role"] = role
         if "label" not in qualifiers:
-            qualifiers['label'] = self.__repr__()
+            qualifiers['label'] = self.label(role=role, with_location=False)
 
         if "color" not in qualifiers:
             qualifiers['color'] = colors_dict[role]
@@ -140,168 +171,3 @@ class Specification:
 
     def as_passive_objective(self):
         return self.copy_with_changes(optimize_passively=True)
-
-
-
-class VoidSpecification(Specification):
-    """Void Specifications are a special case of Specifications that always pass.
-
-    Void Specifications are generally obtained when a Specification is "made void"
-    by a localization. For instance, if we are optimizing the segment (10,50)
-    of a DNA segment, the Specification EnforceTranslation([300,500]) does not
-    apply as it concerns a Gene that is in a completely different segment.
-    Therefore the localized version of EnforceTranslation will be void.
-
-    Note: the initializer accepts starred arguments/keyword arguments to make
-    it easy to void any other specification by replacing the class to Void.
-    Particularly useful when importing an optimization problem from genbank.
-    """
-    best_possible_score = 0
-
-
-
-    def __init__(self, parent_specification=None, message='default', boost=1.0,
-                 *args, **kwargs):
-        """Initialize."""
-        self.parent_specification = parent_specification
-        if message == 'default':
-            message = "Pass (not relevant in this context)"
-        self.message = message
-        self.boost = boost
-
-    def evaluate(self, problem):
-        """The evaluation of VoidSpecifications always passes with score=1.0
-        It returns a message indicating that the parent Specification was voided
-        """
-        return SpecEvaluation(self, problem, score=1.0,
-                                   message=self.message,
-                                   locations=None)
-
-    def __repr__(self):
-        return "Voided %s" % repr(self.parent_specification)
-
-class PatternSpecification(Specification):
-    """Class for Specifications such as presence or absence of a pattern.
-
-    The particularity of the PatternSpecifications is that they will either
-    infer or ask for the length of the associated pattern and use this to
-    localize the specification efficiently when performing local optimization or
-    solving.
-
-    Parameters
-    ----------
-
-    pattern
-      A SequencePattern or DnaNotationPattern
-
-    enzyme
-      Enzyme name, can be provided instead of pattern or dna_pattern
-
-    location
-      Location of the DNA segment on which to enforce the pattern e.g.
-      ``Location(10, 45, 1)``
-
-
-    """
-    shrink_when_localized = True
-    priority = 1 # higher than normal
-
-    def __init__(self, pattern=None, location=None, boost=1.0, enzyme=None):
-        """Initialize."""
-        # if dna_pattern is not None:
-        #     pattern = dna_pattern
-        if enzyme is not None:
-            pattern = enzyme_pattern(enzyme)
-        if isinstance(pattern, str):
-            pattern = DnaNotationPattern(pattern)
-        self.pattern = pattern
-        self.location = location
-        self.enzyme = enzyme
-        self.boost = boost
-
-    def localized(self, location):
-        """Localize the pattern to the given location. Taking into account the
-        specification's own location, and the size of the pattern."""
-        pattern_size = self.pattern.size
-        if self.location is None:
-            new_location = location.extended(pattern_size - 1)
-        else:
-            if self.location.overlap_region(location) is None:
-                return VoidSpecification(parent_specification=self)
-            else:
-                if not self.shrink_when_localized:
-                    return self
-                extended_location = location.extended(pattern_size - 1)
-                new_location = self.location.overlap_region(extended_location)
-
-        return self.copy_with_changes(location=new_location)
-
-class TerminalSpecification(Specification):
-    """Specifications that apply in the same way to both ends of the sequence.
-
-    These are particularly useful for modeling constraints from providers
-    who have terminal-ends constraints.
-
-    Subclasses of these specifications should have a `location_size` and a
-    `evaluate_end` method"""
-
-    def evaluate(self, problem):
-        """Apply method ``evaluate_end`` to both sides and compile results."""
-        sequence = problem.sequence
-        L = len(sequence)
-        wsize = self.window_size
-        locations = [
-            location
-            for location in [Location(0, wsize), Location(L - wsize, L)]
-            if not self.evaluate_end(location.extract_sequence(sequence))
-        ]
-
-        if locations == []:
-            message = "Passed (no breach at the ends)"
-        else:
-            message = "Failed: breaches at ends %s" % str(locations)
-
-        return SpecEvaluation(self, problem, score=-len(locations),
-                                   locations=locations, message=message)
-
-class CodonSpecification(Specification):
-    """Special class for dealing with codon.
-
-    In particular, this class implements a specific localized method
-
-    """
-
-    def localized(self, location):
-        """Generic localization method for codon specifications.
-
-        Calls the class'  ``.localized_on_window`` method at the end.
-
-        """
-        if self.location is not None:
-            overlap = self.location.overlap_region(location)
-            if overlap is None:
-                return VoidSpecification(parent_specification=self)
-            else:
-                # return self
-                o_start, o_end = overlap.start, overlap.end
-                w_start, w_end = self.location.start, self.location.end
-
-                if self.location.strand == 1:
-                    start_codon = int((o_start - w_start) / 3)
-                    end_codon = int((o_end - w_start) / 3)
-                    new_location = Location(
-                        start=w_start + 3 * start_codon,
-                        end=min(w_end, w_start + 3 * (end_codon + 1)),
-                        strand=self.location.strand
-                    )
-                else:
-                    start_codon = int((w_end - o_end) / 3)
-                    end_codon = int((w_end - o_start) / 3)
-                    new_location = Location(
-                        start=max(w_start, w_end - 3 * (end_codon + 1)),
-                        end=w_end - 3 * start_codon,
-                        strand=self.location.strand
-                    )
-                return self.localized_on_window(new_location, start_codon,
-                                                end_codon)
-        return self

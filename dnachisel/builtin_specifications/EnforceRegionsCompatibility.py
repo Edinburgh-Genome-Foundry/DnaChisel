@@ -1,7 +1,8 @@
 from collections import Counter
 import itertools
 
-from ..Specification import Specification, VoidSpecification
+from ..Specification import Specification
+from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 
 class EnforceRegionsCompatibility(Specification):

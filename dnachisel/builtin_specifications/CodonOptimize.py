@@ -1,10 +1,10 @@
 import numpy as np
 
-from ..Specification import CodonSpecification
+from .CodonSpecification import CodonSpecification
 from ..SpecEvaluation import SpecEvaluation
-from dnachisel.biotools import (CODON_USAGE_TABLES, CODONS_TRANSLATIONS,
-                                group_nearby_indices)
-from dnachisel.Location import Location
+from ..biotools import (CODON_USAGE_TABLES, CODONS_TRANSLATIONS,
+                        group_nearby_indices)
+from ..Location import Location
 
 class CodonOptimize(CodonSpecification):
     """Specification to codon-optimize a coding sequence for a particular species.
@@ -30,11 +30,12 @@ class CodonOptimize(CodonSpecification):
       provided instead
 
     location
-      Pair (start, end) indicating the position of the gene to codon-optimize.
-      If not provided, the whole sequence is considered as the gene. Make
-      sure the length of the sequence in the location is a multiple of 3.
-      The location strand is either 1 if the gene is encoded on the (+) strand,
-      or -1 for antisense.
+      Either a DnaChisel Location or a tuple of the form (start, end, strand)
+      or just (start, end), with strand defaulting to +1, indicating the
+      position of the gene to codon-optimize. If not provided, the whole
+      sequence is considered as the gene. The location should have a length
+      that is a multiple of 3. The location strand is either 1 if the gene is
+      encoded on the (+) strand, or -1 for antisense.
 
     codon_usage_table
       A dict of the form ``{"TAC": 0.112, "CCT": 0.68}`` giving the RSCU table
@@ -59,6 +60,8 @@ class CodonOptimize(CodonSpecification):
     def __init__(self, species=None, location=None,
                  codon_usage_table=None, boost=1.0):
         self.boost = boost
+        if isinstance(location, tuple):
+            location = Location.from_tuple(location, default_strand=+1)
         self.location = location
         self.species = species
         if species is not None:
@@ -82,6 +85,7 @@ class CodonOptimize(CodonSpecification):
         Note: no smart localization currently, the sequence is improved via
 
         """
+        # print ('self.location', self.location)
         subsequence = self.location.extract_sequence(problem.sequence)
         length = len(subsequence)
         if (length % 3):
@@ -112,6 +116,7 @@ class CodonOptimize(CodonSpecification):
                 nonoptimal_indices,
                 max_group_spread=self.localization_group_spread)
         ]
+        # print (locations)
         score = -non_optimality.sum()
         return SpecEvaluation(
             self, problem, score=score, locations=locations,
@@ -124,6 +129,8 @@ class CodonOptimize(CodonSpecification):
         return self.__class__(species=self.species, location=new_location,
                               boost=self.boost)
 
+    def label_parameters(self):
+        return [self.species]
 
     def __str__(self):
         """Represent."""

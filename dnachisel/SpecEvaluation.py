@@ -90,19 +90,25 @@ class SpecEvaluation:
           breach or suboptimality.
 
         """
+        message = self.message
         if wrapped:
-            result = self.to_text(role=role, wrapped=False)
-            return "\n".join(textwrap.wrap(result, width=80,
-                             subsequent_indent='     '))
+            indents = 6 if (role == 'constraint') else 11
+            indent = indents*' ' + "│ "
+            message = "\n".join(
+                textwrap.wrap(message, width=80, initial_indent=indent,
+                              subsequent_indent=indent)
+            )
 
         if role == "objective":
-            return ("{optimal} Scored {self.score:.02E} | {self.specification} | "
-                    "{self.message}").format(
-                self=self, optimal="OPTIMAL  | " if self.is_optimal else ""
+            return ("{optimal}{self.score:.02E} ┍ {self.specification} \n"
+                    "{message}").format(
+                self=self, optimal="✔" if self.is_optimal else " ",
+                message = message
             )
         else:
-            return "{passes} | {self.specification} | {self.message}".format(
-                self=self, passes="PASS" if self.passes else "FAIL")
+            return "{passes} ┍ {self.specification}\n{message}".format(
+                self=self, passes="✔PASS" if self.passes else " FAIL",
+                message=message)
 
     def locations_to_biopython_features(self, feature_type="misc_feature",
                                         color="red", label_prefix=""):

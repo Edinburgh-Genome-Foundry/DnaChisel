@@ -24,35 +24,43 @@ Example of use
 Let us optimize a sequence with respect to the following objectives:
 
 - The sequence should contain no restriction site for BsaI (GGTCTC).
-- The GC content should be between 30% and 70% on every 50-nucleotide subsequence.
+- GC content should be between 30% and 70% on every 50-nucleotide subsequence.
 - The sequence's  global GC content should be 40% (or as close as possible)
+- there should be
 
 Here is the Python code to solve the problem with DnaChisel:
-::
+
+.. code:python
+
     from dnachisel import *
 
-    # DEFINE THE OPTIMIZATION PROBLEM
-
-    canvas = DnaOptimizationProblem(
-        sequence=random_dna_sequence(length=10000),
-        constraints=[ AvoidPattern(enzyme_pattern("BsaI")),
-                      GCContentObjective(0.3, 0.7, gc_window=50)],
-        objectives = [GCContentObjective(0.4)]
+    problem = DnaOptimizationProblem(
+        sequence=random_dna_sequence(1500, seed=123),
+        constraints=[
+            AvoidPattern(enzyme="BsmBI"),
+            AvoidChanges((100, 200)),
+            EnforceTranslation((200, 1100, +1)),
+            AvoidChanges((1100, 1200)),
+            EnforcePattern('CCWGG', location=(600, 700))
+        ],
+        objectives = [
+            CodonOptimize('e_coli', (200, 1100, +1)),
+            EnforceGCContent(target=0.4, window=80)
+        ]
     )
 
-    # SOLVE THE CONSTRAINTS, OPTIMIZE WITH RESPECT TO THE OBJECTIVE
+    # RESOLVE CONSTRAINTS AND OPTIMIZE
+    problem.resolve_constraints()
+    problem.optimize()
 
-    canvas.solve_all_constraints_one_by_one()
-    canvas.maximize_all_objectives_one_by_one(max_random_iters=10000)
-
-    # PRINT SUMMARIES TO CHECK THE CONSTRAINTS AND OBJECTIVES
-
-    print(canvas.constraints_summary())
-    print(canvas.objectives_summary())
+    # SAVE OPTIMIZED SEQUENCE
+    problem.to_record("final_sequence.gb")
 
 This prints the following result, indicating that all constraints pass in the end
 and the objective has been (very well) optimized:
-::
+
+.. code:python
+
     ===> SUCCESS - all constraints evaluations pass
     NoPattern(GGTCTC (BsaI), None) Passed. Pattern not found !
     GCContent(min 0.30, max 0.70, gc_win 50, window None) Passed !
@@ -156,7 +164,7 @@ It is released on Github under the MIT licence, everyone is welcome to contribut
     :caption: Reference
     :maxdepth: 3
 
-    ref
+    ref/ref
 
 .. toctree::
     :caption: Examples

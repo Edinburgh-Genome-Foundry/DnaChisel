@@ -1,6 +1,7 @@
 "Implement EnforceTranslation."
 
-from ..Specification import CodonSpecification, VoidSpecification
+from .CodonSpecification import CodonSpecification
+from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from dnachisel.biotools import CODONS_SEQUENCES, translate, reverse_complement
 from dnachisel.Location import Location
@@ -18,8 +19,12 @@ class EnforceTranslation(CodonSpecification):
     -----------
 
     location
-      The Location of the coding sequence. If it is not set, the full sequence
-      is considered the coding sequence.
+      Either a DnaChisel Location or a tuple of the form (start, end, strand)
+      or just (start, end), with strand defaulting to +1, indicating the
+      position of the gene to codon-optimize. If not provided, the whole
+      sequence is considered as the gene. The location should have a length
+      that is a multiple of 3. The location strand is either 1 if the gene is
+      encoded on the (+) strand, or -1 for antisense.
 
     translation
       String representing the protein sequence that the DNA segment should
@@ -36,6 +41,8 @@ class EnforceTranslation(CodonSpecification):
     def __init__(self, location=None, translation=None, boost=1.0):
         """Initialize."""
         self.translation = translation
+        if isinstance(location, tuple):
+            location = Location.from_tuple(location, default_strand=+1)
         if (location is not None) and (location.strand not in [-1, 1]):
             location = Location(location.start, location.end, 1)
         self.set_location(location)
@@ -88,7 +95,6 @@ class EnforceTranslation(CodonSpecification):
 
     def evaluate(self, problem):
         """Score is the number of wrong-translation codons."""
-        # return SpecEvaluation(self, problem, score=0)
         location = (self.location if self.location is not None else
                     Location(0, len(problem.sequence)))
         subsequence = location.extract_sequence(problem.sequence)
@@ -111,7 +117,7 @@ class EnforceTranslation(CodonSpecification):
                               "Wrong translation at indices %s" % errors)
 
     def localized_on_window(self, new_location, start_codon, end_codon):
-        new_translation = self.translation[start_codon:end_codon + 1]
+        new_translation = self.translation[start_codon:end_codon]
         return self.__class__(new_location,
                               translation=new_translation,
                               boost=self.boost)

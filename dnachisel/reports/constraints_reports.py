@@ -17,7 +17,8 @@ except:
 
 
 from ..DnaOptimizationProblem import DnaOptimizationProblem
-from ..biotools import gc_content, repeated_kmers, homopolymer_pattern
+from ..biotools import gc_content
+from ..SequencePattern import repeated_kmers, homopolymer_pattern
 from ..builtin_specifications import (EnforceGCContent, AvoidPattern,
                                       AvoidHairpins)
 

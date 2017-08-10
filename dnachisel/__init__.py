@@ -17,12 +17,8 @@ from .builtin_specifications import (
     SequenceLengthBounds
 )
 
-from .Specification import (
-    Specification,
-    VoidSpecification,
-    PatternSpecification,
-    SpecEvaluation
-)
+from .Specification import Specification
+from .SpecEvaluation import SpecEvaluation
 
 from .SequencePattern import (
     DnaNotationPattern,

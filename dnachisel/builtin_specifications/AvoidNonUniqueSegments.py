@@ -2,7 +2,8 @@
 
 from collections import defaultdict
 
-from ..Specification import Specification, VoidSpecification
+from ..Specification import Specification
+from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from dnachisel.biotools import reverse_complement
 from dnachisel.Location import Location
@@ -38,6 +39,8 @@ class AvoidNonuniqueSegments(Specification):
                  include_reverse_complement=False):
         """Initialize."""
         self.min_length = min_length
+        if isinstance(location, tuple):
+            location = Location.from_tuple(location)
         self.location = location
         self.include_reverse_complement = include_reverse_complement
 
@@ -86,10 +89,5 @@ class AvoidNonuniqueSegments(Specification):
         else:
             return self
 
-    def __repr__(self):
-        """Represent."""
-        return "AvoidNonUniqueSegments(%d)" % (self.min_length)
-
-    def __str__(self):
-        """Represent."""
-        return "AvoidNonUniqueSegments(%d)" % (self.min_length)
+    def label_parameters(self):
+        return [('min_length', self.min_length)]

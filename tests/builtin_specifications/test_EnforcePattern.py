@@ -12,7 +12,7 @@ import numpy
 def test_avoid_change_as_objectives_basics():
     for seed in [2, 3, 123456]:
         # The seeds cover various cases:
-        # 2: the problem is already passing, with exactly one occurence
+        # 2: the problem has no occurences instead of 1 wanted
         # 3: the pattern has no occurences instead of 1 wanted
         # 123456: the pattern is over-represented (4 times instead of 1)
         sequence = random_dna_sequence(5000, seed=seed)

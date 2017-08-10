@@ -3,6 +3,25 @@
 DnaChisel Reference manual
 ==========================
 
+Reports
+--------
+
+.. toctree::
+   :maxdepth: 2
+
+   optimization_reports
+   constraints_reports
+
+Built-in Specifications
+-----------------------
+
+.. toctree::
+   :maxdepth:2
+
+   builtin_specifications/AvoidPattern
+
+Core classes
+---------------
 .. mermaid::
 
    graph TD;
@@ -15,10 +34,19 @@ DnaChisel Reference manual
       s --> c
       P -->|solve, optimize| O[Optimized problem.sequence]
 
-Reports
---------
 
-Optimization reports
+ .. toctree::
+    :maxdepth: 1
+
+    DnaOptimizationProblem
+    Location
+    MutationSpace
+    Specification
+    SpecEvaluation
+
+
+
+Reports
 ~~~~~~~~~~~~~~~~~~~~
 
 .. mermaid::
@@ -30,14 +58,14 @@ Optimization reports
 
 .. automodule:: dnachisel.reports.optimization_reports
    :members:
-
+.. automodule:: dnachisel.reports.constraints_reports
+  :members:
 
 
 Constraint reports
 ~~~~~~~~~~~~~~~~~~
 
-.. automodule:: dnachisel.reports.constraints_reports
-   :members:
+
 
 DnaOptimizationProblem
 ----------------------
