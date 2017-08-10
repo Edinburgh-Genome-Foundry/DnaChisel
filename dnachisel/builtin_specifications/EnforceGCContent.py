@@ -39,7 +39,7 @@ class EnforceGCContent(Specification):
 
     """
 
-    best_possible_score = 0.0
+    best_possible_score = 0
 
     def __init__(self, gc_min=0, gc_max=1.0, gc_objective=None,
                  gc_window=None, location=None, boost=1.0):

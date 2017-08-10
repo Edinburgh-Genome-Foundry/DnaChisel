@@ -1,5 +1,5 @@
 import re
-from ..Location import Location
+from .Location import Location
 from .biotools import (dna_pattern_to_regexpr, is_palyndromic,
                        reverse_complement)
 from Bio.Restriction.Restriction_Dictionary import rest_dict
@@ -111,21 +111,21 @@ class DnaNotationPattern(SequencePattern):
     both strands of sequences.
     """
 
-    def __init__(self, pattern, name=None):
+    def __init__(self, sequence, name=None):
         """Initialize"""
         SequencePattern.__init__(
             self,
-            size=len(pattern),
-            expression=dna_pattern_to_regexpr(pattern),
+            size=len(sequence),
+            expression=dna_pattern_to_regexpr(sequence),
             name=name,
-            in_both_strands=not is_palyndromic(pattern)
+            in_both_strands=not is_palyndromic(sequence)
         )
-        self.pattern = pattern
+        self.sequence = sequence
 
     def __repr__(self):
         """Represent the pattern as PatternType(name) """
-        return self.pattern + ("" if self.name is None else
-                               " (%s)" % self.name)
+        return self.sequence + ("" if self.name is None else
+                                " (%s)" % self.name)
 
 # DEFINITION OF COMMON PATTERNS
 

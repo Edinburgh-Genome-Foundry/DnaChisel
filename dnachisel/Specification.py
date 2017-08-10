@@ -1,8 +1,8 @@
 import copy
 import re
 
-from .biotools import (DnaNotationPattern, enzyme_pattern,
-                       find_specification_in_feature)
+from .SequencePattern import DnaNotationPattern, enzyme_pattern
+from .biotools import find_specification_in_feature
 from .Location import Location
 from .SpecEvaluation import SpecEvaluation
 from Bio.SeqFeature import SeqFeature
@@ -206,11 +206,10 @@ class PatternSpecification(Specification):
     shrink_when_localized = True
     priority = 1 # higher than normal
 
-    def __init__(self, pattern=None, location=None, boost=1.0, enzyme=None,
-                 dna_pattern=None):
+    def __init__(self, pattern=None, location=None, boost=1.0, enzyme=None):
         """Initialize."""
-        if dna_pattern is not None:
-            pattern = dna_pattern
+        # if dna_pattern is not None:
+        #     pattern = dna_pattern
         if enzyme is not None:
             pattern = enzyme_pattern(enzyme)
         if isinstance(pattern, str):

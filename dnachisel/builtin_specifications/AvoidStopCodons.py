@@ -12,6 +12,7 @@ class AvoidStopCodons(EnforceTranslation):
         for codon, translation in CODONS_TRANSLATIONS.items()
     }
     codons_sequences = None
+    enforced_by_nucleotide_restrictions = False
 
     def __init__(self, location, translation=None, boost=1.0):
         if (len(location) % 3) != 0:

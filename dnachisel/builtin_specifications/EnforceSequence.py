@@ -4,17 +4,17 @@
 
 import numpy as np
 
-from dnachisel.biotools import complement, IUPAC_NOTATION
-
 from ..Specification import Specification, VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from dnachisel.Location import Location
-from dnachisel.biotools import group_nearby_indices, reverse_complement
+from dnachisel.biotools import (group_nearby_indices,
+                                reverse_complement,
+                                IUPAC_NOTATION)
 
 
 class EnforceSequence(Specification):
     """WORK IN PROGRESS. Enforces a degenerate sequence."""
-    localization_interval_length = 6  # used when optimizing the minimize_diffs
+    localization_interval_length = 6  # used when optimizing
     best_possible_score = 0
     enforced_by_nucleotide_restrictions = True
 

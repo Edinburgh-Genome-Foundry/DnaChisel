@@ -13,18 +13,3 @@ from .EnforceTranslation import EnforceTranslation
 from .EnforceRegionsCompatibility import EnforceRegionsCompatibility
 from .EnforceSequence import EnforceSequence
 from .SequenceLengthBounds import SequenceLengthBounds
-
-DEFAULT_SPECIFICATIONS_DICT = {
-   'AvoidBlastMatches': AvoidBlastMatches,
-   'AvoidChanges': AvoidChanges,
-   'AvoidHairpins': AvoidHairpins,
-   'AvoidNonUniqueSegments': AvoidNonuniqueSegments,
-   'AvoidPattern': AvoidPattern,
-   'CodonOptimize': CodonOptimize,
-   'EnforceGCContent': EnforceGCContent,
-   'EnforcePattern': EnforcePattern,
-   'EnforceTranslation': EnforceTranslation,
-   'EnforceRegionsCompatibility': EnforceRegionsCompatibility,
-   'EnforceSequence': EnforceSequence,
-   'SequenceLengthBounds': SequenceLengthBounds
-}

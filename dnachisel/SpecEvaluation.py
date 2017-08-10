@@ -56,7 +56,7 @@ class SpecEvaluation:
     """
 
     def __init__(self, specification, problem, score, locations=None,
-                 message=None):
+                 message=None, data=None):
         """Initialize."""
         self.specification = specification
         self.problem = problem
@@ -65,6 +65,7 @@ class SpecEvaluation:
         self.is_optimal = (score == specification.best_possible_score)
         self.locations = locations
         self.message = self.default_message if message is None else message
+        self.data = {} if data is None else data
 
     @property
     def default_message(self):

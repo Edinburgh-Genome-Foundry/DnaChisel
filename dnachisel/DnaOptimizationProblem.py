@@ -6,7 +6,6 @@ constraints, objectives.
 
 from Bio.SeqRecord import SeqRecord
 from Bio import SeqIO
-from tqdm import tqdm
 
 from .biotools.biotools import (sequence_to_biopython_record,
                                 find_specification_in_feature,
@@ -14,12 +13,11 @@ from .biotools.biotools import (sequence_to_biopython_record,
 from .Specification import Specification
 from .SpecEvaluation import (ProblemObjectivesEvaluations,
                              ProblemConstraintsEvaluations)
-from .builtin_specifications import DEFAULT_SPECIFICATIONS_DICT
 from .Location import Location
 from .MutationSpace import MutationSpace
 from .ProgressLogger import DnaOptimizationProgressBar
 
-
+DEFAULT_SPECIFICATIONS_DICT = {} # completed at library initialization
 
 
 class NoSolutionError(Exception):
@@ -276,20 +274,24 @@ class DnaOptimizationProblem:
 
         locations = evaluation.locations
         self.progress_logger(location_total=len(locations))
+        #print (constraint, locations)
         for i, location in enumerate(locations):
             for extension in self.local_extensions:
-                location = location.extended(extension)
+                new_location = location.extended(extension)
+
                 mutation_space = self.mutation_space.localized(location)
                 if mutation_space.space_size == 0:
                     raise NoSolutionError(
                        location=location,
                        message='Constraint breach in frozen region'
                     )
-                location = Location(*mutation_space.choices_span)
+                new_location = Location(*mutation_space.choices_span)
 
                 localized_constraints = [
-                    _constraint.localized(location)
+                    _constraint.localized(new_location)
                     for _constraint in self.constraints
+                    # TODO: solve the situation in EnforcePattern before
+                    # we can uncomment that line for speedup
                     if not _constraint.enforced_by_nucleotide_restrictions
                 ]
                 passing_localized_constraints = [
@@ -299,7 +301,7 @@ class DnaOptimizationProblem:
                 ]
                 local_problem = self.__class__(
                     sequence=self.sequence,
-                    constraints=([constraint.localized(location)] +
+                    constraints=([constraint.localized(new_location)] +
                                  passing_localized_constraints),
                     mutation_space=mutation_space
                 )
@@ -308,17 +310,20 @@ class DnaOptimizationProblem:
                 local_problem.max_random_iters = self.max_random_iters
                 local_problem.n_mutations = self.n_mutations
                 try:
-                    if hasattr(constraint, 'resolution_heurististic'):
+                    if hasattr(constraint, 'resolution_heuristic'):
+
                         constraint.resolution_heuristic(local_problem)
                     else:
                         local_problem.resolve_constraints_locally()
                     self.sequence = local_problem.sequence
+                    #print (local_problem.constraints_text_summary())
                     break
                 except NoSolutionError as error:
                     if extension == self.local_extensions[-1]:
-                        error.location = location
+                        error.location = new_location
                         error.constraint = constraint
                         self.progress_logger(location_index=len(locations))
+                        #print ("WHOOOOO")
                         raise error
                     else:
                         continue
@@ -361,7 +366,8 @@ class DnaOptimizationProblem:
                         ' still failing. This is an unintended behavior,'
                         ' likely due to a complex problem. Try running the'
                         ' solver on the same sequence again, or report the'
-                        ' error to the maintainers' % cst)
+                        ' error to the maintainers' % cst,
+                        problem=self)
 
 
 

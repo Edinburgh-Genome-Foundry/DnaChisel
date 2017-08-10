@@ -30,6 +30,7 @@ class EnforceTranslation(CodonSpecification):
 
     best_possible_score = 0
     codons_sequences = CODONS_SEQUENCES
+    enforced_by_nucleotide_restrictions = True
     codons_translations = "Bacterial"
 
     def __init__(self, location=None, translation=None, boost=1.0):

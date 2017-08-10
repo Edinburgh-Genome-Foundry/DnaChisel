@@ -8,6 +8,7 @@ class ProgressLogger:
         self.state = {}
         if init_state is not None:
             self.state.update(init_state)
+
     def callback(self, **kw):
         pass
 
@@ -41,6 +42,7 @@ class ProgressBarLogger(ProgressLogger):
         self.previous_state = deepcopy(self.state)
 
     def new_bar(self, bar_id):
+        #print ("THEEEER")
         desc, _, total = self.bars_descriptions[bar_id]
         total = self.state[total]
         self.bars[bar_id] = tqdm(total=total, desc=desc, leave=False)

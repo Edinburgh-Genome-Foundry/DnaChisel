@@ -79,7 +79,17 @@ class MutationSpace:
                          MutationChoice(3-5), ... ]
         """
         self.choices_index = choices_index
-        self.choices_list = sorted(set(choices_index), key=lambda c: c.start)
+        self.choices_list = []
+        if choices_index[0] is not None:
+            self.choices_list.append(choices_index[0])
+        for c in choices_index[1:]:
+            if c is None:
+                continue
+            if len(self.choices_list) == 0:
+                self.choices_list = [c]
+            elif c != self.choices_list[-1]:
+                self.choices_list.append(c)
+
         self.unsolvable_segments = [
             choice.segment
             for choice in self.choices_list
@@ -90,7 +100,7 @@ class MutationSpace:
             for choice in self.choices_list
             if len(choice.variants) == 1
         ]
-        self.choices = [
+        self.multichoices = [
             choice
             for choice in self.choices_list
             if len(choice.variants) > 1
@@ -98,22 +108,23 @@ class MutationSpace:
 
     @property
     def choices_span(self):
-        if self.choices == []:
+        if self.multichoices == []:
             return None
-        return self.choices_list[0].start, self.choices_list[-1].end
+        return self.multichoices[0].start, self.multichoices[-1].end
 
     def constrain_sequence(self, sequence):
-        new_sequence = np.array(list(sequence))
+        new_sequence = bytearray(sequence.encode())
         for choice in self.choices_list:
             variants = choice.variants
             if len(choice.variants) == 0:
                 continue
             elif len(variants) == 1:
-                variants = list(list(variants)[0])
-                new_sequence[choice.start:choice.end] = variants
+                variant = list(variants)[0]
+                new_sequence[choice.start:choice.end] = variant.encode()
             elif sequence[choice.start: choice.end] not in variants:
-                new_sequence[choice.start:choice.end] = list(variants)[0]
-        return "".join(new_sequence)
+                variant = list(variants)[0]
+                new_sequence[choice.start:choice.end] = variant.encode()
+        return new_sequence.decode()
 
 
     def localized(self, location):
@@ -122,23 +133,24 @@ class MutationSpace:
             start, end = location.start, location.end
         else:
             start, end = location
-        return MutationSpace(self.choices_index[start:end])
+        return MutationSpace(start * [None] + self.choices_index[start:end])
 
     @property
     def space_size(self):
         """Return the number of possible mutations"""
-        if len(self.choices) == 0:
+        if len(self.multichoices) == 0:
             return 0
         return np.prod([1.0] + [
             len(choice.variants)
-            for choice in self.choices
+            for choice in self.multichoices
         ])
 
     def pick_random_mutations(self, n_mutations, sequence):
         """Draw N random mutations"""
-        n_mutations = min(len(self.choices), n_mutations)
+        n_mutations = min(len(self.multichoices), n_mutations)
         if n_mutations == 1:
-            choice = self.choices[np.random.randint(len(self.choices))]
+            index = np.random.randint(len(self.multichoices))
+            choice = self.multichoices[index]
             return [
                 (choice.segment,
                  choice.random_mutation(sequence=sequence))
@@ -147,8 +159,8 @@ class MutationSpace:
         return [
             (choice_.segment, choice_.random_mutation(sequence=sequence))
             for choice_ in [
-                self.choices[i]
-                for i in np.random.choice(len(self.choices), n_mutations,
+                self.multichoices[i]
+                for i in np.random.choice(len(self.multichoices), n_mutations,
                                           replace=False)
             ]
         ]
@@ -168,7 +180,7 @@ class MutationSpace:
         encoded_segment = sequence[choice_start: choice_end].encode()
         variants_slots = [
              [(choice_.segment, v.encode()) for v in choice_.variants]
-             for choice_ in self.choices
+             for choice_ in self.multichoices
         ]
         for variants in itertools.product(*variants_slots):
             new_sequence[choice_start: choice_end] = encoded_segment
@@ -176,46 +188,43 @@ class MutationSpace:
                 new_sequence[start: end] = variant
             yield new_sequence.decode()
 
-
     @staticmethod
-    def from_optimization_problem(optimization_problem):
+    def from_optimization_problem(problem, new_constraints=None):
+        """Create a mutation space from a DNA optimization problem.
 
-        sequence = optimization_problem.sequence
-        choice_index = [
-            MutationChoice((i, i+1), variants=set("ATGC"))
-            for i in range(len(sequence))
-        ]
+        This can be used either to initialize mutation spaces for new problems,
+        or to
 
+        """
+
+        sequence = problem.sequence
+
+        if new_constraints is None:
+            choices_index = [
+                MutationChoice((i, i+1), variants=set("ATGC"))
+                for i in range(len(sequence))
+            ]
+            constraints = problem.constraints
+        else:
+            choices_index = [c for c in problem.mutation_space.choices_index]
+            constraints = new_constraints
         mutation_choices = sorted([
             choice
             if isinstance(choice, MutationChoice)
             else MutationChoice(segment=choice[0], variants=set(choice[1]))
-            for cst in optimization_problem.constraints
+            for cst in constraints
             for choice in cst.restrict_nucleotides(sequence)
         ], key=lambda choice: (choice.end - choice.start, choice.start))
 
-
         for choice in mutation_choices:
-            underlying_choices = choice_index[choice.start: choice.end]
+            underlying_choices = choices_index[choice.start: choice.end]
             new_choice = choice.percolate_with(set(underlying_choices))
             for i in range(new_choice.start, new_choice.end):
-                choice_index[i] = new_choice
-        return MutationSpace(choice_index)
+                choices_index[i] = new_choice
+        return MutationSpace(choices_index)
 
     def unsolvable_nucleotides(self):
         return [
             loc for (loc, _set) in self.restrictions.items()
             if len(_set) == 0
         ]
-
-    def adapt_to_sequence(self, sequence):
-
-        new_sequence = list(sequence)
-        for (start, end), _set in list(allowed_mutations.items()):
-            if sequence[start:end] not in _set:
-                new_sequence[start:end] = list(_set)[0]
-            if len(_set) == 1:
-                allowed_mutations.pop((start, end))
-
-        new_sequence = "".join(new_sequence)
-        return new_sequence

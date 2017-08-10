@@ -5,10 +5,12 @@ from .biotools import (
     change_biopython_record_sequence,
     complement,
     crop_record,
+    dna_pattern_to_regexpr,
     find_specification_in_feature,
     gc_content,
     group_nearby_indices,
     group_nearby_segments,
+    is_palyndromic,
     random_dna_sequence,
     random_protein_sequence,
     reverse_complement,
@@ -25,13 +27,6 @@ from .features_annotations import (
     annotate_record,
     annotate_differences,
     annotate_pattern_occurrences
-)
-
-from .SequencePattern import (
-    DnaNotationPattern,
-    homopolymer_pattern,
-    enzyme_pattern,
-    repeated_kmers
 )
 
 from .biotables import (CODONS_SEQUENCES, CODONS_TRANSLATIONS,

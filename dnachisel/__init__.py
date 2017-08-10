@@ -1,5 +1,5 @@
-from .DnaOptimizationProblem import (DnaOptimizationProblem,
-                                     NoSolutionError)
+from .DnaOptimizationProblem import (DnaOptimizationProblem, NoSolutionError,
+                                     DEFAULT_SPECIFICATIONS_DICT)
 from .Location import Location
 
 from .builtin_specifications import (
@@ -14,8 +14,7 @@ from .builtin_specifications import (
     EnforceRegionsCompatibility,
     EnforceSequence,
     EnforceTranslation,
-    SequenceLengthBounds,
-    DEFAULT_SPECIFICATIONS_DICT
+    SequenceLengthBounds
 )
 
 from .Specification import (
@@ -25,16 +24,20 @@ from .Specification import (
     SpecEvaluation
 )
 
+from .SequencePattern import (
+    DnaNotationPattern,
+    homopolymer_pattern,
+    enzyme_pattern,
+    repeated_kmers
+)
+
 from .biotools import (
     blast_sequence,
     complement,
-    DnaNotationPattern,
     crop_record,
-    enzyme_pattern,
-    homopolymer_pattern,
+    is_palyndromic,
     random_dna_sequence,
     random_protein_sequence,
-    repeated_kmers,
     reverse_complement,
     reverse_translate,
     sequences_differences,
@@ -50,3 +53,18 @@ from .biotools import (
 from .utils import random_compatible_dna_sequence
 
 from .version import __version__
+
+DEFAULT_SPECIFICATIONS_DICT.update({
+   'AvoidBlastMatches': AvoidBlastMatches,
+   'AvoidChanges': AvoidChanges,
+   'AvoidHairpins': AvoidHairpins,
+   'AvoidNonUniqueSegments': AvoidNonuniqueSegments,
+   'AvoidPattern': AvoidPattern,
+   'CodonOptimize': CodonOptimize,
+   'EnforceGCContent': EnforceGCContent,
+   'EnforcePattern': EnforcePattern,
+   'EnforceTranslation': EnforceTranslation,
+   'EnforceRegionsCompatibility': EnforceRegionsCompatibility,
+   'EnforceSequence': EnforceSequence,
+   'SequenceLengthBounds': SequenceLengthBounds
+})

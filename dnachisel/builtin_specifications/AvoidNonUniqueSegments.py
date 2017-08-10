@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from ..Specification import Specification
+from ..Specification import Specification, VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from dnachisel.biotools import reverse_complement
 from dnachisel.Location import Location
@@ -41,13 +41,14 @@ class AvoidNonuniqueSegments(Specification):
         self.location = location
         self.include_reverse_complement = include_reverse_complement
 
+    def initialize_on_problem(self, problem):
+        """Location is the full sequence by default."""
+        if self.location is None:
+            self.location = Location(0, len(problem.sequence))
+
     def evaluate(self, problem):
         """Return 0 if the sequence has no repeats, else -number_of_repeats."""
-        if self.location is not None:
-            location = self.location
-        else:
-            location = Location(0, len(problem.sequence))
-        sequence = location.extract_sequence(problem.sequence)
+        sequence = self.location.extract_sequence(problem.sequence)
         rev_complement = reverse_complement(sequence)
         kmers_locations = defaultdict(lambda: [])
         for i in range(len(sequence) - self.min_length):
@@ -76,6 +77,14 @@ class AvoidNonuniqueSegments(Specification):
             locations=locations,
             message="Failed, the following positions are the first occurences"
                     "of non-unique segments %s" % locations)
+
+    def localized(self, location):
+        """Localize the evaluation."""
+        new_location = self.location.overlap_region(location)
+        if new_location is None:
+            return VoidSpecification(parent_specification=self)
+        else:
+            return self
 
     def __repr__(self):
         """Represent."""
