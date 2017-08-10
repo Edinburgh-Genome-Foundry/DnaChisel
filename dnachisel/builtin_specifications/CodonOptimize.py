@@ -131,11 +131,3 @@ class CodonOptimize(CodonSpecification):
 
     def label_parameters(self):
         return [self.species]
-
-    def __str__(self):
-        """Represent."""
-        return "CodonOptimize(%s, %s)" % (str(self.location), self.species)
-
-    def __repr__(self):
-        """Represent."""
-        return "CodonOptimize(%s, %s)" % (str(self.location), self.species)
