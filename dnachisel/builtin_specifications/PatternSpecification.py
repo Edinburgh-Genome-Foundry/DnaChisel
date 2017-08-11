@@ -59,7 +59,7 @@ class PatternSpecification(Specification):
         return self.copy_with_changes(location=new_location)
 
     def label_parameters(self):
-        return [('enzyme'. self.enzyme) if (self.enzyme is not None)
+        return [('enzyme', self.enzyme) if (self.enzyme is not None)
                   else (self.pattern.sequence
                         if hasattr(self.pattern, 'sequence')
                         else str(self.pattern))]

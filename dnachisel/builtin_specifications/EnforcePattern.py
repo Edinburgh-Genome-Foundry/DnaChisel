@@ -133,7 +133,7 @@ class EnforcePattern(Specification):
         problem.resolve_constraints_locally()  # default resolution method
 
     def label_parameters(self):
-        result = [('enzyme'. self.enzyme) if (self.enzyme is not None)
+        result = [('enzyme', self.enzyme) if (self.enzyme is not None)
                   else (self.pattern.sequence
                         if hasattr(self.pattern, 'sequence')
                         else str(self.pattern))]

@@ -101,6 +101,9 @@ class Specification:
         pattern = "([@~])(\S+)(\(.*\))"
         match = re.match(pattern, label)
         role, specification, parameters = match.groups()
+        if specification not in specifications_dict:
+            raise TypeError('Unknown specification %s' % specification)
+        specification_class = specifications_dict[specification]
         role = {"@": "constraint", "~": "objective"}[role]
         args, kwargs = [], {}
         for arg in parameters[1:-1].split(', '):
@@ -109,9 +112,18 @@ class Specification:
                 kwargs[key] = format_value(value)
             else:
                 args.append(format_value(arg))
-
         kwargs["location"] = Location.from_biopython_location(feature.location)
-        return role, specifications_dict[specification](*args, **kwargs)
+        try:
+            specification_instance = specification_class(*args, **kwargs)
+        except TypeError as err:
+            message = err.args[0]
+            faulty_parameter = message.split("'")[1]
+            raise TypeError('Unrecognized parameter %s for specification %s'
+                            'at location %s' % (faulty_parameter,
+                                                specification,
+                                                kwargs['location']))
+
+        return role, specification_instance
 
     def label(self, role=None, with_location=True):
         prefix = {'constraint': '@', 'objective': '~', None: ''}[role]
