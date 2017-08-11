@@ -186,7 +186,7 @@ def make_constraints_breaches_pdf(constraints_sets, record, pdf_path):
             plt.close(ax.figure)
 
 
-def plot_gc_content_breaches(sequence, window=70, gc_min=0.35, gc_max=0.65,
+def plot_gc_content_breaches(sequence, window=70, mini=0.35, maxi=0.65,
                              ax=None, title=None):
     """Plot a profile of GC content along the sequence.
     The regions with out-of-bound GC are highlighted.
@@ -201,10 +201,10 @@ def plot_gc_content_breaches(sequence, window=70, gc_min=0.35, gc_max=0.65,
     window
       Number of nucleotides to use for local averaging of GC content
 
-    gc_min
+    mini
       minimal allowed proportion of gc (between 0 and 1)
 
-    gc_max
+    maxi
       maximal allowed proportion of gc (between 0 and 1)
 
     ax
@@ -221,10 +221,10 @@ def plot_gc_content_breaches(sequence, window=70, gc_min=0.35, gc_max=0.65,
     if ax is None:
         fig, ax = plt.subplots(1, figsize=(12, 3))
     gc_inbound = +gc
-    gc_inbound[(gc < gc_min) | (gc > gc_max)] = np.nan
+    gc_inbound[(gc < mini) | (gc > maxi)] = np.nan
     ax.plot(xx, gc_inbound, alpha=0.2, c='b')
 
-    for limit, whr in (gc_min, gc < gc_min), (gc_max, gc > gc_max):
+    for limit, whr in (mini, gc < mini), (maxi, gc > maxi):
         ax.axhline(limit, c="k", lw=0.5, ls=":")
         gc_bad = +gc
         gc_bad[1 - whr] = np.nan
@@ -270,15 +270,15 @@ def plot_sequence_manufacturability_difficulties(sequence):
     fig, axes = plt.subplots(nplots, 1, figsize=(10, 1.4 * nplots),
                              sharex=True, facecolor="white")
 
-    gc_min, gc_max, gc_window = 0.25, 0.80, 50
+    mini, maxi, window = 0.25, 0.80, 50
     plot_gc_content_breaches(
-        sequence, window=gc_window, gc_min=gc_min,
-        gc_max=gc_max, ax=axes[0],
-        title="GC content (window= %d)" % gc_window
+        sequence, window=window, mini=mini,
+        maxi=maxi, ax=axes[0],
+        title="GC content (window= %d)" % window
     )
 
-    constraint = EnforceGCContent(gc_min=gc_min, gc_max=gc_max,
-                                  gc_window=gc_window)
+    constraint = EnforceGCContent(mini=mini, maxi=maxi,
+                                  window=window)
     plot_constraint_breaches(
         constraint, record, ax=axes[1],
         title="Zones of extreme GC content (Gen9-type short window)"
@@ -298,7 +298,9 @@ def plot_sequence_manufacturability_difficulties(sequence):
         constraint = AvoidPattern(homopolymer_pattern(l, n))
         plot_constraint_breaches(
             constraint, record,
-            title="Homopolymers (6+ G or C | 9+ A or T)", ax=axes[4])
+            title="Homopolymers (6+ G or C | 9+ A or T)",
+            ax=axes[4]
+        )
 
     for length, n_repeats in (3, 5), (2, 9):
         pattern = repeated_kmers(length, n_repeats=n_repeats)

@@ -58,7 +58,7 @@ Here is the Python code to solve the problem with DnaChisel:
     canvas = DnaOptimizationProblem(
         sequence=random_dna_sequence(10000),
         constraints=[AvoidPattern(enzyme_pattern("BsaI")),
-                     GCContentConstraint(0.3, 0.7, gc_window=50)],
+                     GCContentConstraint(0.3, 0.7, window=50)],
         objectives = [GCContentObjective(0.4)]
     )
 

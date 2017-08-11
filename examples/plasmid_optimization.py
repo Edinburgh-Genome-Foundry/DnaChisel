@@ -56,7 +56,7 @@ GEN9_constraints = [
     AvoidPattern(homopolymer_pattern("G", 6)),
     AvoidPattern(homopolymer_pattern("C", 9)),
     EnforceGCContent(0.4, 0.65),
-    EnforceGCContent(0.25, 0.80, gc_window=50)
+    EnforceGCContent(0.25, 0.80, window=50)
 ]
 
 CDS_constraints = []

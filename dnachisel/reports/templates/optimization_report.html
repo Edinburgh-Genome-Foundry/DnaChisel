@@ -80,7 +80,7 @@ Sequence Optimization Report
     {% for (before, after) in zip(problem.constraints_before, constraints_after) %}
     <tr>
       <td class='first'>
-        {{ before.objective }}
+        {{ before.specification }}
       </td>
       {% for eval in [before, after] %}
         {% if eval.passes %}

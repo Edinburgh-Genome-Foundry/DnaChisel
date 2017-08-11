@@ -108,7 +108,7 @@ class Specification:
         args, kwargs = [], {}
         for arg in parameters[1:-1].split(', '):
             if "=" in arg:
-                key, value = arg.split('=')
+                key, value = arg.split(':')
                 kwargs[key] = format_value(value)
             else:
                 args.append(format_value(arg))
@@ -118,14 +118,14 @@ class Specification:
         except TypeError as err:
             message = err.args[0]
             faulty_parameter = message.split("'")[1]
-            raise TypeError('Unrecognized parameter %s for specification %s'
+            raise TypeError('Unknown parameter %s for specification %s'
                             'at location %s' % (faulty_parameter,
                                                 specification,
                                                 kwargs['location']))
 
         return role, specification_instance
 
-    def label(self, role=None, with_location=True):
+    def label(self, role=None, with_location=True, assignment=':'):
         prefix = {'constraint': '@', 'objective': '~', None: ''}[role]
         if with_location and hasattr(self, 'location') and self.location:
             location = '[%s]' % self.location
@@ -136,7 +136,7 @@ class Specification:
             params = ""
         else:
             params = "(%s)" % ", ".join([
-                "=".join(p) if isinstance(p, tuple) else p
+                assignment.join(p) if isinstance(p, tuple) else p
                 for p in params
             ])
         return "".join([prefix, self.__class__.__name__, location, params])
@@ -164,8 +164,8 @@ class Specification:
             colors_dict = {"constraint": "#355c87", "objective": "#f9cd60"}
         qualifiers["role"] = role
         if "label" not in qualifiers:
-            qualifiers['label'] = self.label(role=role, with_location=False)
-
+            qualifiers['label'] = self.label(role=role, with_location=False,
+                                             assignment=':')
         if "color" not in qualifiers:
             qualifiers['color'] = colors_dict[role]
         return SeqFeature(self.location.to_biopython_location(),

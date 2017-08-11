@@ -16,7 +16,7 @@ FEATURES             Location/Qualifiers
                      /mol_type="genomic DNA"
                      /note="color: #ffffff"
      misc_feature    10..1319
-                     /label=@EnforceGCContent(gc_max=0.55, gc_window=50)
+                     /label=@EnforceGCContent(maxi=0.55, window=50)
                      /note="color: #000080"
      misc_feature    complement(333..1193)
                      /label=Gene aaCI

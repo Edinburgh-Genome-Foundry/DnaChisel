@@ -129,13 +129,6 @@ def optimization_with_report(target, problem=None, record=None,
         problem.progress_logger(message="Solving constraints")
         problem.resolve_constraints()
     except NoSolutionError as error:
-        # if error.location is None:
-        #     problem.progress_logger(
-        #         message="Failed to solve constraints. Generating report.")
-        #     data = write_optimization_report(
-        #         target, problem, project_name=project_name)
-        #     return False, "No solution found before the end of search.", data
-
         problem.progress_logger(message="No solution found: making report")
         data = write_no_solution_report(target, problem, error)
         start, end, s = error.location.to_tuple()
@@ -168,7 +161,6 @@ def write_no_solution_report(target, problem, error):
 
     error
       A NoSolutionError (carries a message and a location)
-
     """
     root = flametree.file_tree(target, replace=True)
     translator = SpecAnnotationsTranslator()

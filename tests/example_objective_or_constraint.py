@@ -11,7 +11,7 @@ problem = DnaOptimizationProblem(
     sequence=random_dna_sequence(10000),
     constraints=[
         AvoidPattern(enzyme_pattern("BsaI")),
-        EnforceGCContent(gc_min=0.3, gc_max=0.7, gc_window=50)
+        EnforceGCContent(mini=0.3, maxi=0.7, window=50)
     ],
     objectives=[EnforceGCContent(gc_objective=0.4)]
 )

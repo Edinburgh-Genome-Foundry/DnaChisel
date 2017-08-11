@@ -344,7 +344,8 @@ class DnaOptimizationProblem:
         if len(constraints) == 0:
             return
         constraints = sorted(constraints, key=lambda c: -c.priority)
-        self.progress_logger(constraint_total=len(constraints))
+        self.progress_logger(constraint_total=len(constraints),
+                             constraint_index=0)
         for i, constraint in enumerate(constraints):
             try:
                 self.resolve_constraint(constraint=constraint)

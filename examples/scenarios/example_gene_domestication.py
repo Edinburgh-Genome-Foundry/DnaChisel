@@ -11,7 +11,7 @@ problem = DnaOptimizationProblem(
     constraints=[
         EnforceTranslation(),
         AvoidPattern(enzyme="BsmBI"),
-        EnforceGCContent(gc_min=0.4, gc_max=0.6, gc_window=60)
+        EnforceGCContent(mini=0.4, maxi=0.6, window=60)
     ],
     objectives=[
         CodonOptimize(species='s_cerevisiae')
