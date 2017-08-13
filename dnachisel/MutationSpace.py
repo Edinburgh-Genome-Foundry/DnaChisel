@@ -1,4 +1,4 @@
-"""Definie MutationSpace"""
+"""Define MutationSpace"""
 
 import itertools
 import numpy as np
@@ -109,14 +109,12 @@ class MutationSpace:
     --------
 
     >>> space = MutationSpace([
-        MutationChoice((0, 2), {'AT', 'TG'}),
-        MutationChoice((0, 2), {'AT', 'TG'}),
-        MutationChoice((2, 5), {'AT', 'TG'}),
-        MutationChoice((2, 5), {'AT', 'TG'}),
-        MutationChoice((2, 5), {'AT', 'TG'}),
-
-
-    ])
+            MutationChoice((0, 2), {'AT', 'TG'}),
+            MutationChoice((0, 2), {'AT', 'TG'}),
+            MutationChoice((2, 5), {'TTC', 'TTA', 'TTT'}), # same
+            MutationChoice((2, 5), {'TTC', 'TTA', 'TTT'}), #
+            MutationChoice((2, 5), {'TTC', 'TTA', 'TTT'}),
+        ])
     """
     def __init__(self, choices_index):
         """

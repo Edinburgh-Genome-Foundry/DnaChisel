@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
 """Classes for Objective Evaluations."""
+
+
 import textwrap
 import itertools
 try:

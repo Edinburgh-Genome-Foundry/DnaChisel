@@ -1,4 +1,4 @@
-"""Example of use of the AvoidPAttern specification"""
+"""Example of use of the CodonOptimize specification."""
 
 from dnachisel import (DnaOptimizationProblem, random_protein_sequence,
                        CodonOptimize, reverse_translate, EnforceTranslation)

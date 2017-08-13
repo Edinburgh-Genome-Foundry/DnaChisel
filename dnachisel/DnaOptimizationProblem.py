@@ -15,7 +15,15 @@ from .SpecEvaluation import (ProblemObjectivesEvaluations,
                              ProblemConstraintsEvaluations)
 from .Location import Location
 from .MutationSpace import MutationSpace
-from .ProgressLogger import DnaOptimizationProgressBar
+from proglog import TqdmProgressBarLogger
+
+_default_bars = ('objective', 'constraint', 'location', 'mutation')
+class DnaOptimizationProgressBar(TqdmProgressBarLogger):
+
+    def __init__(self, bars=_default_bars, notebook='default'):
+        ignored_bars = set(_default_bars).difference(bars)
+        TqdmProgressBarLogger.__init__(self, bars=bars, notebook=notebook,
+                                       ignored_bars=ignored_bars)
 
 DEFAULT_SPECIFICATIONS_DICT = {} # completed at library initialization
 
@@ -116,7 +124,8 @@ class DnaOptimizationProblem:
         self.objectives = [] if objectives is None else objectives
 
         if progress_logger == 'bar':
-            progress_logger = DnaOptimizationProgressBar()
+            progress_logger = DnaOptimizationProgressBar(
+                bars=('objective', 'constraint', 'location'))
         if progress_logger is None:
             def progress_logger(*a, **k):
                 pass
@@ -126,8 +135,6 @@ class DnaOptimizationProblem:
 
     def initialize(self):
         """Variables initialization before solving."""
-
-        self.progress_logger(message="Initializing...")
 
         self.constraints = [
             constraint.initialize_on_problem(self, role="constraint")
@@ -200,12 +207,13 @@ class DnaOptimizationProblem:
         """
         sequence_before = self.sequence
         all_variants = self.mutation_space.all_variants(self.sequence)
-        self.progress_logger(mutation_total=self.mutation_space.space_size)
-        for i, variant in enumerate(all_variants):
+        space_size = int(self.mutation_space.space_size)
+        self.progress_logger(mutation__total=space_size)
+        for variant in self.progress_logger.iter_bar(mutation=all_variants):
             self.sequence = variant
             if self.all_constraints_pass():
+                self.progress_logger(mutation__index=space_size)
                 return
-            self.progress_logger(mutation_index=i)
         self.sequence = sequence_before
         raise NoSolutionError(
             "Exhaustive search failed to satisfy all constraints.",
@@ -235,10 +243,11 @@ class DnaOptimizationProblem:
             if not e.passes
         ])
 
-        self.progress_logger(mutation_total=self.max_random_iters)
-        for i in range(self.max_random_iters):
+        iters = range(self.max_random_iters)
+        for i in self.progress_logger.iter_bar(mutation=iters):
 
             if all(e.passes for e in evaluations):
+                self.progress_logger(mutation__index=iters)
                 return
             previous_sequence = self.sequence
             self.sequence = self.mutation_space.apply_random_mutations(
@@ -255,7 +264,6 @@ class DnaOptimizationProblem:
                 score = new_score
             else:
                 self.sequence = previous_sequence
-            self.progress_logger(mutation_index=i)
         raise NoSolutionError(
             "Random search hit max_iterations without finding a solution.",
             problem=self
@@ -273,8 +281,7 @@ class DnaOptimizationProblem:
             return
 
         locations = evaluation.locations
-        self.progress_logger(location_total=len(locations))
-        for i, location in enumerate(locations):
+        for location in self.progress_logger.iter_bar(location=locations):
             for extension in self.local_extensions:
                 new_location = location.extended(extension)
 
@@ -319,13 +326,10 @@ class DnaOptimizationProblem:
                     if extension == self.local_extensions[-1]:
                         error.location = new_location
                         error.constraint = constraint
-                        self.progress_logger(location_index=len(locations))
+                        self.progress_logger(location__index=len(locations))
                         raise error
                     else:
                         continue
-
-            self.progress_logger(location_index=i + 1)
-
 
     def resolve_constraints(self, final_check=True):
         """Solve a particular constraint using local, targeted searches.
@@ -344,16 +348,12 @@ class DnaOptimizationProblem:
         if len(constraints) == 0:
             return
         constraints = sorted(constraints, key=lambda c: -c.priority)
-        self.progress_logger(constraint_total=len(constraints),
-                             constraint_index=0)
-        for i, constraint in enumerate(constraints):
+        for constraint in self.progress_logger.iter_bar(constraint=constraints):
             try:
                 self.resolve_constraint(constraint=constraint)
             except NoSolutionError as error:
-                self.progress_logger(constraint_index=len(constraints))
+                self.progress_logger(constraint__index=len(constraints))
                 raise error
-
-            self.progress_logger(constraint_index=i + 1)
         if final_check:
             for cst in self.constraints:
                 if not cst.evaluate(self).passes:
@@ -391,8 +391,9 @@ class DnaOptimizationProblem:
         current_best_score = self.objective_scores_sum()
         current_best_sequence = self.sequence
         all_variants = self.mutation_space.all_variants(self.sequence)
-        self.progress_logger(mutation_total=self.mutation_space.space_size)
-        for i, variant in enumerate(all_variants):
+        space_size = int(self.mutation_space.space_size)
+        self.progress_logger(mutation__total=space_size)
+        for variant in self.progress_logger.iter_bar(mutation=all_variants):
             self.sequence = variant
             if self.all_constraints_pass():
                 score = self.objective_scores_sum()
@@ -401,9 +402,9 @@ class DnaOptimizationProblem:
                     current_best_sequence = self.sequence
                     if ((best_possible_score is not None) and
                             (current_best_score >= best_possible_score)):
+                        self.progress_logger(mutation__index=space_size)
                         break
             self.sequence = self.sequence_before
-            self.progress_logger(mutation_index=i + 1)
         self.sequence = current_best_sequence
         assert self.all_constraints_pass()
 
@@ -423,11 +424,12 @@ class DnaOptimizationProblem:
                                        for obj in self.objectives])
         else:
             best_possible_score = None
-
-        self.progress_logger(mutation_total=self.max_random_iters)
-        for iteration in range(self.max_random_iters):
+        iters = self.max_random_iters
+        # print (len(range(iters)))
+        for iteration in self.progress_logger.iter_bar(mutation=range(iters)):
             if ((best_possible_score is not None) and
                     (score >= best_possible_score)):
+                self.progress_logger(mutation__index=iters)
                 break
 
             previous_sequence = self.sequence
@@ -441,7 +443,6 @@ class DnaOptimizationProblem:
                     self.sequence = previous_sequence
             else:
                 self.sequence = previous_sequence
-            self.progress_logger(mutation_index=iteration + 1)
         #  assert self.all_constraints_pass()
 
     def optimize_objective(self, objective):
@@ -459,8 +460,7 @@ class DnaOptimizationProblem:
                 " returns locations."
             )
 
-        self.progress_logger(location_total=len(locations))
-        for i, location in enumerate(locations):
+        for location in self.progress_logger.iter_bar(location=locations):
             mutation_space = self.mutation_space.localized(location)
             if mutation_space.space_size == 0:
                 continue
@@ -491,7 +491,6 @@ class DnaOptimizationProblem:
                 else:
                     local_problem.optimize_by_random_mutations()
             self.sequence = local_problem.sequence
-            self.progress_logger(location_index=i + 1)
 
     def optimize(self):
         """Maximize the objective via local, targeted mutations."""
@@ -502,37 +501,9 @@ class DnaOptimizationProblem:
         ]
         if len(objectives) == 0:
             return
-        self.progress_logger(objective_total=len(objectives))
-        for i, objective in enumerate(objectives):
+        for objective in self.progress_logger.iter_bar(objective=objectives):
             self.optimize_objective(objective=objective)
-            self.progress_logger(objective_index=i + 1)
         return
-
-    # def include_pattern_by_successive_tries(self, pattern, location=None,
-    #                                         paste_pattern_in=True,
-    #                                         aim_at_location_centre=True):
-    #     if location is None:
-    #         location = Location(0, len(self.sequence))
-    #     constraint = EnforcePattern(pattern=pattern, location=location)
-    #     self.constraints.append(constraint)
-    #
-    #     indices = list(range(location.start, location.end - pattern.size))
-    #     if aim_at_location_centre:
-    #         center = 0.5 * (location.start + location.end - pattern.size)
-    #         indices = sorted(indices, key=lambda i: abs(i - center))
-    #
-    #     for i in indices:
-    #         sequence_before = self.sequence
-    #         if paste_pattern_in:
-    #             location = [i, i + pattern.size]
-    #             self.mutate_sequence([(location, pattern.pattern)])
-    #         try:
-    #             self.resolve_constraints_one_by_one()
-    #             return i
-    #         except NoSolutionError:
-    #             self.sequence = sequence_before
-    #     self.constraints.pop()  # remove the pattern constraint
-    #     raise NoSolutionError("Failed to insert the pattern")
 
     @staticmethod
     def from_record(record, specifications_dict="default"):
