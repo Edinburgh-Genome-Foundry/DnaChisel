@@ -1,3 +1,10 @@
+"""Base class for specification.
+
+Notable features implemented here:
+
+- Many empty methods that features subclass will overwrite
+- Feature import/export from/to Genbank features.
+"""
 import copy
 import re
 
@@ -107,7 +114,7 @@ class Specification:
         role = {"@": "constraint", "~": "objective"}[role]
         args, kwargs = [], {}
         for arg in parameters[1:-1].split(', '):
-            if "=" in arg:
+            if ":" in arg:
                 key, value = arg.split(':')
                 kwargs[key] = format_value(value)
             else:
