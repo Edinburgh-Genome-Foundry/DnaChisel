@@ -114,6 +114,8 @@ class Specification:
         role = {"@": "constraint", "~": "objective"}[role]
         args, kwargs = [], {}
         for arg in parameters[1:-1].split(', '):
+            if arg == '':
+                continue
             if ":" in arg:
                 key, value = arg.split(':')
                 kwargs[key] = format_value(value)
@@ -125,7 +127,7 @@ class Specification:
         except TypeError as err:
             message = err.args[0]
             faulty_parameter = message.split("'")[1]
-            raise TypeError('Unknown parameter %s for specification %s'
+            raise TypeError('Unknown parameter %s for specification %s '
                             'at location %s' % (faulty_parameter,
                                                 specification,
                                                 kwargs['location']))
