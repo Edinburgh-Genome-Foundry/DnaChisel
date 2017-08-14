@@ -16,4 +16,5 @@ from dnachisel.reports import optimization_with_report
 
 if __name__ == "__main__":
     params = docopt(__doc__)
-    optimization_with_report(params["<target>"], record=params["<source>"])
+    optimization_with_report(params["<target>"], record=params["<source>"],
+                             max_random_iters=10000)

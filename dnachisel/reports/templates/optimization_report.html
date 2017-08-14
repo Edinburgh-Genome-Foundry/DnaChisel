@@ -107,7 +107,7 @@ Sequence Optimization Report
       {% for (before, after) in zip(problem.objectives_before, objectives_after) %}
       <tr>
         <td class='first'>
-          {{ before.objective }}
+          {{ before.specification }}
         </td>
         {% for eval in [before, after] %}
           <td class={{'green' if eval.is_optimal else ''}}>

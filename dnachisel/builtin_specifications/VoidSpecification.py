@@ -29,7 +29,7 @@ class VoidSpecification(Specification):
 
     def evaluate(self, problem):
         """Pass the test, always."""
-        return SpecEvaluation(self, problem, score=1.0,
+        return SpecEvaluation(self, problem, score=0,
                               message=self.message,
                               locations=None)
 

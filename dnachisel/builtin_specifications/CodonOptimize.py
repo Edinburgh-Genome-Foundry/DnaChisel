@@ -94,7 +94,7 @@ class CodonOptimize(CodonSpecification):
                 "with size %d not multiple of 3)" % length
             )
         codons = [
-            subsequence[3 * i:3 * (i + 1)]
+            subsequence[3 * i: 3 * (i + 1)]
             for i in range(int(length / 3))
         ]
         # the are arrays:
@@ -107,15 +107,21 @@ class CodonOptimize(CodonSpecification):
         non_optimality = optimal_usage - current_usage
         nonoptimal_indices = 3 * np.nonzero(non_optimality)[0]
         if self.location.strand == -1:
-            nonoptimal_indices = self.location.end - nonoptimal_indices
+            nonoptimal_indices = sorted(self.location.end - nonoptimal_indices)
+            locations = [
+                Location(group[0] - 3, group[-1], strand=-1)
+                for group in group_nearby_indices(
+                    nonoptimal_indices,
+                    max_group_spread=self.localization_group_spread)
+            ]
         else:
             nonoptimal_indices += self.location.start
-        locations = [
-            Location(group[0], group[-1]+2)
-            for group in group_nearby_indices(
-                nonoptimal_indices,
-                max_group_spread=self.localization_group_spread)
-        ]
+            locations = [
+                Location(group[0], group[-1] + 3)
+                for group in group_nearby_indices(
+                    nonoptimal_indices,
+                    max_group_spread=self.localization_group_spread)
+            ]
         # print (locations)
         score = -non_optimality.sum()
         return SpecEvaluation(

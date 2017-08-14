@@ -15,7 +15,7 @@ from .SpecEvaluation import (ProblemObjectivesEvaluations,
                              ProblemConstraintsEvaluations)
 from .Location import Location
 from .MutationSpace import MutationSpace
-from proglog import TqdmProgressBarLogger
+from proglog import TqdmProgressBarLogger, ProgressBarLogger
 
 _default_bars = ('objective', 'constraint', 'location', 'mutation')
 class DnaOptimizationProgressBar(TqdmProgressBarLogger):
@@ -127,8 +127,7 @@ class DnaOptimizationProblem:
             progress_logger = DnaOptimizationProgressBar(
                 bars=('objective', 'constraint', 'location'))
         if progress_logger is None:
-            def progress_logger(*a, **k):
-                pass
+            progress_logger = ProgressBarLogger() # silent logger
         self.progress_logger = progress_logger
         self.mutation_space = mutation_space
         self.initialize()
@@ -425,7 +424,6 @@ class DnaOptimizationProblem:
         else:
             best_possible_score = None
         iters = self.max_random_iters
-        # print (len(range(iters)))
         for iteration in self.progress_logger.iter_bar(mutation=range(iters)):
             if ((best_possible_score is not None) and
                     (score >= best_possible_score)):
@@ -503,7 +501,6 @@ class DnaOptimizationProblem:
             return
         for objective in self.progress_logger.iter_bar(objective=objectives):
             self.optimize_objective(objective=objective)
-        return
 
     @staticmethod
     def from_record(record, specifications_dict="default"):

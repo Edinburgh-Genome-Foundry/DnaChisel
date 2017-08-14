@@ -37,7 +37,7 @@ class CodonSpecification(Specification):
                     start_codon = int((w_end - o_end) / 3)
                     end_codon = int((w_end - o_start) / 3)
                     new_location = Location(
-                        start=max(w_start, w_end - 3 * (end_codon + 1)),
+                        start=max(w_start, w_end - 3 * (end_codon)),
                         end=w_end - 3 * start_codon,
                         strand=self.location.strand
                     )

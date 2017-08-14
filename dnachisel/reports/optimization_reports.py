@@ -173,7 +173,8 @@ def write_no_solution_report(target, problem, error):
         graphical_record = translator.translate_record(record)
         ax, _ = graphical_record.plot(figure_width=20)
         start, end, strand = error.location.to_tuple()
-        ax.fill_between([start, end], -10, 10)
+        ax.fill_between([start, end], -10, 10, zorder=-1000,
+                        facecolor='#ffeeee')
         title = "\n".join(textwrap.wrap(
             "No solution found in zone [%d, %d]: %s" %
             (start, end, str(error)), width=120)

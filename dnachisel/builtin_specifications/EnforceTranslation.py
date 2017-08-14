@@ -106,8 +106,9 @@ class EnforceTranslation(CodonSpecification):
         ]
         errors_locations = [
             Location(3 * ind, 3 * (ind + 1)) if self.location.strand >= 0 else
-            Location(self.location.end - 3 * (ind + 1),
-                     self.location.end - 3 * ind)
+            Location(start=self.location.end - 3 * (ind + 1),
+                     end=self.location.end - 3 * ind,
+                     strand=-1)
             for ind in errors
         ]
         success = (len(errors) == 0)

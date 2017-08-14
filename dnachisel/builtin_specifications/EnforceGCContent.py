@@ -5,6 +5,7 @@ import numpy as np
 from ..Specification import Specification
 from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
+from ..biotools import group_nearby_segments
 from dnachisel.biotools import gc_content
 from dnachisel.Location import Location
 
@@ -82,21 +83,13 @@ class EnforceGCContent(Specification):
             else:
                 breaches_locations = [[wstart, wend]]
         else:
-            breaches_locations = []
-            current_start = breaches_starts[0]
-            last_end = current_start + self.window
-            for i in breaches_starts[1:]:
-                if (i > last_end + self.window):
-                    breaches_locations.append([
-                        wstart + current_start, wstart + last_end]
-                    )
-                    current_start = i
-                    last_end = i + self.window
-
-                else:
-                    last_end = i + self.window
-            breaches_locations.append(
-                [wstart + current_start, wstart + last_end])
+            segments = [(bs, bs + self.window) for bs in breaches_starts]
+            groups = group_nearby_segments(segments,
+                                           max_start_gap=self.window)
+            breaches_locations = [
+                (group[0][0], group[-1][-1])
+                for group in groups
+            ]
 
         if breaches_locations == []:
             message = "Passed !"
@@ -132,18 +125,16 @@ class EnforceGCContent(Specification):
                 new_location = None
         return self.copy_with_changes(location=new_location)
 
-    def __repr__(self):
-        """Represent."""
-        return self.feature_label(
-            "EnforceGCContent[%s](min %.02f, max %.02f %s)" %
-            (self.location,  self.mini, self.maxi,
-             "" if (self.window is None) else ", %dbp window" % self.window,
-             ))
+    def label_parameters(self):
+        show_mini = self.mini is not None
+        show_maxi = self.maxi is not None
+        show_target = not (show_mini or show_maxi)
+        show_window = self.window is not None
 
-    def __str__(self):
-        """Represent."""
         return (
-            "EnforceGCContent[%s](min %.02f, max %.02f %s)" %
-            (self.location,  self.mini, self.maxi,
-             "" if (self.window is None) else ", %dbp window" % self.window,
-             ))
+            show_mini * [('mini', "%.2f" % self.mini)] +
+            show_maxi * [('maxi', "%.2f" % self.maxi)] +
+            show_target * [('target',
+                           ("%.2f" % self.target) if self.target else '')] +
+            show_window * [('window', "%d" % self.window)]
+        )
