@@ -292,7 +292,8 @@ def write_optimization_report(target, problem, project_name="unnammed",
             record.features += edits
             breaches_locations = \
                 constraints.filter("failing") \
-                           .locations_as_features(label_prefix="Breach from")
+                           .locations_as_features(label_prefix="Breach from",
+                                                  merge_overlapping=True)
             record.features += breaches_locations
 
             SeqIO.write(record, root._file(title.lower() + ".gb").open("w"),

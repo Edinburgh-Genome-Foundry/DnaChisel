@@ -16,7 +16,8 @@ def test_avoid_change_as_objectives_basics():
         problem = DnaOptimizationProblem(
             sequence=sequence,
             objectives=[
-                EnforceGCContent(mini=0.45, maxi=0.55, window=80),
+                EnforceGCContent(mini=0.45, maxi=0.55, window=80)
+                .copy_with_changes(locations_span=300),
                 AvoidChanges(boost=boost).as_passive_objective()])
 
         problem.optimize()

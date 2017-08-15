@@ -282,7 +282,7 @@ class DnaOptimizationProblem:
         if evaluation.passes:
             return
 
-        locations = sorted(evaluation.locations, key=lambda l: l.to_tuple())
+        locations = sorted(evaluation.locations)
         iterator = self.progress_logger.iter_bar(location=locations)
         for i, location in enumerate(iterator):
             for extension in self.local_extensions:

@@ -12,6 +12,8 @@ except:
 
 from Bio.SeqFeature import SeqFeature
 
+from .Location import Location
+
 def colors_cycle():
     if not MATPLOTLIB_AVAILABLE:
         raise ImportError("Matplotlib is required !")
@@ -21,6 +23,12 @@ def colors_cycle():
         '#%02x%02x%02x' % tuple([int(255 * c) for c in rgb_tuple[:3]])
         for rgb_tuple in cycle
     )
+
+def score_as_text(score):
+    raw = str(int(score) if (int(score) == score) else score)
+    as_float = "%.02f" % score
+    as_eng = "%.02E." % score
+    return min([raw, as_float, as_eng], key=len).rjust(9)
 
 class SpecEvaluation:
     """Store relevant infos about the evaluation of an objective on a problem.
@@ -66,14 +74,21 @@ class SpecEvaluation:
         self.score = score
         self.passes = score >= 0
         self.is_optimal = (score == specification.best_possible_score)
+        # print (specification, self.is_optimal, score)
         self.locations = locations
         self.message = self.default_message if message is None else message
         self.data = {} if data is None else data
 
+
+
     @property
     def default_message(self):
         """Return the default message for console/reports."""
-        return "Score: %.02E. Locations: %s" % (self.score, self.locations)
+        return "Score: %s. Locations: %s" % (score_as_text(self.score),
+                                             self.locations)
+    @property
+    def score_as_text(self):
+        return score_as_text(self.score)
 
     def to_text(self, role='constraint', wrapped=True):
         """Return a string representation of the evaluation.
@@ -103,10 +118,10 @@ class SpecEvaluation:
             )
 
         if role == "objective":
-            return ("{optimal}{self.score:.02E} ┍ {spec} \n{message}").format(
+            return "{optimal}{score} ┍ {spec} \n{message}".format(
                 self=self, optimal="✔" if self.is_optimal else " ",
                 spec=self.specification.label(with_location=True),
-                message = message
+                score=score_as_text(self.score), message=message
             )
         else:
             return "{passes} ┍ {spec}\n{message}".format(
@@ -115,7 +130,8 @@ class SpecEvaluation:
                 message=message)
 
     def locations_to_biopython_features(self, feature_type="misc_feature",
-                                        color="red", label_prefix=""):
+                                        color="red", label_prefix="",
+                                        merge_overlapping=False):
         """Return a list of locations (of breach/suboptimality) as annotations.
 
         Parameters
@@ -130,13 +146,16 @@ class SpecEvaluation:
           The locations will be labelled of the form
           "prefix NameOfSpecification()"
         """
+        locations = self.locations
+        if merge_overlapping:
+            locations = Location.merge_overlapping_locations(locations)
         return [
             SeqFeature(location.to_biopython_location(), type=feature_type,
                        qualifiers=dict(
                            label=label_prefix + " " + str(self.specification),
                            color=color
             ))
-            for location in self.locations
+            for location in locations
         ]
 
 
@@ -173,15 +192,19 @@ class SpecEvaluations:
         """Return whether all evaluations pass."""
         return all([ev.passes for ev in self.evaluations])
 
-    def scores_sum(self):
+    def scores_sum(self, as_text=False):
         """Return the sum of all evaluations scores.
 
         Scores are multiplied by their respective boost factor.
         """
-        return sum([
+        result = sum([
             ev.specification.boost * ev.score
             for ev in self.evaluations
         ])
+        if as_text:
+            result = score_as_text(result)
+        return result
+
 
     def filter(self, eval_filter):
         """Create a new instance with a subset of the evaluations.
@@ -236,7 +259,7 @@ class SpecEvaluations:
 
     def locations_as_features(self, features_type="misc_feature",
                               with_specifications=True, label_prefix="From",
-                              colors="cycle"):
+                              colors="cycle", merge_overlapping=False):
         """Return all locations from all evaluations as biopython features.
 
         Parameters
@@ -270,7 +293,10 @@ class SpecEvaluations:
                 color=color
             )
             for (ev, color) in zip(self.evaluations_with_locations(), colors)
-            for location in ev.locations
+            for location in (
+                Location.merge_overlapping_locations(ev.locations)
+                if merge_overlapping else ev.locations
+            )
         ]
         if with_specifications:
             features += [
@@ -319,7 +345,6 @@ class ProblemConstraintsEvaluations(SpecEvaluations):
         else:
             return "FAILURE: %d constraints evaluations failed" % len(failed)
 
-
 class ProblemObjectivesEvaluations(SpecEvaluations):
     """Special multi-evaluation class for all objectives of a same problem.
 
@@ -347,4 +372,6 @@ class ProblemObjectivesEvaluations(SpecEvaluations):
 
     def text_summary_message(self):
         """Return a TOTAL SCORE message."""
-        return "TOTAL OBJECTIVES SCORE: %.02f" % self.scores_sum()
+        if len(self.evaluations) == 0:
+            return "No specifications"
+        return "TOTAL OBJECTIVES SCORE: " + self.scores_sum(as_text=True)

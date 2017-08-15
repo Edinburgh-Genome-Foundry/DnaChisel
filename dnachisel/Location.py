@@ -114,6 +114,20 @@ class Location:
         return self.end - self.start
 
     @staticmethod
+    def merge_overlapping_locations(locations):
+        """Return a list of locations obtained by mergin all overlapping."""
+        if len(locations) == 0:
+            return locations
+        locations = sorted(locations)
+        new_locations = [locations[0]]
+        for loc in locations[1:]:
+            if new_locations[-1].overlap_region(loc) is not None:
+                new_locations[-1].end = max(new_locations[-1].end, loc.end)
+            else:
+                new_locations.append(loc)
+        return new_locations
+
+    @staticmethod
     def from_biopython_location(location):
         """Return a DnaChisel Location from a Biopython location."""
         start, end, strand = [

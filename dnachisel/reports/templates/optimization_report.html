@@ -58,10 +58,10 @@ Sequence Optimization Report
         Total objectives score
       </td>
       <td>
-        {{ '%.1E' % problem.objectives_before.scores_sum() }}
+        {{ problem.objectives_before.scores_sum(as_text=True) }}
       </td>
       <td>
-        {{ '%.1E' % objectives_after.scores_sum()}}
+        {{ objectives_after.scores_sum(as_text=True) }}
       </td>
     </tr>
   </table>
@@ -86,7 +86,7 @@ Sequence Optimization Report
         {% if eval.passes %}
           <td>PASS</td>
         {% else %}
-          <td class='red'> FAIL ({{ len(eval.locations) }} places)</td>
+          <td class='red'> FAIL at {{ len(eval.locations) }} locations</td>
         {% endif %}
       {% endfor %}
     </tr>
@@ -111,7 +111,7 @@ Sequence Optimization Report
         </td>
         {% for eval in [before, after] %}
           <td class={{'green' if eval.is_optimal else ''}}>
-            {{ ('%.1f' if 0.1 < eval.score < 1000 else '%.1E') % eval.score }}
+            {{ eval.score_as_text }}
           </td>
         {% endfor %}
       </tr>
@@ -192,6 +192,10 @@ table {
 }
 .fancy-table tbody tr td.red  {
 	background: #f6cdd0;
+}
+
+.fancy-table tbody tr td.green  {
+	background: #d3ffd1;
 }
 
 
