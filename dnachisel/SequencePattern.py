@@ -1,7 +1,19 @@
+"""Implements the SequencePattern, DnaNotationPattern classes.
+
+These classes are responsible for looking for a pattern in a sequence
+(including overlapping patterns !), separating patterns with fixed size
+and patterns with maximal size (from problem localization purposes).
+
+The module also implements functions to specify common DNA patterns:
+homopolymers, repeats, enzymatic restriction sites.
+
+
+"""
+
 import re
 from .Location import Location
 from .biotools import (dna_pattern_to_regexpr, is_palyndromic,
-                       reverse_complement)
+                       reverse_complement, NUCLEOTIDE_TO_REGEXPR)
 from Bio.Restriction.Restriction_Dictionary import rest_dict
 
 class SequencePattern:
@@ -47,6 +59,7 @@ class SequencePattern:
         if size is None:
             size = len(expression)
         self.expression = expression
+        self.lookahead_expression = '(?=(%s))' % expression
         self.size = size
         self.name = name
         self.in_both_strands = in_both_strands
@@ -82,16 +95,19 @@ class SequencePattern:
                 for loc in self.find_matches(subsequence)
             ]
         matches = [
-            (match.start(), match.end(), 1)
-            for match in re.finditer(self.expression, sequence)
+            (match.start(), match.start() + len(match.groups()[0]), 1)
+            #match.end()
+            for match in re.finditer(self.lookahead_expression, sequence)
         ]
 
         if self.in_both_strands:
             reverse = reverse_complement(sequence)
             L = len(sequence)
             matches += [
-                (L - match.end(), L - match.start(), -1)
-                for match in re.finditer(self.expression, reverse)
+                # (L - match.end(), L - match.start(), -1)
+                (L - match.start() - len(match.groups()[0]),
+                 L - match.start(), -1)
+                for match in re.finditer(self.lookahead_expression, reverse)
             ]
 
         return [
@@ -111,18 +127,38 @@ class DnaNotationPattern(SequencePattern):
     both strands of sequences.
     """
 
-    def __init__(self, sequence, name=None):
+    def __init__(self, sequence, name=None, in_both_strands='auto'):
         """Initialize"""
+        if in_both_strands == 'auto':
+            in_both_strands = not is_palyndromic(sequence)
         SequencePattern.__init__(
             self,
             size=len(sequence),
-            expression=dna_pattern_to_regexpr(sequence),
+            expression=self.dna_sequence_to_regexpr(sequence),
             name=name,
-            in_both_strands=not is_palyndromic(sequence)
+            in_both_strands=in_both_strands
         )
         self.sequence = sequence
 
+    @staticmethod
+    def dna_sequence_to_regexpr(sequence):
+        """Return a regular expression to find the pattern in a sequence."""
+
+        regexpr = ''.join([
+            NUCLEOTIDE_TO_REGEXPR[n]
+            for n in sequence
+        ])
+        return regexpr
+        # The ?= implements 'lookahead' which enables to find overlapping
+        # patterns. It is followed by (.{S}) where S is the sequence size
+        # to make sure the full group is selected.
+        # return '(?=(%s))(.\{%d\})' % (regexpr, len(sequence))
+
     def __repr__(self):
+        """Represent the pattern as PatternType(name) """
+        return self.sequence + ("" if self.name is None else
+                                " (%s)" % self.name)
+    def __str__(self):
         """Represent the pattern as PatternType(name) """
         return self.sequence + ("" if self.name is None else
                                 " (%s)" % self.name)

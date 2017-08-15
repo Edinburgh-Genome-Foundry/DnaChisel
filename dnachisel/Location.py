@@ -10,12 +10,15 @@ from Bio.SeqFeature import SeqFeature, FeatureLocation
 class Location:
     """Represent a segment of a sequence, with a start, end, and strand.
 
+    Warning: we use Python's splicing notation, so Location(5, 10) represents
+    sequence[5, 6, 7, 8, 9] which corresponds to nucleotides number
+    6, 7, 8, 9, 10.
+
     The data structure is similar to a Biopython's FeatureLocation, but with
     different methods for different purposes.
 
     Parameters
     ----------
-
     start
       Lowest position index of the segment
 
@@ -36,11 +39,11 @@ class Location:
 
     def overlap_region(self, other_location):
         """Return the overlap span between two locations (None if None)."""
-
+        strand = self.strand
         if other_location.start < self.start:
             self, other_location = other_location, self
 
-        if self.start <= other_location.start <= self.end:
+        if other_location.start < self.end:
             start = other_location.start
             end = min(self.end, other_location.end)
             strand = self.strand
@@ -48,12 +51,22 @@ class Location:
         else:
             return None
 
-    def extended(self, extension_length, upper_limit=None):
+    def extended(self, extension_length, upper_limit=None, left=True,
+                 right=True):
         """Extend the location of a few basepairs on each side."""
-        lower = max(0, self.start - extension_length)
-        upper = self.end + extension_length
-        if upper_limit is not None:
-            upper = min(upper_limit, upper)
+
+        if left:
+            lower = max(0, self.start - extension_length)
+        else:
+            lower = self.start
+
+        if right:
+            upper = self.end + extension_length
+            if upper_limit is not None:
+                upper = min(upper_limit, upper)
+        else:
+            upper = self.end
+
         return Location(lower, upper, self.strand)
 
     def extract_sequence(self, sequence):

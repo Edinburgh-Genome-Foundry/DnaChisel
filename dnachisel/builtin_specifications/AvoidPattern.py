@@ -37,10 +37,8 @@ class AvoidPattern(PatternSpecification):
             self, problem, score, locations=locations, message=message
         )
 
-    def __repr__(self):
-        """Represent."""
-        return "AvoidPattern(%s, %s)" % (self.pattern, self.location)
-
-    def __str__(self):
-        """Represent."""
-        return "AvoidPattern(%s, %s)" % (self.pattern, self.location)
+    def label_parameters(self):
+        return [('enzyme', self.enzyme) if (self.enzyme is not None)
+                  else (self.pattern.sequence
+                        if hasattr(self.pattern, 'sequence')
+                        else str(self.pattern))]

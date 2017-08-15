@@ -269,21 +269,24 @@ class DnaOptimizationProblem:
         )
 
     def resolve_constraints_locally(self):
+        """Orient the local search towards a stochastic or exhaustive search.
+        """
         if self.mutation_space.space_size < self.randomization_threshold:
             self.resolve_constraints_by_exhaustive_search()
         else:
             self.resolve_constraints_by_random_mutations()
 
     def resolve_constraint(self, constraint):
+        """Resolve a constraint through successive localizations."""
         evaluation = constraint.evaluate(self)
         if evaluation.passes:
             return
 
-        locations = evaluation.locations
-        for location in self.progress_logger.iter_bar(location=locations):
+        locations = sorted(evaluation.locations, key=lambda l: l.to_tuple())
+        iterator = self.progress_logger.iter_bar(location=locations)
+        for i, location in enumerate(iterator):
             for extension in self.local_extensions:
                 new_location = location.extended(extension)
-
                 mutation_space = self.mutation_space.localized(location)
                 if mutation_space.space_size == 0:
                     raise NoSolutionError(
@@ -293,9 +296,20 @@ class DnaOptimizationProblem:
                     )
                 new_location = Location(*mutation_space.choices_span)
 
+                # This blocks solves the problem of overlapping breaches,
+                # which can make the local optimization impossible.
+                if (i < (len(locations) - 1)) and (
+                   locations[i + 1].overlap_region(new_location)):
+                    this_local_constraint = constraint.localized(
+                        new_location, with_righthand=False)
+                else:
+                    this_local_constraint = constraint.localized(new_location)
+                if this_local_constraint.evaluate(self).passes:
+                    continue
                 localized_constraints = [
                     _constraint.localized(new_location)
                     for _constraint in self.constraints
+                    if _constraint != constraint
                     if not _constraint.enforced_by_nucleotide_restrictions
                 ]
                 passing_localized_constraints = [
@@ -305,7 +319,7 @@ class DnaOptimizationProblem:
                 ]
                 local_problem = self.__class__(
                     sequence=self.sequence,
-                    constraints=([constraint.localized(new_location)] +
+                    constraints=([this_local_constraint] +
                                  passing_localized_constraints),
                     mutation_space=mutation_space
                 )

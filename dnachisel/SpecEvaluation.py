@@ -103,14 +103,15 @@ class SpecEvaluation:
             )
 
         if role == "objective":
-            return ("{optimal}{self.score:.02E} ┍ {self.specification} \n"
-                    "{message}").format(
+            return ("{optimal}{self.score:.02E} ┍ {spec} \n{message}").format(
                 self=self, optimal="✔" if self.is_optimal else " ",
+                spec=self.specification.label(with_location=True),
                 message = message
             )
         else:
-            return "{passes} ┍ {self.specification}\n{message}".format(
+            return "{passes} ┍ {spec}\n{message}".format(
                 self=self, passes="✔PASS" if self.passes else " FAIL",
+                spec=self.specification.label(with_location=True),
                 message=message)
 
     def locations_to_biopython_features(self, feature_type="misc_feature",

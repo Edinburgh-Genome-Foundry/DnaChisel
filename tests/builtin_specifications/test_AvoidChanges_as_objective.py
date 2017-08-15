@@ -24,6 +24,5 @@ def test_avoid_change_as_objectives_basics():
                                             problem.sequence_before)
         results.append(differences)
     assert results[0] > 40
-    print (results)
     assert(results[0] > results[1] > results[2] > results[3])
     assert results[-1] == 0

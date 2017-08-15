@@ -10,3 +10,13 @@ def test_avoid_pattern_basics():
     assert not problem.all_constraints_pass()
     problem.resolve_constraints()
     assert problem.all_constraints_pass()
+
+def test_avoid_pattern_overlapping_locations():
+    problem = DnaOptimizationProblem(
+        sequence="AGAGAGAGAGAGAGAGAGAGAGAGAGAGAGAGAG",
+        constraints=[AvoidPattern("NAN")]
+    )
+    assert not problem.all_constraints_pass()
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+    assert "A" not in problem.sequence[1:-1]

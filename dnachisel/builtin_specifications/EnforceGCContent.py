@@ -42,6 +42,7 @@ class EnforceGCContent(Specification):
     """
 
     best_possible_score = 0
+    locations_span = 50  # The resolution will use locations of this size
 
     def __init__(self, mini=0, maxi=1.0, target=None,
                  window=None, location=None, boost=1.0):
@@ -84,8 +85,9 @@ class EnforceGCContent(Specification):
                 breaches_locations = [[wstart, wend]]
         else:
             segments = [(bs, bs + self.window) for bs in breaches_starts]
-            groups = group_nearby_segments(segments,
-                                           max_start_gap=self.window)
+            groups = group_nearby_segments(
+                segments,
+                max_start_spread=max(1,  self.locations_span - self.window))
             breaches_locations = [
                 (group[0][0], group[-1][-1])
                 for group in groups
@@ -101,28 +103,31 @@ class EnforceGCContent(Specification):
                               locations=breaches_locations,
                               message=message)
 
-    def localized(self, location):
+    def localized(self, location, with_righthand=True):
         """Localize the GC content evaluation.
 
         For a location, the GC content evaluation will be restricted
         to [start - window, end + window]
         """
-        if self.location is not None:
-            if self.window is None:
-                return self
-            new_location = self.location.overlap_region(location)
-            if new_location is None:
-                return VoidSpecification(parent_specification=self)
-            else:
-                extension = 0 if self.window is None else self.window - 1
-                extended_location = location.extended(extension)
-
-                new_location = self.location.overlap_region(extended_location)
+        # if self.location is not None:
+        if self.window is None:
+            # NOTE: this makes sense, but could be refined by computing
+            # how much the local bounds should be in order not to outbound
+            return self
+        new_location = self.location.overlap_region(location)
+        if new_location is None:
+            return VoidSpecification(parent_specification=self)
         else:
-            if self.window is not None:
-                new_location = location.extended(self.window + 1)
-            else:
-                new_location = None
+            extension = 0 if self.window is None else self.window - 1
+            extended_location = location.extended(
+                extension, right=with_righthand)
+
+            new_location = self.location.overlap_region(extended_location)
+        # else:
+        #     if self.window is not None:
+        #         new_location = location.extended(self.window + 1)
+        #     else:
+        #         new_location = None
         return self.copy_with_changes(location=new_location)
 
     def label_parameters(self):

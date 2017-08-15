@@ -30,4 +30,5 @@ from .features_annotations import (
 )
 
 from .biotables import (CODONS_SEQUENCES, CODONS_TRANSLATIONS,
-                        CODON_USAGE_TABLES, IUPAC_NOTATION)
+                        CODON_USAGE_TABLES, IUPAC_NOTATION,
+                        NUCLEOTIDE_TO_REGEXPR)

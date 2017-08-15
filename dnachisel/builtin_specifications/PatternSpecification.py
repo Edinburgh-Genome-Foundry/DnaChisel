@@ -1,4 +1,5 @@
 from ..Specification import Specification
+from ..Location import Location
 from .VoidSpecification import VoidSpecification
 from ..SequencePattern import enzyme_pattern, DnaNotationPattern
 
@@ -26,12 +27,10 @@ class PatternSpecification(Specification):
 
     """
     shrink_when_localized = True
-    priority = 1 # higher than normal
+    priority = 1
 
     def __init__(self, pattern=None, location=None, boost=1.0, enzyme=None):
         """Initialize."""
-        # if dna_pattern is not None:
-        #     pattern = dna_pattern
         if enzyme is not None:
             pattern = enzyme_pattern(enzyme)
         if isinstance(pattern, str):
@@ -41,20 +40,26 @@ class PatternSpecification(Specification):
         self.enzyme = enzyme
         self.boost = boost
 
-    def localized(self, location):
+    def initialize_on_problem(self, problem, role='constraint'):
+        if self.location is None:
+            location = Location(0, len(problem.sequence), 1)
+            result = self.copy_with_changes(location=location)
+        else:
+            result = self
+        return result
+
+    def localized(self, location, with_righthand=True):
         """Localize the pattern to the given location. Taking into account the
         specification's own location, and the size of the pattern."""
         pattern_size = self.pattern.size
-        if self.location is None:
-            new_location = location.extended(pattern_size - 1)
+        if self.location.overlap_region(location) is None:
+            return VoidSpecification(parent_specification=self)
         else:
-            if self.location.overlap_region(location) is None:
-                return VoidSpecification(parent_specification=self)
-            else:
-                if not self.shrink_when_localized:
-                    return self
-                extended_location = location.extended(pattern_size - 1)
-                new_location = self.location.overlap_region(extended_location)
+            if not self.shrink_when_localized:
+                return self
+            extended_location = location.extended(pattern_size - 1,
+                                                  right=with_righthand)
+            new_location = self.location.overlap_region(extended_location)
 
         return self.copy_with_changes(location=new_location)
 

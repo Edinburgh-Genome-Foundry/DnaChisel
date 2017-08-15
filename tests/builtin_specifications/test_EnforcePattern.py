@@ -9,7 +9,7 @@ import numpy
 
 # Note: we are not providing a location for AvoidChanges: it applies globally
 
-def test_avoid_change_as_objectives_basics():
+def test_enforce_pattern_basics():
     for seed in [2, 3, 123456]:
         # The seeds cover various cases:
         # 2: the problem has no occurences instead of 1 wanted
