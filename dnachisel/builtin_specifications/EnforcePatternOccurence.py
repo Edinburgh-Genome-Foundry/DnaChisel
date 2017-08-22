@@ -10,7 +10,7 @@ from dnachisel.Location import Location
 from ..DnaOptimizationProblem import DnaOptimizationProblem, NoSolutionError
 
 
-class EnforcePattern(Specification):
+class EnforcePatternOccurence(Specification):
     """Enforce a number of occurences of the given pattern in the sequence.
 
     Parameters
@@ -21,10 +21,17 @@ class EnforcePattern(Specification):
     enzyme
       Enzyme name, can be provided instead of a pattern
 
+    occurences
+      Desired number of occurences of the pattern.
+
     location
       Location of the DNA segment on which to enforce the pattern e.g.
       ``Location(10, 45, 1)``
 
+    center
+      If true, new inserted patterns will prioritize locations at the center
+      of the specification's location. Else the insertion will happen at
+      the beginning of the location.
     """
 
     best_possible_score = 0
@@ -32,7 +39,7 @@ class EnforcePattern(Specification):
     genbank_args = ('pattern', 'occurences')
 
     def __init__(self, pattern=None, occurences=1, location=None, enzyme=None,
-                 boost=1.0):
+                 center=True, boost=1.0):
         """Initialize."""
         if enzyme is not None:
             pattern = enzyme_pattern(enzyme)
@@ -45,6 +52,7 @@ class EnforcePattern(Specification):
         self.enzyme = enzyme
         self.boost = boost
         self.occurences = occurences
+        self.center = center
         self.boost = boost
 
     def initialize_on_problem(self, problem, role=None):
@@ -91,7 +99,11 @@ class EnforcePattern(Specification):
         pattern from 0 to some number
         """
         L = self.pattern.size
-        for start in range(self.location.start, self.location.end - L):
+        starts = range(self.location.start, self.location.end - L)
+        if self.center:
+            center = 0.5 * (self.location.start + self.location.end)
+            starts = sorted(starts, key=lambda s: abs(s - center))
+        for start in starts:
             new_location = Location(start, start + L, self.location.strand)
             new_constraint = EnforceSequence(sequence=self.pattern.sequence,
                                              location=new_location)
@@ -105,7 +117,7 @@ class EnforcePattern(Specification):
                 sequence=new_sequence,
                 constraints=new_constraints,
                 mutation_space=new_space,
-                progress_logger=None
+                logger=None
             )
             assert self.evaluate(new_problem).passes
             try:

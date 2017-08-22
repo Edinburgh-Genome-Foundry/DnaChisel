@@ -9,8 +9,9 @@ from .builtin_specifications import (
     AvoidPattern,
     CodonOptimize,
     AvoidChanges,
+    EnforceChoice,
     EnforceGCContent,
-    EnforcePattern,
+    EnforcePatternOccurence,
     EnforceRegionsCompatibility,
     EnforceSequence,
     EnforceTranslation,
@@ -51,16 +52,24 @@ from .utils import random_compatible_dna_sequence
 from .version import __version__
 
 DEFAULT_SPECIFICATIONS_DICT.update({
-   'AvoidBlastMatches': AvoidBlastMatches,
-   'AvoidChanges': AvoidChanges,
-   'AvoidHairpins': AvoidHairpins,
-   'AvoidNonUniqueSegments': AvoidNonuniqueSegments,
-   'AvoidPattern': AvoidPattern,
-   'CodonOptimize': CodonOptimize,
-   'EnforceGCContent': EnforceGCContent,
-   'EnforcePattern': EnforcePattern,
-   'EnforceTranslation': EnforceTranslation,
-   'EnforceRegionsCompatibility': EnforceRegionsCompatibility,
-   'EnforceSequence': EnforceSequence,
-   'SequenceLengthBounds': SequenceLengthBounds
+    'AvoidBlastMatches': AvoidBlastMatches,
+    'AvoidChanges': AvoidChanges,
+    'AvoidHairpins': AvoidHairpins,
+    'AvoidNonUniqueSegments': AvoidNonuniqueSegments,
+    'AvoidPattern': AvoidPattern,
+    'CodonOptimize': CodonOptimize,
+    'EnforceGCContent': EnforceGCContent,
+    'EnforcePatternOccurence': EnforcePatternOccurence,
+    'EnforceTranslation': EnforceTranslation,
+    'EnforceRegionsCompatibility': EnforceRegionsCompatibility,
+    'EnforceSequence': EnforceSequence,
+    'EnforceChoice': EnforceChoice,
+
+    # SHORTHAND NOTATIONS
+    'cds': EnforceTranslation,
+    'choice': EnforceChoice,
+    'gc': EnforceGCContent,
+    'insert': EnforcePatternOccurence,
+    'keep': AvoidChanges,
+    'no': AvoidPattern
 })

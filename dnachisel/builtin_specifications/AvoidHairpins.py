@@ -47,7 +47,6 @@ class AvoidHairpins(Specification):
 
     def evaluate(self, problem):
         """Return the score (-number_of_hairpins) and hairpins locations."""
-        # print("lol")
         sequence = self.location.extract_sequence(problem.sequence)
         reverse = reverse_complement(sequence)
         locations = []
@@ -57,7 +56,6 @@ class AvoidHairpins(Specification):
             if word in rest:
                 locations.append((i, i+rest.index(word) + len(word)))
         score = -len(locations)
-        # print(score)
         locations = group_nearby_segments(locations, max_start_spread=10)
         locations = sorted([Location(l[0][0], l[-1][1] + self.hairpin_window)
                             for l in locations])
@@ -78,7 +76,7 @@ class AvoidHairpins(Specification):
                 new_location.end = min(
                     self.location.end, new_location.end + self.hairpin_window)
             return self.copy_with_changes(location=new_location)
-            
+
     def label_parameters(self):
-        return [('stem_size', self.stem_size),
-                ('hairpin_window', self.hairpin_window)]
+        return [('stem_size', str(self.stem_size)),
+                ('hairpin_window', str(self.hairpin_window))]

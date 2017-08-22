@@ -473,6 +473,7 @@ def group_nearby_segments(segments, max_start_gap=None, max_start_spread=None):
         else:
             current_group = [seg]
             groups.append(current_group)
+    # print (segments, groups)
     return groups
 
 def annotate_record(seqrecord, location="full", feature_type="misc_feature",

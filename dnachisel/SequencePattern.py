@@ -11,9 +11,11 @@ homopolymers, repeats, enzymatic restriction sites.
 """
 
 import re
+import itertools
 from .Location import Location
 from .biotools import (dna_pattern_to_regexpr, is_palyndromic,
-                       reverse_complement, NUCLEOTIDE_TO_REGEXPR)
+                       reverse_complement, NUCLEOTIDE_TO_REGEXPR,
+                       IUPAC_NOTATION)
 from Bio.Restriction.Restriction_Dictionary import rest_dict
 
 class SequencePattern:
@@ -153,6 +155,15 @@ class DnaNotationPattern(SequencePattern):
         # patterns. It is followed by (.{S}) where S is the sequence size
         # to make sure the full group is selected.
         # return '(?=(%s))(.\{%d\})' % (regexpr, len(sequence))
+
+    def all_variants(self):
+        """Return all ATGC sequence variants of a sequence"""
+        return[
+            "".join(nucleotides)
+            for nucleotides in itertools.product(*[
+                IUPAC_NOTATION[n] for n in self.sequence
+            ])
+        ]
 
     def __repr__(self):
         """Represent the pattern as PatternType(name) """

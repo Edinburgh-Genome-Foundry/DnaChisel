@@ -65,15 +65,13 @@ class EnforceGCContent(Specification):
 
     def evaluate(self, problem):
         """Return the sum of breaches extent for all windowed breaches."""
-        location = (self.location if self.location is not None
-                    else Location(0, len(problem.sequence)))
-        wstart, wend = location.start, location.end
-        sequence = location.extract_sequence(problem.sequence)
-        gc = gc_content(sequence, self.window)
+        wstart, wend = self.location.start, self.location.end
+        sequence = self.location.extract_sequence(problem.sequence)
+        gc = gc_content(sequence, window_size=self.window)
         breaches = (np.maximum(0, self.mini - gc) +
                     np.maximum(0, gc - self.maxi))
-        score = - (breaches.sum())
-        breaches_starts = (breaches > 0).nonzero()[0]
+        score = - breaches.sum()
+        breaches_starts = wstart + (breaches > 0).nonzero()[0]
 
         if len(breaches_starts) == 0:
             breaches_locations = []
@@ -121,7 +119,6 @@ class EnforceGCContent(Specification):
             extension = 0 if self.window is None else self.window - 1
             extended_location = location.extended(
                 extension, right=with_righthand)
-
             new_location = self.location.overlap_region(extended_location)
         # else:
         #     if self.window is not None:

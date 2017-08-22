@@ -88,6 +88,8 @@ class Specification:
 
         """
         def format_value(value):
+            if isinstance(value, (list, tuple)):
+                return [format_value(v) for v in value]
             match = re.match(r"'(.*)'", value)
             if match is not None:
                 return match.groups()[0]
@@ -118,6 +120,13 @@ class Specification:
                 continue
             if ":" in arg:
                 key, value = arg.split(':')
+                if '|' in value:
+                    value = value.split('|')
+                kwargs[key] = format_value(value)
+            elif '=' in arg:
+                key, value = arg.split('=')
+                if '|' in value:
+                    value = value.split('|')
                 kwargs[key] = format_value(value)
             else:
                 args.append(format_value(arg))

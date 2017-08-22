@@ -2,7 +2,7 @@
 of a sequence."""
 
 from dnachisel import (EnforceTranslation, DnaOptimizationProblem,
-                       random_dna_sequence, Location, EnforcePattern)
+                       random_dna_sequence, Location, EnforcePatternOccurence)
 
 import numpy
 #numpy.random.seed(123)
@@ -20,7 +20,8 @@ def test_enforce_pattern_basics():
         constraints = [
             EnforceTranslation(Location(1000, 2500)),
             EnforceTranslation(Location(3000, 4500)),
-            EnforcePattern("ANANANANTT", location=Location(1100, 2150))
+            EnforcePatternOccurence("ANANANANTT",
+                                    location=Location(1100, 2150))
         ]
 
         problem = DnaOptimizationProblem(

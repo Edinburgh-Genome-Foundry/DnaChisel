@@ -7,8 +7,10 @@ from .AvoidHairpins import AvoidHairpins
 from .AvoidNonUniqueSegments import AvoidNonuniqueSegments
 from .AvoidPattern import AvoidPattern
 from .CodonOptimize import CodonOptimize
+from .EnforceChoice import EnforceChoice
+from .EnforceSequence import EnforceSequence
 from .EnforceGCContent import EnforceGCContent
-from .EnforcePattern import EnforcePattern
+from .EnforcePatternOccurence import EnforcePatternOccurence
 from .EnforceTranslation import EnforceTranslation
 from .EnforceRegionsCompatibility import EnforceRegionsCompatibility
 from .EnforceSequence import EnforceSequence

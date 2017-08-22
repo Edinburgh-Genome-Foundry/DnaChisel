@@ -83,6 +83,50 @@ class MutationChoice:
         return MutationChoice(segment=final_segment,
                               variants=final_variants)
 
+    def extract_varying_region(self):
+        """Return MutationChoices for the central varying region and 2 flanks.
+
+        For instance:
+
+        >>> choice = MutationChoice((5, 12), [
+        >>>     'ATGCGTG',
+        >>>     'AAAAATG',
+        >>>     'AAATGTG',
+        >>>     'ATGAATG',
+        >>> ])
+        >>> choice.extract_varying_region()
+        >>> Result:
+        >>> [
+        >>>     MutChoice(5-6 A),
+        >>>     MutChoice(6-10 TGCG-AATG-TGAA-AAAA),
+        >>>     MutChoice(10-12 TG)
+        >>> ]
+        >>>
+
+        """
+        if len(self.variants) <= 1:
+            return [self]
+        variants = list(self.variants)
+        variants_array = np.array([
+            np.fromstring(v, dtype='uint8')
+            for v in self.variants
+        ])
+        variance_array = np.diff(variants_array, axis=0).max(axis=0)
+        varying_indices = variance_array.nonzero()[0]
+        result = []
+        start = varying_indices.min()
+        end = varying_indices.max() + 1
+
+        if start > 0:
+            result.append(MutationChoice((self.start, self.start + start),
+                                         set([variants[0][:start]])))
+        result.append(MutationChoice((self.start + start, self.start + end),
+                                     set([v[start: end] for v in variants])))
+        if end < len(variants[0]):
+            result.append(MutationChoice((self.start + end, self.end),
+                                         set([v[end:] for v in variants])))
+        return result
+
     def __repr__(self):
         """Represent."""
         subsequences = "-".join(self.variants)
@@ -272,6 +316,9 @@ class MutationSpace:
         for choice in mutation_choices:
             underlying_choices = choices_index[choice.start: choice.end]
             new_choice = choice.percolate_with(set(underlying_choices))
-            for i in range(new_choice.start, new_choice.end):
-                choices_index[i] = new_choice
+            for choice in new_choice.extract_varying_region():
+                for i in range(choice.start, choice.end):
+                    choices_index[i] = choice
+            # for i in range(new_choice.start, new_choice.end):
+            #     choices_index[i] = new_choice
         return MutationSpace(choices_index)

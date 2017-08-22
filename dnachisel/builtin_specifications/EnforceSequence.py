@@ -32,8 +32,9 @@ class EnforceSequence(Specification):
     best_possible_score = 0
     enforced_by_nucleotide_restrictions = True
 
-    def __init__(self, sequence, location=None, boost=1.0):
+    def __init__(self, sequence=None, location=None, boost=1.0):
         """Initialize."""
+
         self.sequence = sequence
         if isinstance(location, tuple):
             location = Location.from_tuple(location, default_strand=+1)
@@ -97,22 +98,22 @@ class EnforceSequence(Specification):
 
     def restrict_nucleotides(self, sequence, location=None):
         """When localizing, forbid any nucleotide but the one already there."""
-        if location is None:
-            location = Location(0, len(sequence))
-        new_location = self.location.overlap_region(location)
-        if new_location is None:
-            return []
+        if location is not None:
+            new_location = self.location.overlap_region(location)
+            if new_location is None:
+                return []
         else:
-            start, end = new_location.start, new_location.end
-            if self.location.strand == -1:
-                lend = self.location.end
-                return [(i, set(reverse_complement(n) for n in
-                                IUPAC_NOTATION[self.sequence[lend - i]]))
-                        for i in range(start, end)]
-            else:
-                lstart = self.location.start
-                return [(i, IUPAC_NOTATION[self.sequence[i - lstart]])
-                        for i in range(start, end)]
+            new_location = self.location
+        start, end = new_location.start, new_location.end
+        if self.location.strand == -1:
+            lend = self.location.end
+            return [(i, set(reverse_complement(n) for n in
+                            IUPAC_NOTATION[self.sequence[lend - i]]))
+                    for i in range(start, end)]
+        else:
+            lstart = self.location.start
+            return [(i, IUPAC_NOTATION[self.sequence[i - lstart]])
+                    for i in range(start, end)]
 
     def __repr__(self):
         """Represent."""

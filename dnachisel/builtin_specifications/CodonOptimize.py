@@ -85,7 +85,6 @@ class CodonOptimize(CodonSpecification):
         Note: no smart localization currently, the sequence is improved via
 
         """
-        # print ('self.location', self.location)
         subsequence = self.location.extract_sequence(problem.sequence)
         length = len(subsequence)
         if (length % 3):
@@ -97,7 +96,6 @@ class CodonOptimize(CodonSpecification):
             subsequence[3 * i: 3 * (i + 1)]
             for i in range(int(length / 3))
         ]
-        # the are arrays:
         CT = CODONS_TRANSLATIONS
         current_usage, optimal_usage = [np.array(e) for e in zip(*[
             (self.codon_usage_table[codon],
@@ -122,7 +120,6 @@ class CodonOptimize(CodonSpecification):
                     nonoptimal_indices,
                     max_group_spread=self.localization_group_spread)
             ]
-        # print (locations)
         score = -non_optimality.sum()
         return SpecEvaluation(
             self, problem, score=score, locations=locations,

@@ -25,9 +25,9 @@ class CodonSpecification(Specification):
                 o_start, o_end = overlap.start, overlap.end
                 w_start, w_end = self.location.start, self.location.end
 
-                if self.location.strand == 1:
+                if self.location.strand != -1:
                     start_codon = int((o_start - w_start) / 3)
-                    end_codon = int((o_end - w_start) / 3)
+                    end_codon = int((o_end - w_start - 1) / 3) + 1
                     new_location = Location(
                         start=w_start + 3 * start_codon,
                         end=min(w_end, w_start + 3 * (end_codon)),
@@ -35,7 +35,7 @@ class CodonSpecification(Specification):
                     )
                 else:
                     start_codon = int((w_end - o_end) / 3)
-                    end_codon = int((w_end - o_start) / 3)
+                    end_codon = int((w_end - o_start - 1) / 3) + 1
                     new_location = Location(
                         start=max(w_start, w_end - 3 * (end_codon)),
                         end=w_end - 3 * start_codon,
@@ -43,4 +43,5 @@ class CodonSpecification(Specification):
                     )
                 return self.localized_on_window(new_location, start_codon,
                                                 end_codon)
-        return self
+        else:
+            return self

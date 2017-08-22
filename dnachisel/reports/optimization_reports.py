@@ -126,19 +126,19 @@ def optimization_with_report(target, problem=None, record=None,
         problem.__dict__[k] = v
 
     try:
-        problem.progress_logger(message="Solving constraints")
+        problem.logger(message="Solving constraints")
         problem.resolve_constraints()
     except NoSolutionError as error:
-        problem.progress_logger(message="No solution found: making report")
+        problem.logger(message="No solution found: making report")
         data = write_no_solution_report(target, problem, error)
         start, end, s = error.location.to_tuple()
         message = ("No solution found in zone [%d, %d]: %s." %
                    (start, end, str(error)))
         return False, message, data
 
-    problem.progress_logger(message="Now optimizing the sequence")
+    problem.logger(message="Now optimizing the sequence")
     problem.optimize()
-    problem.progress_logger(message="Success ! Generating report.")
+    problem.logger(message="Success ! Generating report.")
     data = write_optimization_report(
         target, problem, project_name=project_name)
     return True, "Optimization successful.", data
@@ -215,6 +215,7 @@ def write_no_solution_report(target, problem, error):
                                 .locations_as_features(label_prefix="BREACH")
         SeqIO.write(record, root._file("constraints breaches.gb").open("w"),
                     "genbank")
+    root._file('logs.txt').write(problem.logger.dump_logs())
 
     # returns zip data if target == '@memory'
     return root._close()
