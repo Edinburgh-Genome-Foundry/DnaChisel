@@ -57,11 +57,14 @@ class SequencePattern:
 
     """
 
-    def __init__(self, expression, size=None, name=None, in_both_strands=True):
+    def __init__(self, expression, size=None, name=None, in_both_strands=True,
+                 use_lookahead=True):
         if size is None:
             size = len(expression)
         self.expression = expression
-        self.lookahead_expression = '(?=(%s))' % expression
+        if use_lookahead:
+            expression = '(?=(%s))' % expression
+        self.lookahead_expression = expression
         self.size = size
         self.name = name
         self.in_both_strands = in_both_strands
@@ -98,7 +101,6 @@ class SequencePattern:
             ]
         matches = [
             (match.start(), match.start() + len(match.groups()[0]), 1)
-            #match.end()
             for match in re.finditer(self.lookahead_expression, sequence)
         ]
 
@@ -106,7 +108,6 @@ class SequencePattern:
             reverse = reverse_complement(sequence)
             L = len(sequence)
             matches += [
-                # (L - match.end(), L - match.start(), -1)
                 (L - match.start() - len(match.groups()[0]),
                  L - match.start(), -1)
                 for match in re.finditer(self.lookahead_expression, reverse)
@@ -217,5 +218,6 @@ def repeated_kmers(kmer_size, n_repeats):
         size=kmer_size * n_repeats,
         expression=r"([ATGC]{%d})\1{%d}" % (kmer_size, n_repeats-1),
         name="%d-repeats %d-mers" % (n_repeats, kmer_size),
-        in_both_strands=False  # a kmer repeat one strand is also on the other
+        in_both_strands=False,  # a kmer repeat one strand is also on the other
+        use_lookahead=False
     )
