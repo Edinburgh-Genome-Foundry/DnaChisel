@@ -37,8 +37,9 @@ class AvoidChanges(Specification):
     best_possible_score = 0
     enforced_by_nucleotide_restrictions = True
 
-    def __init__(self, location=None, indices=None, target_sequence=None,
-                 boost=1.0):
+    def __init__(self, location=None, indices=None,  target_sequence=None, boost=1.0):
+                #    target_sequence=None,
+
         """Initialize."""
         if isinstance(location, tuple):
             location = Location.from_tuple(location)
@@ -64,12 +65,15 @@ class AvoidChanges(Specification):
 
     def initialize_on_problem(self, problem, role):
         """Find out what sequence it is that we are supposed to conserve."""
-
-        if self.target_sequence is None:
-            result = self.copy_with_changes()
-            result.target_sequence = self.extract_subsequence(problem.sequence)
+        if self.location is None:
+            location = Location(0, len(problem.sequence), 1)
+            result = self.copy_with_changes(location=location)
         else:
             result = self
+
+        if self.target_sequence is None:
+            result = result.copy_with_changes()
+            result.target_sequence = self.extract_subsequence(problem.sequence)
         return result
 
     def evaluate(self, problem):

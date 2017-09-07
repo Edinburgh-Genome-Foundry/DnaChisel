@@ -32,6 +32,8 @@ class AvoidHairpins(Specification):
     def __init__(self, stem_size=20, hairpin_window=200, location=None,
                  boost=1.0):
         """Initialize."""
+        if isinstance(location, tuple):
+            location = Location.from_tuple(location)
 
         self.stem_size = stem_size
         self.hairpin_window = hairpin_window

@@ -178,7 +178,7 @@ class DnaNotationPattern(SequencePattern):
 # DEFINITION OF COMMON PATTERNS
 
 
-def homopolymer_pattern(letter, number):
+def homopolymer_pattern(nucleotides, number):
     """Return a DnaNotationPattern with the sequence of a homopolymer.
 
     Examples
@@ -187,8 +187,11 @@ def homopolymer_pattern(letter, number):
     >>> homopolymer("A", 6) # returns DnaNotationPattern("AAAAAA")
 
     """
-    return DnaNotationPattern(number * letter)
-
+    if len(nucleotides) == 1:
+        return DnaNotationPattern(number * nucleotides)
+    else:
+        return SequencePattern(number * ("[%s]" % ("|".join(nucleotides))),
+                               size=number)
 
 def enzyme_pattern(enzyme_name):
     """Return a DnaNotationPattern with the sequence of a homopolymer.

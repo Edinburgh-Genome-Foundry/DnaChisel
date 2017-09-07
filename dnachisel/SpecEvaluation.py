@@ -14,13 +14,17 @@ from Bio.SeqFeature import SeqFeature
 
 from .Location import Location
 
-def colors_cycle():
+def colors_cycle(lightness_factor=1.0, color_shift=0):
     if not MATPLOTLIB_AVAILABLE:
         raise ImportError("Matplotlib is required !")
 
-    cycle = itertools.cycle([cm.Paired(0.21 * i % 1.0) for i in range(30)])
+    cycle = itertools.cycle([
+        cm.Paired(color_shift + 0.21 * i % 1.0)
+        for i in range(30)
+    ])
     return (
-        '#%02x%02x%02x' % tuple([int(255 * c) for c in rgb_tuple[:3]])
+        '#%02x%02x%02x' % tuple([int(255 * c * lightness_factor)
+                                for c in rgb_tuple[:3]])
         for rgb_tuple in cycle
     )
 
@@ -174,6 +178,8 @@ class SpecEvaluations:
       (optional) problem on which the evaluations were carried.
 
     """
+    color_lightness = 1.0
+    color_shift = 0
 
     def __init__(self, evaluations, problem=None):
         """Initialize."""
@@ -283,7 +289,8 @@ class SpecEvaluations:
 
         """
         if colors == "cycle":
-            cycle = colors_cycle()
+            cycle = colors_cycle(lightness_factor=self.color_lightness,
+                                 color_shift=self.color_shift)
             colors = [next(cycle) for ev in self.evaluations]
 
         features = [
@@ -351,6 +358,8 @@ class ProblemObjectivesEvaluations(SpecEvaluations):
     See submethod ``.from_problem``
 
     """
+    color_lightness = 0.8
+    color_shift = 0.14
 
     specifications_role = "objective"
 

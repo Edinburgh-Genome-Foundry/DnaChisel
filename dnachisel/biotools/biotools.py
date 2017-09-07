@@ -10,6 +10,7 @@ from Bio.Blast import NCBIXML
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import DNAAlphabet
 from Bio.SeqFeature import SeqFeature, FeatureLocation
+from Bio import SeqIO
 
 from .biotables import CODONS_SEQUENCES, NUCLEOTIDE_TO_REGEXPR
 
@@ -68,6 +69,18 @@ def random_dna_sequence(length, probas=None, seed=None):
         sequence = np.random.choice(bases, length, p=probas)
     return "".join(sequence)
 
+
+def load_record(filename, linear=True, name="unnamed"):
+    if filename.lower().endswith(("gb", "gbk")):
+        record = SeqIO.read(filename, "genbank")
+    elif filename.lower().endswith(('fa', 'fasta')):
+        record = SeqIO.read(filename, "fasta")
+    else:
+        raise ValueError('Unknown format for file: %s' % filename)
+    record.linear = linear
+    record.id = name
+    record.name = name.replace(" ", "_")[:20]
+    return record
 
 def random_protein_sequence(length, seed=None):
     """Return a random protein sequence "MNQTW...YL*" of the specified length.

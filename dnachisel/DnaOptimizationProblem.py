@@ -326,6 +326,9 @@ class DnaOptimizationProblem:
                                  passing_localized_constraints),
                     mutation_space=mutation_space
                 )
+                self.logger.store(problem=self,
+                                  local_problem=local_problem,
+                                  location=location)
                 local_problem.randomization_threshold = \
                     self.randomization_threshold
                 local_problem.max_random_iters = self.max_random_iters
@@ -496,6 +499,9 @@ class DnaOptimizationProblem:
                     for _objective in self.objectives
                 ]
             )
+            self.logger.store(problem=self,
+                              local_problem=local_problem,
+                              location=location)
             local_problem.randomization_threshold = self.randomization_threshold
             local_problem.max_random_iters = self.max_random_iters
             local_problem.n_mutations = self.n_mutations
@@ -553,9 +559,10 @@ class DnaOptimizationProblem:
 
     def to_record(self, filepath=None, features_type="misc_feature",
                   with_original_features=True,
-                  with_original_objective_features=False,
+                  with_original_spec_features=False,
                   with_constraints=True,
                   with_objectives=True,
+                  with_sequence_edits=False,
                   colors_dict=None):
         record = sequence_to_biopython_record(self.sequence)
 
@@ -578,9 +585,12 @@ class DnaOptimizationProblem:
         if with_original_features and (self.record is not None):
             record.features += [
                 f for f in self.record.features
-                if with_original_objective_features or
+                if with_original_spec_features or
                 not find_specification_in_feature(f)
             ]
+        if with_sequence_edits:
+            record.features += self.sequence_edits_as_features()
+
 
         if filepath is not None:
             SeqIO.write(record, filepath, "genbank")

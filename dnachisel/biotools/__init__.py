@@ -11,6 +11,7 @@ from .biotools import (
     group_nearby_indices,
     group_nearby_segments,
     is_palyndromic,
+    load_record,
     random_dna_sequence,
     random_protein_sequence,
     reverse_complement,
