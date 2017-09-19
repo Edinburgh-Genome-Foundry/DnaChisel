@@ -1,9 +1,16 @@
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/title.png
+   :alt: [logo]
+   :align: center
+   :width: 600px
+
 DnaChisel
 =========
 
 .. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel.svg?branch=master
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel
    :alt: Travis CI build status
+
+
 
 (Documentation in progress)
 
