@@ -55,7 +55,9 @@ In this basic example we optimize a sequence with respect to the following const
 - **Objective 1:** The sequence's  GC content should be 40% (or as close as possible)
 
 Here is the Python code to solve the problem with DnaChisel:
-::
+
+.. code:: python
+
     from dnachisel import *
 
     # DEFINE THE OPTIMIZATION PROBLEM

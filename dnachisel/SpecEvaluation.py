@@ -78,7 +78,6 @@ class SpecEvaluation:
         self.score = score
         self.passes = score >= 0
         self.is_optimal = (score == specification.best_possible_score)
-        # print (specification, self.is_optimal, score)
         self.locations = locations
         self.message = self.default_message if message is None else message
         self.data = {} if data is None else data
