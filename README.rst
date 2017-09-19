@@ -11,7 +11,6 @@ DnaChisel
    :alt: Travis CI build status
 
 
-
 (Documentation in progress)
 
 DnaChisel (full documentation `here
@@ -26,31 +25,6 @@ and other sensible patterns.
 DnaChisel also provides much freedom to define optimization problems and model
 new kinds of specifications, making it suitable for either automated sequence
 design, or for complex custom design projects.
-
-License = MIT
---------------
-
-Bandwagon is an open-source software originally written at the `Edinburgh Genome Foundry
-<http://edinburgh-genome-foundry.github.io/home.html>`_ by `Zulko <https://github.com/Zulko>`_
-and `released on Github <https://github.com/Edinburgh-Genome-Foundry/Bandwagon>`_ under the MIT licence (¢ Edinburg Genome Foundry).
-
-Everyone is welcome to contribute !
-
-Installation
---------------
-
-If you have pip installed, just type:
-
-.. code:: python
-
-    (sudo) pip install dnachisel
-
-DnaChisel can be installed by unzipping the source code in one directory and using this command:
-
-.. code:: python
-
-    (sudo) python setup.py install
-
 
 Example of use
 ---------------
@@ -71,29 +45,26 @@ Here is the Python code to solve the problem with DnaChisel:
 
     problem = DnaOptimizationProblem(
         sequence=random_dna_sequence(10000),
-        constraints=[AvoidPattern(enzyme_pattern("BsaI")),
-                     GCContentConstraint(0.3, 0.7, window=50)],
-        objectives = [GCContentObjective(0.4)]
+        constraints=[AvoidPattern(enzyme_="BsaI"),
+                     EnforceGCContent(mini=0.3, maxi=0.7, window=50)],
+        objectives=[CodonOptimize(species='e_coli', location=(500, 1300))]
     )
 
     # SOLVE THE CONSTRAINTS, OPTIMIZE WITH RESPECT TO THE OBJECTIVE
 
-    canvas.resolve_constraints()
-    canvas.optimize()
+    problem.resolve_constraints()
+    problem.optimize()
 
     # PRINT SUMMARIES TO CHECK THAT CONSTRAINTS PASS
 
-    print(problem.constraints_text_summary()) # Will print success reports
-    print(problem.objectives_text_summary()) # That will be good !
-
-For a more complete and meaningful example, see also this other script, in which
-a plasmid is codon-optimized and tweaked so as to verify constraints imposed by
-a DNA synthesis company.
+    print(problem.constraints_text_summary())
+    print(problem.objectives_text_summary())
 
 DnaChisel implements advanced constraints such as the preservation of coding
 sequences,  or the inclusion or exclusion of advanced patterns, as well as
 some common biological objectives (such as codon optimization, GC content), but it
 is also very easy to implement new constraints and objectives.
+
 
 Installation
 -------------
@@ -110,10 +81,11 @@ To be able to generate plots and reports, run
 ::
     sudo pip install dna_features_viewer weasyprint
 
-Contribute
-----------
+License = MIT
+--------------
 
 DnaChisel is an open-source software originally written at the `Edinburgh Genome Foundry
-<http://www.genomefoundry.org>`_ by `Zulko <https://github.com/Zulko>`_
-and `released on Github <https://github.com/Edinburgh-Genome-Foundry/DnaChisel>`_ under the MIT licence (copyright Edinburgh Genome Foundry).
+<http://edinburgh-genome-foundry.github.io/home.html>`_ by `Zulko <https://github.com/Zulko>`_
+and `released on Github <https://github.com/Edinburgh-Genome-Foundry/DnaChisel>`_ under the MIT licence (¢ Edinburg Genome Foundry).
+
 Everyone is welcome to contribute !
