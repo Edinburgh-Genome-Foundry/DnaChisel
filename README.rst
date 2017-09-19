@@ -12,7 +12,6 @@ DnaChisel
 
 
 (Documentation in progress)
-.. (full documentation `here <http://edinburgh-genome-foundry.github.io/DnaChisel/>`_)
 DnaChisel  is a Python library to optimize
 the nucleotides of DNA sequences with respect to a set of constraints and optimization objectives.
 
