@@ -11,7 +11,8 @@ DnaChisel
    :alt: Travis CI build status
 
 
-(Documentation in progress)
+(Documentation in progress, come back later !)
+
 DnaChisel  is a Python library to optimize
 the nucleotides of DNA sequences with respect to a set of constraints and optimization objectives.
 
@@ -27,13 +28,13 @@ design, or for complex custom design projects.
 Example of use
 ---------------
 
-In this basic example we optimize a sequence with respect to the following constraints and objectives:
+In this basic example we generate a random sequence and optimize it so that
 
-- **Constraint 1:** The sequence should contain no restriction site for BsaI (GGTCTC).
-- **Constraint 2:** The local GC content of every 50-nucleotide subsequence should be between 30% and 70%.
-- **Objective 1:** The sequence's  GC content should be 40% (or as close as possible)
+- It will be rid of BsaI sites
+- GC content will be between 30% and 70% on every 50bp window
+- The reading frame at position 500-1300 hould be codon-optimized for .E. coli*.
 
-Here is the Python code to solve the problem with DnaChisel:
+Here is the code to achieve that:
 
 .. code:: python
 
