@@ -1,4 +1,4 @@
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/title.png
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/title.png
    :alt: [logo]
    :align: center
    :width: 600px
