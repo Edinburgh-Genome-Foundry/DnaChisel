@@ -1,8 +1,6 @@
 """Reports for DNA Chisel"""
 
-from .constraints_reports import (make_constraints_breaches_pdf,
-                                  plot_constraints_breaches,
-                                  plot_constraint_breaches,
+from .constraints_reports import (plot_constraint_breaches,
                                   plot_gc_content_breaches,
                                   plot_sequence_manufacturability_difficulties)
 
