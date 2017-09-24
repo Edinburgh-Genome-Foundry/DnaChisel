@@ -88,7 +88,7 @@ def plot_constraint_breaches(constraint, sequence, title=None, ax=None,
         with_constraints=False
     )
     breaches_record.features = evals.locations_as_features(
-        with_specifications=False)
+        with_specifications=False, merge_overlapping=True)
 
     if record is not None:
         for feature in record.features:
