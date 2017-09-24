@@ -87,7 +87,8 @@ def plot_constraint_breaches(constraint, sequence, title=None, ax=None,
         with_original_features=False, with_objectives=False,
         with_constraints=False
     )
-    breaches_record.features = evals.locations_as_features()
+    breaches_record.features = evals.locations_as_features(
+        with_specifications=False)
 
     if record is not None:
         for feature in record.features:
@@ -102,89 +103,6 @@ def plot_constraint_breaches(constraint, sequence, title=None, ax=None,
     if title is not None:
         ax.set_title(title, fontweight="bold", loc="left")
     return ax
-
-def plot_constraints_breaches(record, constraints, color="red",
-                              ax=None, figure_width=20):
-    """Plot the record and highlight locations of constraints breaches.
-
-    Requires "DNA Features Viewer" installed.
-
-    Parameters
-    ----------
-    record
-      A Biopython record
-
-    constraints
-      A list or tuple of DnaChisel specifications to use as constraints
-
-    color
-      Color for highlighting the constraint breaches in the plot. All
-      other features will appear in white.
-
-    ax
-       Matplotlib ax on which to plot. If none is provided, one is created,
-       and returned at the end.
-
-    figure_width
-      Width of the final figure in inches, if no ax is provided
-
-    Returns
-    -------
-    ax
-      The matplotlib ax on which the plot was drawn
-
-    """
-    if not DFV_AVAILABLE:
-        raise ImportError("Plotting constraint breaches requires "
-                          "Matplotlib and dna_features_viewer installed.")
-
-    class MyTranslator(BiopythonTranslator):
-
-        def compute_feature_color(self, f):
-            return color if (f.type == "breach") else "white"
-
-    new_record = deepcopy(record)
-    sequence = str(record.seq).upper()
-    pb = DnaOptimizationProblem(sequence, constraints=constraints)
-    rec = pb.constraints_breaches_as_biopython_record("breach")
-    for f in rec.features:
-        new_record.features.append(f)
-    gr_record = MyTranslator().translate_record(new_record)
-    ax, _ = gr_record.plot(ax=ax, figure_width=20)
-    return ax
-
-
-def make_constraints_breaches_pdf(constraints_sets, record, pdf_path):
-    """Plot different constraint breach plots in a multi-page PDF.
-
-    Parameters
-    ----------
-
-    constraints_set
-      List of DnaChisel Specifications to be used as constraints.
-
-    record
-      Color for highlighting the constraint breaches in the plot. All
-      other features will appear in white.
-
-    ax
-       Matplotlib ax on which to plot. If none is provided, one is created.
-
-    figure_width
-      Width of the final figure in inches, if no ax is provided
-
-    """
-    if not DFV_AVAILABLE:
-        raise ImportError("Package ``dna_features_viewer`` must be installed"
-                          "to use method ``make_constraints_breaches_pdf``")
-    with PdfPages(pdf_path) as pdf:
-        for title, constraints in constraints_sets.items():
-            ax = plot_constraints_breaches(record, constraints,
-                                           figure_width=20)
-            ax.set_title(title, fontsize=16, fontweight="bold")
-            pdf.savefig(ax.figure, bbox_inches="tight")
-            plt.close(ax.figure)
-
 
 def plot_gc_content_breaches(sequence, window=70, mini=0.35, maxi=0.65,
                              ax=None, title=None):
