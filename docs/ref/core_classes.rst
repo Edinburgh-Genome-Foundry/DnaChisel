@@ -1,19 +1,36 @@
+Core Classes
+-------------
 
+Classes dependencies
+~~~~~~~~~~~~~~~~~~~~~
+
+.. mermaid::
+   :align: center
+
+   graph TD;
+      sequence --> P[DnaOptimizationProblem]
+      o[objectives...] -->P
+      c[constraints...] -->P
+      s[Specifications] --> o
+      s --> o
+      s --> c
+      s --> c
+      P -->|solve, optimize| O[Optimized problem.sequence]
 
 DnaOptimizationProblem
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: dnachisel.DnaOptimizationProblem
    :members:
 
 Specification
--------------
+~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: dnachisel.Specification
    :members:
 
 SpecEvaluation
---------------
+~~~~~~~~~~~~~~~~~~~~~~~
 
 .. mermaid::
 
@@ -25,22 +42,22 @@ SpecEvaluation
       SES --- CES[Constraints evaluations]
 
 .. automodule:: dnachisel.SpecEvaluation
-  :members:
+   :members:
 
 Location
----------
+~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: dnachisel.Location
    :members:
 
 MutationSpace
---------------
+~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: dnachisel.MutationSpace
    :members:
 
 SequencePattern
-----------------
+~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: dnachisel.SequencePattern
-  :members:
+   :members:

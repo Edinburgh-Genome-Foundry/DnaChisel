@@ -10,5 +10,6 @@ Reports
 
 .. automodule:: dnachisel.reports.optimization_reports
    :members:
+
 .. automodule:: dnachisel.reports.constraints_reports
-  :members:
+   :members:

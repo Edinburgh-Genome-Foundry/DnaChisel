@@ -184,7 +184,7 @@ def plot_sequence_manufacturability_difficulties(sequence):
     else:
         record = sequence
 
-    nplots = 7
+    nplots = 8
     fig, axes = plt.subplots(nplots, 1, figsize=(10, 1.4 * nplots),
                              sharex=True, facecolor="white")
 
@@ -212,12 +212,17 @@ def plot_sequence_manufacturability_difficulties(sequence):
         record, title="BsaI sites", ax=axes[3]
     )
 
+    plot_constraint_breaches(
+        AvoidPattern(enzyme="BbsI"),
+        record, title="BbsI sites", ax=axes[4]
+    )
+
     for l, n in [("A", 9), ("T", 9), ("G", 6), ("C", 6)]:
         constraint = AvoidPattern(homopolymer_pattern(l, n))
         plot_constraint_breaches(
             constraint, record,
             title="Homopolymers (6+ G or C | 9+ A or T)",
-            ax=axes[4]
+            ax=axes[5]
         )
 
     for length, n_repeats in (3, 5), (2, 9):
@@ -225,12 +230,12 @@ def plot_sequence_manufacturability_difficulties(sequence):
         constraint = AvoidPattern(pattern)
         plot_constraint_breaches(
             constraint, record,
-            title="Repeats (5 x 3bp, 9 x 2bp)", ax=axes[5]
+            title="Repeats (5 x 3bp, 9 x 2bp)", ax=axes[6]
         )
 
     plot_constraint_breaches(
         AvoidHairpins(stem_size=20, hairpin_window=200),
-        record, title="Hairpins", ax=axes[6]
+        record, title="Hairpins", ax=axes[7]
     )
 
     fig.tight_layout()
