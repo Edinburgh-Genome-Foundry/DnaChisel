@@ -13,8 +13,9 @@ DnaChisel
 
 (Documentation in progress, come back later !)
 
-DnaChisel  is a Python library to optimize
-the nucleotides of DNA sequences with respect to a set of constraints and optimization objectives.
+DnaChisel (complete documentation `here <https://edinburgh-genome-foundry.github.io/DnaChisel/>`_)
+is a Python library to optimize the nucleotides of DNA sequences with respect
+to a set of constraints and optimization objectives.
 
 
 It can be used for codon-optimizing the genes of a sequence for a particular micro-organism,
@@ -30,9 +31,9 @@ Example of use
 
 In this basic example we generate a random sequence and optimize it so that
 
-- It will be rid of BsaI sites
-- GC content will be between 30% and 70% on every 50bp window
-- The reading frame at position 500-1300 hould be codon-optimized for .E. coli*.
+- It will be rid of BsaI sites.
+- GC content will be between 30% and 70% on every 50bp window.
+- The reading frame at position 500-1300 will be codon-optimized for *E. coli*.
 
 Here is the code to achieve that:
 
@@ -69,15 +70,21 @@ Installation
 -------------
 
 You can install DnaChisel through PIP
-::
+
+.. code::
+
     sudo pip install dnachisel
 
 Alternatively, you can unzip the sources in a folder and type
-::
+
+.. code::
+
     sudo python setup.py install
 
 To be able to generate plots and reports, run
-::
+
+.. code::
+
     sudo pip install dna_features_viewer weasyprint
 
 License = MIT

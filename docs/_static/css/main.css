@@ -15,13 +15,19 @@ body, h1, h2, h3 {
 }
 
 .wy-menu-vertical a:hover {
-    background-color: #94aacc
+    background-color: #d0d0e7
 }
 
 .wy-side-nav-search, .wy-nav-top {
-    background-color: #94aacc
+    background-color: #d0d0e7;
+    background-image: url("../images/pw_maze_dark.png");
 }
 
 .edgeLabel {
   background-color: #fcfcfc;
+}
+
+
+.section {
+    opacity: 1.0 !important;
 }

@@ -25,9 +25,14 @@ import sys, os
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo',
-              'sphinx.ext.viewcode', 'numpydoc', 'sphinxcontrib.mermaid']
-
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.todo',
+    'sphinx.ext.viewcode',
+    'numpydoc',
+    'sphinxcontrib.mermaid'
+]
+numpydoc_show_class_members = False
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -42,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'DnaChisel'
-copyright = u'2016, Edinburgh Genome Foundry'
+copyright = u'2017, Edinburgh Genome Foundry'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -127,7 +132,7 @@ else:
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = None
+html_logo = '_static/images/html_logo.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32

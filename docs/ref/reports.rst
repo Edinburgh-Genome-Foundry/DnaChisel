@@ -2,9 +2,10 @@ Reports
 ~~~~~~~~~~~~~~~~~~~~
 
 .. mermaid::
+   :align: center
 
    graph TD;
-      o[optimization_with_report] <--> D[DnaOptimizationProblem]
+      D[DnaOptimizationProblem] --> o[optimization_with_report] 
       o -->|constraints clash| N[write_no_solution_error]
       o -->|no constraints clash| W[write_optimization_report]
 

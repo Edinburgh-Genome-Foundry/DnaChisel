@@ -9,8 +9,8 @@ Classes dependencies
 
    graph TD;
       sequence --> P[DnaOptimizationProblem]
-      o[objectives...] -->P
-      c[constraints...] -->P
+      o[objectives...] --> P
+      c[constraints...] --> P
       s[Specifications] --> o
       s --> o
       s --> c
@@ -20,13 +20,13 @@ Classes dependencies
 DnaOptimizationProblem
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: dnachisel.DnaOptimizationProblem
+.. autoclass:: dnachisel.DnaOptimizationProblem
    :members:
 
 Specification
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: dnachisel.Specification
+.. autoclass:: dnachisel.Specification
    :members:
 
 SpecEvaluation

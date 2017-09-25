@@ -1,79 +1,61 @@
 
-
-
-DNA Chisel Documentation
-=========================
-
-
-.. image:: _static/images/title.png
-   :width: 500px
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/title.png
+   :alt: [logo]
    :align: center
+   :width: 500px
+
+DnaChisel
+=========
+
+.. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel.svg?branch=master
+   :target: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel
+   :alt: Travis CI build status
+
+DnaChisel is a Python library to optimize the nucleotides of DNA sequences with respect
+to a set of constraints and optimization objectives.
 
 
-Dna Chisel is a Python library to modify the nucleotides of DNA sequences with respect to
-constraints and optimization objectives. Potential use cases include:
+It can be used for codon-optimizing the genes of a sequence for a particular micro-organism,
+modifying a sequence to meet the constraints of a DNA provider while preserving genes,
+and other sensible patterns.
 
-- Codon-optimization of a sequence for a particular micro-organism.
-- Modification of a sequence to meet the constraints of a DNA manufacturer.
-- Insertion of patterns in a sequence through non-functionally altering modifications.
-
+DnaChisel also provides much freedom to define optimization problems and model
+new kinds of specifications, making it suitable for either automated sequence
+design, or for complex custom design projects.
 
 Example of use
 ---------------
 
-Let us optimize a sequence with respect to the following objectives:
+In this basic example we generate a random sequence and optimize it so that
 
-- The sequence should contain no restriction site for BsaI (GGTCTC).
-- GC content should be between 30% and 70% on every 50-nucleotide subsequence.
-- The sequence's  global GC content should be 40% (or as close as possible)
-- there should be
+- It will be rid of BsaI sites.
+- GC content will be between 30% and 70% on every 50bp window.
+- The reading frame at position 500-1300 will be codon-optimized for *E. coli*.
 
-Here is the Python code to solve the problem with DnaChisel:
+Here is the code to achieve that:
 
-.. code:python
+.. code:: python
 
     from dnachisel import *
 
+    # DEFINE THE OPTIMIZATION PROBLEM
+
     problem = DnaOptimizationProblem(
-        sequence=random_dna_sequence(1500, seed=123),
-        constraints=[
-            AvoidPattern(enzyme="BsmBI"),
-            AvoidChanges((100, 200)),
-            EnforceTranslation((200, 1100, +1)),
-            AvoidChanges((1100, 1200)),
-            EnforcePattern('CCWGG', location=(600, 700))
-        ],
-        objectives = [
-            CodonOptimize('e_coli', (200, 1100, +1)),
-            EnforceGCContent(target=0.4, window=80)
-        ]
+        sequence=random_dna_sequence(10000),
+        constraints=[AvoidPattern(enzyme_="BsaI"),
+                     EnforceGCContent(mini=0.3, maxi=0.7, window=50)],
+        objectives=[CodonOptimize(species='e_coli', location=(500, 1300))]
     )
 
-    # RESOLVE CONSTRAINTS AND OPTIMIZE
+    # SOLVE THE CONSTRAINTS, OPTIMIZE WITH RESPECT TO THE OBJECTIVE
+
     problem.resolve_constraints()
     problem.optimize()
 
-    # SAVE OPTIMIZED SEQUENCE
-    problem.to_record("final_sequence.gb")
+    # PRINT SUMMARIES TO CHECK THAT CONSTRAINTS PASS
 
-This prints the following result, indicating that all constraints pass in the end
-and the objective has been (very well) optimized:
-
-.. code:python
-
-    ===> SUCCESS - all constraints evaluations pass
-    NoPattern(GGTCTC (BsaI), None) Passed. Pattern not found !
-    GCContent(min 0.30, max 0.70, gc_win 50, window None) Passed !
-
-
-    ===> TOTAL OBJECTIVES SCORE: 0.00
-    GCContentObj(0.40, global): scored -0.00E+00. GC content is 0.400 (0.400 wanted)
-
-
-
-For a more complete and meaningful example, see also :ref:`this other script <plasmid-optimization>`,
-in which a plasmid is codon-optimized and tweaked so as to verify constraints imposed by
-a DNA synthesis company.
+    print(problem.constraints_text_summary())
+    print(problem.objectives_text_summary())
 
 DnaChisel implements advanced constraints such as the preservation of coding
 sequences,  or the inclusion or exclusion of advanced patterns, as well as
@@ -81,12 +63,10 @@ some common biological objectives (such as codon optimization, GC content), but 
 is also very easy to implement new constraints and objectives.
 
 
-
 Installation
 -------------
 
 You can install DnaChisel through PIP
-
 
 .. code::
 
@@ -98,12 +78,21 @@ Alternatively, you can unzip the sources in a folder and type
 
     sudo python setup.py install
 
+To be able to generate plots and reports, run
 
-Contribute
-----------
+.. code::
 
-DnaChisel is an open-source library originally written at the Edinburgh Genome Foundry by Zulko_.
-It is released on Github under the MIT licence, everyone is welcome to contribute.
+    sudo pip install dna_features_viewer weasyprint
+
+License = MIT
+--------------
+
+DnaChisel is an open-source software originally written at the `Edinburgh Genome Foundry
+<http://edinburgh-genome-foundry.github.io/home.html>`_ by `Zulko <https://github.com/Zulko>`_
+and `released on Github <https://github.com/Edinburgh-Genome-Foundry/DnaChisel>`_ under the MIT licence (¢ Edinburg Genome Foundry).
+
+Everyone is welcome to contribute !
+
 
 .. raw:: html
 
