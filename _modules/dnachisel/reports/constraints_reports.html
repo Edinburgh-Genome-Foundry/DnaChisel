@@ -1,0 +1,482 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dnachisel.reports.constraints_reports &mdash; DnaChisel 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/main.css" type="text/css" />
+  
+    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="DnaChisel 0.1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DnaChisel
+          
+
+          
+            
+            <img src="../../../_static/html_logo.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">DnaChisel</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ref/ref.html">DnaChisel Reference manual</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DnaChisel</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>dnachisel.reports.constraints_reports</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dnachisel.reports.constraints_reports</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Misc. plotting and reporting methods, some of which are really arbitrary.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+
+<span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="k">import</span> <span class="n">SeqRecord</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.backends.backend_pdf</span> <span class="k">import</span> <span class="n">PdfPages</span>
+    <span class="kn">from</span> <span class="nn">dna_features_viewer</span> <span class="k">import</span> <span class="n">BiopythonTranslator</span>
+    <span class="n">DFV_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">BiopythonTranslator</span> <span class="o">=</span> <span class="nb">object</span>
+    <span class="n">DFV_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<span class="kn">from</span> <span class="nn">..DnaOptimizationProblem</span> <span class="k">import</span> <span class="n">DnaOptimizationProblem</span>
+<span class="kn">from</span> <span class="nn">..biotools</span> <span class="k">import</span> <span class="n">gc_content</span>
+<span class="kn">from</span> <span class="nn">..SequencePattern</span> <span class="k">import</span> <span class="n">repeated_kmers</span><span class="p">,</span> <span class="n">homopolymer_pattern</span>
+<span class="kn">from</span> <span class="nn">..builtin_specifications</span> <span class="k">import</span> <span class="p">(</span><span class="n">EnforceGCContent</span><span class="p">,</span> <span class="n">AvoidPattern</span><span class="p">,</span>
+                                      <span class="n">AvoidHairpins</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="plot_constraint_breaches"><a class="viewcode-back" href="../../../ref/reports.html#dnachisel.reports.constraints_reports.plot_constraint_breaches">[docs]</a><span class="k">def</span> <span class="nf">plot_constraint_breaches</span><span class="p">(</span><span class="n">constraint</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">show_locations</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_feature_labels</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot all breaches in a sequence for a single constraint.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+<span class="sd">    constraint</span>
+<span class="sd">      A DnaChisel Specification, to be used as a constraint.</span>
+
+<span class="sd">    sequence</span>
+<span class="sd">      An ATGC string, or a record. If it is a record, its annotations will also</span>
+<span class="sd">      be shown in the plot.</span>
+
+<span class="sd">    title</span>
+<span class="sd">      Title to be added to the plot</span>
+
+<span class="sd">    ax</span>
+<span class="sd">      Matplotlib ax on which to plot the result. If no ax is provided, one</span>
+<span class="sd">      will be created, and it will be returned at the end</span>
+
+<span class="sd">    show_locations</span>
+<span class="sd">      Whether or not to label the breach features with their coordinates</span>
+
+<span class="sd">    show_feature_labels</span>
+<span class="sd">      Whether or not to show the labels of all features.</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ax</span>
+<span class="sd">      The matplotlib ax on which the plot was drawn</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">class</span> <span class="nc">Translator</span><span class="p">(</span><span class="n">BiopythonTranslator</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A Biopython record translator for DNA Features Viewer.</span>
+
+<span class="sd">        This translator produces label-free plots.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">default_feature_color</span> <span class="o">=</span> <span class="s2">&quot;#ffaaaa&quot;</span>
+
+        <span class="k">def</span> <span class="nf">compute_feature_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s2">&quot;original&quot;</span> <span class="ow">and</span> <span class="n">show_locations</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">show_feature_labels</span> <span class="ow">and</span> <span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;original&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">BiopythonTranslator</span><span class="o">.</span><span class="n">compute_feature_label</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">def</span> <span class="nf">compute_feature_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;#ffffff&quot;</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;original&quot;</span> <span class="k">else</span> <span class="s2">&quot;#ff9999&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">SeqRecord</span><span class="p">):</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="n">sequence</span>
+        <span class="n">sequence</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sequence</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="p">[</span><span class="n">constraint</span><span class="p">])</span>
+    <span class="n">evals</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&quot;failing&quot;</span><span class="p">)</span>
+    <span class="n">breaches_record</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">to_record</span><span class="p">(</span>
+        <span class="n">with_original_features</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">with_objectives</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">with_constraints</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="n">breaches_record</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">evals</span><span class="o">.</span><span class="n">locations_as_features</span><span class="p">(</span>
+        <span class="n">with_specifications</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">merge_overlapping</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">record</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
+            <span class="n">feature</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+            <span class="n">feature</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s2">&quot;original&quot;</span>
+            <span class="n">breaches_record</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+
+    <span class="n">translator</span> <span class="o">=</span> <span class="n">Translator</span><span class="p">()</span>
+    <span class="n">graphic_record</span> <span class="o">=</span> <span class="n">translator</span><span class="o">.</span><span class="n">translate_record</span><span class="p">(</span><span class="n">breaches_record</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">graphic_record</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ymin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span></div>
+
+<div class="viewcode-block" id="plot_gc_content_breaches"><a class="viewcode-back" href="../../../ref/reports.html#dnachisel.reports.constraints_reports.plot_gc_content_breaches">[docs]</a><span class="k">def</span> <span class="nf">plot_gc_content_breaches</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">mini</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="mf">0.65</span><span class="p">,</span>
+                             <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot a profile of GC content along the sequence.</span>
+<span class="sd">    The regions with out-of-bound GC are highlighted.</span>
+
+<span class="sd">    Returns the Matplotlib ax on which the figure was plotted.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sequence</span>
+<span class="sd">      An ATGC string</span>
+
+<span class="sd">    window</span>
+<span class="sd">      Number of nucleotides to use for local averaging of GC content</span>
+
+<span class="sd">    mini</span>
+<span class="sd">      minimal allowed proportion of gc (between 0 and 1)</span>
+
+<span class="sd">    maxi</span>
+<span class="sd">      maximal allowed proportion of gc (between 0 and 1)</span>
+
+<span class="sd">    ax</span>
+<span class="sd">      Matplotlib ax on which to plot the figure. If none is provided, one</span>
+<span class="sd">      is created and returned in the end.</span>
+
+<span class="sd">    title</span>
+<span class="sd">      Title to be added to the figure.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gc</span> <span class="o">=</span> <span class="n">gc_content</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window</span><span class="p">)</span>
+    <span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gc</span><span class="p">))</span> <span class="o">+</span> <span class="n">window</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">gc_inbound</span> <span class="o">=</span> <span class="o">+</span><span class="n">gc</span>
+    <span class="n">gc_inbound</span><span class="p">[(</span><span class="n">gc</span> <span class="o">&lt;</span> <span class="n">mini</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">gc</span> <span class="o">&gt;</span> <span class="n">maxi</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">gc_inbound</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">limit</span><span class="p">,</span> <span class="n">whr</span> <span class="ow">in</span> <span class="p">(</span><span class="n">mini</span><span class="p">,</span> <span class="n">gc</span> <span class="o">&lt;</span> <span class="n">mini</span><span class="p">),</span> <span class="p">(</span><span class="n">maxi</span><span class="p">,</span> <span class="n">gc</span> <span class="o">&gt;</span> <span class="n">maxi</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+        <span class="n">gc_bad</span> <span class="o">=</span> <span class="o">+</span><span class="n">gc</span>
+        <span class="n">gc_bad</span><span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">whr</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">gc_bad</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">gc</span><span class="p">,</span> <span class="n">y2</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">whr</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span>
+                        <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">gc</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="plot_sequence_manufacturability_difficulties"><a class="viewcode-back" href="../../../ref/reports.html#dnachisel.reports.constraints_reports.plot_sequence_manufacturability_difficulties">[docs]</a><span class="k">def</span> <span class="nf">plot_sequence_manufacturability_difficulties</span><span class="p">(</span><span class="n">sequence</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot a series of manufacturability factor checks, on a single figure.</span>
+
+<span class="sd">    The factors considered are mostly arbitrary. Most users won&#39;t be interested</span>
+<span class="sd">    by this function. The function looks for presence of Type IIs restriction</span>
+<span class="sd">    sites, homopolymers, hairpins, extreme GC content, repeats.</span>
+<span class="sd">    The breaches for each constraint type are plotted on separate axis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sequence</span>
+<span class="sd">      An ATGC string or a Biopythn sequence record (at which case the features</span>
+<span class="sd">      will be drawn along with the constraints breaches).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    axes</span>
+<span class="sd">      List of the different axes (in a same figure) on which the plots were</span>
+<span class="sd">      drawn</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">SeqRecord</span><span class="p">):</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="n">sequence</span>
+        <span class="n">sequence</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sequence</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="n">sequence</span>
+
+    <span class="n">nplots</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nplots</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">1.4</span> <span class="o">*</span> <span class="n">nplots</span><span class="p">),</span>
+                             <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+
+    <span class="n">mini</span><span class="p">,</span> <span class="n">maxi</span><span class="p">,</span> <span class="n">window</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mi">50</span>
+    <span class="n">plot_gc_content_breaches</span><span class="p">(</span>
+        <span class="n">sequence</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">,</span> <span class="n">mini</span><span class="o">=</span><span class="n">mini</span><span class="p">,</span>
+        <span class="n">maxi</span><span class="o">=</span><span class="n">maxi</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;GC content (window= </span><span class="si">%d</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">window</span>
+    <span class="p">)</span>
+
+    <span class="n">constraint</span> <span class="o">=</span> <span class="n">EnforceGCContent</span><span class="p">(</span><span class="n">mini</span><span class="o">=</span><span class="n">mini</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="n">maxi</span><span class="p">,</span>
+                                  <span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">)</span>
+    <span class="n">plot_constraint_breaches</span><span class="p">(</span>
+        <span class="n">constraint</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Zones of extreme GC content (Gen9-type short window)&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">plot_constraint_breaches</span><span class="p">(</span>
+        <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;BsmBI&quot;</span><span class="p">),</span> <span class="n">sequence</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;BsmBI sites&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">plot_constraint_breaches</span><span class="p">(</span>
+        <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;BsaI&quot;</span><span class="p">),</span>
+        <span class="n">record</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;BsaI sites&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">plot_constraint_breaches</span><span class="p">(</span>
+        <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;BbsI&quot;</span><span class="p">),</span>
+        <span class="n">record</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;BbsI sites&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)]:</span>
+        <span class="n">constraint</span> <span class="o">=</span> <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">homopolymer_pattern</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+        <span class="n">plot_constraint_breaches</span><span class="p">(</span>
+            <span class="n">constraint</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Homopolymers (6+ G or C | 9+ A or T)&quot;</span><span class="p">,</span>
+            <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">length</span><span class="p">,</span> <span class="n">n_repeats</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">repeated_kmers</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">n_repeats</span><span class="o">=</span><span class="n">n_repeats</span><span class="p">)</span>
+        <span class="n">constraint</span> <span class="o">=</span> <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+        <span class="n">plot_constraint_breaches</span><span class="p">(</span>
+            <span class="n">constraint</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Repeats (5 x 3bp, 9 x 2bp)&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="n">plot_constraint_breaches</span><span class="p">(</span>
+        <span class="n">AvoidHairpins</span><span class="p">(</span><span class="n">stem_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">hairpin_window</span><span class="o">=</span><span class="mi">200</span><span class="p">),</span>
+        <span class="n">record</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Hairpins&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">axes</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

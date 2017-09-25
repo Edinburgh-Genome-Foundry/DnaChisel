@@ -1,0 +1,1191 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Core Classes &mdash; DnaChisel 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/main.css" type="text/css" />
+  
+    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="DnaChisel 0.1.0 documentation" href="../index.html"/>
+        <link rel="up" title="DnaChisel Reference manual" href="ref.html"/>
+        <link rel="next" title="Reports" href="reports.html"/>
+        <link rel="prev" title="DnaChisel Reference manual" href="ref.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DnaChisel
+          
+
+          
+            
+            <img src="../_static/html_logo.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">DnaChisel</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ref.html">DnaChisel Reference manual</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Core Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#classes-dependencies">Classes dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dnaoptimizationproblem">DnaOptimizationProblem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#specification">Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#specevaluation">SpecEvaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-dnachisel.Location">Location</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-dnachisel.MutationSpace">MutationSpace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-dnachisel.SequencePattern">SequencePattern</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reports.html">Reports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="biotools.html">Biotools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="builtin_specifications.html">Built-in Specifications</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DnaChisel</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="ref.html">DnaChisel Reference manual</a> &raquo;</li>
+        
+      <li>Core Classes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/ref/core_classes.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="core-classes">
+<h1>Core Classes<a class="headerlink" href="#core-classes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="classes-dependencies">
+<h2>Classes dependencies<a class="headerlink" href="#classes-dependencies" title="Permalink to this headline">¶</a></h2>
+<script>mermaid.initialize({startOnLoad:true});</script><div align="center" class="mermaid align-center">
+            graph TD;
+   sequence --&gt; P[DnaOptimizationProblem]
+   o[objectives...] --&gt; P
+   c[constraints...] --&gt; P
+   s[Specifications] --&gt; o
+   s --&gt; o
+   s --&gt; c
+   s --&gt; c
+   P --&gt;|solve, optimize| O[Optimized problem.sequence]
+        </div>
+        </div>
+<div class="section" id="dnaoptimizationproblem">
+<h2>DnaOptimizationProblem<a class="headerlink" href="#dnaoptimizationproblem" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="dnachisel.DnaOptimizationProblem">
+<em class="property">class </em><code class="descclassname">dnachisel.</code><code class="descname">DnaOptimizationProblem</code><span class="sig-paren">(</span><em>sequence</em>, <em>constraints=None</em>, <em>objectives=None</em>, <em>logger='bar'</em>, <em>mutation_space=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem.html#DnaOptimizationProblem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Problem specifications: sequence, constraints, optimization objectives.</p>
+<p>The original constraints, objectives, and original sequence of the problem
+are stored in the DNA Canvas. This class also has methods to display
+reports on the constraints and objectives, as well as solving the
+constraints and objectives.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sequence</strong></p>
+<blockquote>
+<div><p>A string of ATGC characters (they must be upper case!), e.g. “ATTGTGTA”</p>
+</div></blockquote>
+<p><strong>constraints</strong></p>
+<blockquote>
+<div><p>A list of objects of type <code class="docutils literal"><span class="pre">Specification</span></code>.</p>
+</div></blockquote>
+<p><strong>objectives</strong></p>
+<blockquote class="last">
+<div><p>A list of objects of type <code class="docutils literal"><span class="pre">Specification</span></code> specifying what must be
+optimized in the problem. Note that each objective has a float <code class="docutils literal"><span class="pre">boost</span></code>
+parameter. The larger the boost, the more the objective is taken into
+account during the optimization.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The dictionnary <code class="docutils literal"><span class="pre">self.possible_mutations</span></code> is of the form
+<code class="docutils literal"><span class="pre">{location1</span> <span class="pre">:</span> <span class="pre">list1,</span> <span class="pre">location2:</span> <span class="pre">list2...}</span></code>
+where <code class="docutils literal"><span class="pre">location</span></code> is either a single index (e.g. 10) indicating the
+position of a nucleotide to be muted, or a couple <code class="docutils literal"><span class="pre">(start,</span> <span class="pre">end)</span></code>
+indicating a whole segment whose sub-sequence should be replaced.
+The <code class="docutils literal"><span class="pre">list</span></code> s are lists of possible sequences to replace each location,
+e.g. for the mutation of a whole codon <code class="docutils literal"><span class="pre">(3,6):</span> <span class="pre">[&quot;ATT&quot;,</span> <span class="pre">&quot;ACT&quot;,</span> <span class="pre">&quot;AGT&quot;]</span></code>.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dnachisel</span> <span class="k">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">canvas</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">sequence</span> <span class="o">=</span> <span class="s2">&quot;ATGCGTGTGTGC...&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span><span class="n">constraint1</span><span class="p">,</span> <span class="n">constraint2</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">objectives</span> <span class="o">=</span> <span class="p">[</span><span class="n">objective1</span><span class="p">,</span> <span class="n">objective2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">canvas</span><span class="o">.</span><span class="n">resolve_constraints_one_by_one</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">canvas</span><span class="o">.</span><span class="n">maximize_all_objectives_one_by_one</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">canvas</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">canvas</span><span class="o">.</span><span class="n">objectives_summary</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><strong>sequence</strong></td>
+<td>The sequence</td>
+</tr>
+<tr class="row-even"><td><strong>constraints</strong></td>
+<td>The list of constraints</td>
+</tr>
+<tr class="row-odd"><td><strong>objectives</strong></td>
+<td>The list of objectives</td>
+</tr>
+<tr class="row-even"><td><strong>possible_mutations</strong></td>
+<td>A dictionnary indicating the possible mutations. Note that this is only computed the first time that canvas.possible_mutations is invoked.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="dnachisel.DnaOptimizationProblem.all_constraints_pass">
+<code class="descname">all_constraints_pass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem.html#DnaOptimizationProblem.all_constraints_pass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.all_constraints_pass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True iff the current problem sequence passes all constraints.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.DnaOptimizationProblem.constraints_evaluations">
+<code class="descname">constraints_evaluations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem.html#DnaOptimizationProblem.constraints_evaluations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.constraints_evaluations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of the evaluations of each constraint of the canvas.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.DnaOptimizationProblem.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem.html#DnaOptimizationProblem.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Variables initialization before solving.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.DnaOptimizationProblem.objectives_evaluations">
+<code class="descname">objectives_evaluations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem.html#DnaOptimizationProblem.objectives_evaluations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.objectives_evaluations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of the evaluation of each objective of the canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.DnaOptimizationProblem.optimize">
+<code class="descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem.html#DnaOptimizationProblem.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.optimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximize the objective via local, targeted mutations.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.DnaOptimizationProblem.optimize_by_exhaustive_search">
+<code class="descname">optimize_by_exhaustive_search</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem.html#DnaOptimizationProblem.optimize_by_exhaustive_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.optimize_by_exhaustive_search" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.DnaOptimizationProblem.optimize_by_random_mutations">
+<code class="descname">optimize_by_random_mutations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem.html#DnaOptimizationProblem.optimize_by_random_mutations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.optimize_by_random_mutations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.DnaOptimizationProblem.resolve_constraint">
+<code class="descname">resolve_constraint</code><span class="sig-paren">(</span><em>constraint</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem.html#DnaOptimizationProblem.resolve_constraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.resolve_constraint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolve a constraint through successive localizations.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.DnaOptimizationProblem.resolve_constraints">
+<code class="descname">resolve_constraints</code><span class="sig-paren">(</span><em>final_check=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem.html#DnaOptimizationProblem.resolve_constraints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.resolve_constraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve a particular constraint using local, targeted searches.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>constraint</strong></p>
+<blockquote class="last">
+<div><p>The <code class="docutils literal"><span class="pre">Specification</span></code> object for which the sequence should be solved</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.DnaOptimizationProblem.resolve_constraints_by_exhaustive_search">
+<code class="descname">resolve_constraints_by_exhaustive_search</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem.html#DnaOptimizationProblem.resolve_constraints_by_exhaustive_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.resolve_constraints_by_exhaustive_search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve all constraints by exploring the whole search space.</p>
+<p>This method iterates over <code class="docutils literal"><span class="pre">self.iter_mutations_space()</span></code> (space of
+all sequences that could be reached through successive mutations) and
+stops when it finds a sequence which meets all the constraints of the
+canvas.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.DnaOptimizationProblem.resolve_constraints_by_random_mutations">
+<code class="descname">resolve_constraints_by_random_mutations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem.html#DnaOptimizationProblem.resolve_constraints_by_random_mutations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.resolve_constraints_by_random_mutations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve all constraints by successive sets of random mutations.</p>
+<p>This method modifies the canvas sequence by applying a number
+<code class="docutils literal"><span class="pre">n_mutations</span></code> of random mutations. The constraints are then evaluated
+on the new sequence. If all constraints pass, the new sequence becomes
+the canvas’s new sequence.
+If not all constraints pass, the sum of all scores from failing
+constraints is considered. If this score is superior to the score of
+the previous sequence, the new sequence becomes the canvas’s new
+sequence.</p>
+<p>This operation is repeated <cite>max_iter</cite> times at most, after which
+a <code class="docutils literal"><span class="pre">NoSolutionError</span></code> is thrown.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.DnaOptimizationProblem.resolve_constraints_locally">
+<code class="descname">resolve_constraints_locally</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem.html#DnaOptimizationProblem.resolve_constraints_locally"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.resolve_constraints_locally" title="Permalink to this definition">¶</a></dt>
+<dd><p>Orient the local search towards a stochastic or exhaustive search.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="specification">
+<h2>Specification<a class="headerlink" href="#specification" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="dnachisel.Specification">
+<em class="property">class </em><code class="descclassname">dnachisel.</code><code class="descname">Specification</code><span class="sig-paren">(</span><em>evaluate=None</em>, <em>boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification.html#Specification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification" title="Permalink to this definition">¶</a></dt>
+<dd><p>General class to define specifications to optimize.</p>
+<p>Note that all specifications have a <code class="docutils literal"><span class="pre">boost</span></code> attribute that is a
+multiplicator that will be used when computing the global specification
+score of a problem with <code class="docutils literal"><span class="pre">problem.all_objectives_score()</span></code>.</p>
+<p>New types of specifications are defined by subclassing <code class="docutils literal"><span class="pre">Specification</span></code> and
+providing a custom <code class="docutils literal"><span class="pre">evaluate</span></code> and <code class="docutils literal"><span class="pre">localized</span></code> methods.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>evaluate</strong></p>
+<blockquote>
+<div><p>function (sequence) =&gt; SpecEvaluation</p>
+</div></blockquote>
+<p><strong>boost</strong></p>
+<blockquote class="last">
+<div><p>Relative importance of the Specification’s score in a multi-specification
+problem.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="dnachisel.Specification.copy_with_changes">
+<code class="descname">copy_with_changes</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification.html#Specification.copy_with_changes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.copy_with_changes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the Specification with modified properties.</p>
+<p>For instance <code class="docutils literal"><span class="pre">new_spec</span> <span class="pre">=</span> <span class="pre">spec.copy_with_changes(boost=10)</span></code>.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="dnachisel.Specification.from_biopython_feature">
+<em class="property">static </em><code class="descname">from_biopython_feature</code><span class="sig-paren">(</span><em>feature</em>, <em>specifications_dict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification.html#Specification.from_biopython_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.from_biopython_feature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a Biopython feature create an annotation.</p>
+<p>The specifications_dict enables to map specification names to the
+actual implemented class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.Specification.initialize_on_problem">
+<code class="descname">initialize_on_problem</code><span class="sig-paren">(</span><em>problem</em>, <em>role='constraint'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification.html#Specification.initialize_on_problem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.initialize_on_problem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Complete specification initialization when the sequence gets known.</p>
+<p>Some specifications like to know what their role is and on which
+sequence they are employed before they complete some values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.Specification.localized">
+<code class="descname">localized</code><span class="sig-paren">(</span><em>location</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification.html#Specification.localized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.localized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a modified version of the specification for the case where
+sequence modifications are only performed inside the provided location.</p>
+<p>For instance if an specification concerns local GC content, and we are
+only making local mutations to destroy a restriction site, then we only
+need to check the local GC content around the restriction site after
+each mutation (and not compute it for the whole sequence), so
+<code class="docutils literal"><span class="pre">EnforceGCContent.localized(location)</span></code> will return an specification
+that only looks for GC content around the provided location.</p>
+<p>If an specification concerns a DNA segment that is completely disjoint
+from the provided location, this must return a <code class="docutils literal"><span class="pre">VoidSpecification</span></code>.</p>
+<p>Must return an object of class <code class="docutils literal"><span class="pre">Constraint</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.Specification.restrict_nucleotides">
+<code class="descname">restrict_nucleotides</code><span class="sig-paren">(</span><em>sequence</em>, <em>location=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification.html#Specification.restrict_nucleotides"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.restrict_nucleotides" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restrict the possible nucleotides mutations in a sequence to speed
+up optimization.</p>
+<p>This method has no effect unless a special heuristic is implemented
+for it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.Specification.to_biopython_feature">
+<code class="descname">to_biopython_feature</code><span class="sig-paren">(</span><em>feature_type='misc_feature'</em>, <em>role='constraint'</em>, <em>colors_dict=None</em>, <em>**qualifiers</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification.html#Specification.to_biopython_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.to_biopython_feature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Biopython feature representing the specification.</p>
+<p>The feature label is a string representation of the specification,
+and its location indicates the specification’s scope.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="specevaluation">
+<h2>SpecEvaluation<a class="headerlink" href="#specevaluation" title="Permalink to this headline">¶</a></h2>
+<div class="mermaid">
+            graph TD;
+   P[DnaOptimizationProblem] --&gt; SE[SpecEvaluation]
+   S[Specification] --&gt; SE
+   SE --&gt;|grouped into| SES[SpecEvaluations]
+   SES --- OES[Objective evaluations]
+   SES --- CES[Constraints evaluations]
+        </div><span class="target" id="module-dnachisel.SpecEvaluation"></span><p>Classes for Objective Evaluations.</p>
+<dl class="class">
+<dt id="dnachisel.SpecEvaluation.ProblemConstraintsEvaluations">
+<em class="property">class </em><code class="descclassname">dnachisel.SpecEvaluation.</code><code class="descname">ProblemConstraintsEvaluations</code><span class="sig-paren">(</span><em>evaluations</em>, <em>problem=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#ProblemConstraintsEvaluations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.ProblemConstraintsEvaluations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Special multi-evaluation class for all constraints of a same problem.</p>
+<p>See submethod <code class="docutils literal"><span class="pre">.from_problem</span></code></p>
+<dl class="staticmethod">
+<dt id="dnachisel.SpecEvaluation.ProblemConstraintsEvaluations.from_problem">
+<em class="property">static </em><code class="descname">from_problem</code><span class="sig-paren">(</span><em>problem</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#ProblemConstraintsEvaluations.from_problem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.ProblemConstraintsEvaluations.from_problem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an instance by evaluating all constraints in the problem.</p>
+<p>The <code class="docutils literal"><span class="pre">problem</span></code> is a DnaChisel DnaOptimizationProblem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.SpecEvaluation.ProblemConstraintsEvaluations.success_failure_color">
+<code class="descname">success_failure_color</code><span class="sig-paren">(</span><em>evaluation</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#ProblemConstraintsEvaluations.success_failure_color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.ProblemConstraintsEvaluations.success_failure_color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return color #60f979 if evaluation.passes else #f96c60.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.SpecEvaluation.ProblemConstraintsEvaluations.text_summary_message">
+<code class="descname">text_summary_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#ProblemConstraintsEvaluations.text_summary_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.ProblemConstraintsEvaluations.text_summary_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a global SUCCESS or FAILURE message for all evaluations.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dnachisel.SpecEvaluation.ProblemObjectivesEvaluations">
+<em class="property">class </em><code class="descclassname">dnachisel.SpecEvaluation.</code><code class="descname">ProblemObjectivesEvaluations</code><span class="sig-paren">(</span><em>evaluations</em>, <em>problem=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#ProblemObjectivesEvaluations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.ProblemObjectivesEvaluations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Special multi-evaluation class for all objectives of a same problem.</p>
+<p>See submethod <code class="docutils literal"><span class="pre">.from_problem</span></code></p>
+<dl class="staticmethod">
+<dt id="dnachisel.SpecEvaluation.ProblemObjectivesEvaluations.from_problem">
+<em class="property">static </em><code class="descname">from_problem</code><span class="sig-paren">(</span><em>problem</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#ProblemObjectivesEvaluations.from_problem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.ProblemObjectivesEvaluations.from_problem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an instance by evaluating all objectives in the problem.</p>
+<p>The <code class="docutils literal"><span class="pre">problem</span></code> is a DnaChisel DnaOptimizationProblem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.SpecEvaluation.ProblemObjectivesEvaluations.success_failure_color">
+<code class="descname">success_failure_color</code><span class="sig-paren">(</span><em>evaluation</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#ProblemObjectivesEvaluations.success_failure_color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.ProblemObjectivesEvaluations.success_failure_color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return color #cbf960 if evaluation is optimal else #f9a260.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.SpecEvaluation.ProblemObjectivesEvaluations.text_summary_message">
+<code class="descname">text_summary_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#ProblemObjectivesEvaluations.text_summary_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.ProblemObjectivesEvaluations.text_summary_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a TOTAL SCORE message.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dnachisel.SpecEvaluation.SpecEvaluation">
+<em class="property">class </em><code class="descclassname">dnachisel.SpecEvaluation.</code><code class="descname">SpecEvaluation</code><span class="sig-paren">(</span><em>specification</em>, <em>problem</em>, <em>score</em>, <em>locations=None</em>, <em>message=None</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#SpecEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.SpecEvaluation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store relevant infos about the evaluation of an objective on a problem.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>objective</strong></p>
+<blockquote>
+<div><p>The Objective that was evaluated.</p>
+</div></blockquote>
+<p><strong>problem</strong></p>
+<blockquote>
+<div><p>The problem that the objective was evaluated on.</p>
+</div></blockquote>
+<p><strong>score</strong></p>
+<blockquote>
+<div><p>The score associated to the evaluation.</p>
+</div></blockquote>
+<p><strong>locations</strong></p>
+<blockquote>
+<div><p>A list of couples (start, end) indicating the locations on which the
+the optimization shoul be localized to improve the objective.</p>
+</div></blockquote>
+<p><strong>message</strong></p>
+<blockquote class="last">
+<div><p>A message that will be returned by <code class="docutils literal"><span class="pre">str(evaluation)</span></code>. It will notably
+be displayed by <code class="docutils literal"><span class="pre">problem.print_objectives_summaries</span></code>.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">evaluation_result</span> <span class="o">=</span> <span class="n">ConstraintEvaluation</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">specification</span><span class="o">=</span><span class="n">specification</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">problem</span> <span class="o">=</span> <span class="n">problem</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">score</span><span class="o">=</span> <span class="n">evaluation_score</span><span class="p">,</span> <span class="c1"># float</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">locations</span><span class="o">=</span><span class="p">[</span><span class="n">Locations</span> <span class="nb">list</span><span class="o">...</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Score: 42 (found 42 sites)&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="dnachisel.SpecEvaluation.SpecEvaluation.default_message">
+<code class="descname">default_message</code><a class="headerlink" href="#dnachisel.SpecEvaluation.SpecEvaluation.default_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the default message for console/reports.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.SpecEvaluation.SpecEvaluation.locations_to_biopython_features">
+<code class="descname">locations_to_biopython_features</code><span class="sig-paren">(</span><em>feature_type='misc_feature'</em>, <em>color='red'</em>, <em>label_prefix=''</em>, <em>merge_overlapping=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#SpecEvaluation.locations_to_biopython_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.SpecEvaluation.locations_to_biopython_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of locations (of breach/suboptimality) as annotations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>feature_type</strong></p>
+<blockquote>
+<div><p>Genbank type of the annotations</p>
+</div></blockquote>
+<p><strong>color</strong></p>
+<blockquote>
+<div><p>Color property attached to the annotations</p>
+</div></blockquote>
+<p><strong>label_prefix</strong></p>
+<blockquote class="last">
+<div><p>The locations will be labelled of the form
+“prefix NameOfSpecification()”</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.SpecEvaluation.SpecEvaluation.to_text">
+<code class="descname">to_text</code><span class="sig-paren">(</span><em>role='constraint'</em>, <em>wrapped=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#SpecEvaluation.to_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.SpecEvaluation.to_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string representation of the evaluation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>role</strong></p>
+<blockquote>
+<div><p>either ‘objective’ or ‘constraint’</p>
+</div></blockquote>
+<p><strong>wrapped</strong></p>
+<blockquote>
+<div><p>Whether to wrap-and-indent the result</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">message</p>
+<blockquote class="last">
+<div><p>A long string detailing the evaluations’s status and regions of
+breach or suboptimality.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dnachisel.SpecEvaluation.SpecEvaluations">
+<em class="property">class </em><code class="descclassname">dnachisel.SpecEvaluation.</code><code class="descname">SpecEvaluations</code><span class="sig-paren">(</span><em>evaluations</em>, <em>problem=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#SpecEvaluations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.SpecEvaluations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for the collective handling of lists of SpecEvaluations.</p>
+<p>See ProblemObjectivesEvaluations and ProblemConstraintsEvaluations for
+the useful subclasses.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>evaluations</strong></p>
+<blockquote>
+<div><p>list of SpecEvaluations</p>
+</div></blockquote>
+<p><strong>problem</strong></p>
+<blockquote class="last">
+<div><p>(optional) problem on which the evaluations were carried.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="dnachisel.SpecEvaluation.SpecEvaluations.all_evaluations_pass">
+<code class="descname">all_evaluations_pass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#SpecEvaluations.all_evaluations_pass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.SpecEvaluations.all_evaluations_pass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether all evaluations pass.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.SpecEvaluation.SpecEvaluations.evaluations_with_locations">
+<code class="descname">evaluations_with_locations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#SpecEvaluations.evaluations_with_locations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.SpecEvaluations.evaluations_with_locations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the list of all evaluations whose location is not None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.SpecEvaluation.SpecEvaluations.filter">
+<code class="descname">filter</code><span class="sig-paren">(</span><em>eval_filter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#SpecEvaluations.filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.SpecEvaluations.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new instance with a subset of the evaluations.</p>
+<p><code class="docutils literal"><span class="pre">eval_filter</span></code> is either a function <code class="docutils literal"><span class="pre">(evaluation)</span> <span class="pre">=&gt;</span> <span class="pre">True/False</span></code>
+or one of “passing”, “failing”, “optimal”, “suboptimal”, to obtain the
+corresponding constraints.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.SpecEvaluation.SpecEvaluations.locations_as_features">
+<code class="descname">locations_as_features</code><span class="sig-paren">(</span><em>features_type='misc_feature'</em>, <em>with_specifications=True</em>, <em>label_prefix='From'</em>, <em>colors='cycle'</em>, <em>merge_overlapping=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#SpecEvaluations.locations_as_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.SpecEvaluations.locations_as_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all locations from all evaluations as biopython features.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>features_type</strong></p>
+<blockquote>
+<div><p>The Genbank feature type</p>
+</div></blockquote>
+<p><strong>with_specifications</strong></p>
+<blockquote>
+<div><p>If True, features are added to the list to indicate the scope of the
+different specifications. If false, only the specification breaches
+are returned.</p>
+</div></blockquote>
+<p><strong>label_prefix</strong></p>
+<blockquote>
+<div><p>Each breach may be labeled “prefix NameOfSpec(props)”, for instance,
+“From AvoidPattern(100-200)”, to indicate where the breach belongs.</p>
+</div></blockquote>
+<p><strong>colors</strong></p>
+<blockquote class="last">
+<div><p>Either a list of colors (one for each specification) or “cycle”
+for cycling through predefined colors. The colors are applied to all
+breaches.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.SpecEvaluation.SpecEvaluations.scores_sum">
+<code class="descname">scores_sum</code><span class="sig-paren">(</span><em>as_text=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#SpecEvaluations.scores_sum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.SpecEvaluations.scores_sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sum of all evaluations scores.</p>
+<p>Scores are multiplied by their respective boost factor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.SpecEvaluation.SpecEvaluations.success_and_failures_as_features">
+<code class="descname">success_and_failures_as_features</code><span class="sig-paren">(</span><em>feature_type='misc_feature'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#SpecEvaluations.success_and_failures_as_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.SpecEvaluations.success_and_failures_as_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all evaluations as Biopython features.</p>
+<p>With color property depending on whether the evaluation is passing,
+failing, optimal, or suboptimal, the color being determined by
+<code class="docutils literal"><span class="pre">self.success_failure_color</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.SpecEvaluation.SpecEvaluations.to_text">
+<code class="descname">to_text</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SpecEvaluation.html#SpecEvaluations.to_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SpecEvaluation.SpecEvaluations.to_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a long representation of the evaluations.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-dnachisel.Location">
+<span id="location"></span><h2>Location<a class="headerlink" href="#module-dnachisel.Location" title="Permalink to this headline">¶</a></h2>
+<p>Implements the Location class.</p>
+<p>The class has useful methods for finding overlaps between locations, extract
+a subsequence from a sequence, etc.</p>
+<dl class="class">
+<dt id="dnachisel.Location.Location">
+<em class="property">class </em><code class="descclassname">dnachisel.Location.</code><code class="descname">Location</code><span class="sig-paren">(</span><em>start</em>, <em>end</em>, <em>strand=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represent a segment of a sequence, with a start, end, and strand.</p>
+<p>Warning: we use Python’s splicing notation, so Location(5, 10) represents
+sequence[5, 6, 7, 8, 9] which corresponds to nucleotides number
+6, 7, 8, 9, 10.</p>
+<p>The data structure is similar to a Biopython’s FeatureLocation, but with
+different methods for different purposes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>start</strong></p>
+<blockquote>
+<div><p>Lowest position index of the segment</p>
+</div></blockquote>
+<p><strong>end</strong></p>
+<blockquote>
+<div><p>Highest position index of the segment</p>
+</div></blockquote>
+<p><strong>strand</strong></p>
+<blockquote class="last">
+<div><p>Either 1 or -1 for sense or anti-sense orientation.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="dnachisel.Location.Location.extended">
+<code class="descname">extended</code><span class="sig-paren">(</span><em>extension_length</em>, <em>upper_limit=None</em>, <em>left=True</em>, <em>right=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.extended"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.extended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extend the location of a few basepairs on each side.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.Location.Location.extract_sequence">
+<code class="descname">extract_sequence</code><span class="sig-paren">(</span><em>sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.extract_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.extract_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the subsequence read at the given location.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="dnachisel.Location.Location.from_biopython_location">
+<em class="property">static </em><code class="descname">from_biopython_location</code><span class="sig-paren">(</span><em>location</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.from_biopython_location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.from_biopython_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a DnaChisel Location from a Biopython location.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="dnachisel.Location.Location.merge_overlapping_locations">
+<em class="property">static </em><code class="descname">merge_overlapping_locations</code><span class="sig-paren">(</span><em>locations</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.merge_overlapping_locations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.merge_overlapping_locations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of locations obtained by mergin all overlapping.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.Location.Location.overlap_region">
+<code class="descname">overlap_region</code><span class="sig-paren">(</span><em>other_location</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.overlap_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.overlap_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the overlap span between two locations (None if None).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.Location.Location.to_biopython_feature">
+<code class="descname">to_biopython_feature</code><span class="sig-paren">(</span><em>feature_type='misc_feature'</em>, <em>**qualifiers</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.to_biopython_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.to_biopython_feature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Biopython SeqFeature with same location and custom
+qualifiers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.Location.Location.to_biopython_location">
+<code class="descname">to_biopython_location</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.to_biopython_location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.to_biopython_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Biopython FeatureLocation equivalent to the location.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.Location.Location.to_tuple">
+<code class="descname">to_tuple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.to_tuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.to_tuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return (start, end, strand).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dnachisel.Location.MultiLocation">
+<em class="property">class </em><code class="descclassname">dnachisel.Location.</code><code class="descname">MultiLocation</code><span class="sig-paren">(</span><em>locations</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#MultiLocation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.MultiLocation" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO: Implement when necessary</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-dnachisel.MutationSpace">
+<span id="mutationspace"></span><h2>MutationSpace<a class="headerlink" href="#module-dnachisel.MutationSpace" title="Permalink to this headline">¶</a></h2>
+<p>Define MutationSpace</p>
+<dl class="class">
+<dt id="dnachisel.MutationSpace.MutationChoice">
+<em class="property">class </em><code class="descclassname">dnachisel.MutationSpace.</code><code class="descname">MutationChoice</code><span class="sig-paren">(</span><em>segment</em>, <em>variants</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace.html#MutationChoice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationChoice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represent a segment of a sequence with several possible variants.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>segment</strong></p>
+<blockquote>
+<div><p>A pair (start, end) indicating the range of nucleotides concerned. We
+are applying Python range, so</p>
+</div></blockquote>
+<p><strong>variants</strong></p>
+<blockquote class="last">
+<div><p>A set of sequence variants, at the given position</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">choice</span> <span class="o">=</span> <span class="n">MutationChoice</span><span class="p">((</span><span class="mi">70</span><span class="p">,</span> <span class="mi">73</span><span class="p">),</span> <span class="p">{})</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="dnachisel.MutationSpace.MutationChoice.extract_varying_region">
+<code class="descname">extract_varying_region</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace.html#MutationChoice.extract_varying_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationChoice.extract_varying_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return MutationChoices for the central varying region and 2 flanks.</p>
+<p>For instance:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">choice</span> <span class="o">=</span> <span class="n">MutationChoice</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="p">[</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;ATGCGTG&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;AAAAATG&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;AAATGTG&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;ATGAATG&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">choice</span><span class="o">.</span><span class="n">extract_varying_region</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Result</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">MutChoice</span><span class="p">(</span><span class="mi">5</span><span class="o">-</span><span class="mi">6</span> <span class="n">A</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">MutChoice</span><span class="p">(</span><span class="mi">6</span><span class="o">-</span><span class="mi">10</span> <span class="n">TGCG</span><span class="o">-</span><span class="n">AATG</span><span class="o">-</span><span class="n">TGAA</span><span class="o">-</span><span class="n">AAAA</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">MutChoice</span><span class="p">(</span><span class="mi">10</span><span class="o">-</span><span class="mi">12</span> <span class="n">TG</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">]</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.MutationSpace.MutationChoice.percolate_with">
+<code class="descname">percolate_with</code><span class="sig-paren">(</span><em>others</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace.html#MutationChoice.percolate_with"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationChoice.percolate_with" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a mutation restriction</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.MutationSpace.MutationChoice.random_variant">
+<code class="descname">random_variant</code><span class="sig-paren">(</span><em>sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace.html#MutationChoice.random_variant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationChoice.random_variant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return one of the variants, randomly.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dnachisel.MutationSpace.MutationSpace">
+<em class="property">class </em><code class="descclassname">dnachisel.MutationSpace.</code><code class="descname">MutationSpace</code><span class="sig-paren">(</span><em>choices_index</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace.html#MutationSpace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for mutation space (set of sequence segments and their variants).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>choices_index</strong></p>
+<blockquote class="last">
+<div><p>A list L such that L[i] gives the MutationChoice governing the mutations
+allowed at position i (ansd possibly around i)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">space</span> <span class="o">=</span> <span class="n">MutationSpace</span><span class="p">([</span>
+<span class="go">        MutationChoice((0, 2), {&#39;AT&#39;, &#39;TG&#39;}),</span>
+<span class="go">        MutationChoice((0, 2), {&#39;AT&#39;, &#39;TG&#39;}),</span>
+<span class="go">        MutationChoice((2, 5), {&#39;TTC&#39;, &#39;TTA&#39;, &#39;TTT&#39;}), # same</span>
+<span class="go">        MutationChoice((2, 5), {&#39;TTC&#39;, &#39;TTA&#39;, &#39;TTT&#39;}), #</span>
+<span class="go">        MutationChoice((2, 5), {&#39;TTC&#39;, &#39;TTA&#39;, &#39;TTT&#39;}),</span>
+<span class="go">    ])</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="dnachisel.MutationSpace.MutationSpace.all_variants">
+<code class="descname">all_variants</code><span class="sig-paren">(</span><em>sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace.html#MutationSpace.all_variants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.all_variants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate through all sequence variants in this mutation space.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.MutationSpace.MutationSpace.apply_random_mutations">
+<code class="descname">apply_random_mutations</code><span class="sig-paren">(</span><em>n_mutations</em>, <em>sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace.html#MutationSpace.apply_random_mutations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.apply_random_mutations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a sequence with n random mutations applied.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dnachisel.MutationSpace.MutationSpace.choices_span">
+<code class="descname">choices_span</code><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.choices_span" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return (start, end), segment where mutiple choices are possible</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.MutationSpace.MutationSpace.constrain_sequence">
+<code class="descname">constrain_sequence</code><span class="sig-paren">(</span><em>sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace.html#MutationSpace.constrain_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.constrain_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a version of the sequence compatible with the mutation space.</p>
+<p>All nucleotides of the sequence that are incompatible with the
+mutation space are replaced by nucleotides compatible with the space.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="dnachisel.MutationSpace.MutationSpace.from_optimization_problem">
+<em class="property">static </em><code class="descname">from_optimization_problem</code><span class="sig-paren">(</span><em>problem</em>, <em>new_constraints=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace.html#MutationSpace.from_optimization_problem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.from_optimization_problem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a mutation space from a DNA optimization problem.</p>
+<p>This can be used either to initialize mutation spaces for new problems,
+or to</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.MutationSpace.MutationSpace.localized">
+<code class="descname">localized</code><span class="sig-paren">(</span><em>location</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace.html#MutationSpace.localized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.localized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new version with only mutations overlaping the location.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.MutationSpace.MutationSpace.pick_random_mutations">
+<code class="descname">pick_random_mutations</code><span class="sig-paren">(</span><em>n_mutations</em>, <em>sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace.html#MutationSpace.pick_random_mutations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.pick_random_mutations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw N random mutations</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dnachisel.MutationSpace.MutationSpace.space_size">
+<code class="descname">space_size</code><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.space_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of possible mutations</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-dnachisel.SequencePattern">
+<span id="sequencepattern"></span><h2>SequencePattern<a class="headerlink" href="#module-dnachisel.SequencePattern" title="Permalink to this headline">¶</a></h2>
+<p>Implements the SequencePattern, DnaNotationPattern classes.</p>
+<p>These classes are responsible for looking for a pattern in a sequence
+(including overlapping patterns !), separating patterns with fixed size
+and patterns with maximal size (from problem localization purposes).</p>
+<p>The module also implements functions to specify common DNA patterns:
+homopolymers, repeats, enzymatic restriction sites.</p>
+<dl class="class">
+<dt id="dnachisel.SequencePattern.DnaNotationPattern">
+<em class="property">class </em><code class="descclassname">dnachisel.SequencePattern.</code><code class="descname">DnaNotationPattern</code><span class="sig-paren">(</span><em>sequence</em>, <em>name=None</em>, <em>in_both_strands='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#DnaNotationPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.DnaNotationPattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for patterns in plain DNA notation: ATTGCCA, GCNNKTA, etc.</p>
+<p>If the sequence is not palyndromic, the pattern will be looked for in
+both strands of sequences.</p>
+<dl class="method">
+<dt id="dnachisel.SequencePattern.DnaNotationPattern.all_variants">
+<code class="descname">all_variants</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#DnaNotationPattern.all_variants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.DnaNotationPattern.all_variants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all ATGC sequence variants of a sequence</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="dnachisel.SequencePattern.DnaNotationPattern.dna_sequence_to_regexpr">
+<em class="property">static </em><code class="descname">dna_sequence_to_regexpr</code><span class="sig-paren">(</span><em>sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#DnaNotationPattern.dna_sequence_to_regexpr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.DnaNotationPattern.dna_sequence_to_regexpr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a regular expression to find the pattern in a sequence.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dnachisel.SequencePattern.SequencePattern">
+<em class="property">class </em><code class="descclassname">dnachisel.SequencePattern.</code><code class="descname">SequencePattern</code><span class="sig-paren">(</span><em>expression</em>, <em>size=None</em>, <em>name=None</em>, <em>in_both_strands=True</em>, <em>use_lookahead=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#SequencePattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.SequencePattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pattern/ that will be looked for in a DNA sequence.</p>
+<p>Use this class for matching regular expression patterns, and
+DnaNotationPattern for matching explicit sequences or sequences using Ns
+etc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>expression</strong></p>
+<blockquote>
+<div><p>Any string or regular expression for matching ATGC nucleotides.
+Note that multi-nucleotides symbols such as “N” (for A-T-G-C), or “K”
+are not supported by this class, see DnaNotationPattern instead.</p>
+</div></blockquote>
+<p><strong>size</strong></p>
+<blockquote>
+<div><p>Size of the pattern, in number of characters (if none provided, the size
+of the <code class="docutils literal"><span class="pre">pattern</span></code> string is used).
+The <code class="docutils literal"><span class="pre">size</span></code> is used to determine the size of windows when performing
+local optimization and constraint solving.
+It can be important to provide the size when the
+<code class="docutils literal"><span class="pre">pattern</span></code> string provided represents a complex regular expression whose
+maximal matching size cannot be easily evaluated.</p>
+</div></blockquote>
+<p><strong>name</strong></p>
+<blockquote>
+<div><p>Name of the pattern (will be displayed e.g. when the pattern is printed)</p>
+</div></blockquote>
+<p><strong>in_both_strands</strong></p>
+<blockquote class="last">
+<div><p>Set to True (default) if the pattern should also be looked for on the
+reverse-complement of sequences.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="dnachisel.SequencePattern.SequencePattern.find_matches">
+<code class="descname">find_matches</code><span class="sig-paren">(</span><em>sequence</em>, <em>location=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#SequencePattern.find_matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.SequencePattern.find_matches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the locations where the sequence matches the expression.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sequence</strong></p>
+<blockquote>
+<div><p>A string of “ATGC…”</p>
+</div></blockquote>
+<p><strong>location</strong></p>
+<blockquote>
+<div><p>Location indicating a segment to which to restrict
+the search. Only patterns entirely included in the segment will be
+returned</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">matches</p>
+<blockquote class="last">
+<div><p>A list of the locations of matches, of the form
+<code class="docutils literal"><span class="pre">[(start1,</span> <span class="pre">end1),</span> <span class="pre">(start2,</span> <span class="pre">end2),...]</span></code>.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.SequencePattern.enzyme_pattern">
+<code class="descclassname">dnachisel.SequencePattern.</code><code class="descname">enzyme_pattern</code><span class="sig-paren">(</span><em>enzyme_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#enzyme_pattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.enzyme_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a DnaNotationPattern with the sequence of a homopolymer.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pattern</span> <span class="o">=</span> <span class="n">enzyme_pattern</span><span class="p">(</span><span class="s2">&quot;BsaI&quot;</span><span class="p">)</span> <span class="c1"># returns DnaNotationPattern(&quot;GGTCTC&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">constraint</span> <span class="o">=</span> <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.SequencePattern.homopolymer_pattern">
+<code class="descclassname">dnachisel.SequencePattern.</code><code class="descname">homopolymer_pattern</code><span class="sig-paren">(</span><em>nucleotides</em>, <em>number</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#homopolymer_pattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.homopolymer_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a DnaNotationPattern with the sequence of a homopolymer.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">homopolymer</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="c1"># returns DnaNotationPattern(&quot;AAAAAA&quot;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.SequencePattern.repeated_kmers">
+<code class="descclassname">dnachisel.SequencePattern.</code><code class="descname">repeated_kmers</code><span class="sig-paren">(</span><em>kmer_size</em>, <em>n_repeats</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#repeated_kmers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.repeated_kmers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a SequencePattern matching all k-mers repeated n times.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pattern</span> <span class="o">=</span> <span class="n">repeated_kmers</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="c1"># Result will match e.g. ACACACACAC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">constraint</span> <span class="o">=</span> <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="reports.html" class="btn btn-neutral float-right" title="Reports" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ref.html" class="btn btn-neutral" title="DnaChisel Reference manual" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

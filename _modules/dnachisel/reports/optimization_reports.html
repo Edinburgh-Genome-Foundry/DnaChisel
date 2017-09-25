@@ -1,0 +1,588 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dnachisel.reports.optimization_reports &mdash; DnaChisel 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/main.css" type="text/css" />
+  
+    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="DnaChisel 0.1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DnaChisel
+          
+
+          
+            
+            <img src="../../../_static/html_logo.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">DnaChisel</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ref/ref.html">DnaChisel Reference manual</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DnaChisel</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>dnachisel.reports.optimization_reports</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dnachisel.reports.optimization_reports</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Methods to generate optimization reports.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">textwrap</span>
+
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">SeqIO</span>
+
+<span class="kn">import</span> <span class="nn">jinja2</span>
+<span class="kn">import</span> <span class="nn">weasyprint</span>
+<span class="kn">import</span> <span class="nn">flametree</span>
+
+<span class="kn">from</span> <span class="nn">..biotools</span> <span class="k">import</span> <span class="p">(</span><span class="n">sequence_to_biopython_record</span><span class="p">,</span> <span class="n">crop_record</span><span class="p">,</span>
+                        <span class="n">find_specification_in_feature</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..version</span> <span class="k">import</span> <span class="n">__version__</span>
+<span class="kn">from</span> <span class="nn">..DnaOptimizationProblem</span> <span class="k">import</span> <span class="p">(</span><span class="n">DnaOptimizationProblem</span><span class="p">,</span> <span class="n">NoSolutionError</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.backends.backend_pdf</span> <span class="k">import</span> <span class="n">PdfPages</span>
+    <span class="n">MATPLOTLIB_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="kn">from</span> <span class="nn">dna_features_viewer</span> <span class="k">import</span> <span class="n">BiopythonTranslator</span>
+    <span class="n">DFV_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="k">class</span> <span class="nc">BiopythonTranslator</span><span class="p">:</span>
+        <span class="s2">&quot;Class unavailable. Install DNA Features Viewer.&quot;</span>
+        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;BiopythonTranslator unavailable. Install &quot;</span>
+                              <span class="s2">&quot;DNA Features Viewer.&quot;</span><span class="p">)</span>
+
+<span class="n">THIS_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+<span class="n">TEMPLATES_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">THIS_DIR</span><span class="p">,</span> <span class="s2">&quot;templates&quot;</span><span class="p">)</span>
+<span class="n">TITLE_FONTDICT</span> <span class="o">=</span> <span class="n">fontdict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+
+
+
+
+
+<div class="viewcode-block" id="SpecAnnotationsTranslator"><a class="viewcode-back" href="../../../ref/reports.html#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator">[docs]</a><span class="k">class</span> <span class="nc">SpecAnnotationsTranslator</span><span class="p">(</span><span class="n">BiopythonTranslator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Translator of DnaChisel feature-constraints for DNA Features Viewer&quot;&quot;&quot;</span>
+
+    <span class="n">feature_prefixes_colors</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;@&quot;</span><span class="p">:</span> <span class="s2">&quot;#ce5454&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;~&quot;</span><span class="p">:</span> <span class="s2">&quot;#e5be54&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;#&quot;</span><span class="p">:</span> <span class="s2">&quot;#8edfff&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;!&quot;</span><span class="p">:</span> <span class="s2">&quot;#fcff75&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+
+    <span class="k">def</span> <span class="nf">compute_feature_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">color</span>
+
+        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;misc_feature&quot;</span><span class="p">:</span>
+            <span class="n">specification</span> <span class="o">=</span> <span class="n">find_specification_in_feature</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">specification</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;#f4df42&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_prefixes_colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">specification</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                        <span class="s2">&quot;#f4df42&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;#eeeafa&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compute_feature_label</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+        <span class="n">is_edit</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_edit&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;true&quot;</span> <span class="ow">in</span> <span class="p">[</span><span class="n">is_edit</span><span class="p">,</span> <span class="n">is_edit</span><span class="p">[</span><span class="mi">0</span><span class="p">]]:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">default</span> <span class="o">=</span> <span class="n">BiopythonTranslator</span><span class="o">.</span><span class="n">compute_feature_label</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s2">&quot;misc_feature&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">default</span>
+        <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="s2">&quot;misc_feature&quot;</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">label</span></div>
+
+<div class="viewcode-block" id="optimization_with_report"><a class="viewcode-back" href="../../../ref/reports.html#dnachisel.reports.optimization_reports.optimization_with_report">[docs]</a><span class="k">def</span> <span class="nf">optimization_with_report</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">record</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">project_name</span><span class="o">=</span><span class="s2">&quot;unnamed&quot;</span><span class="p">,</span>
+                             <span class="n">specifications_dict</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span>
+                             <span class="o">**</span><span class="n">solver_parameters</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Optimize a sequence and write a multi-file report.</span>
+
+<span class="sd">    The report&#39;s content may vary depending on the success of the optimization</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    target</span>
+<span class="sd">      Either a path to a folder that will containt the report, or a path to</span>
+<span class="sd">      a zip archive, or &quot;@memory&quot; to return raw data of a zip archive</span>
+<span class="sd">      containing the report.</span>
+
+<span class="sd">    problem</span>
+<span class="sd">      A DnaOptimizationProblem. A ``record`` can be provided instead</span>
+
+<span class="sd">    record</span>
+<span class="sd">      Either a Biopython record or the path to a Genbank file, provided to</span>
+<span class="sd">      serve as a problem definition. The record should have specifications</span>
+<span class="sd">      starting with @ or ~ as explained in the documentation.</span>
+
+<span class="sd">    project_name</span>
+<span class="sd">      Project name to write on PDF reports</span>
+
+<span class="sd">    specifications_dict</span>
+<span class="sd">      a dictionnary {&#39;@SpecName&#39;: SpecClass} allowing the parser to map</span>
+<span class="sd">      specifications found in annotations to implemented specifications</span>
+<span class="sd">      classes. By default, the dictionnary contains the built-in objectives</span>
+<span class="sd">      of DNA chisel, but an extended dictionary can be provided to support</span>
+<span class="sd">      custom specifications.</span>
+
+<span class="sd">    **solver_parameters</span>
+<span class="sd">      Extra keyword arguments passed to ``problem.resolve_constraints()``</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (success, message, zip_data)</span>
+<span class="sd">      Triplet where success is True/False, message is a one-line string</span>
+<span class="sd">      summary indication whether some clash was found, or some solution, or</span>
+<span class="sd">      maybe no solution was found because the random searches were too short</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">problem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="o">.</span><span class="n">from_record</span><span class="p">(</span>
+            <span class="n">record</span><span class="p">,</span> <span class="n">specifications_dict</span><span class="o">=</span><span class="n">specifications_dict</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">solver_parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">problem</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">problem</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Solving constraints&quot;</span><span class="p">)</span>
+        <span class="n">problem</span><span class="o">.</span><span class="n">resolve_constraints</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">NoSolutionError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="n">problem</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;No solution found: making report&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">write_no_solution_report</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+        <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;No solution found in zone [</span><span class="si">%d</span><span class="s2">, </span><span class="si">%d</span><span class="s2">]: </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span>
+                   <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">data</span>
+
+    <span class="n">problem</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Now optimizing the sequence&quot;</span><span class="p">)</span>
+    <span class="n">problem</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+    <span class="n">problem</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Success ! Generating report.&quot;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">write_optimization_report</span><span class="p">(</span>
+        <span class="n">target</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="n">project_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;Optimization successful.&quot;</span><span class="p">,</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="write_no_solution_report"><a class="viewcode-back" href="../../../ref/reports.html#dnachisel.reports.optimization_reports.write_no_solution_report">[docs]</a><span class="k">def</span> <span class="nf">write_no_solution_report</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write a report on incompatibility found in the problem&#39;s constraints.</span>
+
+<span class="sd">    The report comprises a PDF of plots of the sequence (global constraints,</span>
+<span class="sd">    local constraints around the problem) and an annotated genbank.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    target</span>
+<span class="sd">      Either a path to a folder, or a path to a zip archive, or &quot;@memory&quot; to</span>
+<span class="sd">      return raw data of a zip archive containing the report.</span>
+
+<span class="sd">    problem</span>
+<span class="sd">      A DnaOptimizationProblem</span>
+
+<span class="sd">    error</span>
+<span class="sd">      A NoSolutionError (carries a message and a location)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">flametree</span><span class="o">.</span><span class="n">file_tree</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">translator</span> <span class="o">=</span> <span class="n">SpecAnnotationsTranslator</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">PdfPages</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s2">&quot;plots.pdf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;wb&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">pdf_io</span><span class="p">:</span>
+
+        <span class="c1"># PLOT GLOBAL LOCATION OF ERROR</span>
+
+        <span class="n">record</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">to_record</span><span class="p">()</span>
+        <span class="n">translator</span> <span class="o">=</span> <span class="n">SpecAnnotationsTranslator</span><span class="p">()</span>
+        <span class="n">graphical_record</span> <span class="o">=</span> <span class="n">translator</span><span class="o">.</span><span class="n">translate_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+        <span class="n">ax</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">graphical_record</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figure_width</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">([</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">],</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1000</span><span class="p">,</span>
+                        <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;#ffeeee&#39;</span><span class="p">)</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">textwrap</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span>
+            <span class="s2">&quot;No solution found in zone [</span><span class="si">%d</span><span class="s2">, </span><span class="si">%d</span><span class="s2">]: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
+            <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)),</span> <span class="n">width</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="n">TITLE_FONTDICT</span><span class="p">)</span>
+        <span class="n">pdf_io</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
+
+        <span class="c1"># PLOT LOCAL CONSTRAINTS BREACHES</span>
+
+        <span class="n">evals</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">problem</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">()</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">problem</span><span class="o">.</span><span class="n">to_record</span><span class="p">(</span>
+            <span class="n">with_original_objective_features</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">with_constraints</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">with_objectives</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">+=</span> <span class="n">evals</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;passing&#39;</span><span class="p">)</span> \
+                                <span class="o">.</span><span class="n">success_and_failures_as_features</span><span class="p">()</span>
+        <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">+=</span> <span class="n">evals</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;failing&#39;</span><span class="p">)</span> \
+                                <span class="o">.</span><span class="n">locations_as_features</span><span class="p">(</span><span class="n">label_prefix</span><span class="o">=</span><span class="s2">&quot;BREACH&quot;</span><span class="p">)</span>
+        <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span><span class="o">+</span><span class="mi">4</span>
+        <span class="n">local_record</span> <span class="o">=</span> <span class="n">crop_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+        <span class="n">graphical_record</span> <span class="o">=</span> <span class="n">translator</span><span class="o">.</span><span class="n">translate_record</span><span class="p">(</span><span class="n">local_record</span><span class="p">)</span>
+        <span class="n">ax</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">graphical_record</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figure_width</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Local constraints breaches in [</span><span class="si">%d</span><span class="s2">, </span><span class="si">%d</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="o">+</span>
+                     <span class="s2">&quot;     (green = passing constraints)&quot;</span><span class="p">,</span>
+                     <span class="n">fontdict</span><span class="o">=</span><span class="n">TITLE_FONTDICT</span><span class="p">)</span>
+        <span class="n">pdf_io</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
+
+        <span class="c1"># WRITE GENBANK</span>
+
+        <span class="n">record</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">to_record</span><span class="p">(</span><span class="n">with_original_objective_features</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                   <span class="n">with_constraints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                   <span class="n">with_objectives</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">evals</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">()</span>
+        <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">+=</span> <span class="n">evals</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;passing&#39;</span><span class="p">)</span> \
+                                <span class="o">.</span><span class="n">success_and_failures_as_features</span><span class="p">()</span>
+        <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">+=</span> <span class="n">evals</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;failing&#39;</span><span class="p">)</span> \
+                                <span class="o">.</span><span class="n">locations_as_features</span><span class="p">(</span><span class="n">label_prefix</span><span class="o">=</span><span class="s2">&quot;BREACH&quot;</span><span class="p">)</span>
+        <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">root</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s2">&quot;constraints breaches.gb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;genbank&quot;</span><span class="p">)</span>
+    <span class="n">root</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s1">&#39;logs.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">dump_logs</span><span class="p">())</span>
+
+    <span class="c1"># returns zip data if target == &#39;@memory&#39;</span>
+    <span class="k">return</span> <span class="n">root</span><span class="o">.</span><span class="n">_close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="write_optimization_report"><a class="viewcode-back" href="../../../ref/reports.html#dnachisel.reports.optimization_reports.write_optimization_report">[docs]</a><span class="k">def</span> <span class="nf">write_optimization_report</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="s2">&quot;unnammed&quot;</span><span class="p">,</span>
+                              <span class="n">constraints_evaluations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">objectives_evaluations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">figure_width</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_features_in_plots</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write an optimization report with a PDF summary, plots, and genbanks.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">constraints_evaluations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">constraints_evaluations</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">objectives_evaluations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">objectives_evaluations</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">objectives_evaluations</span><span class="p">()</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">flametree</span><span class="o">.</span><span class="n">file_tree</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">translator</span> <span class="o">=</span> <span class="n">SpecAnnotationsTranslator</span><span class="p">()</span>
+    <span class="c1"># CREATE FIGURES AND GENBANKS</span>
+
+    <span class="k">with</span> <span class="n">PdfPages</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s2">&quot;before_after.pdf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;wb&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">pdf_io</span><span class="p">:</span>
+
+        <span class="n">figures_data</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;Before&quot;</span><span class="p">,</span>
+                <span class="n">sequence_to_biopython_record</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence_before</span><span class="p">),</span>
+                <span class="n">problem</span><span class="o">.</span><span class="n">constraints_before</span><span class="p">,</span>
+                <span class="n">problem</span><span class="o">.</span><span class="n">objectives_before</span><span class="p">,</span>
+                <span class="p">[]</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;After&quot;</span><span class="p">,</span>
+                <span class="n">sequence_to_biopython_record</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence_before</span><span class="p">),</span>
+                <span class="n">constraints_evaluations</span><span class="p">,</span>
+                <span class="n">objectives_evaluations</span><span class="p">,</span>
+                <span class="n">problem</span><span class="o">.</span><span class="n">sequence_edits_as_features</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="n">plot_height</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="n">constraints</span><span class="p">,</span> <span class="n">objectives</span><span class="p">,</span> <span class="n">edits</span><span class="p">)</span> <span class="ow">in</span> <span class="n">figures_data</span><span class="p">:</span>
+
+            <span class="n">full_title</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">{title}</span><span class="s2">:        </span><span class="si">{nfailing}</span><span class="s2"> constraints failing (in red)&quot;</span>
+                <span class="s2">&quot;        Total Score: </span><span class="si">{score:.01E}</span><span class="s2"> </span><span class="si">{bars}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="n">objectives</span><span class="o">.</span><span class="n">scores_sum</span><span class="p">(),</span>
+                <span class="n">nfailing</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">constraints</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&quot;failing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">evaluations</span><span class="p">),</span>
+                <span class="n">bars</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="p">(</span><span class="n">title</span> <span class="o">==</span> <span class="s2">&quot;Before&quot;</span><span class="p">)</span> <span class="k">else</span>
+                <span class="s2">&quot;       (bars indicate edits)&quot;</span>
+            <span class="p">)</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">title</span> <span class="o">==</span> <span class="s2">&quot;After&quot;</span><span class="p">:</span>
+                <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">+=</span> <span class="n">edits</span>
+                <span class="n">graphical_record</span> <span class="o">=</span> <span class="n">translator</span><span class="o">.</span><span class="n">translate_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+                <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">figure_width</span><span class="p">,</span> <span class="n">plot_height</span><span class="p">))</span>
+                <span class="n">graphical_record</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">level_offset</span><span class="o">=-</span><span class="mf">0.3</span><span class="p">)</span>
+                <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">+=</span> <span class="n">constraints</span><span class="o">.</span><span class="n">success_and_failures_as_features</span><span class="p">()</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">+=</span> <span class="n">objectives</span><span class="o">.</span><span class="n">success_and_failures_as_features</span><span class="p">()</span>
+
+            <span class="n">graphical_record</span> <span class="o">=</span> <span class="n">translator</span><span class="o">.</span><span class="n">translate_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+            <span class="n">ax</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">graphical_record</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">figure_width</span><span class="o">=</span><span class="n">figure_width</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">full_title</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="n">TITLE_FONTDICT</span><span class="p">)</span>
+            <span class="n">plot_height</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">pdf_io</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
+
+            <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">+=</span> <span class="n">edits</span>
+            <span class="n">breaches_locations</span> <span class="o">=</span> \
+                <span class="n">constraints</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&quot;failing&quot;</span><span class="p">)</span> \
+                           <span class="o">.</span><span class="n">locations_as_features</span><span class="p">(</span><span class="n">label_prefix</span><span class="o">=</span><span class="s2">&quot;Breach from&quot;</span><span class="p">,</span>
+                                                  <span class="n">merge_overlapping</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">+=</span> <span class="n">breaches_locations</span>
+
+            <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">root</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;.gb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;genbank&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">breaches_locations</span> <span class="o">!=</span> <span class="p">[]:</span>
+                <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">breaches_locations</span>
+                <span class="n">graphical_record</span> <span class="o">=</span> <span class="n">translator</span><span class="o">.</span><span class="n">translate_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">graphical_record</span><span class="o">.</span><span class="n">features</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_features_in_plots</span><span class="p">:</span>
+                    <span class="n">features</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">graphical_record</span><span class="o">.</span><span class="n">features</span><span class="p">,</span>
+                                      <span class="n">key</span><span class="o">=</span> <span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">start</span> <span class="o">-</span> <span class="n">f</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+                    <span class="n">new_ft</span> <span class="o">=</span> <span class="n">features</span><span class="p">[:</span><span class="n">max_features_in_plots</span><span class="p">]</span>
+                    <span class="n">graphical_record</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">new_ft</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;(only </span><span class="si">%d</span><span class="s2"> features shown)&quot;</span> <span class="o">%</span> \
+                              <span class="n">max_features_in_plots</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="n">ax</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">graphical_record</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figure_width</span><span class="o">=</span><span class="n">figure_width</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span> <span class="o">+</span> <span class="s2">&quot;: Constraints breaches locations&quot;</span>
+                             <span class="o">+</span> <span class="n">message</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="n">TITLE_FONTDICT</span><span class="p">)</span>
+                <span class="n">pdf_io</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
+
+    <span class="c1"># CREATE PDF REPORT</span>
+
+    <span class="n">jinja_env</span> <span class="o">=</span> <span class="n">jinja2</span><span class="o">.</span><span class="n">Environment</span><span class="p">()</span>
+    <span class="n">jinja_env</span><span class="o">.</span><span class="n">globals</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">zip</span><span class="o">=</span><span class="nb">zip</span><span class="p">,</span> <span class="nb">len</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
+    <span class="n">template_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">TEMPLATES_DIR</span><span class="p">,</span> <span class="s2">&quot;optimization_report.html&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">template_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">REPORT_TEMPLATE</span> <span class="o">=</span> <span class="n">jinja_env</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+    <span class="n">html</span> <span class="o">=</span> <span class="n">REPORT_TEMPLATE</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+        <span class="n">dnachisel_version</span><span class="o">=</span><span class="n">__version__</span><span class="p">,</span>
+        <span class="n">project_name</span><span class="o">=</span><span class="s2">&quot;bla&quot;</span><span class="p">,</span>
+        <span class="n">problem</span><span class="o">=</span><span class="n">problem</span><span class="p">,</span>
+        <span class="n">outcome</span><span class="o">=</span><span class="s2">&quot;SUCCESS&quot;</span> <span class="k">if</span> <span class="n">constraints_evaluations</span><span class="o">.</span><span class="n">all_evaluations_pass</span><span class="p">()</span>
+                <span class="k">else</span> <span class="s2">&quot;FAIL&quot;</span><span class="p">,</span>
+        <span class="n">constraints_after</span><span class="o">=</span><span class="n">constraints_evaluations</span><span class="p">,</span>
+        <span class="n">objectives_after</span><span class="o">=</span><span class="n">objectives_evaluations</span><span class="p">,</span>
+        <span class="n">edits</span><span class="o">=</span><span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">edits</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">weasy_html</span> <span class="o">=</span> <span class="n">weasyprint</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="n">html</span><span class="p">,</span>  <span class="n">base_url</span><span class="o">=</span><span class="n">TEMPLATES_DIR</span><span class="p">)</span>
+    <span class="n">weasy_html</span><span class="o">.</span><span class="n">write_pdf</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s2">&quot;Report.pdf&quot;</span><span class="p">))</span>
+
+
+    <span class="n">problem</span><span class="o">.</span><span class="n">to_record</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s2">&quot;final_sequence.gb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">),</span>
+                      <span class="n">with_constraints</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                      <span class="n">with_objectives</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># returns zip data if target == &#39;@memory&#39;</span>
+    <span class="k">return</span> <span class="n">root</span><span class="o">.</span><span class="n">_close</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

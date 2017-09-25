@@ -1,0 +1,849 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dnachisel.DnaOptimizationProblem &mdash; DnaChisel 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/main.css" type="text/css" />
+  
+    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="DnaChisel 0.1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> DnaChisel
+          
+
+          
+            
+            <img src="../../_static/html_logo.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">DnaChisel</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ref/ref.html">DnaChisel Reference manual</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DnaChisel</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>dnachisel.DnaOptimizationProblem</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dnachisel.DnaOptimizationProblem</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Define the DnaOptimizationProblem class.</span>
+
+<span class="sd">DnaOptimizationProblem is where the whole problem is defined: sequence,</span>
+<span class="sd">constraints, objectives.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="k">import</span> <span class="n">SeqRecord</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">SeqIO</span>
+
+<span class="kn">from</span> <span class="nn">.biotools.biotools</span> <span class="k">import</span> <span class="p">(</span><span class="n">sequence_to_biopython_record</span><span class="p">,</span>
+                                <span class="n">find_specification_in_feature</span><span class="p">,</span>
+                                <span class="n">sequences_differences_segments</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.Specification</span> <span class="k">import</span> <span class="n">Specification</span>
+<span class="kn">from</span> <span class="nn">.SpecEvaluation</span> <span class="k">import</span> <span class="p">(</span><span class="n">ProblemObjectivesEvaluations</span><span class="p">,</span>
+                             <span class="n">ProblemConstraintsEvaluations</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.Location</span> <span class="k">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">.MutationSpace</span> <span class="k">import</span> <span class="n">MutationSpace</span>
+<span class="kn">from</span> <span class="nn">proglog</span> <span class="k">import</span> <span class="n">TqdmProgressBarLogger</span><span class="p">,</span> <span class="n">ProgressBarLogger</span>
+
+<span class="n">_default_bars</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;objective&#39;</span><span class="p">,</span> <span class="s1">&#39;constraint&#39;</span><span class="p">,</span> <span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="s1">&#39;mutation&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DnaOptimizationProgressBar</span><span class="p">(</span><span class="n">TqdmProgressBarLogger</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bars</span><span class="o">=</span><span class="n">_default_bars</span><span class="p">,</span> <span class="n">notebook</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
+        <span class="n">ignored_bars</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">_default_bars</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">bars</span><span class="p">)</span>
+        <span class="n">TqdmProgressBarLogger</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bars</span><span class="o">=</span><span class="n">bars</span><span class="p">,</span> <span class="n">notebook</span><span class="o">=</span><span class="n">notebook</span><span class="p">,</span>
+                                       <span class="n">ignored_bars</span><span class="o">=</span><span class="n">ignored_bars</span><span class="p">)</span>
+
+<span class="n">DEFAULT_SPECIFICATIONS_DICT</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># completed at library initialization</span>
+
+
+<span class="k">class</span> <span class="nc">NoSolutionError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Exception returned when a DnaOptimizationProblem aborts.</span>
+<span class="sd">    This means that the constraints are found to be unsatisfiable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">constraint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize.&quot;&quot;&quot;</span>
+        <span class="ne">Exception</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">problem</span> <span class="o">=</span> <span class="n">problem</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constraint</span> <span class="o">=</span> <span class="n">constraint</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
+
+<div class="viewcode-block" id="DnaOptimizationProblem"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem">[docs]</a><span class="k">class</span> <span class="nc">DnaOptimizationProblem</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Problem specifications: sequence, constraints, optimization objectives.</span>
+
+<span class="sd">    The original constraints, objectives, and original sequence of the problem</span>
+<span class="sd">    are stored in the DNA Canvas. This class also has methods to display</span>
+<span class="sd">    reports on the constraints and objectives, as well as solving the</span>
+<span class="sd">    constraints and objectives.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; from dnachisel import *</span>
+<span class="sd">    &gt;&gt;&gt; canvas = DnaOptimizationProblem(</span>
+<span class="sd">    &gt;&gt;&gt;     sequence = &quot;ATGCGTGTGTGC...&quot;,</span>
+<span class="sd">    &gt;&gt;&gt;     constraints = [constraint1, constraint2, ...],</span>
+<span class="sd">    &gt;&gt;&gt;     objectives = [objective1, objective2, ...]</span>
+<span class="sd">    &gt;&gt;&gt; )</span>
+<span class="sd">    &gt;&gt;&gt; canvas.resolve_constraints_one_by_one()</span>
+<span class="sd">    &gt;&gt;&gt; canvas.maximize_all_objectives_one_by_one()</span>
+<span class="sd">    &gt;&gt;&gt; print(canvas.constraints_text_summary())</span>
+<span class="sd">    &gt;&gt;&gt; print(canvas.objectives_summary())</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    sequence</span>
+<span class="sd">      A string of ATGC characters (they must be upper case!), e.g. &quot;ATTGTGTA&quot;</span>
+
+<span class="sd">    constraints</span>
+<span class="sd">      A list of objects of type ``Specification``.</span>
+
+<span class="sd">    objectives</span>
+<span class="sd">      A list of objects of type ``Specification`` specifying what must be</span>
+<span class="sd">      optimized in the problem. Note that each objective has a float ``boost``</span>
+<span class="sd">      parameter. The larger the boost, the more the objective is taken into</span>
+<span class="sd">      account during the optimization.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    sequence</span>
+<span class="sd">      The sequence</span>
+
+<span class="sd">    constraints</span>
+<span class="sd">      The list of constraints</span>
+
+<span class="sd">    objectives</span>
+<span class="sd">      The list of objectives</span>
+
+<span class="sd">    possible_mutations</span>
+<span class="sd">      A dictionnary indicating the possible mutations. Note that this is only</span>
+<span class="sd">      computed the first time that canvas.possible_mutations is invoked.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    The dictionnary ``self.possible_mutations`` is of the form</span>
+<span class="sd">    ``{location1 : list1, location2: list2...}``</span>
+<span class="sd">    where ``location`` is either a single index (e.g. 10) indicating the</span>
+<span class="sd">    position of a nucleotide to be muted, or a couple ``(start, end)``</span>
+<span class="sd">    indicating a whole segment whose sub-sequence should be replaced.</span>
+<span class="sd">    The ``list`` s are lists of possible sequences to replace each location,</span>
+<span class="sd">    e.g. for the mutation of a whole codon ``(3,6): [&quot;ATT&quot;, &quot;ACT&quot;, &quot;AGT&quot;]``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">randomization_threshold</span> <span class="o">=</span> <span class="mi">10000</span>
+    <span class="n">max_random_iters</span> <span class="o">=</span> <span class="mi">1000</span>
+    <span class="n">n_mutations</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">local_extensions</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">objectives</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">logger</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="n">mutation_space</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">SeqRecord</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">record</span> <span class="o">=</span> <span class="n">sequence</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sequence</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">record</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">sequence</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constraints</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">constraints</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">constraints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">objectives</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">objectives</span>
+
+        <span class="k">if</span> <span class="n">logger</span> <span class="o">==</span> <span class="s1">&#39;bar&#39;</span><span class="p">:</span>
+            <span class="n">logger</span> <span class="o">=</span> <span class="n">DnaOptimizationProgressBar</span><span class="p">(</span>
+                <span class="n">bars</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;objective&#39;</span><span class="p">,</span> <span class="s1">&#39;constraint&#39;</span><span class="p">,</span> <span class="s1">&#39;location&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span> <span class="o">=</span> <span class="n">ProgressBarLogger</span><span class="p">()</span> <span class="c1"># silent logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mutation_space</span> <span class="o">=</span> <span class="n">mutation_space</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+
+<div class="viewcode-block" id="DnaOptimizationProblem.initialize"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Variables initialization before solving.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">constraint</span><span class="o">.</span><span class="n">initialize_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="s2">&quot;constraint&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">objective</span><span class="o">.</span><span class="n">initialize_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="s2">&quot;objective&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">objective</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span>
+        <span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sequence_before</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_constraints_before</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_objectives_before</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutation_space</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mutation_space</span> <span class="o">=</span> <span class="n">MutationSpace</span><span class="o">.</span><span class="n">from_optimization_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">constrain_sequence</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">constraints_before</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_constraints_before</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_before</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_constraints_before</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">sequence</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_constraints_before</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">objectives_before</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objectives_before</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_before</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_objectives_before</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives_evaluations</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">sequence</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objectives_before</span>
+
+<div class="viewcode-block" id="DnaOptimizationProblem.constraints_evaluations"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.constraints_evaluations">[docs]</a>    <span class="k">def</span> <span class="nf">constraints_evaluations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of the evaluations of each constraint of the canvas.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ProblemConstraintsEvaluations</span><span class="o">.</span><span class="n">from_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DnaOptimizationProblem.all_constraints_pass"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.all_constraints_pass">[docs]</a>    <span class="k">def</span> <span class="nf">all_constraints_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True iff the current problem sequence passes all constraints.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">()</span><span class="o">.</span><span class="n">all_evaluations_pass</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">constraints_text_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">failed_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">evals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">failed_only</span><span class="p">:</span>
+            <span class="n">evals</span> <span class="o">=</span> <span class="n">evals</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&quot;failing&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">evals</span><span class="o">.</span><span class="n">to_text</span><span class="p">()</span>
+
+<div class="viewcode-block" id="DnaOptimizationProblem.objectives_evaluations"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.objectives_evaluations">[docs]</a>    <span class="k">def</span> <span class="nf">objectives_evaluations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of the evaluation of each objective of the canvas&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ProblemObjectivesEvaluations</span><span class="o">.</span><span class="n">from_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">objective_scores_sum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives_evaluations</span><span class="p">()</span><span class="o">.</span><span class="n">scores_sum</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">objectives_text_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives_evaluations</span><span class="p">()</span><span class="o">.</span><span class="n">to_text</span><span class="p">()</span>
+
+<div class="viewcode-block" id="DnaOptimizationProblem.resolve_constraints_by_exhaustive_search"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.resolve_constraints_by_exhaustive_search">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_constraints_by_exhaustive_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Solve all constraints by exploring the whole search space.</span>
+
+<span class="sd">        This method iterates over ``self.iter_mutations_space()`` (space of</span>
+<span class="sd">        all sequences that could be reached through successive mutations) and</span>
+<span class="sd">        stops when it finds a sequence which meets all the constraints of the</span>
+<span class="sd">        canvas.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sequence_before</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span>
+        <span class="n">all_variants</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">all_variants</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
+        <span class="n">space_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">space_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">mutation__total</span><span class="o">=</span><span class="n">space_size</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">variant</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">iter_bar</span><span class="p">(</span><span class="n">mutation</span><span class="o">=</span><span class="n">all_variants</span><span class="p">):</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">variant</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_constraints_pass</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">mutation__index</span><span class="o">=</span><span class="n">space_size</span><span class="p">)</span>
+                <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">sequence_before</span>
+        <span class="k">raise</span> <span class="n">NoSolutionError</span><span class="p">(</span>
+            <span class="s2">&quot;Exhaustive search failed to satisfy all constraints.&quot;</span><span class="p">,</span>
+            <span class="n">problem</span><span class="o">=</span><span class="bp">self</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DnaOptimizationProblem.resolve_constraints_by_random_mutations"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.resolve_constraints_by_random_mutations">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_constraints_by_random_mutations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Solve all constraints by successive sets of random mutations.</span>
+
+<span class="sd">        This method modifies the canvas sequence by applying a number</span>
+<span class="sd">        ``n_mutations`` of random mutations. The constraints are then evaluated</span>
+<span class="sd">        on the new sequence. If all constraints pass, the new sequence becomes</span>
+<span class="sd">        the canvas&#39;s new sequence.</span>
+<span class="sd">        If not all constraints pass, the sum of all scores from failing</span>
+<span class="sd">        constraints is considered. If this score is superior to the score of</span>
+<span class="sd">        the previous sequence, the new sequence becomes the canvas&#39;s new</span>
+<span class="sd">        sequence.</span>
+
+<span class="sd">        This operation is repeated `max_iter` times at most, after which</span>
+<span class="sd">        a ``NoSolutionError`` is thrown.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">evaluations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">()</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">score</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">evaluations</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">e</span><span class="o">.</span><span class="n">passes</span>
+        <span class="p">])</span>
+
+        <span class="n">iters</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">max_random_iters</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">iter_bar</span><span class="p">(</span><span class="n">mutation</span><span class="o">=</span><span class="n">iters</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">passes</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">evaluations</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">mutation__index</span><span class="o">=</span><span class="n">iters</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="n">previous_sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">apply_random_mutations</span><span class="p">(</span>
+                <span class="n">n_mutations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_mutations</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
+
+            <span class="n">evaluations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">()</span>
+            <span class="n">new_score</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span>
+                <span class="n">e</span><span class="o">.</span><span class="n">score</span>
+                <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">evaluations</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">e</span><span class="o">.</span><span class="n">passes</span>
+            <span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">new_score</span> <span class="o">&gt;</span> <span class="n">score</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="n">new_score</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">previous_sequence</span>
+        <span class="k">raise</span> <span class="n">NoSolutionError</span><span class="p">(</span>
+            <span class="s2">&quot;Random search hit max_iterations without finding a solution.&quot;</span><span class="p">,</span>
+            <span class="n">problem</span><span class="o">=</span><span class="bp">self</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DnaOptimizationProblem.resolve_constraints_locally"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.resolve_constraints_locally">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_constraints_locally</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Orient the local search towards a stochastic or exhaustive search.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">space_size</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">randomization_threshold</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">resolve_constraints_by_exhaustive_search</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">resolve_constraints_by_random_mutations</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DnaOptimizationProblem.resolve_constraint"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.resolve_constraint">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_constraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constraint</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Resolve a constraint through successive localizations.&quot;&quot;&quot;</span>
+        <span class="n">evaluation</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">evaluation</span><span class="o">.</span><span class="n">passes</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">locations</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">evaluation</span><span class="o">.</span><span class="n">locations</span><span class="p">)</span>
+        <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">iter_bar</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">locations</span><span class="p">,</span>
+                                        <span class="n">bar_message</span><span class="o">=</span><span class="k">lambda</span> <span class="n">loc</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">loc</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">location</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">iterator</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">extension</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_extensions</span><span class="p">:</span>
+                <span class="n">new_location</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">extended</span><span class="p">(</span><span class="n">extension</span><span class="p">)</span>
+                <span class="n">mutation_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">localized</span><span class="p">(</span><span class="n">new_location</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">mutation_space</span><span class="o">.</span><span class="n">space_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">NoSolutionError</span><span class="p">(</span>
+                       <span class="n">location</span><span class="o">=</span><span class="n">new_location</span><span class="p">,</span>
+                       <span class="n">problem</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                       <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Constraint breach in frozen region&#39;</span>
+                    <span class="p">)</span>
+                <span class="n">new_location</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="o">*</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">choices_span</span><span class="p">)</span>
+
+                <span class="c1"># This blocks solves the problem of overlapping breaches,</span>
+                <span class="c1"># which can make the local optimization impossible.</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">locations</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span>
+                   <span class="n">locations</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span><span class="n">new_location</span><span class="p">)):</span>
+                    <span class="n">this_local_constraint</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">localized</span><span class="p">(</span>
+                        <span class="n">new_location</span><span class="p">,</span> <span class="n">with_righthand</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">this_local_constraint</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">localized</span><span class="p">(</span><span class="n">new_location</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">this_local_constraint</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">passes</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">localized_constraints</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">_constraint</span><span class="o">.</span><span class="n">localized</span><span class="p">(</span><span class="n">new_location</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">_constraint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints</span>
+                    <span class="k">if</span> <span class="n">_constraint</span> <span class="o">!=</span> <span class="n">constraint</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">_constraint</span><span class="o">.</span><span class="n">enforced_by_nucleotide_restrictions</span>
+                <span class="p">]</span>
+                <span class="n">passing_localized_constraints</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">_constraint</span>
+                    <span class="k">for</span> <span class="n">_constraint</span> <span class="ow">in</span> <span class="n">localized_constraints</span>
+                    <span class="k">if</span> <span class="n">_constraint</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">passes</span>
+                <span class="p">]</span>
+                <span class="n">local_problem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span>
+                    <span class="n">sequence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span>
+                    <span class="n">constraints</span><span class="o">=</span><span class="p">([</span><span class="n">this_local_constraint</span><span class="p">]</span> <span class="o">+</span>
+                                 <span class="n">passing_localized_constraints</span><span class="p">),</span>
+                    <span class="n">mutation_space</span><span class="o">=</span><span class="n">mutation_space</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">problem</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                                  <span class="n">local_problem</span><span class="o">=</span><span class="n">local_problem</span><span class="p">,</span>
+                                  <span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">)</span>
+                <span class="n">local_problem</span><span class="o">.</span><span class="n">randomization_threshold</span> <span class="o">=</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">randomization_threshold</span>
+                <span class="n">local_problem</span><span class="o">.</span><span class="n">max_random_iters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_random_iters</span>
+                <span class="n">local_problem</span><span class="o">.</span><span class="n">n_mutations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_mutations</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">constraint</span><span class="p">,</span> <span class="s1">&#39;resolution_heuristic&#39;</span><span class="p">):</span>
+
+                        <span class="n">constraint</span><span class="o">.</span><span class="n">resolution_heuristic</span><span class="p">(</span><span class="n">local_problem</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">local_problem</span><span class="o">.</span><span class="n">resolve_constraints_locally</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">local_problem</span><span class="o">.</span><span class="n">sequence</span>
+                    <span class="k">break</span>
+                <span class="k">except</span> <span class="n">NoSolutionError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">extension</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_extensions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="n">error</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">new_location</span>
+                        <span class="n">error</span><span class="o">.</span><span class="n">constraint</span> <span class="o">=</span> <span class="n">constraint</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">location__index</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">locations</span><span class="p">),</span>
+                                    <span class="n">location__message</span><span class="o">=</span><span class="s1">&#39;Cold exit&#39;</span><span class="p">)</span>
+                        <span class="k">raise</span> <span class="n">error</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">continue</span></div>
+
+<div class="viewcode-block" id="DnaOptimizationProblem.resolve_constraints"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.resolve_constraints">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">final_check</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Solve a particular constraint using local, targeted searches.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        constraint</span>
+<span class="sd">          The ``Specification`` object for which the sequence should be solved</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">enforced_by_nucleotide_restrictions</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">constraints</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">constraints</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="o">-</span><span class="n">c</span><span class="o">.</span><span class="n">priority</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">iter_bar</span><span class="p">(</span><span class="n">constraint</span><span class="o">=</span><span class="n">constraints</span><span class="p">,</span>
+                                               <span class="n">bar_message</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">resolve_constraint</span><span class="p">(</span><span class="n">constraint</span><span class="o">=</span><span class="n">constraint</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">NoSolutionError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">constraint__index</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">constraints</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="n">error</span>
+        <span class="k">if</span> <span class="n">final_check</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">cst</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">cst</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">passes</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">NoSolutionError</span><span class="p">(</span>
+                        <span class="s1">&#39;The solving of all constraints failed to solve&#39;</span>
+                        <span class="s1">&#39; all constraints, constraint </span><span class="si">%s</span><span class="s1"> is&#39;</span>
+                        <span class="s1">&#39; still failing. This is an unintended behavior,&#39;</span>
+                        <span class="s1">&#39; likely due to a complex problem. Try running the&#39;</span>
+                        <span class="s1">&#39; solver on the same sequence again, or report the&#39;</span>
+                        <span class="s1">&#39; error to the maintainers&#39;</span> <span class="o">%</span> <span class="n">cst</span><span class="p">,</span>
+                        <span class="n">problem</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+
+    <span class="c1"># SPECIFICATIONS</span>
+
+<div class="viewcode-block" id="DnaOptimizationProblem.optimize_by_exhaustive_search"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.optimize_by_exhaustive_search">[docs]</a>    <span class="k">def</span> <span class="nf">optimize_by_exhaustive_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_constraints_pass</span><span class="p">():</span>
+            <span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">(</span><span class="n">failed_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NoSolutionError</span><span class="p">(</span>
+                <span class="n">summary</span> <span class="o">+</span>
+                <span class="s2">&quot;Optimization can only be done when all constraints are&quot;</span>
+                <span class="s2">&quot;verified.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">obj</span><span class="o">.</span><span class="n">best_possible_score</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span><span class="p">]):</span>
+            <span class="n">best_possible_score</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">obj</span><span class="o">.</span><span class="n">best_possible_score</span>
+                                       <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">best_possible_score</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">current_best_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective_scores_sum</span><span class="p">()</span>
+        <span class="n">current_best_sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span>
+        <span class="n">all_variants</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">all_variants</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
+        <span class="n">space_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">space_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">mutation__total</span><span class="o">=</span><span class="n">space_size</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">variant</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">iter_bar</span><span class="p">(</span><span class="n">mutation</span><span class="o">=</span><span class="n">all_variants</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">variant</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_constraints_pass</span><span class="p">():</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective_scores_sum</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="n">current_best_score</span><span class="p">:</span>
+                    <span class="n">current_best_score</span> <span class="o">=</span> <span class="n">score</span>
+                    <span class="n">current_best_sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span>
+                    <span class="k">if</span> <span class="p">((</span><span class="n">best_possible_score</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span>
+                            <span class="p">(</span><span class="n">current_best_score</span> <span class="o">&gt;=</span> <span class="n">best_possible_score</span><span class="p">)):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">mutation__index</span><span class="o">=</span><span class="n">space_size</span><span class="p">)</span>
+                        <span class="k">break</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_before</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">current_best_sequence</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_constraints_pass</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DnaOptimizationProblem.optimize_by_random_mutations"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.optimize_by_random_mutations">[docs]</a>    <span class="k">def</span> <span class="nf">optimize_by_random_mutations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_constraints_pass</span><span class="p">():</span>
+            <span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">summary</span> <span class="o">+</span> <span class="s2">&quot;Optimization can only be done when all&quot;</span>
+                             <span class="s2">&quot; constraints are verified&quot;</span><span class="p">)</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective_scores_sum</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">obj</span><span class="o">.</span><span class="n">best_possible_score</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span><span class="p">]):</span>
+            <span class="n">best_possible_score</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">obj</span><span class="o">.</span><span class="n">best_possible_score</span> <span class="o">*</span> <span class="n">obj</span><span class="o">.</span><span class="n">boost</span>
+                                       <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">best_possible_score</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">iters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_random_iters</span>
+        <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">iter_bar</span><span class="p">(</span><span class="n">mutation</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">iters</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">best_possible_score</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="p">(</span><span class="n">score</span> <span class="o">&gt;=</span> <span class="n">best_possible_score</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">mutation__index</span><span class="o">=</span><span class="n">iters</span><span class="p">)</span>
+                <span class="k">break</span>
+
+            <span class="n">previous_sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">apply_random_mutations</span><span class="p">(</span>
+                <span class="n">n_mutations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_mutations</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_constraints_pass</span><span class="p">():</span>
+                <span class="n">new_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective_scores_sum</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">new_score</span> <span class="o">&gt;</span> <span class="n">score</span><span class="p">:</span>
+                    <span class="n">score</span> <span class="o">=</span> <span class="n">new_score</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">previous_sequence</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">previous_sequence</span></div>
+        <span class="c1">#  assert self.all_constraints_pass()</span>
+
+    <span class="k">def</span> <span class="nf">optimize_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objective</span><span class="p">):</span>
+
+        <span class="n">evaluation</span> <span class="o">=</span> <span class="n">objective</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">locations</span> <span class="o">=</span> <span class="n">evaluation</span><span class="o">.</span><span class="n">locations</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">objective</span><span class="o">.</span><span class="n">best_possible_score</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="p">(</span><span class="n">evaluation</span><span class="o">.</span><span class="n">score</span> <span class="o">==</span> <span class="n">objective</span><span class="o">.</span><span class="n">best_possible_score</span><span class="p">)):</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">locations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="p">(</span><span class="s2">&quot;With </span><span class="si">%s</span><span class="s2">:&quot;</span> <span class="o">%</span> <span class="n">objective</span><span class="p">)</span> <span class="o">+</span>
+                <span class="s2">&quot;max_objective_by_localization requires either that&quot;</span>
+                <span class="s2">&quot; locations be provided or that the objective evaluation&quot;</span>
+                <span class="s2">&quot; returns locations.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">iter_bar</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">locations</span><span class="p">,</span>
+                                             <span class="n">bar_message</span><span class="o">=</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">l</span><span class="p">)):</span>
+            <span class="n">mutation_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">localized</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">mutation_space</span><span class="o">.</span><span class="n">space_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="o">*</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">choices_span</span><span class="p">)</span>
+            <span class="n">localized_constraints</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">_constraint</span><span class="o">.</span><span class="n">localized</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">_constraint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints</span>
+            <span class="p">]</span>
+            <span class="n">local_problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span>
+                <span class="n">sequence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span>
+                <span class="n">constraints</span><span class="o">=</span><span class="n">localized_constraints</span><span class="p">,</span>
+                <span class="n">mutation_space</span><span class="o">=</span><span class="n">mutation_space</span><span class="p">,</span>
+                <span class="n">objectives</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">_objective</span><span class="o">.</span><span class="n">localized</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">_objective</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">problem</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                              <span class="n">local_problem</span><span class="o">=</span><span class="n">local_problem</span><span class="p">,</span>
+                              <span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">)</span>
+            <span class="n">local_problem</span><span class="o">.</span><span class="n">randomization_threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">randomization_threshold</span>
+            <span class="n">local_problem</span><span class="o">.</span><span class="n">max_random_iters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_random_iters</span>
+            <span class="n">local_problem</span><span class="o">.</span><span class="n">n_mutations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_mutations</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="s1">&#39;optimization_heuristic&#39;</span><span class="p">):</span>
+                <span class="n">objective</span><span class="o">.</span><span class="n">optimization_heuristic</span><span class="p">(</span><span class="n">local_problem</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">space_size</span> <span class="o">=</span> <span class="n">local_problem</span><span class="o">.</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">space_size</span>
+                <span class="n">exhaustive_search</span> <span class="o">=</span> <span class="n">space_size</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">randomization_threshold</span>
+                <span class="k">if</span> <span class="n">exhaustive_search</span><span class="p">:</span>
+                    <span class="n">local_problem</span><span class="o">.</span><span class="n">optimize_by_exhaustive_search</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">local_problem</span><span class="o">.</span><span class="n">optimize_by_random_mutations</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">local_problem</span><span class="o">.</span><span class="n">sequence</span>
+
+<div class="viewcode-block" id="DnaOptimizationProblem.optimize"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Maximize the objective via local, targeted mutations.&quot;&quot;&quot;</span>
+
+        <span class="n">objectives</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">obj</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">obj</span><span class="o">.</span><span class="n">optimize_passively</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">objectives</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">for</span> <span class="n">objective</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">iter_bar</span><span class="p">(</span><span class="n">objective</span><span class="o">=</span><span class="n">objectives</span><span class="p">,</span>
+                                              <span class="n">bar_message</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimize_objective</span><span class="p">(</span><span class="n">objective</span><span class="o">=</span><span class="n">objective</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">specifications_dict</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;.fa&quot;</span><span class="p">,</span> <span class="s2">&quot;.fasta&quot;</span><span class="p">)):</span>
+                <span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">record</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;.gb&quot;</span><span class="p">,</span> <span class="s2">&quot;.gbk&quot;</span><span class="p">)):</span>
+                <span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s1">&#39;genbank&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Record is either a Biopython record or a &quot;</span>
+                                 <span class="s2">&quot;file path ending in .gb, .gbk, .fa, .fasta.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">specifications_dict</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+            <span class="n">specifications_dict</span> <span class="o">=</span> <span class="n">DEFAULT_SPECIFICATIONS_DICT</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">sequence</span><span class="o">=</span><span class="n">record</span><span class="p">,</span>
+            <span class="n">constraints</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">objectives</span><span class="o">=</span><span class="p">[]</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">feature</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s2">&quot;misc_feature&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">find_specification_in_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">role</span><span class="p">,</span> <span class="n">spec</span> <span class="o">=</span> <span class="n">Specification</span><span class="o">.</span><span class="n">from_biopython_feature</span><span class="p">(</span>
+                <span class="n">feature</span><span class="p">,</span> <span class="n">specifications_dict</span><span class="p">)</span>
+            <span class="n">parameters</span><span class="p">[</span><span class="n">role</span> <span class="o">+</span> <span class="s2">&quot;s&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span><span class="o">**</span><span class="n">parameters</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">features_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span>
+                  <span class="n">with_original_features</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                  <span class="n">with_original_spec_features</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">with_constraints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                  <span class="n">with_objectives</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                  <span class="n">with_sequence_edits</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">colors_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="n">sequence_to_biopython_record</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
+
+        <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">with_constraints</span><span class="p">:</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">+=</span> <span class="p">[</span>
+                <span class="n">cst</span><span class="o">.</span><span class="n">to_biopython_feature</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;constraint&quot;</span><span class="p">,</span>
+                                         <span class="n">feature_type</span><span class="o">=</span><span class="n">features_type</span><span class="p">,</span>
+                                         <span class="n">colors_dict</span><span class="o">=</span><span class="n">colors_dict</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">cst</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints</span>
+                <span class="k">if</span> <span class="n">cst</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="k">if</span> <span class="n">with_objectives</span><span class="p">:</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">+=</span> <span class="p">[</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">to_biopython_feature</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;objective&quot;</span><span class="p">,</span>
+                                         <span class="n">feature_type</span><span class="o">=</span><span class="n">features_type</span><span class="p">,</span>
+                                         <span class="n">colors_dict</span><span class="o">=</span><span class="n">colors_dict</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span>
+            <span class="p">]</span>
+        <span class="k">if</span> <span class="n">with_original_features</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">record</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">+=</span> <span class="p">[</span>
+                <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">record</span><span class="o">.</span><span class="n">features</span>
+                <span class="k">if</span> <span class="n">with_original_spec_features</span> <span class="ow">or</span>
+                <span class="ow">not</span> <span class="n">find_specification_in_feature</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="k">if</span> <span class="n">with_sequence_edits</span><span class="p">:</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_edits_as_features</span><span class="p">()</span>
+
+
+        <span class="k">if</span> <span class="n">filepath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;genbank&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">record</span>
+
+    <span class="k">def</span> <span class="nf">sequence_edits_as_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">):</span>
+
+        <span class="n">segments</span> <span class="o">=</span> <span class="n">sequences_differences_segments</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span>
+                                                  <span class="bp">self</span><span class="o">.</span><span class="n">sequence_before</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">Location</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span><span class="o">.</span><span class="n">to_biopython_feature</span><span class="p">(</span>
+                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;was &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_before</span><span class="p">[</span><span class="n">start</span><span class="p">:</span> <span class="n">end</span><span class="p">],</span>
+                <span class="n">is_edit</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="n">segments</span>
+        <span class="p">]</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

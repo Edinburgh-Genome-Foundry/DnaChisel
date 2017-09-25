@@ -1,0 +1,482 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Reports &mdash; DnaChisel 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/main.css" type="text/css" />
+  
+    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="DnaChisel 0.1.0 documentation" href="../index.html"/>
+        <link rel="up" title="DnaChisel Reference manual" href="ref.html"/>
+        <link rel="next" title="Biotools" href="biotools.html"/>
+        <link rel="prev" title="Core Classes" href="core_classes.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DnaChisel
+          
+
+          
+            
+            <img src="../_static/html_logo.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">DnaChisel</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ref.html">DnaChisel Reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core_classes.html">Core Classes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Reports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="biotools.html">Biotools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="builtin_specifications.html">Built-in Specifications</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DnaChisel</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="ref.html">DnaChisel Reference manual</a> &raquo;</li>
+        
+      <li>Reports</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/ref/reports.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="reports">
+<h1>Reports<a class="headerlink" href="#reports" title="Permalink to this headline">¶</a></h1>
+<script>mermaid.initialize({startOnLoad:true});</script><div align="center" class="mermaid align-center">
+            graph TD;
+   D[DnaOptimizationProblem] --&gt; o[optimization_with_report]
+   o --&gt;|constraints clash| N[write_no_solution_error]
+   o --&gt;|no constraints clash| W[write_optimization_report]
+        </div>
+        <span class="target" id="module-dnachisel.reports.optimization_reports"></span><p>Methods to generate optimization reports.</p>
+<dl class="class">
+<dt id="dnachisel.reports.optimization_reports.SpecAnnotationsTranslator">
+<em class="property">class </em><code class="descclassname">dnachisel.reports.optimization_reports.</code><code class="descname">SpecAnnotationsTranslator</code><span class="sig-paren">(</span><em>features_filters=()</em>, <em>features_properties=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#SpecAnnotationsTranslator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translator of DnaChisel feature-constraints for DNA Features Viewer</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.reports.optimization_reports.optimization_with_report">
+<code class="descclassname">dnachisel.reports.optimization_reports.</code><code class="descname">optimization_with_report</code><span class="sig-paren">(</span><em>target</em>, <em>problem=None</em>, <em>record=None</em>, <em>project_name='unnamed'</em>, <em>specifications_dict='default'</em>, <em>**solver_parameters</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#optimization_with_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.optimization_with_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optimize a sequence and write a multi-file report.</p>
+<p>The report’s content may vary depending on the success of the optimization</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>target</strong></p>
+<blockquote>
+<div><p>Either a path to a folder that will containt the report, or a path to
+a zip archive, or “&#64;memory” to return raw data of a zip archive
+containing the report.</p>
+</div></blockquote>
+<p><strong>problem</strong></p>
+<blockquote>
+<div><p>A DnaOptimizationProblem. A <code class="docutils literal"><span class="pre">record</span></code> can be provided instead</p>
+</div></blockquote>
+<p><strong>record</strong></p>
+<blockquote>
+<div><p>Either a Biopython record or the path to a Genbank file, provided to
+serve as a problem definition. The record should have specifications
+starting with &#64; or ~ as explained in the documentation.</p>
+</div></blockquote>
+<p><strong>project_name</strong></p>
+<blockquote>
+<div><p>Project name to write on PDF reports</p>
+</div></blockquote>
+<p><strong>specifications_dict</strong></p>
+<blockquote>
+<div><p>a dictionnary <a class="reference external" href="mailto:{'&#37;&#52;&#48;SpecName">{‘<span>&#64;</span>SpecName</a>’: SpecClass} allowing the parser to map
+specifications found in annotations to implemented specifications
+classes. By default, the dictionnary contains the built-in objectives
+of DNA chisel, but an extended dictionary can be provided to support
+custom specifications.</p>
+</div></blockquote>
+<p><strong>**solver_parameters</strong></p>
+<blockquote>
+<div><p>Extra keyword arguments passed to <code class="docutils literal"><span class="pre">problem.resolve_constraints()</span></code></p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">(success, message, zip_data)</p>
+<blockquote class="last">
+<div><p>Triplet where success is True/False, message is a one-line string
+summary indication whether some clash was found, or some solution, or
+maybe no solution was found because the random searches were too short</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.reports.optimization_reports.write_no_solution_report">
+<code class="descclassname">dnachisel.reports.optimization_reports.</code><code class="descname">write_no_solution_report</code><span class="sig-paren">(</span><em>target</em>, <em>problem</em>, <em>error</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#write_no_solution_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.write_no_solution_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a report on incompatibility found in the problem’s constraints.</p>
+<p>The report comprises a PDF of plots of the sequence (global constraints,
+local constraints around the problem) and an annotated genbank.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>target</strong></p>
+<blockquote>
+<div><p>Either a path to a folder, or a path to a zip archive, or “&#64;memory” to
+return raw data of a zip archive containing the report.</p>
+</div></blockquote>
+<p><strong>problem</strong></p>
+<blockquote>
+<div><p>A DnaOptimizationProblem</p>
+</div></blockquote>
+<p><strong>error</strong></p>
+<blockquote class="last">
+<div><p>A NoSolutionError (carries a message and a location)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.reports.optimization_reports.write_optimization_report">
+<code class="descclassname">dnachisel.reports.optimization_reports.</code><code class="descname">write_optimization_report</code><span class="sig-paren">(</span><em>target</em>, <em>problem</em>, <em>project_name='unnammed'</em>, <em>constraints_evaluations=None</em>, <em>objectives_evaluations=None</em>, <em>figure_width=20</em>, <em>max_features_in_plots=300</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#write_optimization_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.write_optimization_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an optimization report with a PDF summary, plots, and genbanks.</p>
+</dd></dl>
+
+<span class="target" id="module-dnachisel.reports.constraints_reports"></span><p>Misc. plotting and reporting methods, some of which are really arbitrary.</p>
+<dl class="function">
+<dt id="dnachisel.reports.constraints_reports.plot_constraint_breaches">
+<code class="descclassname">dnachisel.reports.constraints_reports.</code><code class="descname">plot_constraint_breaches</code><span class="sig-paren">(</span><em>constraint</em>, <em>sequence</em>, <em>title=None</em>, <em>ax=None</em>, <em>show_locations=False</em>, <em>show_feature_labels=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports.html#plot_constraint_breaches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.plot_constraint_breaches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot all breaches in a sequence for a single constraint.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>constraint</strong></p>
+<blockquote>
+<div><p>A DnaChisel Specification, to be used as a constraint.</p>
+</div></blockquote>
+<p><strong>sequence</strong></p>
+<blockquote>
+<div><p>An ATGC string, or a record. If it is a record, its annotations will also
+be shown in the plot.</p>
+</div></blockquote>
+<p><strong>title</strong></p>
+<blockquote>
+<div><p>Title to be added to the plot</p>
+</div></blockquote>
+<p><strong>ax</strong></p>
+<blockquote>
+<div><p>Matplotlib ax on which to plot the result. If no ax is provided, one
+will be created, and it will be returned at the end</p>
+</div></blockquote>
+<p><strong>show_locations</strong></p>
+<blockquote>
+<div><p>Whether or not to label the breach features with their coordinates</p>
+</div></blockquote>
+<p><strong>show_feature_labels</strong></p>
+<blockquote>
+<div><p>Whether or not to show the labels of all features.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ax</p>
+<blockquote class="last">
+<div><p>The matplotlib ax on which the plot was drawn</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.reports.constraints_reports.plot_gc_content_breaches">
+<code class="descclassname">dnachisel.reports.constraints_reports.</code><code class="descname">plot_gc_content_breaches</code><span class="sig-paren">(</span><em>sequence</em>, <em>window=70</em>, <em>mini=0.35</em>, <em>maxi=0.65</em>, <em>ax=None</em>, <em>title=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports.html#plot_gc_content_breaches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.plot_gc_content_breaches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a profile of GC content along the sequence.
+The regions with out-of-bound GC are highlighted.</p>
+<p>Returns the Matplotlib ax on which the figure was plotted.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sequence</strong></p>
+<blockquote>
+<div><p>An ATGC string</p>
+</div></blockquote>
+<p><strong>window</strong></p>
+<blockquote>
+<div><p>Number of nucleotides to use for local averaging of GC content</p>
+</div></blockquote>
+<p><strong>mini</strong></p>
+<blockquote>
+<div><p>minimal allowed proportion of gc (between 0 and 1)</p>
+</div></blockquote>
+<p><strong>maxi</strong></p>
+<blockquote>
+<div><p>maximal allowed proportion of gc (between 0 and 1)</p>
+</div></blockquote>
+<p><strong>ax</strong></p>
+<blockquote>
+<div><p>Matplotlib ax on which to plot the figure. If none is provided, one
+is created and returned in the end.</p>
+</div></blockquote>
+<p><strong>title</strong></p>
+<blockquote class="last">
+<div><p>Title to be added to the figure.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.reports.constraints_reports.plot_sequence_manufacturability_difficulties">
+<code class="descclassname">dnachisel.reports.constraints_reports.</code><code class="descname">plot_sequence_manufacturability_difficulties</code><span class="sig-paren">(</span><em>sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports.html#plot_sequence_manufacturability_difficulties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.plot_sequence_manufacturability_difficulties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a series of manufacturability factor checks, on a single figure.</p>
+<p>The factors considered are mostly arbitrary. Most users won’t be interested
+by this function. The function looks for presence of Type IIs restriction
+sites, homopolymers, hairpins, extreme GC content, repeats.
+The breaches for each constraint type are plotted on separate axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sequence</strong></p>
+<blockquote>
+<div><p>An ATGC string or a Biopythn sequence record (at which case the features
+will be drawn along with the constraints breaches).</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">axes</p>
+<blockquote class="last">
+<div><p>List of the different axes (in a same figure) on which the plots were
+drawn</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="biotools.html" class="btn btn-neutral float-right" title="Biotools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="core_classes.html" class="btn btn-neutral" title="Core Classes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
