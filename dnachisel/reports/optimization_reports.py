@@ -187,7 +187,7 @@ def write_no_solution_report(target, problem, error):
 
         evals = error.problem.constraints_evaluations()
         record = error.problem.to_record(
-            with_original_objective_features=False,
+            with_original_spec_features=False,
             with_constraints=False, with_objectives=False)
         record.features += evals.filter('passing') \
                                 .success_and_failures_as_features()
@@ -205,7 +205,7 @@ def write_no_solution_report(target, problem, error):
 
         # WRITE GENBANK
 
-        record = problem.to_record(with_original_objective_features=False,
+        record = problem.to_record(with_original_spec_features=False,
                                    with_constraints=True,
                                    with_objectives=True)
         evals = problem.constraints_evaluations()
@@ -254,7 +254,7 @@ def write_optimization_report(target, problem, project_name="unnammed",
             ),
             (
                 "After",
-                sequence_to_biopython_record(problem.sequence_before),
+                sequence_to_biopython_record(problem.sequence),
                 constraints_evaluations,
                 objectives_evaluations,
                 problem.sequence_edits_as_features()

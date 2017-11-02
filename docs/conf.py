@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# MoviePy documentation build configuration file, created by
+# DnaChisel documentation build configuration file, created by
 # sphinx-quickstart on Sat Jul 13 14:47:48 2013.
 #
 # This file is execfile()d with the current directory set to its containing dir.

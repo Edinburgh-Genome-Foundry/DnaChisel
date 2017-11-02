@@ -36,6 +36,8 @@ class PatternSpecification(Specification):
         if isinstance(pattern, str):
             pattern = DnaNotationPattern(pattern)
         self.pattern = pattern
+        if isinstance(location, tuple):
+            location = Location.from_tuple(location)
         self.location = location
         self.enzyme = enzyme
         self.boost = boost

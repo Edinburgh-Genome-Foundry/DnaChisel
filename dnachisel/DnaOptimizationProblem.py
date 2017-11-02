@@ -78,6 +78,10 @@ class DnaOptimizationProblem:
       parameter. The larger the boost, the more the objective is taken into
       account during the optimization.
 
+    logger
+      Either None for no logger, 'bar' for a tqdm progress bar logger, or
+      any ProgLog progress bar logger.
+
     Attributes
     ----------
 

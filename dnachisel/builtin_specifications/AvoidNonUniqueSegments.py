@@ -34,8 +34,11 @@ class AvoidNonuniqueSegments(Specification):
     >>> print (problem.constraints_summary())
 
     """
+    best_possible_score = 0
+    priority = -1
 
-    def __init__(self, min_length, location=None,
+
+    def __init__(self, min_length, location=None, boost = 1.0,
                  include_reverse_complement=False):
         """Initialize."""
         self.min_length = min_length
@@ -43,11 +46,16 @@ class AvoidNonuniqueSegments(Specification):
             location = Location.from_tuple(location)
         self.location = location
         self.include_reverse_complement = include_reverse_complement
+        self.boost = 1.0
 
-    def initialize_on_problem(self, problem):
+    def initialize_on_problem(self, problem, role='constraint'):
         """Location is the full sequence by default."""
         if self.location is None:
-            self.location = Location(0, len(problem.sequence))
+            location = Location(0, len(problem.sequence), 1)
+            result = self.copy_with_changes(location=location)
+        else:
+            result = self
+        return result
 
     def evaluate(self, problem):
         """Return 0 if the sequence has no repeats, else -number_of_repeats."""
@@ -81,7 +89,7 @@ class AvoidNonuniqueSegments(Specification):
             message="Failed, the following positions are the first occurences"
                     "of non-unique segments %s" % locations)
 
-    def localized(self, location):
+    def localized(self, location, with_righthand=True):
         """Localize the evaluation."""
         new_location = self.location.overlap_region(location)
         if new_location is None:
@@ -90,4 +98,4 @@ class AvoidNonuniqueSegments(Specification):
             return self
 
     def label_parameters(self):
-        return [('min_length', self.min_length)]
+        return [('min_length', str(self.min_length))]

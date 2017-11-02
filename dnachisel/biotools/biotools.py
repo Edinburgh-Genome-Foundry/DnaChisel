@@ -378,7 +378,7 @@ def crop_record(record, crop_start, crop_end, features_suffix=" (part)"):
         new_start, new_end = new_start - crop_start, new_end - crop_start
 
         feature = deepcopy(feature)
-        feature.location = FeatureLocation(new_start, new_end,
+        feature.location = FeatureLocation(int(new_start), int(new_end),
                                            feature.location.strand)
         label = "".join(feature.qualifiers.get("label", ""))
         feature.qualifiers["label"] = label + features_suffix
