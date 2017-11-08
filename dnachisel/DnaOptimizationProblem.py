@@ -20,10 +20,12 @@ from proglog import TqdmProgressBarLogger, ProgressBarLogger
 _default_bars = ('objective', 'constraint', 'location', 'mutation')
 class DnaOptimizationProgressBar(TqdmProgressBarLogger):
 
-    def __init__(self, bars=_default_bars, notebook='default'):
+    def __init__(self, bars=_default_bars, notebook='default',
+                 min_time_interval=0.2):
         ignored_bars = set(_default_bars).difference(bars)
         TqdmProgressBarLogger.__init__(self, bars=bars, notebook=notebook,
-                                       ignored_bars=ignored_bars)
+                                       ignored_bars=ignored_bars,
+                                       min_time_interval=min_time_interval)
 
 DEFAULT_SPECIFICATIONS_DICT = {} # completed at library initialization
 
@@ -131,7 +133,7 @@ class DnaOptimizationProblem:
             logger = DnaOptimizationProgressBar(
                 bars=('objective', 'constraint', 'location'))
         if logger is None:
-            logger = ProgressBarLogger() # silent logger
+            logger = ProgressBarLogger(min_time_interval=0.2) # silent logger
         self.logger = logger
         self.mutation_space = mutation_space
         self.initialize()
