@@ -25,32 +25,32 @@ much improved.
 The final sequence (with the original annotations) is exported to Genbank.
 """
 
+from dnachisel import (DnaOptimizationProblem, AvoidPattern, AvoidChanges,
+                       EnforceTranslation, homopolymer_pattern,
+                       EnforceGCContent, CodonOptimize, load_record)
+from io import StringIO
 import urllib
-from dnachisel import *
-from Bio import SeqIO, Seq
+
 
 # DOWNLOAD THE PLASMID FROM THE WEB (it is a 7kb plasmid with 3 genes)
-
 url = "http://www.stevekellylab.com/constructs/pDex/pDex577-G.gb"
-urllib.urlretrieve(url, "pDex577-G.gb")
+response = urllib.request.urlopen(url)
+record_file = StringIO(response.read().decode('utf-8'))
+record = load_record(record_file, fmt='genbank')
 
 
-# PARSE THE PLASMID FILE WITH BIOPYTHON, GET ITS SEQUENCE AND GENES LOCATIONS
-
-annotated_sequence = SeqIO.read(open("pDex577-G.gb"), "genbank")
-sequence = str(annotated_sequence.seq)
 CDS_list = [
     (int(f.location.start), int(f.location.end), int(f.location.strand))
-    for f in annotated_sequence.features
+    for f in record.features
     if f.type == "CDS"
 ]
 
 
-# DEFINE ALL THE CONSTRAINTS
+# DEFINE CONSTRAINTS
 
-GEN9_constraints = [
-    AvoidPattern(enzyme_pattern("BsaI")),
-    AvoidPattern(enzyme_pattern("AarI")),
+dna_provider_constraints = [
+    AvoidPattern(enzyme="BsaI"),
+    AvoidPattern(enzyme="AarI"),
     AvoidPattern(homopolymer_pattern("A", 9)),
     AvoidPattern(homopolymer_pattern("T", 9)),
     AvoidPattern(homopolymer_pattern("G", 6)),
@@ -62,18 +62,19 @@ GEN9_constraints = [
 CDS_constraints = []
 for (start, end, strand) in CDS_list:
     if strand == 1:
-        promoter_region = Location(start - 30, start - 1)
+        promoter_region = (start - 30, start - 1)
     else:
-        promoter_region = Location(end + 1, end + 30)
-    keep_promoter_region = AvoidChanges(promoter_region)
-    keep_translation = EnforceTranslation(Location(start, end, strand))
-    CDS_constraints += [keep_promoter_region, keep_translation]
+        promoter_region = (end + 1, end + 30)
+    CDS_constraints += [
+        AvoidChanges(promoter_region),
+        EnforceTranslation((start, end, strand))
+    ]
 
 
-# DEFINE ALL THE OBJECTIVES
+# DEFINE OBJECTIVES
 
 objectives = [EnforceGCContent(0.51, boost=10000)] + [
-    CodonOptimize("e_coli", location=Location(start, end, strand=strand))
+    CodonOptimize("e_coli", location=(start, end, strand))
     for (start, end, strand) in CDS_list
 ]
 
@@ -81,31 +82,24 @@ objectives = [EnforceGCContent(0.51, boost=10000)] + [
 # DEFINE AND SOLVE THE PROBLEM
 
 problem = DnaOptimizationProblem(
-    sequence=sequence,
-    constraints=GEN9_constraints + CDS_constraints,
+    sequence=record,
+    constraints=dna_provider_constraints + CDS_constraints,
     objectives=objectives
 )
 
 print ("\n\n=== Initial Status ===")
 print (problem.constraints_text_summary(failed_only=True))
 print (problem.objectives_text_summary())
-import time
 
 print ("Now solving constraints...")
-problem.solve_all_constraints_one_by_one()
+problem.resolve_constraints()
 print (problem.constraints_text_summary(failed_only=True))
 
 print ("Now optimizing objectives...")
 
-problem.maximize_all_objectives_one_by_one(max_random_iters=2000)
+problem.optimize()
 
 print ("\n\n=== Status after optimization ===\n\n")
 print (problem.objectives_text_summary())
 print ("Let us check again on the constraints:")
 print (problem.constraints_text_summary(failed_only=True))
-
-# Write the final sequence back to GENBANK (annotations are conserved)
-
-annotated_sequence.seq = Seq.Seq(problem.sequence,
-                                 annotated_sequence.seq.alphabet)
-SeqIO.write(annotated_sequence, open("result.gb", "w+"), "genbank")

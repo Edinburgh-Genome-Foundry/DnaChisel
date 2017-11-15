@@ -138,5 +138,6 @@ class EnforceGCContent(Specification):
             show_maxi * [('maxi', "%.2f" % self.maxi)] +
             show_target * [('target',
                            ("%.2f" % self.target) if self.target else '')] +
-            show_window * [('window', "%d" % self.window)]
+            show_window * [('window',
+                            ("%d" % self.window) if self.window else '')]
         )

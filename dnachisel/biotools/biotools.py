@@ -70,8 +70,10 @@ def random_dna_sequence(length, probas=None, seed=None):
     return "".join(sequence)
 
 
-def load_record(filename, linear=True, name="unnamed"):
-    if filename.lower().endswith(("gb", "gbk")):
+def load_record(filename, linear=True, name="unnamed", fmt=None):
+    if fmt is not None:
+        record = SeqIO.read(filename, fmt)
+    elif filename.lower().endswith(("gb", "gbk")):
         record = SeqIO.read(filename, "genbank")
     elif filename.lower().endswith(('fa', 'fasta')):
         record = SeqIO.read(filename, "fasta")
