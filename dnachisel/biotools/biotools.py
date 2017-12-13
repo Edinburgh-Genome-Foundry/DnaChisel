@@ -12,7 +12,8 @@ from Bio.Alphabet import DNAAlphabet
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 from Bio import SeqIO
 
-from .biotables import CODONS_SEQUENCES, NUCLEOTIDE_TO_REGEXPR
+from .biotables import (CODONS_TRANSLATIONS, NUCLEOTIDE_TO_REGEXPR,
+                        CODONS_SEQUENCES)
 
 
 def complement(dna_sequence):
@@ -523,3 +524,22 @@ def annotate_record(seqrecord, location="full", feature_type="misc_feature",
             type=feature_type
         )
     )
+
+def codons_frequencies_and_positions(sequence):
+    codons_positions = {cod: [] for cod in CODONS_TRANSLATIONS}
+    for i in range(int(len(sequence) / 3)):
+        codon = sequence[3 * i: 3 * (i + 1)]
+        codons_positions[codon].append(i)
+    # aa: amino-acid
+    codons_frequencies = {aa: {'total': 0} for aa in CODONS_SEQUENCES}
+    for codon, positions in codons_positions.items():
+        count = len(positions)
+        aa = CODONS_TRANSLATIONS[codon]
+        codons_frequencies[aa][codon] = count
+        codons_frequencies[aa]['total'] += count
+    for aa, data in codons_frequencies.items():
+        total = data['total']
+        for codon, value in data.items():
+            if codon != 'total':
+                data[codon] = 1.0 * value / total
+    return codons_frequencies, codons_positions

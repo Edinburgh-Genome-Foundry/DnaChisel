@@ -97,7 +97,6 @@ class AvoidChanges(Specification):
         # if self.passive_objective or (len(discrepancies) == 0):
         #     locations = []
         # else:
-        l = self.localization_interval_length
         intervals = [
             (r[0], r[-1])
             for r in group_nearby_indices(discrepancies,

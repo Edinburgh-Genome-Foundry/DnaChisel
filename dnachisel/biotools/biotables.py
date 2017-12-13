@@ -10,7 +10,7 @@ def reverse_table(table):
     the keys of table such that table[k1]=v1.
     """
     new_table = defaultdict(lambda: [])
-    for (k, v) in table.items():
+    for (k, v) in sorted(table.items()):
         new_table[v].append(k)
     return dict(new_table)
 
@@ -63,6 +63,17 @@ for fname in os.listdir(codons_usage_dir):
             aa: max([table[codon] for codon in CODONS_SEQUENCES[aa]])
             for aa in CODONS_SEQUENCES
         }
+
+CODON_USAGE_BY_AA = {
+    species: {
+        aa: {
+            codon: species_data[codon]
+            for codon in codons
+        }
+        for aa, codons in CODONS_SEQUENCES.items()
+    }
+    for species, species_data in CODON_USAGE_TABLES.items()
+}
 
 
 AA_LONG_NAMES = dict_from_csv(os.path.join(data_dir, "aa_long_names.csv"))

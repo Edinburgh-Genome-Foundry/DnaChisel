@@ -21,7 +21,8 @@ from .biotools import (
     sequences_differences_segments,
     sequence_to_biopython_record,
     translate,
-    windows_overlap
+    windows_overlap,
+    codons_frequencies_and_positions
 )
 
 from .features_annotations import (
@@ -32,4 +33,4 @@ from .features_annotations import (
 
 from .biotables import (CODONS_SEQUENCES, CODONS_TRANSLATIONS,
                         CODON_USAGE_TABLES, IUPAC_NOTATION,
-                        NUCLEOTIDE_TO_REGEXPR)
+                        NUCLEOTIDE_TO_REGEXPR, CODON_USAGE_BY_AA)

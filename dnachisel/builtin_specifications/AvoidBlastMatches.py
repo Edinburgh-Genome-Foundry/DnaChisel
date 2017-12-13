@@ -3,7 +3,7 @@
 from ..Specification import Specification
 from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
-from dnachisel.biotools import blast_sequence
+from dnachisel.biotools import blast_sequence, group_nearby_segments
 from dnachisel.Location import Location
 
 class AvoidBlastMatches(Specification):
@@ -34,11 +34,14 @@ class AvoidBlastMatches(Specification):
     min_align_length
       Minimal length that an alignment should have to be considered.
     """
+    priority = -2
 
     def __init__(self, blast_db, word_size=4, perc_identity=100,
                  num_alignments=1000, num_threads=3, min_align_length=20,
                  ungapped=True, location=None):
         """Initialize."""
+        if isinstance(location, tuple):
+            location = Location.from_tuple(location)
         self.blast_db = blast_db
         self.word_size = word_size
         self.perc_identity = perc_identity
@@ -48,10 +51,17 @@ class AvoidBlastMatches(Specification):
         self.location = location
         self.ungapped = ungapped
 
+    def initialize_on_problem(self, problem, role):
+        """Find out what sequence it is that we are supposed to conserve."""
+        if self.location is None:
+            location = Location(0, len(problem.sequence), 1)
+            return self.copy_with_changes(location=location)
+        else:
+            return self
+
     def evaluate(self, problem):
         """Score as (-total number of blast identities in matches)."""
         location = self.location
-        # print ("location", location)
         if location is None:
             location = Location(0, len(problem.sequence))
         sequence = location.extract_sequence(problem.sequence)
@@ -77,10 +87,16 @@ class AvoidBlastMatches(Specification):
         ]
 
         locations = sorted([
-            Location(start, end, strand)
+            (start, end)
             for (start, end, strand, ids) in query_hits
             if (end - start) >= self.min_align_length
         ])
+        locations = [
+            (r[0][0], r[-1][-1])
+            for r in group_nearby_segments(locations, max_start_spread=2)
+        ]
+        # raise ValueError(locations)
+        locations = [Location(start, end) for start, end in locations]
 
         score = -sum([
             ids
@@ -102,15 +118,14 @@ class AvoidBlastMatches(Specification):
             self, problem, score=score, locations=locations,
             message="Failed - matches at %s" % locations)
 
-    def localized(self, location):
+    def localized(self, location, with_righthand=True):
         """Localize the evaluation."""
-        if self.location is not None:
-            new_location = self.location.overlap_region(location)
-            if new_location is None:
-                return VoidSpecification(parent_specification=self)
-        else:
-            new_location = location.extended(self.min_align_length)
+        new_location = self.location.overlap_region(location)
+        if new_location is None:
+            return VoidSpecification(parent_specification=self)
 
+        new_location = location.extended(self.min_align_length,
+                                         right=with_righthand)
         return self.copy_with_changes(location=new_location)
 
     def feature_label_parameters(self):

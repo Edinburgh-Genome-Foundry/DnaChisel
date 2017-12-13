@@ -150,5 +150,5 @@ class EnforcePatternOccurence(Specification):
                         if hasattr(self.pattern, 'sequence')
                         else str(self.pattern))]
         if self.occurences != 1:
-            result.append('occurence', self.occurences)
+            result += ['occurence', str(self.occurences)]
         return result
