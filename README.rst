@@ -1,17 +1,13 @@
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/title.png
-   :alt: [logo]
-   :align: center
-   :width: 600px
+.. raw:: html
 
-DnaChisel
-=========
+    <p align="center">
+    <img alt="DNA Chisel Logo" title="DNA Chisel" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/title.png" width="450">
+    <br /><br />
+    </p>
 
 .. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel.svg?branch=master
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel
    :alt: Travis CI build status
-
-
-(Documentation in progress, come back later !)
 
 DnaChisel (complete documentation `here <https://edinburgh-genome-foundry.github.io/DnaChisel/>`_)
 is a Python library to optimize the nucleotides of DNA sequences with respect
