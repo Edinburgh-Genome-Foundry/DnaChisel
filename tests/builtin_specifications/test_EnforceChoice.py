@@ -11,7 +11,7 @@ def test_EnforceChoice():
     spec = EnforceChoice(enzymes=['BsmBI', 'EcoRI'], location=(2, 8))
 
     problem = DnaOptimizationProblem(
-        sequence="AGCCCCCCGT",  constraints=[spec, EnforceGCContent(maxi=0.5)])
+        sequence="AGCCCCCCGT",  constraints=[spec, EnforceGCContent(maxi=0.3)])
     problem.resolve_constraints()
     assert 'GAATTC' in problem.sequence
 
