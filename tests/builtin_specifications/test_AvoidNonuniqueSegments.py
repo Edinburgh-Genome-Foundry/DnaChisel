@@ -1,5 +1,4 @@
 from dnachisel import (DnaOptimizationProblem, random_dna_sequence,
-                       AvoidChanges, sequences_differences,
                        AvoidNonuniqueSegments)
 import numpy
 numpy.random.seed(123)

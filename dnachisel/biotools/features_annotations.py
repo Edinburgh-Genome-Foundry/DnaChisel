@@ -6,13 +6,13 @@ from Bio.SeqFeature import SeqFeature, FeatureLocation
 
 """Useful function to annotate sequences"""
 
-
 def annotate_record(seqrecord, location="full", feature_type="misc_feature",
                     margin=0, **qualifiers):
-    """Add a feature to a Biopython SeqRecord. (also returns that same record).
+    """Add a feature to a Biopython SeqRecord.
 
     Parameters
     ----------
+
     seqrecord
       The biopython seqrecord to be annotated.
 
@@ -27,12 +27,11 @@ def annotate_record(seqrecord, location="full", feature_type="misc_feature",
 
     qualifiers
       Dictionnary that will be the Biopython feature's `qualifiers` attribute.
-
     """
     if location == "full":
         location = (margin, len(seqrecord) - margin)
 
-    strand = location[2] if (len(location) == 3) else 1
+    strand = location[2] if len(location) == 3 else 1
     seqrecord.features.append(
         SeqFeature(
             FeatureLocation(location[0], location[1], strand),
@@ -40,7 +39,6 @@ def annotate_record(seqrecord, location="full", feature_type="misc_feature",
             type=feature_type
         )
     )
-    return seqrecord
 
 
 def annotate_differences(record, reference, feature_type="misc_feature",

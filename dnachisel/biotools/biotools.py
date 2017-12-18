@@ -491,40 +491,6 @@ def group_nearby_segments(segments, max_start_gap=None, max_start_spread=None):
             groups.append(current_group)
     return groups
 
-def annotate_record(seqrecord, location="full", feature_type="misc_feature",
-                    margin=0, **qualifiers):
-    """Add a feature to a Biopython SeqRecord.
-
-    Parameters
-    ----------
-
-    seqrecord
-      The biopython seqrecord to be annotated.
-
-    location
-      Either (start, end) or (start, end, strand). (strand defaults to +1)
-
-    feature_type
-      The type associated with the feature
-
-    margin
-      Number of extra bases added on each side of the given location.
-
-    qualifiers
-      Dictionnary that will be the Biopython feature's `qualifiers` attribute.
-    """
-    if location == "full":
-        location = (margin, len(seqrecord) - margin)
-
-    strand = location[2] if len(location) == 3 else 1
-    seqrecord.features.append(
-        SeqFeature(
-            FeatureLocation(location[0], location[1], strand),
-            qualifiers=qualifiers,
-            type=feature_type
-        )
-    )
-
 def codons_frequencies_and_positions(sequence):
     codons_positions = {cod: [] for cod in CODONS_TRANSLATIONS}
     for i in range(int(len(sequence) / 3)):
