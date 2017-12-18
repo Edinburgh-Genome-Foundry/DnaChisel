@@ -12,6 +12,10 @@ from dnachisel.Location import Location
 class AvoidNonuniqueSegments(Specification):
     """Avoid sub-sequence which have repeats elsewhere in the sequence.
 
+    NOTE: For sequences with subsequences appearing more than 2 times, the
+    specification may not work as a problem constraint, but will work as a
+    problem optimization objective.
+
     Parameters
     ----------
     min_length

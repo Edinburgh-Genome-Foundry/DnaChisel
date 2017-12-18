@@ -9,6 +9,10 @@
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel
    :alt: Travis CI build status
 
+.. image:: https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/DnaChisel/badge.svg?branch=master
+   :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/DnaChisel?branch=master
+
+
 DnaChisel (complete documentation `here <https://edinburgh-genome-foundry.github.io/DnaChisel/>`_)
 is a Python library to optimize the nucleotides of DNA sequences with respect
 to a set of constraints and optimization objectives.
