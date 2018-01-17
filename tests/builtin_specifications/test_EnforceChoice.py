@@ -1,4 +1,4 @@
-from dnachisel import (DnaOptimizationProblem, EnforceChoice, EnforceGCContent)
+from dnachisel import DnaOptimizationProblem, EnforceChoice, EnforceGCContent
 import numpy
 numpy.random.seed(123)
 

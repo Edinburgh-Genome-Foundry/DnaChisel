@@ -195,10 +195,9 @@ def plot_sequence_manufacturability_difficulties(sequence):
         title="GC content (window= %d)" % window
     )
 
-    constraint = EnforceGCContent(mini=mini, maxi=maxi,
-                                  window=window)
     plot_constraint_breaches(
-        constraint, record, ax=axes[1],
+        EnforceGCContent(mini=mini, maxi=maxi, window=window),
+        record, ax=axes[1],
         title="Zones of extreme GC content (Gen9-type short window)"
     )
 

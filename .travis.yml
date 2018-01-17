@@ -3,8 +3,9 @@ python:
   - "3.6"
 # command to install dependencies
 install:
-  - pip install pytest jinja2 weasyprint dna_features_viewer
+  - pip install jinja2 weasyprint dna_features_viewer
   - pip install coveralls pytest-cov pytest
+  - sudo apt-get install ncbi-blast+
   - pip install -e .
 # command to run tests
 script:

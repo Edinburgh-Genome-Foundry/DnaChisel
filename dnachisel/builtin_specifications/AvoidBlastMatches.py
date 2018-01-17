@@ -36,13 +36,14 @@ class AvoidBlastMatches(Specification):
     """
     priority = -2
 
-    def __init__(self, blast_db, word_size=4, perc_identity=100,
-                 num_alignments=1000, num_threads=3, min_align_length=20,
-                 ungapped=True, location=None):
+    def __init__(self, blast_db=None, sequences=None, word_size=4,
+                 perc_identity=100, num_alignments=1000, num_threads=3,
+                 min_align_length=20, ungapped=True, location=None):
         """Initialize."""
         if isinstance(location, tuple):
             location = Location.from_tuple(location)
         self.blast_db = blast_db
+        self.sequences = sequences
         self.word_size = word_size
         self.perc_identity = perc_identity
         self.num_alignments = num_alignments
@@ -68,12 +69,22 @@ class AvoidBlastMatches(Specification):
 
         blast_record = blast_sequence(
             sequence, blast_db=self.blast_db,
+            subject_sequences=self.sequences,
             word_size=self.word_size,
             perc_identity=self.perc_identity,
             num_alignments=self.num_alignments,
             num_threads=self.num_threads,
             ungapped=self.ungapped
         )
+
+        if isinstance(blast_record, list):
+            alignments = [
+                alignment
+                for rec in blast_record
+                for alignment in rec.alignments
+            ]
+        else:
+            alignments = blast_record.alignments
 
         query_hits = [
             (
@@ -82,7 +93,7 @@ class AvoidBlastMatches(Specification):
                 1 - 2 * (hit.query_start > hit.query_end),
                 hit.identities
             )
-            for alignment in blast_record.alignments
+            for alignment in alignments
             for hit in alignment.hsps
         ]
 
@@ -110,7 +121,7 @@ class AvoidBlastMatches(Specification):
 
         score = -sum([
             hit.identities
-            for alignment in blast_record.alignments
+            for alignment in alignments
             for hit in alignment.hsps
         ])
 

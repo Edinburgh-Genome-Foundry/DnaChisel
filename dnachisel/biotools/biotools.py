@@ -259,8 +259,10 @@ def gc_content(sequence, window_size=None):
 #     ]
 
 
-def blast_sequence(sequence, blast_db, word_size=4, perc_identity=80,
-                   num_alignments=1000, ungapped=False, num_threads=3):
+def blast_sequence(sequence, blast_db=None, subject_sequences=None,
+                   subject=None, word_size=4, perc_identity=80,
+                   num_alignments=1000, ungapped=False, num_threads=3,
+                   use_megablast=True):
     """Return a Biopython BLAST record of the given sequence BLASTed
     against the provided database.
 
@@ -284,35 +286,74 @@ def blast_sequence(sequence, blast_db, word_size=4, perc_identity=80,
     with open(fasta_name, "w+") as f:
         f.write(">seq\n" + sequence)
 
-    p = subprocess.Popen(
-        [
-            "blastn", "-out", xml_name,
-            "-outfmt", "5",
-            "-num_alignments", str(num_alignments),
-            "-query", fasta_name,
-            "-db", blast_db,
-            "-word_size", str(word_size),
-            "-num_threads", str(num_threads),
-            "-perc_identity", str(perc_identity)
-        ] + (["-ungapped"] if ungapped else []),
-        close_fds=True
-    )
-    p.communicate()
+    close_subject = False
+    remove_subject = False
+
+    if subject is not None:
+        close_subject = True
+
+    if subject_sequences is not None:
+        close_subject = True
+        remove_subject = True
+        subject_file, subject = tempfile.mkstemp(".fa")
+        if isinstance(subject_sequences[0], str):
+            subject_sequences = [
+                ("%06d" % i, seq)
+                for i, seq in enumerate(subject_sequences)
+            ]
+        fasta_content = "\n".join([
+            ">%s\n%s" % name_sequence
+             for name_sequence in subject_sequences
+        ])
+        with open(subject, "w+") as f:
+            f.write(fasta_content)
+
+    command = [
+        "blastn", "-out", xml_name,
+        "-outfmt", "5",
+        "-num_alignments", str(num_alignments),
+        "-query", fasta_name
+    ] + (
+        ["-db", blast_db]
+        if subject is None
+        else ['-subject', subject]
+    ) + (
+        ["-task", "megablast"]
+        if use_megablast
+        else []
+    ) + [
+        "-word_size", str(word_size),
+        "-num_threads", str(num_threads),
+        "-perc_identity", str(perc_identity)
+    ] + (["-ungapped"] if ungapped else [])
+
+    p = subprocess.Popen(command, close_fds=True)
+    out, err = p.communicate()
     p.wait()
-    for i in range(3):
+    n_trials = 3
+    for i in range(n_trials):
         try:
             with open(xml_name, "r") as f:
-                blast_record = NCBIXML.read(f)
+                res = list(NCBIXML.parse(f))
+                os.fdopen(xml_file, 'w').close()
+                os.fdopen(fasta_file, 'w').close()
+                os.remove(xml_name)
+                os.remove(fasta_name)
+                if close_subject:
+                    open(subject, 'w').close()
+                    if remove_subject:
+                        os.remove(subject)
+                if len(res) == 1:
+                    return res[0]
+                else:
+                    return res
             break
-        except ValueError:
+        except ValueError as err:
+            if i == n_trials - 1:
+                raise err
             time.sleep(0.1)
-    else:
-        raise ValueError("Problem reading the blast record.")
 
-    os.fdopen(xml_file, 'w').close()
-    os.fdopen(fasta_file, 'w').close()
 
-    return blast_record
 
 
 def subdivide_window(window, max_span):
