@@ -1,0 +1,17 @@
+"""Example of use of the AvoidPAttern specification"""
+
+from dnachisel import (DnaOptimizationProblem, random_dna_sequence,
+                       AvoidPattern, EnforceTerminalGCContent)
+
+def test_basics():
+    probas = {'A': 0.2, 'T': 0.2, 'G': 0.3, 'C': 0.3}
+    problem = DnaOptimizationProblem(
+        sequence=random_dna_sequence(10000, probas=probas, seed=123),
+        constraints=[
+            AvoidPattern(enzyme="BsaI"),
+            EnforceTerminalGCContent(mini=0.2, maxi=0.4, window_size=50)
+        ]
+    )
+    assert not problem.all_constraints_pass()
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()

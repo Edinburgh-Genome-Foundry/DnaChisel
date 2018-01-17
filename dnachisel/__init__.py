@@ -4,16 +4,17 @@ from .Location import Location
 
 from .builtin_specifications import (
     AvoidBlastMatches,
+    AvoidChanges,
     AvoidHairpins,
     AvoidNonuniqueSegments,
     AvoidPattern,
     CodonOptimize,
-    AvoidChanges,
     EnforceChoice,
     EnforceGCContent,
     EnforcePatternOccurence,
     EnforceRegionsCompatibility,
     EnforceSequence,
+    EnforceTerminalGCContent,
     EnforceTranslation,
     SequenceLengthBounds
 )

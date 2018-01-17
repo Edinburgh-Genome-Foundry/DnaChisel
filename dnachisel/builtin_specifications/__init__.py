@@ -13,5 +13,6 @@ from .EnforceGCContent import EnforceGCContent
 from .EnforcePatternOccurence import EnforcePatternOccurence
 from .EnforceTranslation import EnforceTranslation
 from .EnforceRegionsCompatibility import EnforceRegionsCompatibility
+from .EnforceTerminalGCContent import EnforceTerminalGCContent
 from .EnforceSequence import EnforceSequence
 from .SequenceLengthBounds import SequenceLengthBounds

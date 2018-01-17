@@ -1,6 +1,6 @@
 """Implement EnforceTerminalGCContent"""
 
-from ..Specification import TerminalSpecification
+from .TerminalSpecification import TerminalSpecification
 from dnachisel.biotools import gc_content
 
 class EnforceTerminalGCContent(TerminalSpecification):
@@ -30,7 +30,8 @@ class EnforceTerminalGCContent(TerminalSpecification):
         self.boost = boost
 
     def evaluate_end(self, sequence):
-        return (self.mini < gc_content(sequence) < self.maxi)
+        gc = gc_content(sequence)
+        return -(max(0, self.mini - gc) + max(0, gc - self.maxi))
 
     def __repr__(self):
         return "Terminal(%.02f < gc < %.02f, window: %d)" % \
