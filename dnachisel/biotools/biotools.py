@@ -185,13 +185,6 @@ def windows_overlap(window1, window2):
         return None
 
 
-def read_fasta(filename):
-    """Read A sequence in a FASTA file with Biopython."""
-    import Bio.SeqIO as seqio
-    with open(filename) as f:
-        return str(seqio.read(f, "fasta").seq)
-
-
 def gc_content(sequence, window_size=None):
     """Compute global or local GC content.
 
@@ -353,15 +346,12 @@ def blast_sequence(sequence, blast_db=None, subject_sequences=None,
                 raise err
             time.sleep(0.1)
 
-
-
-
 def subdivide_window(window, max_span):
     """Subdivide a window (start, end) into windows of size < max_span
     (start, i_1), (i_1, i_2), ... (i_n, end)"""
     start, end = window
     inds = list(range(start, end, max_span)) + [end]
-    return zip(inds, inds[1:])
+    return list(zip(inds, inds[1:]))
 
 
 def change_biopython_record_sequence(record, new_seq):

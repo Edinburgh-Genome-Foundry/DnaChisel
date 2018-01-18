@@ -20,6 +20,7 @@ from .biotools import (
     sequences_differences_array,
     sequences_differences_segments,
     sequence_to_biopython_record,
+    subdivide_window,
     translate,
     windows_overlap,
     codons_frequencies_and_positions
