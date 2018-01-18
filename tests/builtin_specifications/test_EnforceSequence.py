@@ -10,10 +10,11 @@ def test_EnforceSequence():
     # constraint on GC content
     for symbol, nucleotides in [('W', 'AT'), ('S', 'GC')]:
         problem = DnaOptimizationProblem(
-            sequence=50*"ATGC",
+            sequence=25*"ATGC",
             constraints=[AvoidPattern("ATGC"), AvoidPattern("AA"),
-                         AvoidPattern("GG"), 
+                         AvoidPattern("GG"),
                          EnforceSequence(30*symbol, location=(50, 80))]
         )
+        problem.max_random_iters = 10000
         problem.resolve_constraints()
         assert all([n in nucleotides for n in problem.sequence[50:80]])
