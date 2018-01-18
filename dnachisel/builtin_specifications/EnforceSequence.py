@@ -14,11 +14,10 @@ from dnachisel.biotools import (group_nearby_indices,
 
 
 class EnforceSequence(Specification):
-    """Enforces a degenerate sequence.
+    """Enforces a (possibly degenerate) sequence at some location.
 
     Parameters
     ----------
-
     sequence
       An ATGC string representing the wanted sequence, possibly degenerated,
       for instance ATTCGCGTYTTKWNAA
