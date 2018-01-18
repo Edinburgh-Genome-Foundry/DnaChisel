@@ -6,6 +6,7 @@ from .AvoidChanges import AvoidChanges
 from .AvoidHairpins import AvoidHairpins
 from .AvoidNonUniqueSegments import AvoidNonuniqueSegments
 from .AvoidPattern import AvoidPattern
+from .AvoidStopCodons import AvoidStopCodons
 from .CodonOptimize import CodonOptimize
 from .EnforceChoice import EnforceChoice
 from .EnforceSequence import EnforceSequence

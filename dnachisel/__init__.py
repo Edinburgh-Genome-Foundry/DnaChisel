@@ -8,6 +8,7 @@ from .builtin_specifications import (
     AvoidHairpins,
     AvoidNonuniqueSegments,
     AvoidPattern,
+    AvoidStopCodons,
     CodonOptimize,
     EnforceChoice,
     EnforceGCContent,
