@@ -152,6 +152,7 @@ class MutationSpace:
     Examples
     --------
 
+    >>> # BEWARE: below, similar mutation choices are actually the SAME OBJECT
     >>> space = MutationSpace([
             MutationChoice((0, 2), {'AT', 'TG'}),
             MutationChoice((0, 2), {'AT', 'TG'}),

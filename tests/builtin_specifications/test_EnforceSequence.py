@@ -15,12 +15,29 @@ def test_EnforceSequence():
         location = (start, start + n_nucleotides)
         problem = DnaOptimizationProblem(
             sequence=25*"ATGC",
-            constraints=[AvoidPattern("ATGC"), AvoidPattern("AA"),
-                         AvoidPattern("GG"),
-                         EnforceSequence(n_nucleotides*symbol,
-                                         location=location)]
-        )
+            constraints=[
+                AvoidPattern("ATGC"), AvoidPattern("AAA"), AvoidPattern("GGG"),
+                EnforceSequence(n_nucleotides*symbol, location=location)
+        ])
         problem.max_random_iters = 10000
         problem.resolve_constraints()
         s, e = start, start + n_nucleotides
         assert all([n in nucleotides for n in problem.sequence[s:e]])
+
+def test_EnforceSequence_as_objective():
+    # Two enzymes, BsmBI(CGTCTC) is GC-rich, EcoRI(GAATTC) is GC-poor, which
+    # enzyme will be chosen and inserted in the sequence depends on the other
+    # constraint on GC content
+    numpy.random.seed(1234)
+    n_nucleotides = 15
+    start = 50
+    location = (start, start + n_nucleotides)
+    problem = DnaOptimizationProblem(
+        sequence=25*"ATGC",
+        constraints=[AvoidPattern("ATGC")],
+        objectives=[EnforceSequence("W"*n_nucleotides, location=location)]
+    )
+    assert problem.objective_scores_sum() < 0
+    problem.resolve_constraints()
+    problem.optimize()
+    assert problem.objective_scores_sum() == 0
