@@ -11,7 +11,8 @@ def test_EnforceSequence():
     for symbol, nucleotides in [('W', 'AT'), ('S', 'GC')]:
         problem = DnaOptimizationProblem(
             sequence=50*"ATGC",
-            constraints=[AvoidPattern("ATGC"),
+            constraints=[AvoidPattern("ATGC"), AvoidPattern("AA"),
+                         AvoidPattern("GG"), 
                          EnforceSequence(30*symbol, location=(50, 80))]
         )
         problem.resolve_constraints()
