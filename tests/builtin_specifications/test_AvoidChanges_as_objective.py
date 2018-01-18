@@ -5,11 +5,11 @@ from dnachisel import (DnaOptimizationProblem, random_dna_sequence,
                        AvoidChanges, sequences_differences,
                        EnforceGCContent)
 import numpy
-numpy.random.seed(123)
 
 # Note: we are not providing a location for AvoidChanges: it applies globally
 
 def test_avoid_change_as_objectives_basics():
+    numpy.random.seed(123)
     results = []
     for boost in (0, 0.1, 0.2, 1):
         sequence = random_dna_sequence(1000, seed=123)

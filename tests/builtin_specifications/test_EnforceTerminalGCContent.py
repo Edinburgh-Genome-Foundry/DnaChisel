@@ -2,8 +2,10 @@
 
 from dnachisel import (DnaOptimizationProblem, random_dna_sequence,
                        AvoidPattern, EnforceTerminalGCContent)
+import numpy
 
 def test_basics():
+    numpy.random.seed(123)
     probas = {'A': 0.2, 'T': 0.2, 'G': 0.3, 'C': 0.3}
     problem = DnaOptimizationProblem(
         sequence=random_dna_sequence(10000, probas=probas, seed=123),

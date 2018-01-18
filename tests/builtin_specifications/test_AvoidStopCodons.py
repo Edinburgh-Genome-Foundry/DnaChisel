@@ -1,10 +1,10 @@
 from dnachisel import DnaOptimizationProblem, AvoidStopCodons
 import numpy
-numpy.random.seed(123)
 
 # Note: we are not providing a location for AvoidChanges: it applies globally
 
 def test_AvoidStopCodons():
+    numpy.random.seed(123)
     problem = DnaOptimizationProblem(
         sequence="ATTGCCATCTAA",
         constraints=[AvoidStopCodons()]

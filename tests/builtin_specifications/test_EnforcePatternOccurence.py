@@ -10,6 +10,7 @@ import numpy
 # Note: we are not providing a location for AvoidChanges: it applies globally
 
 def test_enforce_pattern_basics():
+    numpy.random.seed(123)
     for seed in [2, 3, 123456]:
         # The seeds cover various cases:
         # 2: the problem has no occurences instead of 1 wanted

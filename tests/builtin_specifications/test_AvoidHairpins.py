@@ -2,9 +2,10 @@
 
 from dnachisel import (DnaOptimizationProblem, random_dna_sequence,
                        reverse_complement, AvoidHairpins)
-
+import numpy
 
 def test_avoid_hairpin_basics():
+    numpy.random.seed(123)
     random_sequences = [random_dna_sequence(30) for i in range(10)]
 
     full_sequence = "".join([

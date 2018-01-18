@@ -52,7 +52,7 @@ FEATURES             Location/Qualifiers
                      Kanamycin resistance marker"
                      /note="color: #c0c0c0; direction: RIGHT"
      misc_feature    2149..4201
-                     /label=@AvoidPattern(enzyme=BsrBI)
+                     /label=@AvoidPattern(enzyme:BsrBI)
                      /note="color: #000080"
      terminator      2552..2602
                      /label=kanR terminator

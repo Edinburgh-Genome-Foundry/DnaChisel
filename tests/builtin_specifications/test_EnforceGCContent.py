@@ -2,9 +2,10 @@
 
 from dnachisel import (DnaOptimizationProblem, random_dna_sequence,
                        AvoidPattern, EnforceGCContent)
+import numpy
 
-def test_basics():
-
+def test_EnforceGCContents():
+    numpy.random.seed(123)
     problem = DnaOptimizationProblem(
         sequence=random_dna_sequence(10000, seed=123),
         constraints=[
