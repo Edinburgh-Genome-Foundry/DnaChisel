@@ -13,18 +13,9 @@
    :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/DnaChisel?branch=master
 
 
-DnaChisel (complete documentation `here <https://edinburgh-genome-foundry.github.io/DnaChisel/>`_)
-is a Python library to optimize the nucleotides of DNA sequences with respect
-to a set of constraints and optimization objectives.
+DNA Chisel (complete documentation `here <https://edinburgh-genome-foundry.github.io/DnaChisel/>`_) is a Python library to optimize the nucleotides of DNA sequences with respect to a set of constraints and optimization objectives. It can be used for codon-optimizing the genes of a sequence for a particular organism, modifying a sequence to meet the constraints of a DNA provider while preserving genes, and much more.
 
-
-It can be used for codon-optimizing the genes of a sequence for a particular micro-organism,
-modifying a sequence to meet the constraints of a DNA provider while preserving genes,
-and other sensible patterns.
-
-DnaChisel also provides much freedom to define optimization problems and model
-new kinds of specifications, making it suitable for either automated sequence
-design, or for complex custom design projects.
+DNA Chisel comes with more than 15 types of optimizations and constraints and allows users to define new specifications in Python, making the library suitable for a large range of automated sequence design applications, or complex custom design projects.
 
 Example of use
 ---------------
@@ -92,6 +83,12 @@ License = MIT
 
 DnaChisel is an open-source software originally written at the `Edinburgh Genome Foundry
 <http://edinburgh-genome-foundry.github.io/home.html>`_ by `Zulko <https://github.com/Zulko>`_
-and `released on Github <https://github.com/Edinburgh-Genome-Foundry/DnaChisel>`_ under the MIT licence (¢ Edinburg Genome Foundry).
+and `released on Github <https://github.com/Edinburgh-Genome-Foundry/DnaChisel>`_ under the MIT licence (¢ Edinburg Genome Foundry). Everyone is welcome to contribute !
 
-Everyone is welcome to contribute !
+More biology software
+-----------------------
+
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Edinburgh-Genome-Foundry.github.io/master/static/imgs/logos/egf-codon-horizontal.png
+  :target: https://edinburgh-genome-foundry.github.io/
+
+DNA Chisel is part of the `EGF Codons <https://edinburgh-genome-foundry.github.io/>`_ synthetic biology software suite for DNA design, manufacturing and validation.

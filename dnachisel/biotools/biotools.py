@@ -380,7 +380,7 @@ def find_specification_in_feature(feature):
         potential_label = feature.qualifiers.get(labelfield, "_")
         if isinstance(potential_label, list):
             potential_label = potential_label[0]
-        if potential_label[0] in "@~":
+        if (potential_label != '') and (potential_label[0] in "@~"):
             return potential_label
     return None
 
