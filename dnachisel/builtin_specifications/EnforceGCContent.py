@@ -42,7 +42,7 @@ class EnforceGCContent(Specification):
     """
 
     best_possible_score = 0
-    locations_span = 50  # The resolution will use locations of this size
+    locations_span = 50  # The resolution will use locations size
 
     def __init__(self, mini=0, maxi=1.0, target=None,
                  window=None, location=None, boost=1.0):
@@ -85,7 +85,7 @@ class EnforceGCContent(Specification):
             segments = [(bs, bs + self.window) for bs in breaches_starts]
             groups = group_nearby_segments(
                 segments,
-                max_start_spread=max(1,  self.locations_span - self.window))
+                max_start_spread=max(1,  self.locations_span))
             breaches_locations = [
                 (group[0][0], group[-1][-1])
                 for group in groups

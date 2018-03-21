@@ -117,7 +117,15 @@ class AvoidChanges(Specification):
                 return VoidSpecification(parent_specification=self)
             else:
                 return self
-                # TODO: refine copy_with_changes(target sequence, location)
+                # TODO: refine using the code hereunder, which sometimes
+                # creates exceptions like "different sequences"
+                new_constraint = self.copy_with_changes(location=new_location)
+                new_constraint.target_sequence = \
+                    new_constraint.extract_subsequence(self.target_sequence)
+                return new_constraint
+                # print (new_constraint, new_constraint.target_sequence)
+
+
         elif self.indices is not None:
             inds = self.indices
             new_indices = inds[(start <= inds) & (inds <= end)]

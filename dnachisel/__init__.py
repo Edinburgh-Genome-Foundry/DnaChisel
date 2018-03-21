@@ -35,6 +35,7 @@ from .biotools import (
     complement,
     crop_record,
     is_palyndromic,
+    list_common_enzymes,
     load_record,
     random_dna_sequence,
     random_protein_sequence,

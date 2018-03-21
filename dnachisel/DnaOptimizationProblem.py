@@ -122,10 +122,10 @@ class DnaOptimizationProblem:
         """Initialize"""
         if isinstance(sequence, SeqRecord):
             self.record = sequence
-            self.sequence = str(sequence.seq)
+            self.sequence = str(sequence.seq).upper()
         else:
             self.record = None
-            self.sequence = sequence
+            self.sequence = sequence.upper()
         self.constraints = [] if constraints is None else constraints
         self.objectives = [] if objectives is None else objectives
 

@@ -2,6 +2,7 @@ import tempfile
 import os
 import subprocess
 import time
+import itertools
 from copy import deepcopy
 
 import numpy as np
@@ -9,11 +10,12 @@ from Bio.Seq import Seq
 from Bio.Blast import NCBIXML
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import DNAAlphabet
-from Bio.SeqFeature import SeqFeature, FeatureLocation
+from Bio.SeqFeature import FeatureLocation
 from Bio import SeqIO
+from Bio import Restriction
 
 from .biotables import (CODONS_TRANSLATIONS, NUCLEOTIDE_TO_REGEXPR,
-                        CODONS_SEQUENCES)
+                        CODONS_SEQUENCES, IUPAC_NOTATION)
 
 
 def complement(dna_sequence):
@@ -429,7 +431,8 @@ def sequences_differences_array(seq1, seq2):
     seq1, seq2 should both be ATGC strings.
     """
     if len(seq1) != len(seq2):
-        raise ValueError("Only use on same-size sequences")
+        raise ValueError("Only use on same-size sequences (%d, %d)" %
+                         (len(seq1), len(seq2)))
     arr1 = np.fromstring(seq1, dtype="uint8")
     arr2 = np.fromstring(seq2, dtype="uint8")
     return arr1 != arr2
@@ -540,3 +543,30 @@ def codons_frequencies_and_positions(sequence):
             if codon != 'total':
                 data[codon] = 1.0 * value / total
     return codons_frequencies, codons_positions
+
+def all_iupac_variants(iupac_sequence):
+    return[
+        "".join(nucleotides)
+        for nucleotides in itertools.product(*[
+            IUPAC_NOTATION[n] for n in iupac_sequence
+        ])
+    ]
+def list_common_enzymes(site_length=(6,), opt_temp=(37,), min_suppliers=1,
+                        site_unlike=()):
+    site_unlike = set([
+        variant
+        for enzyme in site_unlike
+        for variant in all_iupac_variants(Restriction.__dict__[enzyme].site)
+    ])
+    def is_valid(enzyme_name):
+        enzyme = Restriction.__dict__[enzyme_name]
+        return (len(enzyme.site) in site_length
+                and enzyme.opt_temp in opt_temp
+                and len(enzyme.supplier_list()) >= min_suppliers
+                and len(set(all_iupac_variants(enzyme.site))
+                        .intersection(site_unlike)) == 0)
+    return [
+        enzyme_name
+        for enzyme_name in Restriction.AllEnzymes.elements()
+        if is_valid(enzyme_name)
+    ]
