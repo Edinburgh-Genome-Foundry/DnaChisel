@@ -77,7 +77,7 @@ class EnforceSequence(Specification):
         return SpecEvaluation(self, problem, score=-len(discrepancies),
                               locations=locations)
 
-    def localized(self, location):
+    def localized(self, location, problem=None):
         """Localize the spec to the overlap of its location and the new."""
         start, end = location.start, location.end
         new_location = self.location.overlap_region(location)

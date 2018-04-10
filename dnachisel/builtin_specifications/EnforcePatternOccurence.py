@@ -83,7 +83,7 @@ class EnforcePatternOccurence(Specification):
             data=dict(matches=matches)
         )
 
-    def localized(self, location):
+    def localized(self, location, problem=None):
         """Localize the evaluation."""
         new_location = self.location.overlap_region(location)
         if new_location is None:

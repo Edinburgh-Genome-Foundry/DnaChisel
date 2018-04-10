@@ -65,6 +65,7 @@ class SequencePattern:
         if use_lookahead:
             expression = '(?=(%s))' % expression
         self.lookahead_expression = expression
+        self.compiled_expression = re.compile(self.lookahead_expression)
         self.size = size
         self.name = name
         self.in_both_strands = in_both_strands
@@ -101,7 +102,7 @@ class SequencePattern:
             ]
         matches = [
             (match.start(), match.start() + len(match.groups()[0]), 1)
-            for match in re.finditer(self.lookahead_expression, sequence)
+            for match in re.finditer(self.compiled_expression, sequence)
         ]
 
         if self.in_both_strands:
@@ -110,7 +111,7 @@ class SequencePattern:
             matches += [
                 (L - match.start() - len(match.groups()[0]),
                  L - match.start(), -1)
-                for match in re.finditer(self.lookahead_expression, reverse)
+                for match in re.finditer(self.compiled_expression, reverse)
             ]
 
         return [

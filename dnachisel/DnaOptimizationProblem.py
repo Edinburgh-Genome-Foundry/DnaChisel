@@ -15,7 +15,7 @@ from .SpecEvaluation import (ProblemObjectivesEvaluations,
                              ProblemConstraintsEvaluations)
 from .Location import Location
 from .MutationSpace import MutationSpace
-from proglog import TqdmProgressBarLogger, ProgressBarLogger
+from proglog import TqdmProgressBarLogger, MuteProgressBarLogger
 
 _default_bars = ('objective', 'constraint', 'location', 'mutation')
 class DnaOptimizationProgressBar(TqdmProgressBarLogger):
@@ -133,7 +133,7 @@ class DnaOptimizationProblem:
             logger = DnaOptimizationProgressBar(
                 bars=('objective', 'constraint', 'location'))
         if logger is None:
-            logger = ProgressBarLogger(min_time_interval=0.2) # silent logger
+            logger = MuteProgressBarLogger(min_time_interval=0.2) # silent logger
         self.logger = logger
         self.mutation_space = mutation_space
         self.initialize()
@@ -309,14 +309,15 @@ class DnaOptimizationProblem:
                 if (i < (len(locations) - 1)) and (
                    locations[i + 1].overlap_region(new_location)):
                     this_local_constraint = constraint.localized(
-                        new_location, with_righthand=False)
+                        new_location, with_righthand=False, problem=self)
                 else:
-                    this_local_constraint = constraint.localized(new_location)
+                    this_local_constraint = constraint.localized(
+                        new_location, problem=self)
 
                 if this_local_constraint.evaluate(self).passes:
                     continue
                 localized_constraints = [
-                    _constraint.localized(new_location)
+                    _constraint.localized(new_location, problem=self)
                     for _constraint in self.constraints
                     if _constraint != constraint
                     if not _constraint.enforced_by_nucleotide_restrictions
@@ -493,7 +494,7 @@ class DnaOptimizationProblem:
                 continue
             location = Location(*mutation_space.choices_span)
             localized_constraints = [
-                _constraint.localized(location)
+                _constraint.localized(location, problem=self)
                 for _constraint in self.constraints
             ]
             local_problem = DnaOptimizationProblem(
@@ -501,7 +502,7 @@ class DnaOptimizationProblem:
                 constraints=localized_constraints,
                 mutation_space=mutation_space,
                 objectives=[
-                    _objective.localized(location)
+                    _objective.localized(location, problem=self)
                     for _objective in self.objectives
                 ]
             )

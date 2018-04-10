@@ -29,6 +29,11 @@ class EnforceGCContent(Specification):
     maxi
       Maximal proportion of G-C (e.g. ``0.75``)
 
+    target
+      Target proportion of GC (e.g. ``0.4``), which can be used instead of
+      ``mini`` and ``maxi`` when using the specification as an optimization
+      objective.
+
     window
       Length of the sliding window, in nucleotides, for local GC content.
       If not provided, the global GC content of the whole sequence is
@@ -101,7 +106,7 @@ class EnforceGCContent(Specification):
                               locations=breaches_locations,
                               message=message)
 
-    def localized(self, location, with_righthand=True):
+    def localized(self, location, problem=None, with_righthand=True):
         """Localize the GC content evaluation.
 
         For a location, the GC content evaluation will be restricted

@@ -35,10 +35,12 @@ class AvoidBlastMatches(Specification):
       Minimal length that an alignment should have to be considered.
     """
     priority = -2
+    best_possible_score = 0
 
     def __init__(self, blast_db=None, sequences=None, word_size=4,
                  perc_identity=100, num_alignments=1000, num_threads=3,
-                 min_align_length=20, ungapped=True, location=None):
+                 min_align_length=20, ungapped=True, e_value=None,
+                 location=None):
         """Initialize."""
         if isinstance(location, tuple):
             location = Location.from_tuple(location)
@@ -50,6 +52,7 @@ class AvoidBlastMatches(Specification):
         self.num_threads = num_threads
         self.min_align_length = min_align_length
         self.location = location
+        self.e_value = e_value
         self.ungapped = ungapped
 
     def initialize_on_problem(self, problem, role):
@@ -74,7 +77,8 @@ class AvoidBlastMatches(Specification):
             perc_identity=self.perc_identity,
             num_alignments=self.num_alignments,
             num_threads=self.num_threads,
-            ungapped=self.ungapped
+            ungapped=self.ungapped,
+            e_value=self.e_value
         )
 
         if isinstance(blast_record, list):
@@ -129,7 +133,7 @@ class AvoidBlastMatches(Specification):
             self, problem, score=score, locations=locations,
             message="Failed - matches at %s" % locations)
 
-    def localized(self, location, with_righthand=True):
+    def localized(self, location, problem=None, with_righthand=True):
         """Localize the evaluation."""
         new_location = self.location.overlap_region(location)
         if new_location is None:

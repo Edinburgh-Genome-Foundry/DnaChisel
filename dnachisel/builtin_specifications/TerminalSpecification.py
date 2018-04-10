@@ -46,7 +46,7 @@ class TerminalSpecification(Specification):
         else:
             return self
 
-    def localized(self, location):
+    def localized(self, location, problem=None):
         new_end_locations = []
         for end_location in self.ends_locations:
             overlap = location.overlap_region(end_location)

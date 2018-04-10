@@ -64,7 +64,7 @@ class AvoidHairpins(Specification):
 
         return SpecEvaluation(self, problem, score, locations=locations)
 
-    def localized(self, location, with_righthand=True):
+    def localized(self, location, problem=None, with_righthand=True):
         """Localize the spec, make sure no neighbouring hairpin is created."""
         new_location = self.location.overlap_region(location)
         if new_location is None:

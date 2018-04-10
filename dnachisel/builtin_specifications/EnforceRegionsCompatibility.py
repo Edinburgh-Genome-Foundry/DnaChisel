@@ -50,7 +50,7 @@ class EnforceRegionsCompatibility(Specification):
             message=message
         )
 
-    def localized(self, location):
+    def localized(self, location, problem=None):
         if any(location.overlap_region(rl) for rl in self.locations):
             return self
         else:

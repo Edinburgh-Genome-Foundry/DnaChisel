@@ -257,7 +257,7 @@ def gc_content(sequence, window_size=None):
 def blast_sequence(sequence, blast_db=None, subject_sequences=None,
                    subject=None, word_size=4, perc_identity=80,
                    num_alignments=1000, ungapped=False, num_threads=3,
-                   use_megablast=True):
+                   e_value=None, use_megablast=True):
     """Return a Biopython BLAST record of the given sequence BLASTed
     against the provided database.
 
@@ -316,7 +316,11 @@ def blast_sequence(sequence, blast_db=None, subject_sequences=None,
         ["-task", "megablast"]
         if use_megablast
         else []
-    ) + [
+    ) + (
+        ["-evalue", str(e_value)]
+        if e_value is not None
+        else []
+    ) +[
         "-word_size", str(word_size),
         "-num_threads", str(num_threads),
         "-perc_identity", str(perc_identity)

@@ -51,12 +51,12 @@ class Location:
         else:
             return None
 
-    def extended(self, extension_length, upper_limit=None, left=True,
-                 right=True):
+    def extended(self, extension_length, lower_limit=0, upper_limit=None,
+                 left=True, right=True):
         """Extend the location of a few basepairs on each side."""
 
         if left:
-            lower = max(0, self.start - extension_length)
+            lower = max(lower_limit, self.start - extension_length)
         else:
             lower = self.start
 
@@ -80,6 +80,11 @@ class Location:
     def to_tuple(self):
         """Return (start, end, strand)."""
         return (self.start, self.end, self.strand)
+
+    @property
+    def indices(self):
+        result = list(range(self.start, self.end))
+        return result if (self.strand != -1) else result[::-1]
 
     @staticmethod
     def from_tuple(some_tuple, default_strand=0):

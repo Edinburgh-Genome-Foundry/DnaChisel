@@ -10,7 +10,7 @@ class CodonSpecification(Specification):
 
     """
 
-    def localized(self, location):
+    def localized(self, location, problem=None):
         """Generic localization method for codon specifications.
 
         Calls the class'  ``.localized_on_window`` method at the end.

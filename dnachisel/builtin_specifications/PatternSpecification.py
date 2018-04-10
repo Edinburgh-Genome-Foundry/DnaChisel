@@ -50,7 +50,7 @@ class PatternSpecification(Specification):
             result = self
         return result
 
-    def localized(self, location, with_righthand=True):
+    def localized(self, location, problem=None, with_righthand=True):
         """Localize the pattern to the given location. Taking into account the
         specification's own location, and the size of the pattern."""
         pattern_size = self.pattern.size

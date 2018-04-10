@@ -79,7 +79,7 @@ class EnforceChoice(Specification):
         locations = [] if (score == 0) else [self.location]
         return SpecEvaluation(self, problem, score=score, locations=locations)
 
-    def localized(self, location):
+    def localized(self, location, problem=None):
         """Localize the spec to the overlap of its location and the new."""
         return self
 

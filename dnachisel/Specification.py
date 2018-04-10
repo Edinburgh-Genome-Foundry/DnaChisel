@@ -44,7 +44,7 @@ class Specification:
         if evaluate is not None:
             self.evaluate = evaluate
 
-    def localized(self, location):
+    def localized(self, location, problem=None):
         """Return a modified version of the specification for the case where
         sequence modifications are only performed inside the provided location.
 
@@ -67,7 +67,7 @@ class Specification:
 
         For instance ``new_spec = spec.copy_with_changes(boost=10)``.
         """
-        new_specification = copy.deepcopy(self)
+        new_specification = copy.copy(self)
         new_specification.__dict__.update(kwargs)
         return new_specification
 
