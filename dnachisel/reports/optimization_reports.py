@@ -162,7 +162,10 @@ def write_no_solution_report(target, problem, error):
     error
       A NoSolutionError (carries a message and a location)
     """
-    root = flametree.file_tree(target, replace=True)
+    if isinstance(target, str):
+        root = flametree.file_tree(target, replace=True)
+    else:
+        root = target
     translator = SpecAnnotationsTranslator()
     with PdfPages(root._file("plots.pdf").open("wb")) as pdf_io:
 
@@ -218,7 +221,8 @@ def write_no_solution_report(target, problem, error):
     root._file('logs.txt').write(problem.logger.dump_logs())
 
     # returns zip data if target == '@memory'
-    return root._close()
+    if isinstance(target, str):
+        return root._close()
 
 
 def write_optimization_report(target, problem, project_name="unnammed",
@@ -230,15 +234,15 @@ def write_optimization_report(target, problem, project_name="unnammed",
     Parameters
     ----------
 
-
-
-
     """
     if constraints_evaluations is None:
         constraints_evaluations = problem.constraints_evaluations()
     if objectives_evaluations is None:
         objectives_evaluations = problem.objectives_evaluations()
-    root = flametree.file_tree(target, replace=True)
+    if isinstance(target, str):
+        root = flametree.file_tree(target, replace=True)
+    else:
+        root = target
     translator = SpecAnnotationsTranslator()
     # CREATE FIGURES AND GENBANKS
 
@@ -345,4 +349,5 @@ def write_optimization_report(target, problem, project_name="unnammed",
                       with_objectives=False)
 
     # returns zip data if target == '@memory'
-    return root._close()
+    if isinstance(target, str):
+        return root._close()
