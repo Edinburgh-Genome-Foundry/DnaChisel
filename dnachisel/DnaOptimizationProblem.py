@@ -9,6 +9,7 @@ from Bio import SeqIO
 
 from .biotools.biotools import (sequence_to_biopython_record,
                                 find_specification_in_feature,
+                                sequences_differences_array,
                                 sequences_differences_segments)
 from .Specification import Specification
 from .SpecEvaluation import (ProblemObjectivesEvaluations,
@@ -38,9 +39,13 @@ class NoSolutionError(Exception):
     def __init__(self, message, problem, constraint=None, location=None):
         """Initialize."""
         Exception.__init__(self, message)
+        self.message = message
         self.problem = problem
         self.constraint = constraint
         self.location = location
+
+    def __str__(self):
+        return self.message
 
 class DnaOptimizationProblem:
     """Problem specifications: sequence, constraints, optimization objectives.
@@ -352,6 +357,9 @@ class DnaOptimizationProblem:
                     if extension == self.local_extensions[-1]:
                         error.location = new_location
                         error.constraint = constraint
+                        error.message = "While solving %s in %s:\n\n%s" % (
+                            constraint, new_location, str(error)
+                        )
                         self.logger(location__index=len(locations),
                                     location__message='Cold exit')
                         raise error
@@ -387,11 +395,11 @@ class DnaOptimizationProblem:
                 if not cst.evaluate(self).passes:
                     raise NoSolutionError(
                         'The solving of all constraints failed to solve'
-                        ' all constraints, constraint %s is'
-                        ' still failing. This is an unintended behavior,'
+                        ' all constraints. This is an unintended behavior,'
                         ' likely due to a complex problem. Try running the'
                         ' solver on the same sequence again, or report the'
-                        ' error to the maintainers' % cst,
+                        ' error to the maintainers:\n\n' +
+                        self.constraints_text_summary(failed_only=True),
                         problem=self)
 
 
@@ -603,6 +611,10 @@ class DnaOptimizationProblem:
             SeqIO.write(record, filepath, "genbank")
         else:
             return record
+
+    def sequence_edits_as_array(self):
+        return sequences_differences_array(self.sequence, self.sequence_before)
+
 
     def sequence_edits_as_features(self, feature_type="misc_feature"):
 

@@ -5,16 +5,15 @@ import textwrap
 
 from Bio import SeqIO
 
-import jinja2
-import weasyprint
 import flametree
 
-from ..biotools import (sequence_to_biopython_record, crop_record,
+from ..biotools import (sequence_to_biopython_record,
                         find_specification_in_feature)
 from ..version import __version__
 from ..DnaOptimizationProblem import (DnaOptimizationProblem, NoSolutionError)
 
 try:
+    from sequenticon import sequenticon
     import matplotlib.cm as cm
     import matplotlib.pyplot as plt
     from matplotlib.backends.backend_pdf import PdfPages
@@ -28,12 +27,17 @@ except:
             raise ImportError("BiopythonTranslator unavailable. Install "
                               "DNA Features Viewer.")
 
+from pdf_reports import ReportWriter
+
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
-TEMPLATES_DIR = os.path.join(THIS_DIR, "templates")
+ASSETS_DIR = os.path.join(THIS_DIR, "assets")
 TITLE_FONTDICT = fontdict = dict(size=14, weight="bold")
 
-
-
+report_writer = ReportWriter(
+    dnachisel_logo_url=os.path.join(ASSETS_DIR, 'logo.png'),
+    version=__version__,
+    default_stylesheets=(os.path.join(ASSETS_DIR, "style.css"),)
+)
 
 
 class SpecAnnotationsTranslator(BiopythonTranslator):
@@ -76,7 +80,7 @@ class SpecAnnotationsTranslator(BiopythonTranslator):
         return label
 
 def optimization_with_report(target, problem=None, record=None,
-                             project_name="unnamed",
+                             project_name="Unnamed project",
                              specifications_dict='default',
                              **solver_parameters):
     """Optimize a sequence and write a multi-file report.
@@ -174,7 +178,9 @@ def write_no_solution_report(target, problem, error):
         record = problem.to_record()
         translator = SpecAnnotationsTranslator()
         graphical_record = translator.translate_record(record)
-        ax, _ = graphical_record.plot(figure_width=20)
+        ax, _ = graphical_record.plot(figure_width=min(20, 0.3*len(record)))
+        if len(record) < 60:
+            graphical_record.plot_sequence(ax)
         start, end, strand = error.location.to_tuple()
         ax.fill_between([start, end], -10, 10, zorder=-1000,
                         facecolor='#ffeeee')
@@ -196,10 +202,13 @@ def write_no_solution_report(target, problem, error):
                                 .success_and_failures_as_features()
         record.features += evals.filter('failing') \
                                 .locations_as_features(label_prefix="BREACH")
-        start, end = error.location.start-5, error.location.end+4
-        local_record = crop_record(record, start, end)
-        graphical_record = translator.translate_record(local_record)
-        ax, _ = graphical_record.plot(figure_width=20)
+        start = max(0, error.location.start - 5)
+        end = min(len(record), error.location.end + 4)
+        # local_record = crop_record(record, start, end)
+        graphical_record = translator.translate_record(record)
+        graphical_record = graphical_record.crop((start, end))
+        ax, _ = graphical_record.plot(figure_width=min(20, 0.3*(end - start)))
+        graphical_record.plot_sequence(ax)
         ax.set_title("Local constraints breaches in [%d, %d]" % (start, end) +
                      "     (green = passing constraints)",
                      fontdict=TITLE_FONTDICT)
@@ -309,7 +318,7 @@ def write_optimization_report(target, problem, project_name="unnammed",
                 graphical_record = translator.translate_record(record)
                 if len(graphical_record.features) > max_features_in_plots:
                     features = sorted(graphical_record.features,
-                                      key= lambda f: f.start - f.end)
+                                      key=lambda f: f.start - f.end)
                     new_ft = features[:max_features_in_plots]
                     graphical_record.features = new_ft
                     message = "(only %d features shown)" % \
@@ -324,24 +333,38 @@ def write_optimization_report(target, problem, project_name="unnammed",
 
     # CREATE PDF REPORT
 
-    jinja_env = jinja2.Environment()
-    jinja_env.globals.update(zip=zip, len=len)
-    template_path = os.path.join(TEMPLATES_DIR, "optimization_report.html")
-    with open(template_path, "r") as f:
-        REPORT_TEMPLATE = jinja_env.from_string(f.read())
-
-    html = REPORT_TEMPLATE.render(
-        dnachisel_version=__version__,
-        project_name="bla",
+    html = report_writer.pug_to_html(
+        path=os.path.join(ASSETS_DIR, "optimization_report.pug"),
+        project_name=project_name,
         problem=problem,
-        outcome="SUCCESS" if constraints_evaluations.all_evaluations_pass()
-                else "FAIL",
-        constraints_after=constraints_evaluations,
-        objectives_after=objectives_evaluations,
-        edits=sum(len(f) for f in edits)
+        constraints_evaluations=constraints_evaluations,
+        objectives_evaluations=objectives_evaluations,
+        edits=sum(len(f) for f in edits),
+        sequenticons={
+            label: sequenticon(seq, output_format="html_image", size=24)
+            for label, seq in [("before", problem.sequence_before),
+                               ("after", problem.sequence)]
+        }
     )
-    weasy_html = weasyprint.HTML(string=html,  base_url=TEMPLATES_DIR)
-    weasy_html.write_pdf(root._file("Report.pdf"))
+    report_writer.write_report(html, root._file("Report.pdf"))
+    # jinja_env = jinja2.Environment()
+    # jinja_env.globals.update(zip=zip, len=len)
+    # template_path = os.path.join(TEMPLATES_DIR, "optimization_report.html")
+    # with open(template_path, "r") as f:
+    #     REPORT_TEMPLATE = jinja_env.from_string(f.read())
+    #
+    # html = REPORT_TEMPLATE.render(
+    #     dnachisel_version=__version__,
+    #     project_name="bla",
+    #     problem=problem,
+    #     outcome="SUCCESS" if constraints_evaluations.all_evaluations_pass()
+    #             else "FAIL",
+    #     constraints_after=constraints_evaluations,
+    #     objectives_after=objectives_evaluations,
+    #     edits=sum(len(f) for f in edits)
+    # )
+    # weasy_html = weasyprint.HTML(string=html,  base_url=TEMPLATES_DIR)
+    # weasy_html.write_pdf(root._file("Report.pdf"))
 
 
     problem.to_record(root._file("final_sequence.gb").open("w"),

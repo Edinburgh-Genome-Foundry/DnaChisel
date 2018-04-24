@@ -1,20 +1,23 @@
 """Example of use of the AvoidChanges as an objective to minimize modifications
 of a sequence."""
 
+import os
 from dnachisel import (AvoidBlastMatches, random_dna_sequence,
-                       DnaOptimizationProblem)
-import numpy
+                       DnaOptimizationProblem, load_record)
+
+sequence_path = os.path.join("tests", "data", "example_sequence.gbk")
+sequence = str(load_record(sequence_path).seq.upper())
 
 def test_avoid_blast_matches():
-    numpy.random.seed(123)
-    avoided_seqs = [random_dna_sequence(20, seed=i) for i in range(10)]
+    avoided_seqs = ["GTCCTCATGCGAAAGCTACGATCGCCAACCCTGT",
+                    "ACCCACCTCGTTACGTCCACGGCACGAGGAATGATCTCGAGTTGCTTT"]
     constraint = AvoidBlastMatches(sequences=avoided_seqs, min_align_length=8)
     problem = DnaOptimizationProblem(
-        sequence=random_dna_sequence(4500, seed=12),
+        sequence=sequence,
         constraints=[constraint]
     )
     assert not problem.all_constraints_pass()
     cst_eval = constraint.evaluate(problem)
-    assert len(cst_eval.locations) == 2
+    assert len(cst_eval.locations) == 10
     problem.resolve_constraints()
     assert problem.all_constraints_pass()

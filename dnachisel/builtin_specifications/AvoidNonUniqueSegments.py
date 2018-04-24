@@ -85,6 +85,7 @@ class AvoidNonuniqueSegments(Specification):
             return default if location is None else location
         location = location_or_default(self.location)
         extended_location = location_or_default(self.extended_location)
+        print(extended_location)
         return self.copy_with_changes(
             location=location, extended_location=extended_location)
 
@@ -158,13 +159,16 @@ class AvoidNonuniqueSegments(Specification):
     def global_evaluation(self, problem):
         extract_kmer = self.get_kmer_extractor(problem.sequence)
         kmers_locations = defaultdict(lambda: [])
-        for i in range(len(problem.sequence) - self.min_length):
+        start, end = self.extended_location.start, self.extended_location.end
+        for i in range(start, end - self.min_length):
             kmers_locations[extract_kmer(i)].append((i, i + self.min_length))
         locations = sorted([
-            Location(*min(positions_list, key=lambda p: p[0]))
-            for positions_list in kmers_locations.values()
-            if len(positions_list) > 1
-        ])
+            Location(start_, end_)
+            for locations_list in kmers_locations.values()
+            for start_, end_ in locations_list
+            if len(locations_list) > 1
+            and (self.location.start < start_ < end_ < self.location.end)
+        ], key=lambda l: l.start)
 
         if locations == []:
             return SpecEvaluation(
@@ -186,7 +190,7 @@ class AvoidNonuniqueSegments(Specification):
 
         extract_kmer = self.get_kmer_extractor(problem.sequence)
         k = self.min_length
-        changing_kmers_zone = (location.extended(k)
+        changing_kmers_zone = (location.extended(k, right=with_righthand)
                                        .overlap_region(self.extended_location))
         changing_kmer_indices = set(changing_kmers_zone.indices[:-k])
         localization_data = {}

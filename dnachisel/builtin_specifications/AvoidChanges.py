@@ -37,8 +37,8 @@ class AvoidChanges(Specification):
     best_possible_score = 0
     enforced_by_nucleotide_restrictions = True
 
-    def __init__(self, location=None, indices=None,  target_sequence=None, boost=1.0):
-                #    target_sequence=None,
+    def __init__(self, location=None, indices=None,  target_sequence=None,
+                 boost=1.0):
 
         """Initialize."""
         if isinstance(location, tuple):
@@ -94,9 +94,7 @@ class AvoidChanges(Specification):
                 discrepancies = self.location.end - discrepancies
             else:
                 discrepancies = discrepancies + self.location.start
-        # if self.passive_objective or (len(discrepancies) == 0):
-        #     locations = []
-        # else:
+
         intervals = [
             (r[0], r[-1])
             for r in group_nearby_indices(discrepancies,

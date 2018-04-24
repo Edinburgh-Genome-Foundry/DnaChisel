@@ -43,7 +43,7 @@ def is_palyndromic(dna_sequence):
     return reverse_complement(dna_sequence) == dna_sequence
 
 
-def random_dna_sequence(length, probas=None, seed=None):
+def random_dna_sequence(length, gc_share=None, probas=None, seed=None):
     """Return a random DNA sequence ("ATGGCGT...") with the specified length.
 
     Parameters
@@ -65,6 +65,10 @@ def random_dna_sequence(length, probas=None, seed=None):
     """
     if seed is not None:
         np.random.seed(seed)
+    if gc_share is not None:
+        g_or_c = gc_share / 2.0
+        not_g_or_c = (1 - gc_share) / 2.0
+        probas = {"G": g_or_c, "C": g_or_c, "A": not_g_or_c, "T": not_g_or_c}
     if probas is None:
         sequence = np.random.choice(list("ATCG"), length)
     else:
@@ -257,7 +261,8 @@ def gc_content(sequence, window_size=None):
 def blast_sequence(sequence, blast_db=None, subject_sequences=None,
                    subject=None, word_size=4, perc_identity=80,
                    num_alignments=1000, ungapped=False, num_threads=3,
-                   e_value=None, use_megablast=True):
+                   culling_limit=None, e_value=None, use_megablast=True,
+                   dust="no"):
     """Return a Biopython BLAST record of the given sequence BLASTed
     against the provided database.
 
@@ -303,28 +308,29 @@ def blast_sequence(sequence, blast_db=None, subject_sequences=None,
         with open(subject, "w+") as f:
             f.write(fasta_content)
 
+    def parameter_if_not_none(label, param):
+        return [label, str(param)] if param else []
+
     command = [
         "blastn", "-out", xml_name,
         "-outfmt", "5",
-        "-num_alignments", str(num_alignments),
-        "-query", fasta_name
-    ] + (
-        ["-db", blast_db]
-        if subject is None
-        else ['-subject', subject]
-    ) + (
-        ["-task", "megablast"]
-        if use_megablast
-        else []
-    ) + (
-        ["-evalue", str(e_value)]
-        if e_value is not None
-        else []
-    ) +[
+        "-max_target_seqs", str(num_alignments),
+        "-query", fasta_name,
         "-word_size", str(word_size),
         "-num_threads", str(num_threads),
         "-perc_identity", str(perc_identity)
-    ] + (["-ungapped"] if ungapped else [])
+    ]
+    command += (
+        (["-db", blast_db] if subject is None else ['-subject', subject]) +
+        parameter_if_not_none("-dust", dust) +
+        parameter_if_not_none("-db", blast_db) +
+        parameter_if_not_none("-evalue", e_value) +
+        parameter_if_not_none("-culling_limit", culling_limit)
+    )
+    if use_megablast:
+        command += ["-task", "megablast"]
+    if ungapped:
+        command += ["-ungapped"]
 
     p = subprocess.Popen(command, close_fds=True)
     out, err = p.communicate()

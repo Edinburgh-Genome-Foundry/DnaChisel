@@ -8,7 +8,7 @@ def test_AvoidNonuniqueSegments_as_constraint():
     sequence = random_dna_sequence(1000, seed=123)
     problem = DnaOptimizationProblem(
         sequence=sequence,
-        constraints=[AvoidNonuniqueSegments(8, location=(0, 1000))])
+        constraints=[AvoidNonuniqueSegments(8)])
     assert not problem.all_constraints_pass()
     problem.resolve_constraints()
     assert problem.all_constraints_pass()
@@ -16,8 +16,8 @@ def test_AvoidNonuniqueSegments_as_constraint():
 def test_AvoidNonuniqueSegments_as_objective():
     numpy.random.seed(123)
     sequence = random_dna_sequence(1000, seed=123)
-    specification = AvoidNonuniqueSegments(8, location=(0, 1000))
+    specification = AvoidNonuniqueSegments(8)
     problem = DnaOptimizationProblem(sequence=sequence,
                                      objectives=[specification])
     problem.optimize()
-    assert specification.evaluate(problem).passes
+    assert problem.objectives[0].evaluate(problem).passes

@@ -38,9 +38,9 @@ class AvoidBlastMatches(Specification):
     best_possible_score = 0
 
     def __init__(self, blast_db=None, sequences=None, word_size=4,
-                 perc_identity=100, num_alignments=1000, num_threads=3,
-                 min_align_length=20, ungapped=True, e_value=None,
-                 location=None):
+                 perc_identity=100, num_alignments=100000, num_threads=3,
+                 min_align_length=20, ungapped=True, e_value=1e80,
+                 culling_limit=1, location=None):
         """Initialize."""
         if isinstance(location, tuple):
             location = Location.from_tuple(location)
@@ -54,6 +54,7 @@ class AvoidBlastMatches(Specification):
         self.location = location
         self.e_value = e_value
         self.ungapped = ungapped
+        self.culling_limit = culling_limit
 
     def initialize_on_problem(self, problem, role):
         """Find out what sequence it is that we are supposed to conserve."""
@@ -78,7 +79,8 @@ class AvoidBlastMatches(Specification):
             num_alignments=self.num_alignments,
             num_threads=self.num_threads,
             ungapped=self.ungapped,
-            e_value=self.e_value
+            e_value=self.e_value,
+            culling_limit=self.culling_limit
         )
 
         if isinstance(blast_record, list):
@@ -92,7 +94,7 @@ class AvoidBlastMatches(Specification):
 
         query_hits = [
             (
-                min(hit.query_start, hit.query_end) + location.start,
+                min(hit.query_start, hit.query_end) + location.start - 1,
                 max(hit.query_start, hit.query_end) + location.start,
                 1 - 2 * (hit.query_start > hit.query_end),
                 hit.identities
@@ -102,32 +104,23 @@ class AvoidBlastMatches(Specification):
         ]
 
         locations = sorted([
-            (start, end)
+            (start, end, ids)
             for (start, end, strand, ids) in query_hits
             if (end - start) >= self.min_align_length
         ])
-        locations = [
-            (r[0][0], r[-1][-1])
-            for r in group_nearby_segments(locations, max_start_spread=2)
-        ]
-        # raise ValueError(locations)
-        locations = [Location(start, end) for start, end in locations]
+        # locations = [
+        #     (r[0][0], r[-1][-1])
+        #     for r in group_nearby_segments(locations, max_start_spread=2)
+        # ]
 
-        score = -sum([
-            ids
-            for (start, end, strand, ids) in query_hits
-            if (end - start) >= self.min_align_length
-        ])
+        score = -sum([ids for start, end, ids in locations])
+        locations = [Location(start, end) for start, end, ids in locations]
 
         if locations == []:
             return SpecEvaluation(self, problem, score=1,
                                   message="Passed: no BLAST match found")
 
-        score = -sum([
-            hit.identities
-            for alignment in alignments
-            for hit in alignment.hsps
-        ])
+
 
         return SpecEvaluation(
             self, problem, score=score, locations=locations,
@@ -139,7 +132,7 @@ class AvoidBlastMatches(Specification):
         if new_location is None:
             return VoidSpecification(parent_specification=self)
 
-        new_location = location.extended(self.min_align_length,
+        new_location = location.extended(self.min_align_length - 1,
                                          right=with_righthand)
         return self.copy_with_changes(location=new_location)
 
