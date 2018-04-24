@@ -11,9 +11,9 @@ from ..biotools import (sequence_to_biopython_record,
                         find_specification_in_feature)
 from ..version import __version__
 from ..DnaOptimizationProblem import (DnaOptimizationProblem, NoSolutionError)
+from sequenticon import sequenticon
 
 try:
-    from sequenticon import sequenticon
     import matplotlib.cm as cm
     import matplotlib.pyplot as plt
     from matplotlib.backends.backend_pdf import PdfPages
