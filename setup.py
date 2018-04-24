@@ -27,4 +27,4 @@ setup(name='dnachisel',
       include_package_data=True,
       scripts=['scripts/dnachisel'],
       install_requires=["numpy", "Biopython", "proglog", 'docopt',
-                        'flametree', 'pdf_reports'])
+                        'flametree', 'pdf_reports', 'sequenticon'])

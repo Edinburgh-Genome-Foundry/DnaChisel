@@ -25,7 +25,8 @@ except:
         "Class unavailable. Install DNA Features Viewer."
         def __init__(self):
             raise ImportError("BiopythonTranslator unavailable. Install "
-                              "DNA Features Viewer.")
+                              "DNA Features Viewer with:\n"
+                              "pip install dna_features_viewer")
 
 from pdf_reports import ReportWriter
 
