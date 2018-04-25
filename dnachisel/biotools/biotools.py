@@ -227,37 +227,6 @@ def gc_content(sequence, window_size=None):
         b = np.hstack([[0], cs[:-window_size]])
         return 1.0 * (a - b) / window_size
 
-
-# def find_orfs(sequence, minsize=300):
-#     """Return the list of (start, end) of all orfs in a sequence
-#
-#     TODO: This seems to be junk code from a former project. complete it
-#     or bin it.
-#
-#     """
-#     import tempfile
-#     import os
-#     import subprocess as sp
-#     import regex
-#     input_temp = tempfile.mkstemp(suffix=".fa")[1]
-#     self.to_fasta(filename=input_temp)
-#     outfile = tempfile.mkstemp(suffix=".seq")[1]
-#     proc = sp.Popen(["getorf", "-minsize", "%d" % minsize,
-#                      "-sequence", input_temp, "-outseq", outfile])
-#     proc.wait()
-#     with open(outfile, 'r') as f:
-#         result = f.read()
-#
-#     os.remove(outfile)
-#     os.remove(input_temp)
-#     orfs_coordinates = regex.findall(">(\S+) \[(\d+) - (\d+)\]",
-#                                      result)
-#     return [
-#         (int(start), int(stop), (+1 if int(start) < int(stop) else -1))
-#         for (_, start, stop) in orfs_coordinates
-#     ]
-
-
 def blast_sequence(sequence, blast_db=None, subject_sequences=None,
                    subject=None, word_size=4, perc_identity=80,
                    num_alignments=1000, ungapped=False, num_threads=3,
@@ -323,7 +292,6 @@ def blast_sequence(sequence, blast_db=None, subject_sequences=None,
     command += (
         (["-db", blast_db] if subject is None else ['-subject', subject]) +
         parameter_if_not_none("-dust", dust) +
-        parameter_if_not_none("-db", blast_db) +
         parameter_if_not_none("-evalue", e_value) +
         parameter_if_not_none("-culling_limit", culling_limit)
     )

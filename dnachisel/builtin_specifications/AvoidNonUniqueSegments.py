@@ -85,7 +85,6 @@ class AvoidNonuniqueSegments(Specification):
             return default if location is None else location
         location = location_or_default(self.location)
         extended_location = location_or_default(self.extended_location)
-        print(extended_location)
         return self.copy_with_changes(
             location=location, extended_location=extended_location)
 

@@ -218,6 +218,20 @@ def repeated_kmers(kmer_size, n_repeats):
     >>> constraint = AvoidPattern(pattern)
     """
 
+    # FIXME: this regular expression does not support lookahead so we will
+    # need the following special pattern.
+    #     def myfindall(regex, seq):
+    # ...    resultlist=[]
+    # ...    pos=0
+    # ...
+    # ...    while True:
+    # ...       result = regex.search(seq, pos)
+    # ...       if result is None:
+    # ...          break
+    # ...       resultlist.append(seq[result.start():result.end()])
+    # ...       pos = result.start()+1
+    # ...    return resultlist
+
     return SequencePattern(
         size=kmer_size * n_repeats,
         expression=r"([ATGC]{%d})\1{%d}" % (kmer_size, n_repeats-1),

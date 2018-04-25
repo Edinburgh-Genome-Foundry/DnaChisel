@@ -276,7 +276,11 @@ class DnaOptimizationProblem:
             else:
                 self.sequence = previous_sequence
         raise NoSolutionError(
-            "Random search hit max_iterations without finding a solution.",
+            "Random search did not find a solution in the given number of "
+            "attempts. Try to increase the number of attempts with:\n\n"
+            "problem.max_random_iters = 5000 # or even 10000, 20000, etc.\n\n"
+            "If the problem persists, you may be in presence of a complex or "
+            "unsolvable problem.",
             problem=self
         )
 

@@ -18,7 +18,7 @@ def test_no_solution_error_random_search():
     )
     with pytest.raises(NoSolutionError) as err:
         problem.resolve_constraints()
-    assert 'Random search hit max_iterations' in str(err.value)
+    assert 'Random search did not' in str(err.value)
 
 
 def test_no_solution_error_exhaustive_search():
