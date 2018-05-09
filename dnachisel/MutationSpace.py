@@ -298,8 +298,14 @@ class MutationSpace:
         sequence = problem.sequence
 
         if new_constraints is None:
+            # The use of different nucleotide orders by arrays of 4
+            # "randomizes" the considered sequence variants, thus reducing
+            # the apparition of homopolymers during exhaustive searches
+            # (may create 4bp tandem repeats though). also increased solving
+            # time by 6% in tests.
+            variants = ["ACTG", "CTGA", "TGAC", "GACT"]
             choices_index = [
-                MutationChoice((i, i+1), variants=set("ATGC"))
+                MutationChoice((i, i+1), variants=variants[i % 4])
                 for i in range(len(sequence))
             ]
             constraints = problem.constraints

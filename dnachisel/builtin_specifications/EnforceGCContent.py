@@ -58,6 +58,8 @@ class EnforceGCContent(Specification):
         self.mini = mini
         self.maxi = maxi
         self.window = window
+        if isinstance(location, tuple):
+            location = Location.from_tuple(location)
         self.location = location
         self.boost = boost
 

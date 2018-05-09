@@ -56,6 +56,19 @@ sequences,  or the inclusion or exclusion of advanced patterns, as well as
 some common biological objectives (such as codon optimization, GC content), but it
 is also very easy to implement new constraints and objectives.
 
+How it works
+------------
+
+DnaChisel hunts down every constraint breach and suboptimal region by recreating local version of the problem around these regions. Each type of constraint can be locally *reduced* and solved in its own way, to ensure fast and reliable resolution.
+
+Below is an animation of the algorithm in action:
+
+.. raw:: html
+
+    <p align="center">
+    <img alt="DNA Chisel algorithm" title="DNA Chisel" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/dnachisel_algorithm.gif" width="800">
+    <br />
+    </p>
 
 Installation
 -------------
