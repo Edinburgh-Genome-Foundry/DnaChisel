@@ -319,11 +319,17 @@ class MutationSpace:
             for cst in constraints
             for choice in cst.restrict_nucleotides(sequence)
         ], key=lambda choice: (choice.end - choice.start, choice.start))
-
+        # print (new_constraints, choices_index)
+        # print ("mutation_choices", mutation_choices)
         for choice in mutation_choices:
             underlying_choices = choices_index[choice.start: choice.end]
-            new_choice = choice.percolate_with(set(underlying_choices))
+            if underlying_choices == []:
+                new_choice = choice
+            else:
+                new_choice = choice.percolate_with(set(underlying_choices))
             for choice in new_choice.extract_varying_region():
+                if choice.end > len(choices_index):
+                    choices_index += (choice.end - len(choices_index)) * [None]
                 for i in range(choice.start, choice.end):
                     choices_index[i] = choice
             # for i in range(new_choice.start, new_choice.end):
