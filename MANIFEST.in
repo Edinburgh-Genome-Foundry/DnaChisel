@@ -1,6 +1,6 @@
 include *.txt
 recursive-include docs *
 recursive-include dnachisel/biotools/data *
-recursive-include dnachisel/reports/templates *
+recursive-include dnachisel/reports/assets *
 include *.rst
 include ez_setup.py
