@@ -24,7 +24,7 @@ In this basic example we generate a random sequence and optimize it so that
 
 - It will be rid of BsaI sites.
 - GC content will be between 30% and 70% on every 50bp window.
-- The reading frame at position 500-1300 will be codon-optimized for *E. coli*.
+- The reading frame at position 500-1400 will be codon-optimized for *E. coli*.
 
 Here is the code to achieve that:
 
@@ -36,9 +36,12 @@ Here is the code to achieve that:
 
     problem = DnaOptimizationProblem(
         sequence=random_dna_sequence(10000),
-        constraints=[AvoidPattern(enzyme_="BsaI"),
-                     EnforceGCContent(mini=0.3, maxi=0.7, window=50)],
-        objectives=[CodonOptimize(species='e_coli', location=(500, 1300))]
+        constraints=[
+            EnforceTranslation((500, 1400)),
+            AvoidPattern(enzyme="BsaI"),
+            EnforceGCContent(mini=0.3, maxi=0.7, window=50)
+        ],
+        objectives=[CodonOptimize(species='e_coli', location=(500, 1400))]
     )
 
     # SOLVE THE CONSTRAINTS, OPTIMIZE WITH RESPECT TO THE OBJECTIVE
