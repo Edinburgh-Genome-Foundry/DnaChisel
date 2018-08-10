@@ -214,7 +214,8 @@ class CodonOptimize(CodonSpecification):
             return self
         else:
             return self.__class__(species=self.species, location=new_location,
+                                  codon_usage_table=self.codon_usage_table,
                                   boost=self.boost)
 
     def label_parameters(self):
-        return [self.species]
+        return ["(custom table)" if self.species is None else self.species]
