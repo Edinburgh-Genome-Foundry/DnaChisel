@@ -2,7 +2,7 @@
 
 from dnachisel import (DnaOptimizationProblem, random_protein_sequence,
                        random_dna_sequence, Location, CodonOptimize,
-                       reverse_translate, EnforceTranslation)
+                       reverse_translate, EnforceTranslation, biotools)
 import numpy
 
 def test_codon_optimize_bestcodon():
@@ -45,3 +45,14 @@ def test_codon_optimize_as_hard_constraint():
     assert not problem.all_constraints_pass()
     problem.resolve_constraints()
     assert problem.all_constraints_pass()
+
+def test_codon_optimize_with_custom_table():
+    problem = DnaOptimizationProblem(
+        sequence=random_dna_sequence(1200, seed=123),
+        constraints=[EnforceTranslation()],
+        objectives=[CodonOptimize(
+            codon_usage_table=biotools.CODON_USAGE_TABLES['b_subtilis'])]
+    )
+    assert (problem.objective_scores_sum() < -10)
+    problem.optimize()
+    assert (problem.objective_scores_sum() == 0)
