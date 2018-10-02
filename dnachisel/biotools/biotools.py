@@ -77,8 +77,9 @@ def random_dna_sequence(length, gc_share=None, probas=None, seed=None):
     return "".join(sequence)
 
 
-def load_record(filename, linear=True, name="unnamed", fmt=None):
-    if fmt is not None:
+def load_record(filename, linear=True, name="unnamed", fmt='auto'):
+    """Load a FASTA/Genbank/... record"""
+    if fmt is not 'auto':
         record = SeqIO.read(filename, fmt)
     elif filename.lower().endswith(("gb", "gbk")):
         record = SeqIO.read(filename, "genbank")
@@ -504,6 +505,26 @@ def group_nearby_segments(segments, max_start_gap=None, max_start_spread=None):
     return groups
 
 def codons_frequencies_and_positions(sequence):
+    """Return dicts indicating codons frequencies and positions.
+
+    Parameters
+    ----------
+    sequence
+      A sequence with length divisible by 3 (like an ORF)
+    
+    Returns
+    -------
+    codons_frequencies
+      A dict ``{'K': {'total': 60, 'AAA': 0.5, 'AAG': 0.4}}, 'M': {...} ...}``
+      providing the frequency of each version of each codon in the given
+      sequence.
+    
+    
+    codons_positions
+      A dict ``{'ATA': [2, 55, 1], 'ATG': [0] ...}`` indicating the position of
+      the different codons in the sequence.
+
+    """
     codons_positions = {cod: [] for cod in CODONS_TRANSLATIONS}
     for i in range(int(len(sequence) / 3)):
         codon = sequence[3 * i: 3 * (i + 1)]
@@ -516,13 +537,14 @@ def codons_frequencies_and_positions(sequence):
         codons_frequencies[aa][codon] = count
         codons_frequencies[aa]['total'] += count
     for aa, data in codons_frequencies.items():
-        total = data['total']
+        total = max(1, data['total'])
         for codon, value in data.items():
             if codon != 'total':
                 data[codon] = 1.0 * value / total
     return codons_frequencies, codons_positions
 
 def all_iupac_variants(iupac_sequence):
+    """Return all unambiguous possible versions of the given sequence."""
     return[
         "".join(nucleotides)
         for nucleotides in itertools.product(*[
@@ -531,6 +553,25 @@ def all_iupac_variants(iupac_sequence):
     ]
 def list_common_enzymes(site_length=(6,), opt_temp=(37,), min_suppliers=1,
                         site_unlike=()):
+    """Return a list of enzyme names with the given constraints.
+    
+    Parameters
+    ----------
+
+    site_length
+      List of accepted site lengths (6, 4, ...)
+    
+    opt_temp
+      List of accepted optimal temperatures for the enzyme
+    
+    min_suppliers
+      Minimal number registered suppliers in the Biopython data. A minimum
+      of 3 known suppliers returns the most common enzymes.
+
+    site_unlike
+      List of (ambiguous or unambiguous) DNA sequences that should NOT be
+      recognized by the selected enzymes.
+    """
     site_unlike = set([
         variant
         for enzyme in site_unlike
