@@ -88,8 +88,9 @@ def load_record(filename, linear=True, name="unnamed", fmt='auto'):
     else:
         raise ValueError('Unknown format for file: %s' % filename)
     record.linear = linear
-    record.id = name
-    record.name = name.replace(" ", "_")[:20]
+    if name != "unnamed":
+        record.id = name
+        record.name = name.replace(" ", "_")[:20]
     return record
 
 def random_protein_sequence(length, seed=None):

@@ -17,12 +17,12 @@ to minimize this score, and we use it to optimize a coding sequence.
 """
 
 from collections import Counter
-from dnachisel import (EnforceTranslation, ObjectiveEvaluation, Objective,
+from dnachisel import (EnforceTranslation, Specification, SpecEvaluation,
                        reverse_translate, random_protein_sequence, Location,
                        DnaOptimizationProblem)
 
 
-class MinimizeNinemersScore(Objective):
+class MinimizeNinemersScore(Specification):
     """Minimize Gen9's "no-9mers" score."""
 
     def evaluate(self, problem):
@@ -35,7 +35,7 @@ class MinimizeNinemersScore(Objective):
             if count > 1
         ])
         score = - (9.0 * number_of_non_unique_9mers) / len(sequence)
-        return ObjectiveEvaluation(
+        return SpecEvaluation(
             self, problem,
             score=score,
             locations=[Location(0, len(sequence))],
