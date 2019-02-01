@@ -99,7 +99,7 @@ def plot_constraint_breaches(constraint, sequence, title=None, ax=None,
     translator = Translator()
     graphic_record = translator.translate_record(breaches_record)
     ax, _ = graphic_record.plot(ax=ax)
-    ax.set_ylim(ymin=-1, ymax=min(5, ax.get_ylim()[1]))
+    ax.set_ylim(bottom=-1, top=min(5, ax.get_ylim()[1]))
     if title is not None:
         ax.set_title(title, fontweight="bold", loc="left")
     return ax

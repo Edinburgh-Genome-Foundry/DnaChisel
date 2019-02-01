@@ -13,6 +13,7 @@ from ..version import __version__
 from ..DnaOptimizationProblem import (DnaOptimizationProblem, NoSolutionError)
 from sequenticon import sequenticon
 
+MATPLOTLIB_AVAILABLE = DFV_AVAILABLE = GENEBLOCKS_AVAILABLE = False
 try:
     import matplotlib.cm as cm
     import matplotlib.pyplot as plt
@@ -20,6 +21,8 @@ try:
     MATPLOTLIB_AVAILABLE = True
     from dna_features_viewer import BiopythonTranslator
     DFV_AVAILABLE = True
+    from geneblocks import DiffBlocks
+    GENEBLOCKS_AVAILABLE = True
 except:
     class BiopythonTranslator:
         "Class unavailable. Install DNA Features Viewer."
@@ -29,6 +32,7 @@ except:
                               "pip install dna_features_viewer")
 
 from pdf_reports import ReportWriter
+import pdf_reports.tools as pdf_tools
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 ASSETS_DIR = os.path.join(THIS_DIR, "assets")
@@ -50,6 +54,13 @@ class SpecAnnotationsTranslator(BiopythonTranslator):
         "#": "#8edfff",
         "!": "#fcff75",
     }
+
+    def compute_filtered_features(self, features):
+        """Do not display edits."""
+        return [
+            feature for feature in features
+            if "".join(feature.qualifiers.get("is_edit", "false")) != 'true'
+        ]
 
 
     def compute_feature_color(self, f):
@@ -255,13 +266,23 @@ def write_optimization_report(target, problem, project_name="unnammed",
         root = target
     translator = SpecAnnotationsTranslator()
     # CREATE FIGURES AND GENBANKS
+    diffs_figure_data = None
+    if GENEBLOCKS_AVAILABLE:
+        sequence_before = sequence_to_biopython_record(problem.sequence_before)
+        sequence_after = problem.to_record()
+        contract_under = max(3, int(len(sequence_after)/ 25))
+        diffs = DiffBlocks.from_sequences(sequence_before, sequence_after,
+                                        contract_under=contract_under)
+        _, diffs_ax = diffs.plot()
+        diffs_figure_data = pdf_tools.figure_data(diffs_ax.figure)
+        plt.close(diffs_ax.figure)
 
     with PdfPages(root._file("before_after.pdf").open("wb")) as pdf_io:
 
         figures_data = [
             (
                 "Before",
-                sequence_to_biopython_record(problem.sequence_before),
+                sequence_before,
                 problem.constraints_before,
                 problem.objectives_before,
                 []
@@ -333,7 +354,6 @@ def write_optimization_report(target, problem, project_name="unnammed",
                 plt.close(ax.figure)
 
     # CREATE PDF REPORT
-
     html = report_writer.pug_to_html(
         path=os.path.join(ASSETS_DIR, "optimization_report.pug"),
         project_name=project_name,
@@ -341,37 +361,18 @@ def write_optimization_report(target, problem, project_name="unnammed",
         constraints_evaluations=constraints_evaluations,
         objectives_evaluations=objectives_evaluations,
         edits=sum(len(f) for f in edits),
+        diffs_figure_data=diffs_figure_data,
         sequenticons={
             label: sequenticon(seq, output_format="html_image", size=24)
             for label, seq in [("before", problem.sequence_before),
                                ("after", problem.sequence)]
         }
     )
-    report_writer.write_report(html, root._file("Report.pdf"))
-    # jinja_env = jinja2.Environment()
-    # jinja_env.globals.update(zip=zip, len=len)
-    # template_path = os.path.join(TEMPLATES_DIR, "optimization_report.html")
-    # with open(template_path, "r") as f:
-    #     REPORT_TEMPLATE = jinja_env.from_string(f.read())
-    #
-    # html = REPORT_TEMPLATE.render(
-    #     dnachisel_version=__version__,
-    #     project_name="bla",
-    #     problem=problem,
-    #     outcome="SUCCESS" if constraints_evaluations.all_evaluations_pass()
-    #             else "FAIL",
-    #     constraints_after=constraints_evaluations,
-    #     objectives_after=objectives_evaluations,
-    #     edits=sum(len(f) for f in edits)
-    # )
-    # weasy_html = weasyprint.HTML(string=html,  base_url=TEMPLATES_DIR)
-    # weasy_html.write_pdf(root._file("Report.pdf"))
-
-
     problem.to_record(root._file("final_sequence.gb").open("w"),
                       with_constraints=False,
                       with_objectives=False)
 
+    report_writer.write_report(html, root._file("Report.pdf"))
     # returns zip data if target == '@memory'
     if isinstance(target, str):
         return root._close()
