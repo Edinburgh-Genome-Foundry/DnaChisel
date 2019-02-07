@@ -11,22 +11,12 @@ from .biotools.biotools import (sequence_to_biopython_record,
                                 find_specification_in_feature,
                                 sequences_differences_array,
                                 sequences_differences_segments)
-from .Specification import Specification
+from .Specification import Specification, SpecificationsSet
 from .SpecEvaluation import (ProblemObjectivesEvaluations,
                              ProblemConstraintsEvaluations)
 from .Location import Location
 from .MutationSpace import MutationSpace
-from proglog import TqdmProgressBarLogger, MuteProgressBarLogger
-
-_default_bars = ('objective', 'constraint', 'location', 'mutation')
-class DnaOptimizationProgressBar(TqdmProgressBarLogger):
-
-    def __init__(self, bars=_default_bars, notebook='default',
-                 min_time_interval=0.2):
-        ignored_bars = set(_default_bars).difference(bars)
-        TqdmProgressBarLogger.__init__(self, bars=bars, notebook=notebook,
-                                       ignored_bars=ignored_bars,
-                                       min_time_interval=min_time_interval)
+from proglog import default_bar_logger
 
 DEFAULT_SPECIFICATIONS_DICT = {} # completed at library initialization
 
@@ -131,20 +121,34 @@ class DnaOptimizationProblem:
         else:
             self.record = None
             self.sequence = sequence.upper()
-        self.constraints = [] if constraints is None else constraints
-        self.objectives = [] if objectives is None else objectives
-
-        if logger == 'bar':
-            logger = DnaOptimizationProgressBar(
-                bars=('objective', 'constraint', 'location'))
-        if logger is None:
-            logger = MuteProgressBarLogger(min_time_interval=0.2) # silent logger
-        self.logger = logger
+        self.constraints = [] if constraints is None else list(constraints)
+        self.objectives = [] if objectives is None else list(objectives)
+        
+        default_bars = ('objective', 'constraint', 'location', 'mutation')
+        self.logger = default_bar_logger(
+            logger, bars=('objective', 'constraint', 'location'),
+            ignored_bars=('mutation',), min_time_interval=0.2)
         self.mutation_space = mutation_space
         self.initialize()
 
     def initialize(self):
         """Variables initialization before solving."""
+
+        #Uncompress SpecificationSets into
+        for specs in (self.constraints, self.objectives):
+            specsets = [
+                spec for spec in specs
+                if isinstance(spec, SpecificationsSet)
+            ]
+            specs_in_sets = [
+                spec
+                for specset in specsets
+                for spec in specset.specifications.values()
+            ]
+            for specset in specsets:
+                specs.remove(specset)
+            specs.extend(specs_in_sets)
+
 
         self.constraints = [
             constraint.initialize_on_problem(self, role="constraint")
@@ -220,7 +224,6 @@ class DnaOptimizationProblem:
         space_size = int(self.mutation_space.space_size)
         self.logger(mutation__total=space_size)
         for variant in self.logger.iter_bar(mutation=all_variants):
-
             self.sequence = variant
             if self.all_constraints_pass():
                 self.logger(mutation__index=space_size)
@@ -418,7 +421,8 @@ class DnaOptimizationProblem:
             raise NoSolutionError(
                 summary +
                 "Optimization can only be done when all constraints are"
-                "verified."
+                "verified.",
+                self
             )
 
         if all([obj.best_possible_score is not None

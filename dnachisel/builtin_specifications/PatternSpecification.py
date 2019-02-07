@@ -43,12 +43,13 @@ class PatternSpecification(Specification):
         self.boost = boost
 
     def initialize_on_problem(self, problem, role='constraint'):
-        if self.location is None:
-            location = Location(0, len(problem.sequence), 1)
-            result = self.copy_with_changes(location=location)
-        else:
-            result = self
-        return result
+        # if self.location is None:
+        #     location = Location(0, len(problem.sequence), 1)
+        #     result = self.copy_with_changes(location=location)
+        # else:
+        #     result = self
+        # return result
+        return self._copy_with_full_span_if_no_location(problem)
 
     def localized(self, location, problem=None, with_righthand=True):
         """Localize the pattern to the given location. Taking into account the

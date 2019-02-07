@@ -64,11 +64,12 @@ class EnforceGCContent(Specification):
         self.boost = boost
 
     def initialize_on_problem(self, problem, role=None):
-        if self.location is None:
-            location = Location(0, len(problem.sequence))
-            return self.copy_with_changes(location=location)
-        else:
-            return self
+        return self._copy_with_full_span_if_no_location(problem)
+        # if self.location is None:
+        #     location = Location(0, len(problem.sequence))
+        #     return self.copy_with_changes(location=location)
+        # else:
+        #     return self
 
     def evaluate(self, problem):
         """Return the sum of breaches extent for all windowed breaches."""

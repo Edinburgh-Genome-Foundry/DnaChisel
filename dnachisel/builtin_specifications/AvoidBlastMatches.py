@@ -57,12 +57,12 @@ class AvoidBlastMatches(Specification):
         self.culling_limit = culling_limit
 
     def initialize_on_problem(self, problem, role):
-        """Find out what sequence it is that we are supposed to conserve."""
-        if self.location is None:
-            location = Location(0, len(problem.sequence), 1)
-            return self.copy_with_changes(location=location)
-        else:
-            return self
+        return self._copy_with_full_span_if_no_location(problem)
+        # if self.location is None:
+        #     location = Location(0, len(problem.sequence), 1)
+        #     return self.copy_with_changes(location=location)
+        # else:
+        #     return self
 
     def evaluate(self, problem):
         """Score as (-total number of blast identities in matches)."""

@@ -1,10 +1,10 @@
 """Built-in genetic specifications."""
 
-
+from .AllowPrimer import AllowPrimer
 from .AvoidBlastMatches import AvoidBlastMatches
 from .AvoidChanges import AvoidChanges
 from .AvoidHairpins import AvoidHairpins
-from .AvoidNonUniqueSegments import AvoidNonuniqueSegments
+from .AvoidNonUniqueSegments import AvoidNonUniqueSegments
 from .AvoidPattern import AvoidPattern
 from .AvoidStopCodons import AvoidStopCodons
 from .CodonOptimize import CodonOptimize

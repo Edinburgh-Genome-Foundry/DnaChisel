@@ -201,3 +201,27 @@ class Specification:
 
     def as_passive_objective(self):
         return self.copy_with_changes(optimize_passively=True)
+    
+    def _copy_with_full_span_if_no_location(self, problem):
+        """Helper function to turn "None" locations into "full sequence"."""
+        if self.location is None:
+            location = Location(0, len(problem.sequence), 1)
+            return self.copy_with_changes(location=location)
+        else:
+            return self
+
+class SpecificationsSet:
+    """Generic class for writing Specs wchich are actually made of more specs.
+    
+    Behaves as a Specification when it comes to instanciation, reading it
+    from annotated records, etc. but the initialization acutally creates a
+    dictionnary of standard Specifications and the DNAOptimizationProblem
+    actually once embedded in a problem
+    """
+
+    def register_specifications(self, specifications):
+        for name, spec in specifications.items():
+            spec.parent_specification = self
+            spec.name_in_parent = name
+        self.specifications = specifications
+        

@@ -1,4 +1,4 @@
-"""Implement AvoidNonuniqueSegments(Specification)"""
+"""Implement AvoidNonUniqueSegments(Specification)"""
 
 from collections import defaultdict
 
@@ -8,9 +8,47 @@ from ..SpecEvaluation import SpecEvaluation
 from dnachisel.biotools import reverse_complement
 from dnachisel.Location import Location
 
+from functools import lru_cache
 
 
-class AvoidNonuniqueSegments(Specification):
+def get_kmer_extractor(sequence, include_reverse_complement=True,
+                              min_length=1):
+    """"""
+    if include_reverse_complement:
+        rev_comp_sequence = reverse_complement(sequence)
+        L = len(sequence)
+        def extract_kmer(i):
+            subsequence = sequence[i: i + min_length]
+            rev_comp = rev_comp_sequence[L - i - min_length: L - i]
+            return min(subsequence, rev_comp)
+    else:
+        def extract_kmer(i):
+            return sequence[i: i + min_length]
+    return extract_kmer
+
+@lru_cache(maxsize=1)
+def get_kmer_extractor_cached(sequence, include_reverse_complement=True,
+                              min_length=1):
+    """Kmer extractor with memoization.
+    
+    This globally cached method enables much faster computations when
+    several AvoidNonUniqueSegments functions with equal min_length are used. 
+    """
+    if include_reverse_complement:
+        rev_comp_sequence = reverse_complement(sequence)
+        L = len(sequence)
+        @lru_cache(maxsize=len(sequence))
+        def extract_kmer(i):
+            subsequence = sequence[i: i + min_length]
+            rev_comp = rev_comp_sequence[L - i - min_length: L - i]
+            return min(subsequence, rev_comp)
+    else:
+        @lru_cache(maxsize=len(sequence))
+        def extract_kmer(i):
+            return sequence[i: i + min_length]
+    return extract_kmer
+
+class AvoidNonUniqueSegments(Specification):
     """Avoid sub-sequence which have repeats elsewhere in the sequence.
 
     NOTE: For sequences with subsequences appearing more than 2 times, the
@@ -56,12 +94,13 @@ class AvoidNonuniqueSegments(Specification):
 
     >>> from dnachisel import *
     >>> sequence = random_dna_sequence(50000)
-    >>> constraint= AvoidNonuniqueSegments(10, include_reverse_complement=True)
+    >>> constraint= AvoidNonUniqueSegments(10, include_reverse_complement=True)
     >>> problem = DnaOptimizationProblem(sequence, constraints= [contraint])
     >>> print (problem.constraints_summary())
 
     """
     best_possible_score = 0
+    use_cache = True
     # priority = -1
 
 
@@ -96,13 +135,7 @@ class AvoidNonuniqueSegments(Specification):
             return self.global_evaluation(problem)
 
     def local_evaluation(self, problem):
-        def extract_kmer(i):
-            subsequence = problem.sequence[i: i + self.min_length]
-            if self.include_reverse_complement:
-                return min(subsequence, reverse_complement(subsequence))
-            else:
-                return subsequence
-
+        extract_kmer = self.get_kmer_extractor(problem.sequence)
         variable_kmers = {}
         for label in ("location", "extended"):
             variable_kmers[label] = d = {}
@@ -126,7 +159,8 @@ class AvoidNonuniqueSegments(Specification):
         for c in [extended_variable_kmers,
                   fixed_location_kmers, extended_fixed_kmers]:
             nonunique_locations += [
-                i for kmer in location_variable_kmers.intersection(c)
+                i
+                for kmer in location_variable_kmers.intersection(c)
                 for i in variable_kmers["location"][kmer]
             ]
 
@@ -135,25 +169,21 @@ class AvoidNonuniqueSegments(Specification):
                 i for kmer in extended_variable_kmers.intersection(c)
                 for i in variable_kmers["extended"][kmer]
             ]
+        nonunique_locations = [Location(i, i + self.min_length)
+                               for i in nonunique_locations]
+        # print (len(nonunique_locations))
         return SpecEvaluation(
             self, problem, score=-len(nonunique_locations),
             locations=nonunique_locations,
             message="Failed, the following positions are the first occurences"
                     "of local non-unique segments %s" % nonunique_locations)
-
+    
     def get_kmer_extractor(self, sequence):
-        if self.include_reverse_complement:
-            # reverse-complement is done here ad-hoc as it can be bottlenecky
-            rev_comp_sequence = reverse_complement(sequence)
-            L = len(sequence)
-            def extract_kmer(i):
-                subsequence = sequence[i: i + self.min_length]
-                rev_comp = rev_comp_sequence[L - i - self.min_length: L - i]
-                return min(subsequence, rev_comp)
-        else:
-            def extract_kmer(i):
-                return sequence[i: i + self.min_length]
-        return extract_kmer
+        getter = (get_kmer_extractor_cached if self.use_cache else
+                  get_kmer_extractor)
+        return getter(
+            sequence, min_length=self.min_length,
+            include_reverse_complement=self.include_reverse_complement)
 
     def global_evaluation(self, problem):
         extract_kmer = self.get_kmer_extractor(problem.sequence)
@@ -166,14 +196,13 @@ class AvoidNonuniqueSegments(Specification):
             for locations_list in kmers_locations.values()
             for start_, end_ in locations_list
             if len(locations_list) > 1
-            and (self.location.start < start_ < end_ < self.location.end)
+            and (self.location.start <= start_ < end_ < self.location.end)
         ], key=lambda l: l.start)
 
         if locations == []:
             return SpecEvaluation(
                 self, problem, score=0,
                 message="Passed: no nonunique %d-mer found." % self.min_length)
-
         return SpecEvaluation(
             self, problem, score=-len(locations),
             locations=locations,
@@ -186,10 +215,9 @@ class AvoidNonuniqueSegments(Specification):
 
         if location.overlap_region(self.extended_location) is None:
             return VoidSpecification(parent_specification=self)
-
         extract_kmer = self.get_kmer_extractor(problem.sequence)
         k = self.min_length
-        changing_kmers_zone = (location.extended(k, right=with_righthand)
+        changing_kmers_zone = (location.extended(k - 1, right=with_righthand)
                                        .overlap_region(self.extended_location))
         changing_kmer_indices = set(changing_kmers_zone.indices[:-k])
         localization_data = {}
@@ -197,7 +225,7 @@ class AvoidNonuniqueSegments(Specification):
                            (self.extended_location, "extended")]:
             kmer_indices = set(loc.indices[:-self.min_length])
             fixed_kmer_indices = kmer_indices.difference(changing_kmer_indices)
-            fixed_kmers = set(extract_kmer(i) for i in fixed_kmer_indices)
+            fixed_kmers = set([extract_kmer(i) for i in fixed_kmer_indices])
             changing_inds = kmer_indices.intersection(changing_kmer_indices)
             localization_data[label] = {
                 "fixed_kmers": fixed_kmers,
@@ -205,7 +233,8 @@ class AvoidNonuniqueSegments(Specification):
             }
         localization_data["extended"]["changing_indices"].difference_update(
             localization_data["location"]["changing_indices"])
-        return self.copy_with_changes(localization_data=localization_data)
+        return self.copy_with_changes(localization_data=localization_data,
+                                      location=changing_kmers_zone)
 
     def label_parameters(self):
         return [('min_length', str(self.min_length))]

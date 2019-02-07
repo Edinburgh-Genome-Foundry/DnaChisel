@@ -23,7 +23,7 @@ try:
     DFV_AVAILABLE = True
     from geneblocks import DiffBlocks
     GENEBLOCKS_AVAILABLE = True
-except:
+except ImportError:
     class BiopythonTranslator:
         "Class unavailable. Install DNA Features Viewer."
         def __init__(self):
@@ -31,8 +31,12 @@ except:
                               "DNA Features Viewer with:\n"
                               "pip install dna_features_viewer")
 
-from pdf_reports import ReportWriter
-import pdf_reports.tools as pdf_tools
+try:
+    from pdf_reports import ReportWriter
+    import pdf_reports.tools as pdf_tools
+    PDF_REPORTS_AVAILABLE = True
+except ImportError:
+    PDF_REPORTS_AVAILABLE = False
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 ASSETS_DIR = os.path.join(THIS_DIR, "assets")
@@ -154,7 +158,7 @@ def optimization_with_report(target, problem=None, record=None,
 
     problem.logger(message="Now optimizing the sequence")
     problem.optimize()
-    problem.logger(message="Success ! Generating report.")
+    problem.logger(message="Success! Generating report.")
     data = write_optimization_report(
         target, problem, project_name=project_name)
     return True, "Optimization successful.", data

@@ -1,22 +1,32 @@
 from dnachisel import (DnaOptimizationProblem, random_dna_sequence,
-                       AvoidNonuniqueSegments)
+                       AvoidNonUniqueSegments)
 import numpy
 
 # Note: we are not providing a location for AvoidChanges: it applies globally
-def test_AvoidNonuniqueSegments_as_constraint():
+def test_AvoidNonUniqueSegments_as_constraint():
     numpy.random.seed(123)
     sequence = random_dna_sequence(1000, seed=123)
     problem = DnaOptimizationProblem(
         sequence=sequence,
-        constraints=[AvoidNonuniqueSegments(8)])
+        constraints=[AvoidNonUniqueSegments(8)])
     assert not problem.all_constraints_pass()
     problem.resolve_constraints()
     assert problem.all_constraints_pass()
 
-def test_AvoidNonuniqueSegments_as_objective():
+
+def test_AvoidNonUniqueSegments_from_polyAs():
+    problem = DnaOptimizationProblem(
+        sequence= 40 * "A",
+        constraints=[AvoidNonUniqueSegments(3, location=(10, 30))]
+    )
+    assert not problem.all_constraints_pass()
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+
+def test_AvoidNonUniqueSegments_as_objective():
     numpy.random.seed(123)
     sequence = random_dna_sequence(1000, seed=123)
-    specification = AvoidNonuniqueSegments(8)
+    specification = AvoidNonUniqueSegments(8)
     problem = DnaOptimizationProblem(sequence=sequence,
                                      objectives=[specification])
     problem.optimize()

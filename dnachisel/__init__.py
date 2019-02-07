@@ -3,10 +3,11 @@ from .DnaOptimizationProblem import (DnaOptimizationProblem, NoSolutionError,
 from .Location import Location
 
 from .builtin_specifications import (
+    AllowPrimer,
     AvoidBlastMatches,
     AvoidChanges,
     AvoidHairpins,
-    AvoidNonuniqueSegments,
+    AvoidNonUniqueSegments,
     AvoidPattern,
     AvoidStopCodons,
     CodonOptimize,
@@ -20,7 +21,7 @@ from .builtin_specifications import (
     SequenceLengthBounds
 )
 
-from .Specification import Specification
+from .Specification import Specification, SpecificationsSet
 from .SpecEvaluation import SpecEvaluation
 
 from .SequencePattern import (
@@ -59,7 +60,7 @@ DEFAULT_SPECIFICATIONS_DICT.update({
     'AvoidBlastMatches': AvoidBlastMatches,
     'AvoidChanges': AvoidChanges,
     'AvoidHairpins': AvoidHairpins,
-    'AvoidNonUniqueSegments': AvoidNonuniqueSegments,
+    'AvoidNonUniqueSegments': AvoidNonUniqueSegments,
     'AvoidPattern': AvoidPattern,
     'CodonOptimize': CodonOptimize,
     'EnforceGCContent': EnforceGCContent,

@@ -42,12 +42,13 @@ class EnforceSequence(Specification):
 
     def initialize_on_problem(self, problem, role):
         """Find out what sequence it is that we are supposed to conserve."""
-        if self.location is None:
-            result = self.copy_with_changes()
-            result.location = Location(0, len(problem.sequence), 1)
-            return result
-        else:
-            return self
+        return self._copy_with_full_span_if_no_location(problem)
+        # if self.location is None:
+        #     result = self.copy_with_changes()
+        #     result.location = Location(0, len(problem.sequence), 1)
+        #     return result
+        # else:
+        #     return self
 
     def evaluate(self, problem):
         """Return a score equal to -number_of modifications.

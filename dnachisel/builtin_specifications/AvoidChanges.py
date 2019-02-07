@@ -65,11 +65,12 @@ class AvoidChanges(Specification):
 
     def initialize_on_problem(self, problem, role):
         """Find out what sequence it is that we are supposed to conserve."""
-        if self.location is None:
-            location = Location(0, len(problem.sequence), 1)
-            result = self.copy_with_changes(location=location)
-        else:
-            result = self
+        # if self.location is None:
+        #     location = Location(0, len(problem.sequence), 1)
+        #     result = self.copy_with_changes(location=location)
+        # else:
+        #     result = self
+        result = self._copy_with_full_span_if_no_location(problem)
 
         if self.target_sequence is None:
             result = result.copy_with_changes()
@@ -114,7 +115,7 @@ class AvoidChanges(Specification):
             if new_location is None:
                 return VoidSpecification(parent_specification=self)
             else:
-                return self
+                # return self
                 # TODO: refine using the code hereunder, which sometimes
                 # creates exceptions like "different sequences"
                 new_constraint = self.copy_with_changes(location=new_location)

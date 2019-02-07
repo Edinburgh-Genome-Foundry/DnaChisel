@@ -41,11 +41,12 @@ class AvoidHairpins(Specification):
         self.boost = boost
 
     def initialize_on_problem(self, problem, role):
-        if self.location is None:
-            location = Location(0, len(problem.sequence), 1)
-            return self.copy_with_changes(location=location)
-        else:
-            return self
+        return self._copy_with_full_span_if_no_location(problem)
+        # if self.location is None:
+        #     location = Location(0, len(problem.sequence), 1)
+        #     return self.copy_with_changes(location=location)
+        # else:
+        #     return self
 
     def evaluate(self, problem):
         """Return the score (-number_of_hairpins) and hairpins locations."""

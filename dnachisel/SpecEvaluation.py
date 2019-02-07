@@ -291,7 +291,6 @@ class SpecEvaluations:
             cycle = colors_cycle(lightness_factor=self.color_lightness,
                                  color_shift=self.color_shift)
             colors = [next(cycle) for ev in self.evaluations]
-
         features = [
             location.to_biopython_feature(
                 feature_type="misc_feature",

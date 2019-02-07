@@ -57,11 +57,12 @@ class EnforceChoice(Specification):
 
     def initialize_on_problem(self, problem, role='constraint'):
         """Find out what sequence it is that we are supposed to conserve."""
-        if self.location is None:
-            location = Location(0, len(problem.sequence), 1)
-            result = self.copy_with_changes(location=location)
-        else:
-            result = self
+        # if self.location is None:
+        #     location = Location(0, len(problem.sequence), 1)
+        #     result = self.copy_with_changes(location=location)
+        # else:
+        #     result = self
+        result = self._copy_with_full_span_if_no_location(problem)
         if not all([len(c) == len(result.location) for c in result.choices]):
             raise ValueError("All sequence choices should have the same "
                              "length as the region on which the spec is "
