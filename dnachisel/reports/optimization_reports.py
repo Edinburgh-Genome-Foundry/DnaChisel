@@ -275,8 +275,8 @@ def write_optimization_report(target, problem, project_name="unnammed",
     translator = SpecAnnotationsTranslator()
     # CREATE FIGURES AND GENBANKS
     diffs_figure_data = None
+    sequence_before = sequence_to_biopython_record(problem.sequence_before)
     if GENEBLOCKS_AVAILABLE:
-        sequence_before = sequence_to_biopython_record(problem.sequence_before)
         sequence_after = problem.to_record()
         contract_under = max(3, int(len(sequence_after)/ 25))
         diffs = DiffBlocks.from_sequences(sequence_before, sequence_after,
