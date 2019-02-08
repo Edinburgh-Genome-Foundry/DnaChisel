@@ -13,7 +13,7 @@ from ..version import __version__
 from ..DnaOptimizationProblem import (DnaOptimizationProblem, NoSolutionError)
 from sequenticon import sequenticon
 
-MATPLOTLIB_AVAILABLE = DFV_AVAILABLE = GENEBLOCKS_AVAILABLE = False
+MATPLOTLIB_AVAILABLE = DFV_AVAILABLE = False
 try:
     import matplotlib.cm as cm
     import matplotlib.pyplot as plt
@@ -21,8 +21,6 @@ try:
     MATPLOTLIB_AVAILABLE = True
     from dna_features_viewer import BiopythonTranslator
     DFV_AVAILABLE = True
-    from geneblocks import DiffBlocks
-    GENEBLOCKS_AVAILABLE = True
 except ImportError:
     class BiopythonTranslator:
         "Class unavailable. Install DNA Features Viewer."
@@ -30,6 +28,12 @@ except ImportError:
             raise ImportError("BiopythonTranslator unavailable. Install "
                               "DNA Features Viewer with:\n"
                               "pip install dna_features_viewer")
+
+try:
+    from geneblocks import DiffBlocks
+    GENEBLOCKS_AVAILABLE = True
+except:
+    GENEBLOCKS_AVAILABLE = False
 
 try:
     from pdf_reports import ReportWriter
