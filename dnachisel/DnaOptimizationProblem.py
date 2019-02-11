@@ -123,8 +123,6 @@ class DnaOptimizationProblem:
             self.sequence = sequence.upper()
         self.constraints = [] if constraints is None else list(constraints)
         self.objectives = [] if objectives is None else list(objectives)
-        
-        default_bars = ('objective', 'constraint', 'location', 'mutation')
         self.logger = default_bar_logger(
             logger, bars=('objective', 'constraint', 'location'),
             ignored_bars=('mutation',), min_time_interval=0.2)
@@ -309,11 +307,23 @@ class DnaOptimizationProblem:
                 new_location = location.extended(extension)
                 mutation_space = self.mutation_space.localized(new_location)
                 if mutation_space.space_size == 0:
-                    raise NoSolutionError(
-                       location=new_location,
-                       problem=self,
-                       message='Constraint breach in frozen region'
-                    )
+                    if extension == self.local_extensions[-1]:
+                        error = NoSolutionError(
+                            location=new_location,
+                            problem=self,
+                            message='Constraint breach in region that cannot '
+                                    'be mutated.'
+                        )
+                        error.location = new_location
+                        error.constraint = constraint
+                        error.message = "While solving %s in %s:\n\n%s" % (
+                            constraint, new_location, str(error)
+                        )
+                        self.logger(location__index=len(locations),
+                                    location__message='Cold exit')
+                        raise error
+                    else:
+                        continue
                 new_location = Location(*mutation_space.choices_span)
 
                 # This blocks solves the problem of overlapping breaches,
@@ -354,7 +364,6 @@ class DnaOptimizationProblem:
                 local_problem.n_mutations = self.n_mutations
                 try:
                     if hasattr(constraint, 'resolution_heuristic'):
-
                         constraint.resolution_heuristic(local_problem)
                     else:
                         local_problem.resolve_constraints_locally()

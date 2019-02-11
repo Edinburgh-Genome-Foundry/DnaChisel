@@ -9,7 +9,7 @@ def test_no_solution_error_frozen_region():
     )
     with pytest.raises(NoSolutionError) as err:
         problem.resolve_constraints()
-    assert 'Constraint breach in frozen region' in str(err.value)
+    assert 'region that cannot be mutated' in str(err.value)
 
 def test_no_solution_error_random_search():
     problem = DnaOptimizationProblem(

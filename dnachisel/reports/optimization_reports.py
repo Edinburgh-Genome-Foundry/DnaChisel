@@ -153,6 +153,7 @@ def optimization_with_report(target, problem=None, record=None,
         problem.logger(message="Solving constraints")
         problem.resolve_constraints()
     except NoSolutionError as error:
+        print (error)
         problem.logger(message="No solution found: making report")
         data = write_no_solution_report(target, problem, error)
         start, end, s = error.location.to_tuple()
@@ -201,6 +202,8 @@ def write_no_solution_report(target, problem, error):
         ax, _ = graphical_record.plot(figure_width=min(20, 0.3*len(record)))
         if len(record) < 60:
             graphical_record.plot_sequence(ax)
+        if error.location is None:
+            raise error
         start, end, strand = error.location.to_tuple()
         ax.fill_between([start, end], -10, 10, zorder=-1000,
                         facecolor='#ffeeee')

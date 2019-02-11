@@ -58,11 +58,12 @@ class SequencePattern:
     """
 
     def __init__(self, expression, size=None, name=None, in_both_strands=True,
-                 use_lookahead=True):
+                 lookahead='re'):
         if size is None:
             size = len(expression)
         self.expression = expression
-        if use_lookahead:
+        self.lookahead = lookahead
+        if lookahead == 're':
             expression = '(?=(%s))' % expression
         self.lookahead_expression = expression
         self.compiled_expression = re.compile(self.lookahead_expression)
@@ -100,10 +101,11 @@ class SequencePattern:
                 loc + location.start
                 for loc in self.find_matches(subsequence)
             ]
-        matches = [
-            (match.start(), match.start() + len(match.groups()[0]), 1)
-            for match in re.finditer(self.compiled_expression, sequence)
-        ]
+        matches = self.find_all_re_matches(sequence)
+        # [
+        #     (match.start(), match.start() + len(match.groups()[0]), 1)
+        #     for match in re.finditer(self.compiled_expression, sequence)
+        # ]
 
         if self.in_both_strands:
             reverse = reverse_complement(sequence)
@@ -118,6 +120,23 @@ class SequencePattern:
             Location(start, end, strand)
             for start, end, strand in matches
         ]
+    def find_all_re_matches(self, sequence):
+        if self.lookahead == 'loop':
+            matches = []
+            position = 0
+            while True:
+                result = re.search(self.compiled_expression, sequence)
+                if result is None:
+                    return matches
+                start, end = result.start(), result.end()
+                matches.append((start + position, end + position, 1))
+                sequence = sequence[start + 1:]
+                position += start + 1
+        else:
+            return [
+                (match.start(), match.start() + len(match.groups()[0]), 1)
+                for match in re.finditer(self.compiled_expression, sequence)
+            ]
 
     def __str__(self):
         return self.expression + ("" if self.name is None else
@@ -231,11 +250,22 @@ def repeated_kmers(kmer_size, n_repeats):
     # ...       resultlist.append(seq[result.start():result.end()])
     # ...       pos = result.start()+1
     # ...    return resultlist
+        #     def myfindall(regex, seq):
+    # ...    resultlist=[]
+    # ...    pos=0
+    # ...
+    # ...    while True:
+    # ...       result = regex.search(seq, pos)
+    # ...       if result is None:
+    # ...          break
+    # ...       resultlist.append(seq[result.start():result.end()])
+    # ...       pos = result.start()+1
+    # ...    return resultlist
 
     return SequencePattern(
         size=kmer_size * n_repeats,
         expression=r"([ATGC]{%d})\1{%d}" % (kmer_size, n_repeats-1),
         name="%d-repeats %d-mers" % (n_repeats, kmer_size),
         in_both_strands=False,  # a kmer repeat one strand is also on the other
-        use_lookahead=False
+        lookahead='loop'
     )
