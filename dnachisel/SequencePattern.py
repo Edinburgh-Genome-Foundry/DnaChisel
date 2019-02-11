@@ -25,8 +25,8 @@ class SequencePattern:
     DnaNotationPattern for matching explicit sequences or sequences using Ns
     etc.
 
-    Example
-    -------
+    Examples
+    --------
     >>> expression = "A[ATGC]{3,}"
     >>> pattern = SequencePattern(expression)
     >>> constraint = AvoidPattern(pattern)

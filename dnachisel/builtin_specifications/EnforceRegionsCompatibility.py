@@ -7,6 +7,7 @@ from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 
 class EnforceRegionsCompatibility(Specification):
+    """Ensure that different subregions satisfy compatibility constraints."""
     max_possible_score = 0
 
     def __init__(self, locations, compatibility_condition,

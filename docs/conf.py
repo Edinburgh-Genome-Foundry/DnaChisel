@@ -30,6 +30,7 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
     'numpydoc',
+    'sphinx.ext.autosummary',
     'sphinxcontrib.mermaid'
 ]
 numpydoc_show_class_members = False

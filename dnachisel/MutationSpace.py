@@ -43,7 +43,7 @@ class MutationChoice:
     def percolate_with(self, others):
         """Return a mutation restriction
 
-        Example:
+        Examples:
         --------
 
         >>> [
