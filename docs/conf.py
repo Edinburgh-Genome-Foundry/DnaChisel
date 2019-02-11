@@ -30,6 +30,7 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
     'numpydoc',
+    'sphinx.ext.githubpages',
     'sphinx.ext.autosummary',
     'sphinxcontrib.mermaid'
 ]
