@@ -32,8 +32,6 @@
   
     <link rel="stylesheet" href="../../../_static/css/main.css" type="text/css" />
   
-    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
-  
 
   
         <link rel="index" title="Index"
@@ -97,7 +95,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../index.html">DnaChisel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">DNA Chisel</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -176,6 +174,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -183,10 +182,12 @@
 <span class="kn">from</span> <span class="nn">Bio.Blast</span> <span class="k">import</span> <span class="n">NCBIXML</span>
 <span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="k">import</span> <span class="n">SeqRecord</span>
 <span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="k">import</span> <span class="n">DNAAlphabet</span>
-<span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="k">import</span> <span class="n">SeqFeature</span><span class="p">,</span> <span class="n">FeatureLocation</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="k">import</span> <span class="n">FeatureLocation</span>
 <span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">SeqIO</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">Restriction</span>
 
-<span class="kn">from</span> <span class="nn">.biotables</span> <span class="k">import</span> <span class="n">CODONS_SEQUENCES</span><span class="p">,</span> <span class="n">NUCLEOTIDE_TO_REGEXPR</span>
+<span class="kn">from</span> <span class="nn">.biotables</span> <span class="k">import</span> <span class="p">(</span><span class="n">CODONS_TRANSLATIONS</span><span class="p">,</span> <span class="n">NUCLEOTIDE_TO_REGEXPR</span><span class="p">,</span>
+                        <span class="n">CODONS_SEQUENCES</span><span class="p">,</span> <span class="n">IUPAC_NOTATION</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="complement"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.complement">[docs]</a><span class="k">def</span> <span class="nf">complement</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">):</span>
@@ -214,7 +215,7 @@
     <span class="k">return</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">)</span> <span class="o">==</span> <span class="n">dna_sequence</span></div>
 
 
-<div class="viewcode-block" id="random_dna_sequence"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.random_dna_sequence">[docs]</a><span class="k">def</span> <span class="nf">random_dna_sequence</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">probas</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="random_dna_sequence"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.random_dna_sequence">[docs]</a><span class="k">def</span> <span class="nf">random_dna_sequence</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">gc_share</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">probas</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a random DNA sequence (&quot;ATGGCGT...&quot;) with the specified length.</span>
 
 <span class="sd">    Parameters</span>
@@ -236,6 +237,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">gc_share</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">g_or_c</span> <span class="o">=</span> <span class="n">gc_share</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="n">not_g_or_c</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">gc_share</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="n">probas</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="n">g_or_c</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="n">g_or_c</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="n">not_g_or_c</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="n">not_g_or_c</span><span class="p">}</span>
     <span class="k">if</span> <span class="n">probas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">sequence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="s2">&quot;ATCG&quot;</span><span class="p">),</span> <span class="n">length</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -244,17 +249,21 @@
     <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">load_record</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;unnamed&quot;</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;gb&quot;</span><span class="p">,</span> <span class="s2">&quot;gbk&quot;</span><span class="p">)):</span>
+<div class="viewcode-block" id="load_record"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.load_record">[docs]</a><span class="k">def</span> <span class="nf">load_record</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;unnamed&quot;</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load a FASTA/Genbank/... record&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">fmt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">fmt</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;gb&quot;</span><span class="p">,</span> <span class="s2">&quot;gbk&quot;</span><span class="p">)):</span>
         <span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;genbank&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s1">&#39;fa&#39;</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">)):</span>
         <span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;fasta&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown format for file: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">filename</span><span class="p">)</span>
     <span class="n">record</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">linear</span>
-    <span class="n">record</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">name</span>
-    <span class="n">record</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)[:</span><span class="mi">20</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">record</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;unnamed&quot;</span><span class="p">:</span>
+        <span class="n">record</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="n">record</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)[:</span><span class="mi">20</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">record</span></div>
 
 <div class="viewcode-block" id="random_protein_sequence"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.random_protein_sequence">[docs]</a><span class="k">def</span> <span class="nf">random_protein_sequence</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a random protein sequence &quot;MNQTW...YL*&quot; of the specified length.</span>
@@ -356,13 +365,6 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="read_fasta"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.read_fasta">[docs]</a><span class="k">def</span> <span class="nf">read_fasta</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Read A sequence in a FASTA file with Biopython.&quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">Bio.SeqIO</span> <span class="k">as</span> <span class="nn">seqio</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">seqio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s2">&quot;fasta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="gc_content"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.gc_content">[docs]</a><span class="k">def</span> <span class="nf">gc_content</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Compute global or local GC content.</span>
 
@@ -399,39 +401,11 @@
         <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cs</span><span class="p">[:</span><span class="o">-</span><span class="n">window_size</span><span class="p">]])</span>
         <span class="k">return</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="n">window_size</span></div>
 
-
-<span class="c1"># def find_orfs(sequence, minsize=300):</span>
-<span class="c1">#     &quot;&quot;&quot;Return the list of (start, end) of all orfs in a sequence</span>
-<span class="c1">#</span>
-<span class="c1">#     TODO: This seems to be junk code from a former project. complete it</span>
-<span class="c1">#     or bin it.</span>
-<span class="c1">#</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     import tempfile</span>
-<span class="c1">#     import os</span>
-<span class="c1">#     import subprocess as sp</span>
-<span class="c1">#     import regex</span>
-<span class="c1">#     input_temp = tempfile.mkstemp(suffix=&quot;.fa&quot;)[1]</span>
-<span class="c1">#     self.to_fasta(filename=input_temp)</span>
-<span class="c1">#     outfile = tempfile.mkstemp(suffix=&quot;.seq&quot;)[1]</span>
-<span class="c1">#     proc = sp.Popen([&quot;getorf&quot;, &quot;-minsize&quot;, &quot;%d&quot; % minsize,</span>
-<span class="c1">#                      &quot;-sequence&quot;, input_temp, &quot;-outseq&quot;, outfile])</span>
-<span class="c1">#     proc.wait()</span>
-<span class="c1">#     with open(outfile, &#39;r&#39;) as f:</span>
-<span class="c1">#         result = f.read()</span>
-<span class="c1">#</span>
-<span class="c1">#     os.remove(outfile)</span>
-<span class="c1">#     os.remove(input_temp)</span>
-<span class="c1">#     orfs_coordinates = regex.findall(&quot;&gt;(\S+) \[(\d+) - (\d+)\]&quot;,</span>
-<span class="c1">#                                      result)</span>
-<span class="c1">#     return [</span>
-<span class="c1">#         (int(start), int(stop), (+1 if int(start) &lt; int(stop) else -1))</span>
-<span class="c1">#         for (_, start, stop) in orfs_coordinates</span>
-<span class="c1">#     ]</span>
-
-
-<div class="viewcode-block" id="blast_sequence"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.blast_sequence">[docs]</a><span class="k">def</span> <span class="nf">blast_sequence</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">blast_db</span><span class="p">,</span> <span class="n">word_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">perc_identity</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
-                   <span class="n">num_alignments</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">ungapped</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<div class="viewcode-block" id="blast_sequence"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.blast_sequence">[docs]</a><span class="k">def</span> <span class="nf">blast_sequence</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">blast_db</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subject_sequences</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">subject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">word_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">perc_identity</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+                   <span class="n">num_alignments</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">ungapped</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                   <span class="n">culling_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">e_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_megablast</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                   <span class="n">dust</span><span class="o">=</span><span class="s2">&quot;no&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a Biopython BLAST record of the given sequence BLASTed</span>
 <span class="sd">    against the provided database.</span>
 
@@ -455,43 +429,83 @@
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fasta_name</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&gt;seq</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">sequence</span><span class="p">)</span>
 
-    <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
-        <span class="p">[</span>
-            <span class="s2">&quot;blastn&quot;</span><span class="p">,</span> <span class="s2">&quot;-out&quot;</span><span class="p">,</span> <span class="n">xml_name</span><span class="p">,</span>
-            <span class="s2">&quot;-outfmt&quot;</span><span class="p">,</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;-num_alignments&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">num_alignments</span><span class="p">),</span>
-            <span class="s2">&quot;-query&quot;</span><span class="p">,</span> <span class="n">fasta_name</span><span class="p">,</span>
-            <span class="s2">&quot;-db&quot;</span><span class="p">,</span> <span class="n">blast_db</span><span class="p">,</span>
-            <span class="s2">&quot;-word_size&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">word_size</span><span class="p">),</span>
-            <span class="s2">&quot;-num_threads&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">num_threads</span><span class="p">),</span>
-            <span class="s2">&quot;-perc_identity&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">perc_identity</span><span class="p">)</span>
-        <span class="p">]</span> <span class="o">+</span> <span class="p">([</span><span class="s2">&quot;-ungapped&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">ungapped</span> <span class="k">else</span> <span class="p">[]),</span>
-        <span class="n">close_fds</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">close_subject</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">remove_subject</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">subject</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">close_subject</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="n">subject_sequences</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">close_subject</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">remove_subject</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">subject_file</span><span class="p">,</span> <span class="n">subject</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="s2">&quot;.fa&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subject_sequences</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">subject_sequences</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span><span class="s2">&quot;</span><span class="si">%06d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">seq</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">seq</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">subject_sequences</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="n">fasta_content</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+            <span class="s2">&quot;&gt;</span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">name_sequence</span>
+             <span class="k">for</span> <span class="n">name_sequence</span> <span class="ow">in</span> <span class="n">subject_sequences</span>
+        <span class="p">])</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fasta_content</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">parameter_if_not_none</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">label</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">)]</span> <span class="k">if</span> <span class="n">param</span> <span class="k">else</span> <span class="p">[]</span>
+
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;blastn&quot;</span><span class="p">,</span> <span class="s2">&quot;-out&quot;</span><span class="p">,</span> <span class="n">xml_name</span><span class="p">,</span>
+        <span class="s2">&quot;-outfmt&quot;</span><span class="p">,</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-max_target_seqs&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">num_alignments</span><span class="p">),</span>
+        <span class="s2">&quot;-query&quot;</span><span class="p">,</span> <span class="n">fasta_name</span><span class="p">,</span>
+        <span class="s2">&quot;-word_size&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">word_size</span><span class="p">),</span>
+        <span class="s2">&quot;-num_threads&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">num_threads</span><span class="p">),</span>
+        <span class="s2">&quot;-perc_identity&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">perc_identity</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">command</span> <span class="o">+=</span> <span class="p">(</span>
+        <span class="p">([</span><span class="s2">&quot;-db&quot;</span><span class="p">,</span> <span class="n">blast_db</span><span class="p">]</span> <span class="k">if</span> <span class="n">subject</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[</span><span class="s1">&#39;-subject&#39;</span><span class="p">,</span> <span class="n">subject</span><span class="p">])</span> <span class="o">+</span>
+        <span class="n">parameter_if_not_none</span><span class="p">(</span><span class="s2">&quot;-dust&quot;</span><span class="p">,</span> <span class="n">dust</span><span class="p">)</span> <span class="o">+</span>
+        <span class="n">parameter_if_not_none</span><span class="p">(</span><span class="s2">&quot;-evalue&quot;</span><span class="p">,</span> <span class="n">e_value</span><span class="p">)</span> <span class="o">+</span>
+        <span class="n">parameter_if_not_none</span><span class="p">(</span><span class="s2">&quot;-culling_limit&quot;</span><span class="p">,</span> <span class="n">culling_limit</span><span class="p">)</span>
     <span class="p">)</span>
-    <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">use_megablast</span><span class="p">:</span>
+        <span class="n">command</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;-task&quot;</span><span class="p">,</span> <span class="s2">&quot;megablast&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">ungapped</span><span class="p">:</span>
+        <span class="n">command</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;-ungapped&quot;</span><span class="p">]</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">close_fds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
     <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">n_trials</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_trials</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">xml_name</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">blast_record</span> <span class="o">=</span> <span class="n">NCBIXML</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">NCBIXML</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">xml_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">fasta_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">xml_name</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fasta_name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">close_subject</span><span class="p">:</span>
+                    <span class="nb">open</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">remove_subject</span><span class="p">:</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">subject</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">res</span>
             <span class="k">break</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Problem reading the blast record.&quot;</span><span class="p">)</span>
-
-    <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">xml_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">fasta_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">blast_record</span></div>
-
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">n_trials</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">err</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="subdivide_window"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.subdivide_window">[docs]</a><span class="k">def</span> <span class="nf">subdivide_window</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">max_span</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Subdivide a window (start, end) into windows of size &lt; max_span</span>
 <span class="sd">    (start, i_1), (i_1, i_2), ... (i_n, end)&quot;&quot;&quot;</span>
     <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">window</span>
     <span class="n">inds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">max_span</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="n">end</span><span class="p">]</span>
-    <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="n">inds</span><span class="p">,</span> <span class="n">inds</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span></div>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">inds</span><span class="p">,</span> <span class="n">inds</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span></div>
 
 
 <div class="viewcode-block" id="change_biopython_record_sequence"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.change_biopython_record_sequence">[docs]</a><span class="k">def</span> <span class="nf">change_biopython_record_sequence</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">new_seq</span><span class="p">):</span>
@@ -520,7 +534,7 @@
         <span class="n">potential_label</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">labelfield</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">potential_label</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">potential_label</span> <span class="o">=</span> <span class="n">potential_label</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">potential_label</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="s2">&quot;@~&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">potential_label</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">potential_label</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="s2">&quot;@~&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">potential_label</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -552,7 +566,7 @@
         <span class="n">new_start</span><span class="p">,</span> <span class="n">new_end</span> <span class="o">=</span> <span class="n">new_start</span> <span class="o">-</span> <span class="n">crop_start</span><span class="p">,</span> <span class="n">new_end</span> <span class="o">-</span> <span class="n">crop_start</span>
 
         <span class="n">feature</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
-        <span class="n">feature</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">FeatureLocation</span><span class="p">(</span><span class="n">new_start</span><span class="p">,</span> <span class="n">new_end</span><span class="p">,</span>
+        <span class="n">feature</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">FeatureLocation</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">new_start</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">new_end</span><span class="p">),</span>
                                            <span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span><span class="p">)</span>
         <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
         <span class="n">feature</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span> <span class="o">+</span> <span class="n">features_suffix</span>
@@ -569,7 +583,8 @@
 <span class="sd">    seq1, seq2 should both be ATGC strings.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq1</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq2</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only use on same-size sequences&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only use on same-size sequences (</span><span class="si">%d</span><span class="s2">, </span><span class="si">%d</span><span class="s2">)&quot;</span> <span class="o">%</span>
+                         <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">seq1</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq2</span><span class="p">)))</span>
     <span class="n">arr1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">seq1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span>
     <span class="n">arr2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">seq2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">arr1</span> <span class="o">!=</span> <span class="n">arr2</span></div>
@@ -662,39 +677,91 @@
             <span class="n">groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_group</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">groups</span></div>
 
-<div class="viewcode-block" id="annotate_record"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.annotate_record">[docs]</a><span class="k">def</span> <span class="nf">annotate_record</span><span class="p">(</span><span class="n">seqrecord</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span> <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span>
-                    <span class="n">margin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">qualifiers</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Add a feature to a Biopython SeqRecord.</span>
+<div class="viewcode-block" id="codons_frequencies_and_positions"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.codons_frequencies_and_positions">[docs]</a><span class="k">def</span> <span class="nf">codons_frequencies_and_positions</span><span class="p">(</span><span class="n">sequence</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return dicts indicating codons frequencies and positions.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    sequence</span>
+<span class="sd">      A sequence with length divisible by 3 (like an ORF)</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    codons_frequencies</span>
+<span class="sd">      A dict ``{&#39;K&#39;: {&#39;total&#39;: 60, &#39;AAA&#39;: 0.5, &#39;AAG&#39;: 0.4}}, &#39;M&#39;: {...} ...}``</span>
+<span class="sd">      providing the frequency of each version of each codon in the given</span>
+<span class="sd">      sequence.</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    codons_positions</span>
+<span class="sd">      A dict ``{&#39;ATA&#39;: [2, 55, 1], &#39;ATG&#39;: [0] ...}`` indicating the position of</span>
+<span class="sd">      the different codons in the sequence.</span>
 
-<span class="sd">    seqrecord</span>
-<span class="sd">      The biopython seqrecord to be annotated.</span>
-
-<span class="sd">    location</span>
-<span class="sd">      Either (start, end) or (start, end, strand). (strand defaults to +1)</span>
-
-<span class="sd">    feature_type</span>
-<span class="sd">      The type associated with the feature</span>
-
-<span class="sd">    margin</span>
-<span class="sd">      Number of extra bases added on each side of the given location.</span>
-
-<span class="sd">    qualifiers</span>
-<span class="sd">      Dictionnary that will be the Biopython feature&#39;s `qualifiers` attribute.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;full&quot;</span><span class="p">:</span>
-        <span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="n">margin</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqrecord</span><span class="p">)</span> <span class="o">-</span> <span class="n">margin</span><span class="p">)</span>
+    <span class="n">codons_positions</span> <span class="o">=</span> <span class="p">{</span><span class="n">cod</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">cod</span> <span class="ow">in</span> <span class="n">CODONS_TRANSLATIONS</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)):</span>
+        <span class="n">codon</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="mi">3</span> <span class="o">*</span> <span class="n">i</span><span class="p">:</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="n">codons_positions</span><span class="p">[</span><span class="n">codon</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="c1"># aa: amino-acid</span>
+    <span class="n">codons_frequencies</span> <span class="o">=</span> <span class="p">{</span><span class="n">aa</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;total&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span> <span class="k">for</span> <span class="n">aa</span> <span class="ow">in</span> <span class="n">CODONS_SEQUENCES</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">codon</span><span class="p">,</span> <span class="n">positions</span> <span class="ow">in</span> <span class="n">codons_positions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
+        <span class="n">aa</span> <span class="o">=</span> <span class="n">CODONS_TRANSLATIONS</span><span class="p">[</span><span class="n">codon</span><span class="p">]</span>
+        <span class="n">codons_frequencies</span><span class="p">[</span><span class="n">aa</span><span class="p">][</span><span class="n">codon</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+        <span class="n">codons_frequencies</span><span class="p">[</span><span class="n">aa</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">count</span>
+    <span class="k">for</span> <span class="n">aa</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">codons_frequencies</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">codon</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">codon</span> <span class="o">!=</span> <span class="s1">&#39;total&#39;</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">codon</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">value</span> <span class="o">/</span> <span class="n">total</span>
+    <span class="k">return</span> <span class="n">codons_frequencies</span><span class="p">,</span> <span class="n">codons_positions</span></div>
 
-    <span class="n">strand</span> <span class="o">=</span> <span class="n">location</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="mi">1</span>
-    <span class="n">seqrecord</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-        <span class="n">SeqFeature</span><span class="p">(</span>
-            <span class="n">FeatureLocation</span><span class="p">(</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">strand</span><span class="p">),</span>
-            <span class="n">qualifiers</span><span class="o">=</span><span class="n">qualifiers</span><span class="p">,</span>
-            <span class="nb">type</span><span class="o">=</span><span class="n">feature_type</span>
-        <span class="p">)</span>
-    <span class="p">)</span></div>
+<div class="viewcode-block" id="all_iupac_variants"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.all_iupac_variants">[docs]</a><span class="k">def</span> <span class="nf">all_iupac_variants</span><span class="p">(</span><span class="n">iupac_sequence</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return all unambiguous possible versions of the given sequence.&quot;&quot;&quot;</span>
+    <span class="k">return</span><span class="p">[</span>
+        <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nucleotides</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">nucleotides</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="p">[</span>
+            <span class="n">IUPAC_NOTATION</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">iupac_sequence</span>
+        <span class="p">])</span>
+    <span class="p">]</span></div>
+<div class="viewcode-block" id="list_common_enzymes"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.list_common_enzymes">[docs]</a><span class="k">def</span> <span class="nf">list_common_enzymes</span><span class="p">(</span><span class="n">site_length</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,),</span> <span class="n">opt_temp</span><span class="o">=</span><span class="p">(</span><span class="mi">37</span><span class="p">,),</span> <span class="n">min_suppliers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">site_unlike</span><span class="o">=</span><span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;Return a list of enzyme names with the given constraints.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    site_length</span>
+<span class="sd">      List of accepted site lengths (6, 4, ...)</span>
+<span class="sd">    </span>
+<span class="sd">    opt_temp</span>
+<span class="sd">      List of accepted optimal temperatures for the enzyme</span>
+<span class="sd">    </span>
+<span class="sd">    min_suppliers</span>
+<span class="sd">      Minimal number registered suppliers in the Biopython data. A minimum</span>
+<span class="sd">      of 3 known suppliers returns the most common enzymes.</span>
+
+<span class="sd">    site_unlike</span>
+<span class="sd">      List of (ambiguous or unambiguous) DNA sequences that should NOT be</span>
+<span class="sd">      recognized by the selected enzymes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">site_unlike</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span>
+        <span class="n">variant</span>
+        <span class="k">for</span> <span class="n">enzyme</span> <span class="ow">in</span> <span class="n">site_unlike</span>
+        <span class="k">for</span> <span class="n">variant</span> <span class="ow">in</span> <span class="n">all_iupac_variants</span><span class="p">(</span><span class="n">Restriction</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">enzyme</span><span class="p">]</span><span class="o">.</span><span class="n">site</span><span class="p">)</span>
+    <span class="p">])</span>
+    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="n">enzyme_name</span><span class="p">):</span>
+        <span class="n">enzyme</span> <span class="o">=</span> <span class="n">Restriction</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">enzyme_name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">enzyme</span><span class="o">.</span><span class="n">site</span><span class="p">)</span> <span class="ow">in</span> <span class="n">site_length</span>
+                <span class="ow">and</span> <span class="n">enzyme</span><span class="o">.</span><span class="n">opt_temp</span> <span class="ow">in</span> <span class="n">opt_temp</span>
+                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">enzyme</span><span class="o">.</span><span class="n">supplier_list</span><span class="p">())</span> <span class="o">&gt;=</span> <span class="n">min_suppliers</span>
+                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_iupac_variants</span><span class="p">(</span><span class="n">enzyme</span><span class="o">.</span><span class="n">site</span><span class="p">))</span>
+                        <span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">site_unlike</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">enzyme_name</span>
+        <span class="k">for</span> <span class="n">enzyme_name</span> <span class="ow">in</span> <span class="n">Restriction</span><span class="o">.</span><span class="n">AllEnzymes</span><span class="o">.</span><span class="n">elements</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">is_valid</span><span class="p">(</span><span class="n">enzyme_name</span><span class="p">)</span>
+    <span class="p">]</span></div>
 </pre></div>
 
            </div>
@@ -741,7 +808,7 @@
       <script type="text/javascript" src="../../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
+      <script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
 
   
 

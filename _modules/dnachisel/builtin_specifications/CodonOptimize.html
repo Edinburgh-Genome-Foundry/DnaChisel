@@ -1,0 +1,460 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dnachisel.builtin_specifications.CodonOptimize &mdash; DnaChisel 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/main.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="DnaChisel 0.1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DnaChisel
+          
+
+          
+            
+            <img src="../../../_static/html_logo.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">DNA Chisel</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ref/ref.html">DnaChisel Reference manual</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DnaChisel</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>dnachisel.builtin_specifications.CodonOptimize</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dnachisel.builtin_specifications.CodonOptimize</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">.CodonSpecification</span> <span class="k">import</span> <span class="n">CodonSpecification</span>
+<span class="kn">from</span> <span class="nn">..SpecEvaluation</span> <span class="k">import</span> <span class="n">SpecEvaluation</span>
+<span class="kn">from</span> <span class="nn">..biotools</span> <span class="k">import</span> <span class="p">(</span><span class="n">CODON_USAGE_TABLES</span><span class="p">,</span> <span class="n">CODONS_TRANSLATIONS</span><span class="p">,</span>
+                        <span class="n">group_nearby_indices</span><span class="p">,</span> <span class="n">codons_frequencies_and_positions</span><span class="p">,</span>
+                        <span class="n">CODON_USAGE_BY_AA</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..Location</span> <span class="k">import</span> <span class="n">Location</span>
+
+
+<div class="viewcode-block" id="CodonOptimize"><a class="viewcode-back" href="../../../ref/builtin_specifications.html#dnachisel.builtin_specifications.CodonOptimize">[docs]</a><span class="k">class</span> <span class="nc">CodonOptimize</span><span class="p">(</span><span class="n">CodonSpecification</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Specification to codon-optimize a coding sequence for a particular species.</span>
+
+<span class="sd">    Several codon-optimization policies exist. At the moment this Specification</span>
+<span class="sd">    implements a method in which codons are replaced by the most frequent</span>
+<span class="sd">    codon in the species.</span>
+
+<span class="sd">    (as long as this doesn&#39;t break any Specification or lowers the global</span>
+<span class="sd">    optimization objective)</span>
+
+<span class="sd">    Supported speciess are ``E. coli``, ``S. cerevisiae``, ``H. Sapiens``,</span>
+<span class="sd">    ``C. elegans``, ``D. melanogaster``, ``B. subtilis``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    species</span>
+<span class="sd">      Name of the species to codon-optimize for. Supported speciess are</span>
+<span class="sd">      ``E. coli``, ``S. cerevisiae``, ``H. Sapiens``, ``C. elegans``,</span>
+<span class="sd">      ``D. melanogaster``, ``B. subtilis``.</span>
+<span class="sd">      Note that the species can be omited if a ``codon_usage_table`` is</span>
+<span class="sd">      provided instead</span>
+
+<span class="sd">    mode</span>
+<span class="sd">      Either &#39;best_codon&#39; or &#39;harmonized&#39;. For &#39;best_codon&#39;, the optimization</span>
+<span class="sd">      will always replace a codon with the most-frequent triplet possible.</span>
+<span class="sd">      For &#39;harmonized&#39;, the optimization will bring the relative frequencies of</span>
+<span class="sd">      the different triplets as close as possible as the frequencies in the</span>
+<span class="sd">      reference species.</span>
+
+<span class="sd">    location</span>
+<span class="sd">      Either a DnaChisel Location or a tuple of the form (start, end, strand)</span>
+<span class="sd">      or just (start, end), with strand defaulting to +1, indicating the</span>
+<span class="sd">      position of the gene to codon-optimize. If not provided, the whole</span>
+<span class="sd">      sequence is considered as the gene. The location should have a length</span>
+<span class="sd">      that is a multiple of 3. The location strand is either 1 if the gene is</span>
+<span class="sd">      encoded on the (+) strand, or -1 for antisense.</span>
+
+<span class="sd">    codon_usage_table</span>
+<span class="sd">      A dict of the form ``{&quot;TAC&quot;: 0.112, &quot;CCT&quot;: 0.68}`` giving the RSCU table</span>
+<span class="sd">      (relative usage of each codon). Only provide if no ``species`` name</span>
+<span class="sd">      was provided.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; objective = CodonOptimizationSpecification(</span>
+<span class="sd">    &gt;&gt;&gt;     species = &quot;E. coli&quot;,</span>
+<span class="sd">    &gt;&gt;&gt;     location = (150, 300), # coordinates of a gene</span>
+<span class="sd">    &gt;&gt;&gt;     strand = -1</span>
+<span class="sd">    &gt;&gt;&gt; )</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">best_possible_score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">localization_group_spread</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;best_codon&#39;</span><span class="p">,</span>
+                 <span class="n">codon_usage_table</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boost</span> <span class="o">=</span> <span class="n">boost</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_tuple</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">default_strand</span><span class="o">=+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">species</span> <span class="o">=</span> <span class="n">species</span>
+        <span class="k">if</span> <span class="n">species</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">codon_usage_table</span> <span class="o">=</span> <span class="n">CODON_USAGE_TABLES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">codon_usage_table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Provide either an species name or a codon &quot;</span>
+                             <span class="s2">&quot;usage table&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span> <span class="o">=</span> <span class="n">codon_usage_table</span>
+
+    <span class="k">def</span> <span class="nf">initialize_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get location from sequence if no location provided.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_with_full_span_if_no_location</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+        <span class="c1"># if self.location is None:</span>
+        <span class="c1">#     location = Location(0, len(problem.sequence), 1)</span>
+        <span class="c1">#     return self.copy_with_changes(location=location)</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     return self</span>
+
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the sum of all codons frequencies.</span>
+
+<span class="sd">        Note: no smart localization currently, the sequence is improved via</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;best_codon&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_best_codon</span><span class="p">,</span>
+            <span class="s1">&#39;harmonized&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_harmonized</span><span class="p">,</span>
+
+        <span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">](</span><span class="n">problem</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">codon_harmonization_stats</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">species</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a codon harmonisation score and a suboptimal locations list.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        sequence</span>
+<span class="sd">          An ATGC string</span>
+
+<span class="sd">        species</span>
+<span class="sd">          Any species name from the DnaChisel codon tables, such as ``e_coli``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        score, list_of_over_represented_codons_positions</span>
+<span class="sd">          ``score`` is a negative number equals to sum(fi - ei) where for the</span>
+<span class="sd">          i-th codon in the sequence fi is the relative frequency of this</span>
+<span class="sd">          triplet in the sequence and ei is the relative frequency in the</span>
+<span class="sd">          reference species. The ``list_of_suboptimal_codons_positions`` is</span>
+<span class="sd">          of the form [1, 4, 5, 6...] a number k in that list indicates that</span>
+<span class="sd">          the k-th codon is over-represented, and that a synonymous mutation</span>
+<span class="sd">          of this codon can improve the harmonization score.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">length</span> <span class="o">%</span> <span class="mi">3</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Coding sequence with size </span><span class="si">%d</span><span class="s2"> not multiple of 3)&quot;</span> <span class="o">%</span> <span class="n">length</span>
+            <span class="p">)</span>
+        <span class="n">codons_frequencies</span><span class="p">,</span> <span class="n">codons_positions</span> <span class="o">=</span> \
+            <span class="n">codons_frequencies_and_positions</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+        <span class="n">codon_usage</span> <span class="o">=</span> <span class="n">CODON_USAGE_BY_AA</span><span class="p">[</span><span class="n">species</span><span class="p">]</span>
+
+        <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">nonoptimal_indices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">aa</span><span class="p">,</span> <span class="n">usage_data</span> <span class="ow">in</span> <span class="n">codon_usage</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">sequence_data</span> <span class="o">=</span> <span class="n">codons_frequencies</span><span class="p">[</span><span class="n">aa</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">codon</span><span class="p">,</span> <span class="n">usage_freq</span> <span class="ow">in</span> <span class="n">usage_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">sequence_freq</span> <span class="o">=</span> <span class="n">sequence_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">codon</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">frequency_diff</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">sequence_freq</span> <span class="o">-</span> <span class="n">usage_freq</span><span class="p">)</span>
+                <span class="n">score</span> <span class="o">-=</span> <span class="n">frequency_diff</span> <span class="o">*</span> <span class="n">sequence_data</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">sequence_freq</span> <span class="o">&gt;</span> <span class="n">usage_freq</span><span class="p">:</span>
+                    <span class="n">nonoptimal_indices</span> <span class="o">+=</span> <span class="n">codons_positions</span><span class="p">[</span><span class="n">codon</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">score</span><span class="p">,</span> <span class="n">nonoptimal_indices</span>
+
+    <span class="k">def</span> <span class="nf">codons_indices_to_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert a list of codon positions to a list of Locations&quot;&quot;&quot;</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="n">indices</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[</span>
+                <span class="n">Location</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">3</span><span class="p">,</span> <span class="n">group</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">strand</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">group_nearby_indices</span><span class="p">(</span>
+                    <span class="n">indices</span><span class="p">,</span>
+                    <span class="n">max_group_spread</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">localization_group_spread</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">indices</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span>
+            <span class="k">return</span> <span class="p">[</span>
+                <span class="n">Location</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">group</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">group_nearby_indices</span><span class="p">(</span>
+                    <span class="n">indices</span><span class="p">,</span>
+                    <span class="n">max_group_spread</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">localization_group_spread</span><span class="p">)</span>
+            <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">evaluate_best_codon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the evaluation for mode==best_codon.&quot;&quot;&quot;</span>
+        <span class="n">subsequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">extract_sequence</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsequence</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">length</span> <span class="o">%</span> <span class="mi">3</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;CodonOptimizationSpecification on a window/sequence&quot;</span>
+                <span class="s2">&quot;with size </span><span class="si">%d</span><span class="s2"> not multiple of 3)&quot;</span> <span class="o">%</span> <span class="n">length</span>
+            <span class="p">)</span>
+        <span class="n">codons</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">subsequence</span><span class="p">[</span><span class="mi">3</span> <span class="o">*</span> <span class="n">i</span><span class="p">:</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">length</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="p">]</span>
+        <span class="n">CT</span> <span class="o">=</span> <span class="n">CODONS_TRANSLATIONS</span>
+        <span class="n">current_usage</span><span class="p">,</span> <span class="n">optimal_usage</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">[</span><span class="n">codon</span><span class="p">],</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">[</span><span class="s1">&#39;best_frequencies&#39;</span><span class="p">][</span><span class="n">CT</span><span class="p">[</span><span class="n">codon</span><span class="p">]])</span>
+            <span class="k">for</span> <span class="n">codon</span> <span class="ow">in</span> <span class="n">codons</span>
+        <span class="p">])]</span>
+        <span class="n">non_optimality</span> <span class="o">=</span> <span class="n">optimal_usage</span> <span class="o">-</span> <span class="n">current_usage</span>
+        <span class="n">nonoptimal_indices</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">non_optimality</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">locations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codons_indices_to_locations</span><span class="p">(</span><span class="n">nonoptimal_indices</span><span class="p">)</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="o">-</span><span class="n">non_optimality</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="n">score</span><span class="p">,</span> <span class="n">locations</span><span class="o">=</span><span class="n">locations</span><span class="p">,</span>
+            <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Codon opt. on window </span><span class="si">%s</span><span class="s2"> scored </span><span class="si">%.02E</span><span class="s2">&quot;</span> <span class="o">%</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">evaluate_harmonized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the evaluation for mode==harmonized.&quot;&quot;&quot;</span>
+        <span class="n">subsequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">extract_sequence</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
+        <span class="n">score</span><span class="p">,</span> <span class="n">nonoptimal_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codon_harmonization_stats</span><span class="p">(</span><span class="n">subsequence</span><span class="p">,</span>
+                                                                   <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">)</span>
+        <span class="n">locations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codons_indices_to_locations</span><span class="p">(</span><span class="n">nonoptimal_indices</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">locations</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="n">score</span><span class="p">,</span> <span class="n">locations</span><span class="o">=</span><span class="n">locations</span><span class="p">,</span>
+            <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Codon opt. on window </span><span class="si">%s</span><span class="s2"> scored </span><span class="si">%.02E</span><span class="s2">&quot;</span> <span class="o">%</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">localized_on_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_location</span><span class="p">,</span> <span class="n">start_codon</span><span class="p">,</span> <span class="n">end_codon</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Relocate without changing much.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;harmonized&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">species</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">new_location</span><span class="p">,</span>
+                                  <span class="n">codon_usage_table</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">,</span>
+                                  <span class="n">boost</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boost</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">label_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;(custom table)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -95,7 +95,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">DnaChisel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">DNA Chisel</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -171,34 +171,6 @@
             
   <div class="section" id="pattern-insertion-in-a-dna-sequence">
 <span id="pattern-insertion"></span><h1>Pattern insertion in a DNA sequence<a class="headerlink" href="#pattern-insertion-in-a-dna-sequence" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Pattern insertion in DnaChisel.</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">dnachisel</span> <span class="k">import</span> <span class="o">*</span>
-
-<span class="n">protein_sequence</span> <span class="o">=</span> <span class="n">random_protein_sequence</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
-<span class="n">dna_sequence</span> <span class="o">=</span> <span class="n">reverse_translate</span><span class="p">(</span><span class="n">protein_sequence</span><span class="p">)</span>
-
-<span class="n">canvas</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span>
-    <span class="n">sequence</span><span class="o">=</span><span class="n">dna_sequence</span><span class="p">,</span>
-    <span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">homopolymer_pattern</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="mi">5</span><span class="p">)),</span>
-        <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">enzyme_pattern</span><span class="p">(</span><span class="s2">&quot;HindIII&quot;</span><span class="p">)),</span>
-        <span class="n">EnforceTranslationConstraint</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">)],</span>
-                                     <span class="n">translation</span><span class="o">=</span><span class="n">protein_sequence</span><span class="p">),</span>
-    <span class="p">]</span>
-<span class="p">)</span>
-
-<span class="n">pattern</span> <span class="o">=</span><span class="n">enzyme_pattern</span><span class="p">(</span><span class="s2">&quot;BsaI&quot;</span><span class="p">)</span>
-<span class="n">matches</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">)</span>
-<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">BEFORE PATTERN INSERTION AND SOLVING</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;BsaI matches in the original sequence: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">matches</span><span class="p">)</span>
-<span class="n">canvas</span><span class="o">.</span><span class="n">print_constraints_summary</span><span class="p">()</span>
-<span class="n">canvas</span><span class="o">.</span><span class="n">include_pattern_by_successive_tries</span><span class="p">(</span><span class="n">enzyme_pattern</span><span class="p">(</span><span class="s2">&quot;BsaI&quot;</span><span class="p">))</span>
-<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;AFTER PATTERN INSERTION AND SOLVING&quot;</span><span class="p">)</span>
-<span class="n">canvas</span><span class="o">.</span><span class="n">print_constraints_summary</span><span class="p">()</span>
-</pre></div>
-</div>
 </div>
 
 

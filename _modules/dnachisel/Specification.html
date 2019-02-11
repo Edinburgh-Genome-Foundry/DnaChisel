@@ -32,8 +32,6 @@
   
     <link rel="stylesheet" href="../../_static/css/main.css" type="text/css" />
   
-    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
-  
 
   
         <link rel="index" title="Index"
@@ -97,7 +95,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">DnaChisel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">DNA Chisel</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -218,7 +216,7 @@
         <span class="k">if</span> <span class="n">evaluate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span> <span class="o">=</span> <span class="n">evaluate</span>
 
-<div class="viewcode-block" id="Specification.localized"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.Specification.localized">[docs]</a>    <span class="k">def</span> <span class="nf">localized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
+<div class="viewcode-block" id="Specification.localized"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.Specification.localized">[docs]</a>    <span class="k">def</span> <span class="nf">localized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a modified version of the specification for the case where</span>
 <span class="sd">        sequence modifications are only performed inside the provided location.</span>
 
@@ -241,7 +239,7 @@
 
 <span class="sd">        For instance ``new_spec = spec.copy_with_changes(boost=10)``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">new_specification</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">new_specification</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">new_specification</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_specification</span></div>
 
@@ -374,7 +372,31 @@
         <span class="k">return</span> <span class="p">[]</span></div>
 
     <span class="k">def</span> <span class="nf">as_passive_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span><span class="n">optimize_passively</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span><span class="n">optimize_passively</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_copy_with_full_span_if_no_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Helper function to turn &quot;None&quot; locations into &quot;full sequence&quot;.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span></div>
+
+<span class="k">class</span> <span class="nc">SpecificationsSet</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Generic class for writing Specs wchich are actually made of more specs.</span>
+<span class="sd">    </span>
+<span class="sd">    Behaves as a Specification when it comes to instanciation, reading it</span>
+<span class="sd">    from annotated records, etc. but the initialization acutally creates a</span>
+<span class="sd">    dictionnary of standard Specifications and the DNAOptimizationProblem</span>
+<span class="sd">    actually once embedded in a problem</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">register_specifications</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">specifications</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">specifications</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">spec</span><span class="o">.</span><span class="n">parent_specification</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="n">spec</span><span class="o">.</span><span class="n">name_in_parent</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">specifications</span> <span class="o">=</span> <span class="n">specifications</span>
+        
 </pre></div>
 
            </div>
@@ -421,7 +443,7 @@
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
+      <script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
 
   
 

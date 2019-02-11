@@ -32,8 +32,6 @@
   
     <link rel="stylesheet" href="../../../_static/css/main.css" type="text/css" />
   
-    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
-  
 
   
         <link rel="index" title="Index"
@@ -97,7 +95,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../index.html">DnaChisel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">DNA Chisel</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -180,13 +178,13 @@
 
 <span class="sd">&quot;&quot;&quot;Useful function to annotate sequences&quot;&quot;&quot;</span>
 
-
 <div class="viewcode-block" id="annotate_record"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.features_annotations.annotate_record">[docs]</a><span class="k">def</span> <span class="nf">annotate_record</span><span class="p">(</span><span class="n">seqrecord</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span> <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span>
                     <span class="n">margin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">qualifiers</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Add a feature to a Biopython SeqRecord. (also returns that same record).</span>
+    <span class="sd">&quot;&quot;&quot;Add a feature to a Biopython SeqRecord.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+
 <span class="sd">    seqrecord</span>
 <span class="sd">      The biopython seqrecord to be annotated.</span>
 
@@ -201,20 +199,18 @@
 
 <span class="sd">    qualifiers</span>
 <span class="sd">      Dictionnary that will be the Biopython feature&#39;s `qualifiers` attribute.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;full&quot;</span><span class="p">:</span>
         <span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="n">margin</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqrecord</span><span class="p">)</span> <span class="o">-</span> <span class="n">margin</span><span class="p">)</span>
 
-    <span class="n">strand</span> <span class="o">=</span> <span class="n">location</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="n">strand</span> <span class="o">=</span> <span class="n">location</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="mi">1</span>
     <span class="n">seqrecord</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
         <span class="n">SeqFeature</span><span class="p">(</span>
             <span class="n">FeatureLocation</span><span class="p">(</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">strand</span><span class="p">),</span>
             <span class="n">qualifiers</span><span class="o">=</span><span class="n">qualifiers</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="n">feature_type</span>
         <span class="p">)</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">seqrecord</span></div>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="annotate_differences"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.features_annotations.annotate_differences">[docs]</a><span class="k">def</span> <span class="nf">annotate_differences</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span>
@@ -327,7 +323,7 @@
       <script type="text/javascript" src="../../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
+      <script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
 
   
 

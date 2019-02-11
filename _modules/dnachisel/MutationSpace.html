@@ -32,8 +32,6 @@
   
     <link rel="stylesheet" href="../../_static/css/main.css" type="text/css" />
   
-    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
-  
 
   
         <link rel="index" title="Index"
@@ -97,7 +95,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">DnaChisel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">DNA Chisel</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -217,7 +215,7 @@
 <div class="viewcode-block" id="MutationChoice.percolate_with"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.MutationSpace.MutationChoice.percolate_with">[docs]</a>    <span class="k">def</span> <span class="nf">percolate_with</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">others</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a mutation restriction</span>
 
-<span class="sd">        Example:</span>
+<span class="sd">        Examples:</span>
 <span class="sd">        --------</span>
 
 <span class="sd">        &gt;&gt;&gt; [</span>
@@ -326,6 +324,7 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
+<span class="sd">    &gt;&gt;&gt; # BEWARE: below, similar mutation choices are actually the SAME OBJECT</span>
 <span class="sd">    &gt;&gt;&gt; space = MutationSpace([</span>
 <span class="sd">            MutationChoice((0, 2), {&#39;AT&#39;, &#39;TG&#39;}),</span>
 <span class="sd">            MutationChoice((0, 2), {&#39;AT&#39;, &#39;TG&#39;}),</span>
@@ -471,8 +470,14 @@
         <span class="n">sequence</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">sequence</span>
 
         <span class="k">if</span> <span class="n">new_constraints</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># The use of different nucleotide orders by arrays of 4</span>
+            <span class="c1"># &quot;randomizes&quot; the considered sequence variants, thus reducing</span>
+            <span class="c1"># the apparition of homopolymers during exhaustive searches</span>
+            <span class="c1"># (may create 4bp tandem repeats though). also increased solving</span>
+            <span class="c1"># time by 6% in tests.</span>
+            <span class="n">variants</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ACTG&quot;</span><span class="p">,</span> <span class="s2">&quot;CTGA&quot;</span><span class="p">,</span> <span class="s2">&quot;TGAC&quot;</span><span class="p">,</span> <span class="s2">&quot;GACT&quot;</span><span class="p">]</span>
             <span class="n">choices_index</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">MutationChoice</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">variants</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="s2">&quot;ATGC&quot;</span><span class="p">))</span>
+                <span class="n">MutationChoice</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">variants</span><span class="o">=</span><span class="n">variants</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="mi">4</span><span class="p">])</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">))</span>
             <span class="p">]</span>
             <span class="n">constraints</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints</span>
@@ -486,11 +491,17 @@
             <span class="k">for</span> <span class="n">cst</span> <span class="ow">in</span> <span class="n">constraints</span>
             <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">cst</span><span class="o">.</span><span class="n">restrict_nucleotides</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
         <span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">choice</span><span class="p">:</span> <span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="n">choice</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">choice</span><span class="o">.</span><span class="n">start</span><span class="p">))</span>
-
+        <span class="c1"># print (new_constraints, choices_index)</span>
+        <span class="c1"># print (&quot;mutation_choices&quot;, mutation_choices)</span>
         <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">mutation_choices</span><span class="p">:</span>
             <span class="n">underlying_choices</span> <span class="o">=</span> <span class="n">choices_index</span><span class="p">[</span><span class="n">choice</span><span class="o">.</span><span class="n">start</span><span class="p">:</span> <span class="n">choice</span><span class="o">.</span><span class="n">end</span><span class="p">]</span>
-            <span class="n">new_choice</span> <span class="o">=</span> <span class="n">choice</span><span class="o">.</span><span class="n">percolate_with</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">underlying_choices</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">underlying_choices</span> <span class="o">==</span> <span class="p">[]:</span>
+                <span class="n">new_choice</span> <span class="o">=</span> <span class="n">choice</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">new_choice</span> <span class="o">=</span> <span class="n">choice</span><span class="o">.</span><span class="n">percolate_with</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">underlying_choices</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">new_choice</span><span class="o">.</span><span class="n">extract_varying_region</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">choice</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">choices_index</span><span class="p">):</span>
+                    <span class="n">choices_index</span> <span class="o">+=</span> <span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">choices_index</span><span class="p">))</span> <span class="o">*</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">choice</span><span class="o">.</span><span class="n">end</span><span class="p">):</span>
                     <span class="n">choices_index</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">choice</span>
             <span class="c1"># for i in range(new_choice.start, new_choice.end):</span>
@@ -542,7 +553,7 @@
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
+      <script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
 
   
 

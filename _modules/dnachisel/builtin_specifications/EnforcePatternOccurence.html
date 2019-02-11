@@ -1,0 +1,393 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dnachisel.builtin_specifications.EnforcePatternOccurence &mdash; DnaChisel 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/main.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="DnaChisel 0.1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DnaChisel
+          
+
+          
+            
+            <img src="../../../_static/html_logo.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">DNA Chisel</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ref/ref.html">DnaChisel Reference manual</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DnaChisel</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>dnachisel.builtin_specifications.EnforcePatternOccurence</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dnachisel.builtin_specifications.EnforcePatternOccurence</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Implement AvoidPattern&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">..Specification</span> <span class="k">import</span> <span class="n">Specification</span>
+<span class="kn">from</span> <span class="nn">.VoidSpecification</span> <span class="k">import</span> <span class="n">VoidSpecification</span>
+<span class="kn">from</span> <span class="nn">..SpecEvaluation</span> <span class="k">import</span> <span class="n">SpecEvaluation</span>
+<span class="kn">from</span> <span class="nn">.EnforceSequence</span> <span class="k">import</span> <span class="n">EnforceSequence</span>
+<span class="kn">from</span> <span class="nn">..MutationSpace</span> <span class="k">import</span> <span class="n">MutationSpace</span>
+<span class="kn">from</span> <span class="nn">..SequencePattern</span> <span class="k">import</span> <span class="n">DnaNotationPattern</span><span class="p">,</span> <span class="n">enzyme_pattern</span>
+<span class="kn">from</span> <span class="nn">dnachisel.Location</span> <span class="k">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">..DnaOptimizationProblem</span> <span class="k">import</span> <span class="n">DnaOptimizationProblem</span><span class="p">,</span> <span class="n">NoSolutionError</span>
+
+
+<div class="viewcode-block" id="EnforcePatternOccurence"><a class="viewcode-back" href="../../../ref/builtin_specifications.html#dnachisel.builtin_specifications.EnforcePatternOccurence">[docs]</a><span class="k">class</span> <span class="nc">EnforcePatternOccurence</span><span class="p">(</span><span class="n">Specification</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Enforce a number of occurences of the given pattern in the sequence.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pattern</span>
+<span class="sd">      A SequencePattern or DnaNotationPattern</span>
+
+<span class="sd">    enzyme</span>
+<span class="sd">      Enzyme name, can be provided instead of a pattern</span>
+
+<span class="sd">    occurences</span>
+<span class="sd">      Desired number of occurences of the pattern.</span>
+
+<span class="sd">    location</span>
+<span class="sd">      Location of the DNA segment on which to enforce the pattern e.g.</span>
+<span class="sd">      ``Location(10, 45, 1)``</span>
+
+<span class="sd">    center</span>
+<span class="sd">      If true, new inserted patterns will prioritize locations at the center</span>
+<span class="sd">      of the specification&#39;s location. Else the insertion will happen at</span>
+<span class="sd">      the beginning of the location.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">best_possible_score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">priority</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">genbank_args</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;pattern&#39;</span><span class="p">,</span> <span class="s1">&#39;occurences&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">occurences</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">boost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">enzyme</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="n">enzyme_pattern</span><span class="p">(</span><span class="n">enzyme</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="n">DnaNotationPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="n">pattern</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_tuple</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span> <span class="o">=</span> <span class="n">enzyme</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boost</span> <span class="o">=</span> <span class="n">boost</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">occurences</span> <span class="o">=</span> <span class="n">occurences</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">center</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boost</span> <span class="o">=</span> <span class="n">boost</span>
+
+    <span class="k">def</span> <span class="nf">initialize_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_with_full_span_if_no_location</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+        <span class="c1"># if self.location is None:</span>
+        <span class="c1">#     location = Location(0, len(problem.sequence))</span>
+        <span class="c1">#     return self.copy_with_changes(location=location)</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     return self</span>
+
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Score the difference between expected and observed n_occurences.&quot;&quot;&quot;</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="o">-</span><span class="nb">abs</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">occurences</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">score</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Passed. Pattern found at positions </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">matches</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">occurences</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Failed. Pattern not found.&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Failed. Pattern found </span><span class="si">%d</span><span class="s2"> times instead of </span><span class="si">%d</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot; wanted, at locations </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">),</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">occurences</span><span class="p">,</span>
+                                                          <span class="n">matches</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
+            <span class="n">locations</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">],</span>
+            <span class="n">data</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">matches</span><span class="o">=</span><span class="n">matches</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">localized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Localize the evaluation.&quot;&quot;&quot;</span>
+        <span class="n">new_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">new_location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">VoidSpecification</span><span class="p">(</span><span class="n">parent_specification</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+
+    <span class="k">def</span> <span class="nf">insert_pattern_in_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Insert the pattern in the problem&#39;s sequence by successive tries.</span>
+
+<span class="sd">        This heuristic is attempted to get the number of occurences in the</span>
+<span class="sd">        pattern from 0 to some number</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">starts</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="n">L</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">:</span>
+            <span class="n">center</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+            <span class="n">starts</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">starts</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="n">center</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="n">starts</span><span class="p">:</span>
+            <span class="n">new_location</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">start</span> <span class="o">+</span> <span class="n">L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span><span class="p">)</span>
+            <span class="n">new_constraint</span> <span class="o">=</span> <span class="n">EnforceSequence</span><span class="p">(</span><span class="n">sequence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span>
+                                             <span class="n">location</span><span class="o">=</span><span class="n">new_location</span><span class="p">)</span>
+            <span class="n">new_space</span> <span class="o">=</span> <span class="n">MutationSpace</span><span class="o">.</span><span class="n">from_optimization_problem</span><span class="p">(</span>
+                <span class="n">problem</span><span class="p">,</span> <span class="n">new_constraints</span><span class="o">=</span><span class="p">[</span><span class="n">new_constraint</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_space</span><span class="o">.</span><span class="n">unsolvable_segments</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">new_sequence</span> <span class="o">=</span> <span class="n">new_space</span><span class="o">.</span><span class="n">constrain_sequence</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
+            <span class="n">new_constraints</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints</span> <span class="o">+</span> <span class="p">[</span><span class="n">new_constraint</span><span class="p">]</span>
+            <span class="n">new_problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span>
+                <span class="n">sequence</span><span class="o">=</span><span class="n">new_sequence</span><span class="p">,</span>
+                <span class="n">constraints</span><span class="o">=</span><span class="n">new_constraints</span><span class="p">,</span>
+                <span class="n">mutation_space</span><span class="o">=</span><span class="n">new_space</span><span class="p">,</span>
+                <span class="n">logger</span><span class="o">=</span><span class="kc">None</span>
+            <span class="p">)</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">new_problem</span><span class="p">)</span><span class="o">.</span><span class="n">passes</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">new_problem</span><span class="o">.</span><span class="n">resolve_constraints</span><span class="p">()</span>
+                <span class="n">problem</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">new_problem</span><span class="o">.</span><span class="n">sequence</span>
+                <span class="k">return</span>
+            <span class="k">except</span> <span class="n">NoSolutionError</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">raise</span> <span class="n">NoSolutionError</span><span class="p">(</span>
+            <span class="n">problem</span><span class="o">=</span><span class="n">problem</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
+            <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Insertion of pattern </span><span class="si">%s</span><span class="s1"> in </span><span class="si">%s</span><span class="s1"> failed&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">resolution_heuristic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Resolve using custom instertion if possible.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="n">DnaNotationPattern</span><span class="p">):</span>
+            <span class="n">evaluation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">evaluation</span><span class="o">.</span><span class="n">passes</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">evaluation</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;matches&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">occurences</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">insert_pattern_in_problem</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+                <span class="k">return</span>
+        <span class="n">problem</span><span class="o">.</span><span class="n">resolve_constraints_locally</span><span class="p">()</span>  <span class="c1"># default resolution method</span>
+
+    <span class="k">def</span> <span class="nf">label_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;enzyme&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
+                  <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">sequence</span>
+                        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="s1">&#39;sequence&#39;</span><span class="p">)</span>
+                        <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">))]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">occurences</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;occurence&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">occurences</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

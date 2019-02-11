@@ -32,8 +32,6 @@
   
     <link rel="stylesheet" href="../_static/css/main.css" type="text/css" />
   
-    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
-  
 
   
         <link rel="index" title="Index"
@@ -99,7 +97,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">DnaChisel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">DNA Chisel</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul class="current">
@@ -194,7 +192,14 @@
 <h1>Core Classes<a class="headerlink" href="#core-classes" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="classes-dependencies">
 <h2>Classes dependencies<a class="headerlink" href="#classes-dependencies" title="Permalink to this headline">¶</a></h2>
-<script>mermaid.initialize({startOnLoad:true});</script><div align="center" class="mermaid align-center">
+
+            <style>
+            /* mermaid issue 527 workaround */
+            .section {
+                opacity: 1.0 !important;
+            }
+            </style>
+            <script>mermaid.initialize({startOnLoad:true});</script><div align="center" class="mermaid align-center">
             graph TD;
    sequence --&gt; P[DnaOptimizationProblem]
    o[objectives...] --&gt; P
@@ -229,11 +234,16 @@ constraints and objectives.</p>
 <div><p>A list of objects of type <code class="docutils literal"><span class="pre">Specification</span></code>.</p>
 </div></blockquote>
 <p><strong>objectives</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>A list of objects of type <code class="docutils literal"><span class="pre">Specification</span></code> specifying what must be
 optimized in the problem. Note that each objective has a float <code class="docutils literal"><span class="pre">boost</span></code>
 parameter. The larger the boost, the more the objective is taken into
 account during the optimization.</p>
+</div></blockquote>
+<p><strong>logger</strong></p>
+<blockquote class="last">
+<div><p>Either None for no logger, ‘bar’ for a tqdm progress bar logger, or
+any ProgLog progress bar logger.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -433,7 +443,7 @@ sequence they are employed before they complete some values.</p>
 
 <dl class="method">
 <dt id="dnachisel.Specification.localized">
-<code class="descname">localized</code><span class="sig-paren">(</span><em>location</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification.html#Specification.localized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.localized" title="Permalink to this definition">¶</a></dt>
+<code class="descname">localized</code><span class="sig-paren">(</span><em>location</em>, <em>problem=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification.html#Specification.localized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.localized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a modified version of the specification for the case where
 sequence modifications are only performed inside the provided location.</p>
 <p>For instance if an specification concerns local GC content, and we are
@@ -469,7 +479,14 @@ and its location indicates the specification’s scope.</p>
 </div>
 <div class="section" id="specevaluation">
 <h2>SpecEvaluation<a class="headerlink" href="#specevaluation" title="Permalink to this headline">¶</a></h2>
-<div class="mermaid">
+
+            <style>
+            /* mermaid issue 527 workaround */
+            .section {
+                opacity: 1.0 !important;
+            }
+            </style>
+            <div class="mermaid">
             graph TD;
    P[DnaOptimizationProblem] --&gt; SE[SpecEvaluation]
    S[Specification] --&gt; SE
@@ -776,7 +793,7 @@ different methods for different purposes.</p>
 </table>
 <dl class="method">
 <dt id="dnachisel.Location.Location.extended">
-<code class="descname">extended</code><span class="sig-paren">(</span><em>extension_length</em>, <em>upper_limit=None</em>, <em>left=True</em>, <em>right=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.extended"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.extended" title="Permalink to this definition">¶</a></dt>
+<code class="descname">extended</code><span class="sig-paren">(</span><em>extension_length</em>, <em>lower_limit=0</em>, <em>upper_limit=None</em>, <em>left=True</em>, <em>right=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.extended"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.extended" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extend the location of a few basepairs on each side.</p>
 </dd></dl>
 
@@ -887,6 +904,17 @@ are applying Python range, so</p>
 <dt id="dnachisel.MutationSpace.MutationChoice.percolate_with">
 <code class="descname">percolate_with</code><span class="sig-paren">(</span><em>others</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace.html#MutationChoice.percolate_with"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationChoice.percolate_with" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a mutation restriction</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;GTA&#39;</span><span class="p">,</span> <span class="s1">&#39;GCT&#39;</span><span class="p">,</span> <span class="s1">&#39;GTT&#39;</span><span class="p">}),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;ATGC&#39;</span><span class="p">}),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;ATG&#39;</span><span class="p">,</span> <span class="s1">&#39;ACC&#39;</span><span class="p">,</span> <span class="s1">&#39;CTG&#39;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">]</span>
+</pre></div>
+</div>
+<p>percolated with:
+&gt;&gt;&gt; ((2, 5), {‘ATT’, ‘ATA’})
+returns
+&gt;&gt;&gt; (0, 7), {‘GTATACC’, ‘GTATATG’}</p>
 </dd></dl>
 
 <dl class="method">
@@ -915,7 +943,8 @@ allowed at position i (ansd possibly around i)</p>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">space</span> <span class="o">=</span> <span class="n">MutationSpace</span><span class="p">([</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># BEWARE: below, similar mutation choices are actually the SAME OBJECT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">space</span> <span class="o">=</span> <span class="n">MutationSpace</span><span class="p">([</span>
 <span class="go">        MutationChoice((0, 2), {&#39;AT&#39;, &#39;TG&#39;}),</span>
 <span class="go">        MutationChoice((0, 2), {&#39;AT&#39;, &#39;TG&#39;}),</span>
 <span class="go">        MutationChoice((2, 5), {&#39;TTC&#39;, &#39;TTA&#39;, &#39;TTT&#39;}), # same</span>
@@ -1009,7 +1038,7 @@ both strands of sequences.</p>
 
 <dl class="class">
 <dt id="dnachisel.SequencePattern.SequencePattern">
-<em class="property">class </em><code class="descclassname">dnachisel.SequencePattern.</code><code class="descname">SequencePattern</code><span class="sig-paren">(</span><em>expression</em>, <em>size=None</em>, <em>name=None</em>, <em>in_both_strands=True</em>, <em>use_lookahead=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#SequencePattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.SequencePattern" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">dnachisel.SequencePattern.</code><code class="descname">SequencePattern</code><span class="sig-paren">(</span><em>expression</em>, <em>size=None</em>, <em>name=None</em>, <em>in_both_strands=True</em>, <em>lookahead='re'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#SequencePattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.SequencePattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pattern/ that will be looked for in a DNA sequence.</p>
 <p>Use this class for matching regular expression patterns, and
 DnaNotationPattern for matching explicit sequences or sequences using Ns
@@ -1047,6 +1076,12 @@ reverse-complement of sequences.</p>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">expression</span> <span class="o">=</span> <span class="s2">&quot;A[ATGC]{3,}&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pattern</span> <span class="o">=</span> <span class="n">SequencePattern</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">constraint</span> <span class="o">=</span> <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="method">
 <dt id="dnachisel.SequencePattern.SequencePattern.find_matches">
 <code class="descname">find_matches</code><span class="sig-paren">(</span><em>sequence</em>, <em>location=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#SequencePattern.find_matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.SequencePattern.find_matches" title="Permalink to this definition">¶</a></dt>
@@ -1169,7 +1204,7 @@ returned</p>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
+      <script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
 
   
 

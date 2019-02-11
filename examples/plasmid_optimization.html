@@ -38,8 +38,7 @@
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="DnaChisel 0.1.0 documentation" href="../index.html"/>
-        <link rel="next" title="Minimization of the number of repeated kmers" href="non_unique_kmers_minimization.html"/>
-        <link rel="prev" title="Built-in Specifications" href="../ref/builtin_specifications.html"/> 
+        <link rel="next" title="Minimization of the number of repeated kmers" href="non_unique_kmers_minimization.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -96,7 +95,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">DnaChisel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">DNA Chisel</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -172,119 +171,6 @@
             
   <div class="section" id="plasmid-optimization-with-dnachisel">
 <span id="plasmid-optimization"></span><h1>Plasmid optimization with DnaChisel<a class="headerlink" href="#plasmid-optimization-with-dnachisel" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Example of plasmid optimization with DnaChisel.</span>
-
-<span class="sd">In this example, we download a plasmid from the web in GENBANK format and</span>
-<span class="sd">modify the sequence with respect to the following constraints and objectives:</span>
-
-<span class="sd">- For each coding sequence (CDS) found in the Genbank file:</span>
-<span class="sd">    - Make sure the corresponding protein sequence remains unchanged.</span>
-<span class="sd">    - Do not modify the 30-base-pair region upstream of the CDS (promoter)</span>
-<span class="sd">    - Codon-optimize for E. coli (use the most frequent codons preferentially)</span>
-
-<span class="sd">- Enforce the constraints given by the DNA provider Gen9:</span>
-<span class="sd">    - Make sure there is no restriction site for BsaI and AarI in the sequence</span>
-<span class="sd">    - Make sure there is no 9-homopolymers of A,T,C or any 6-homopolymers of G.</span>
-<span class="sd">    - Make sure the GC content remains between 40 and 65 percent globally and</span>
-<span class="sd">      between 25 and 80 percent over sliding 100-base-pair windows</span>
-
-<span class="sd">- Aim at a global GC content of 51 percent like in E. coli</span>
-
-<span class="sd">At the beginning, many of the constraints fail (there are BsaI sites, A- and T-</span>
-<span class="sd">homopolymers, and the GC-content is out-of-bounds in many locations).</span>
-<span class="sd">After a run of the constraint solver (~ 1 second) all constraints are solved.</span>
-<span class="sd">And after a run of the optimization algorithm (~20 seconds) the objectives are</span>
-<span class="sd">much improved.</span>
-
-<span class="sd">The final sequence (with the original annotations) is exported to Genbank.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">import</span> <span class="nn">urllib</span>
-<span class="kn">from</span> <span class="nn">dnachisel</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">SeqIO</span><span class="p">,</span> <span class="n">Seq</span>
-
-<span class="c1"># DOWNLOAD THE PLASMID FROM THE WEB (it is a 7kb plasmid with 3 genes)</span>
-
-<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://www.stevekellylab.com/constructs/pDex/pDex577-G.gb&quot;</span>
-<span class="n">urllib</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="s2">&quot;pDex577-G.gb&quot;</span><span class="p">)</span>
-
-
-<span class="c1"># PARSE THE PLASMID FILE WITH BIOPYTHON, GET ITS SEQUENCE AND GENES LOCATIONS</span>
-
-<span class="n">annotated_sequence</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;pDex577-G.gb&quot;</span><span class="p">),</span> <span class="s2">&quot;genbank&quot;</span><span class="p">)</span>
-<span class="n">sequence</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">annotated_sequence</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
-<span class="n">CDS_list</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">annotated_sequence</span><span class="o">.</span><span class="n">features</span>
-    <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CDS&quot;</span>
-<span class="p">]</span>
-
-
-<span class="c1"># DEFINE ALL THE CONSTRAINTS</span>
-
-<span class="n">GEN9_constraints</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">enzyme_pattern</span><span class="p">(</span><span class="s2">&quot;BsaI&quot;</span><span class="p">)),</span>
-    <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">enzyme_pattern</span><span class="p">(</span><span class="s2">&quot;AarI&quot;</span><span class="p">)),</span>
-    <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">homopolymer_pattern</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)),</span>
-    <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">homopolymer_pattern</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)),</span>
-    <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">homopolymer_pattern</span><span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)),</span>
-    <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">homopolymer_pattern</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)),</span>
-    <span class="n">EnforceGCContent</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.65</span><span class="p">),</span>
-    <span class="n">EnforceGCContent</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-<span class="p">]</span>
-
-<span class="n">CDS_constraints</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="p">)</span> <span class="ow">in</span> <span class="n">CDS_list</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">strand</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">promoter_region</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="n">start</span> <span class="o">-</span> <span class="mi">30</span><span class="p">,</span> <span class="n">start</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">promoter_region</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">30</span><span class="p">)</span>
-    <span class="n">keep_promoter_region</span> <span class="o">=</span> <span class="n">AvoidChanges</span><span class="p">(</span><span class="n">promoter_region</span><span class="p">)</span>
-    <span class="n">keep_translation</span> <span class="o">=</span> <span class="n">EnforceTranslation</span><span class="p">(</span><span class="n">Location</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="p">))</span>
-    <span class="n">CDS_constraints</span> <span class="o">+=</span> <span class="p">[</span><span class="n">keep_promoter_region</span><span class="p">,</span> <span class="n">keep_translation</span><span class="p">]</span>
-
-
-<span class="c1"># DEFINE ALL THE OBJECTIVES</span>
-
-<span class="n">objectives</span> <span class="o">=</span> <span class="p">[</span><span class="n">EnforceGCContent</span><span class="p">(</span><span class="mf">0.51</span><span class="p">,</span> <span class="n">boost</span><span class="o">=</span><span class="mi">10000</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span>
-    <span class="n">CodonOptimize</span><span class="p">(</span><span class="s2">&quot;e_coli&quot;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">Location</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="n">strand</span><span class="p">))</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="p">)</span> <span class="ow">in</span> <span class="n">CDS_list</span>
-<span class="p">]</span>
-
-
-<span class="c1"># DEFINE AND SOLVE THE PROBLEM</span>
-
-<span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span>
-    <span class="n">sequence</span><span class="o">=</span><span class="n">sequence</span><span class="p">,</span>
-    <span class="n">constraints</span><span class="o">=</span><span class="n">GEN9_constraints</span> <span class="o">+</span> <span class="n">CDS_constraints</span><span class="p">,</span>
-    <span class="n">objectives</span><span class="o">=</span><span class="n">objectives</span>
-<span class="p">)</span>
-
-<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">=== Initial Status ===&quot;</span><span class="p">)</span>
-<span class="nb">print</span> <span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">(</span><span class="n">failed_only</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-<span class="nb">print</span> <span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">objectives_text_summary</span><span class="p">())</span>
-<span class="kn">import</span> <span class="nn">time</span>
-
-<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Now solving constraints...&quot;</span><span class="p">)</span>
-<span class="n">problem</span><span class="o">.</span><span class="n">solve_all_constraints_one_by_one</span><span class="p">()</span>
-<span class="nb">print</span> <span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">(</span><span class="n">failed_only</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-
-<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Now optimizing objectives...&quot;</span><span class="p">)</span>
-
-<span class="n">problem</span><span class="o">.</span><span class="n">maximize_all_objectives_one_by_one</span><span class="p">(</span><span class="n">max_random_iters</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
-
-<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">=== Status after optimization ===</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span> <span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">objectives_text_summary</span><span class="p">())</span>
-<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Let us check again on the constraints:&quot;</span><span class="p">)</span>
-<span class="nb">print</span> <span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">(</span><span class="n">failed_only</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-
-<span class="c1"># Write the final sequence back to GENBANK (annotations are conserved)</span>
-
-<span class="n">annotated_sequence</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">Seq</span><span class="o">.</span><span class="n">Seq</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span>
-                                 <span class="n">annotated_sequence</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">alphabet</span><span class="p">)</span>
-<span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">annotated_sequence</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;result.gb&quot;</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">),</span> <span class="s2">&quot;genbank&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 </div>
 
 
@@ -299,8 +185,6 @@
       
         <a href="non_unique_kmers_minimization.html" class="btn btn-neutral float-right" title="Minimization of the number of repeated kmers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-      
-        <a href="../ref/builtin_specifications.html" class="btn btn-neutral" title="Built-in Specifications" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

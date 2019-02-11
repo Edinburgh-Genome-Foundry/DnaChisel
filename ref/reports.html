@@ -32,8 +32,6 @@
   
     <link rel="stylesheet" href="../_static/css/main.css" type="text/css" />
   
-    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
-  
 
   
         <link rel="index" title="Index"
@@ -99,7 +97,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">DnaChisel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">DNA Chisel</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul class="current">
@@ -183,7 +181,14 @@
             
   <div class="section" id="reports">
 <h1>Reports<a class="headerlink" href="#reports" title="Permalink to this headline">¶</a></h1>
-<script>mermaid.initialize({startOnLoad:true});</script><div align="center" class="mermaid align-center">
+
+            <style>
+            /* mermaid issue 527 workaround */
+            .section {
+                opacity: 1.0 !important;
+            }
+            </style>
+            <script>mermaid.initialize({startOnLoad:true});</script><div align="center" class="mermaid align-center">
             graph TD;
    D[DnaOptimizationProblem] --&gt; o[optimization_with_report]
    o --&gt;|constraints clash| N[write_no_solution_error]
@@ -194,11 +199,17 @@
 <dt id="dnachisel.reports.optimization_reports.SpecAnnotationsTranslator">
 <em class="property">class </em><code class="descclassname">dnachisel.reports.optimization_reports.</code><code class="descname">SpecAnnotationsTranslator</code><span class="sig-paren">(</span><em>features_filters=()</em>, <em>features_properties=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#SpecAnnotationsTranslator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Translator of DnaChisel feature-constraints for DNA Features Viewer</p>
+<dl class="method">
+<dt id="dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_filtered_features">
+<code class="descname">compute_filtered_features</code><span class="sig-paren">(</span><em>features</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#SpecAnnotationsTranslator.compute_filtered_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_filtered_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do not display edits.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="function">
 <dt id="dnachisel.reports.optimization_reports.optimization_with_report">
-<code class="descclassname">dnachisel.reports.optimization_reports.</code><code class="descname">optimization_with_report</code><span class="sig-paren">(</span><em>target</em>, <em>problem=None</em>, <em>record=None</em>, <em>project_name='unnamed'</em>, <em>specifications_dict='default'</em>, <em>**solver_parameters</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#optimization_with_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.optimization_with_report" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">dnachisel.reports.optimization_reports.</code><code class="descname">optimization_with_report</code><span class="sig-paren">(</span><em>target</em>, <em>problem=None</em>, <em>record=None</em>, <em>project_name='Unnamed project'</em>, <em>specifications_dict='default'</em>, <em>**solver_parameters</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#optimization_with_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.optimization_with_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optimize a sequence and write a multi-file report.</p>
 <p>The report’s content may vary depending on the success of the optimization</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -460,7 +471,7 @@ drawn</p>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
+      <script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
 
   
 
