@@ -33,6 +33,9 @@ Example of use
     print(problem.constraints_text_summary())
     print(problem.objectives_text_summary())
 
+See `this page <https://edinburgh-genome-foundry.github.io/DnaChisel/ref/builtin_specifications.html>`_
+for an overview of available specifications.
+
 Infos
 -----
 
