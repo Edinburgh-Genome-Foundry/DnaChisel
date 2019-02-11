@@ -56,24 +56,24 @@ Here is the code to achieve that:
 
 DnaChisel implements advanced constraints such as the preservation of coding
 sequences,  or the inclusion or exclusion of advanced patterns (see
-`here for an overview of available specifications <https://edinburgh-genome-foundry.github.io/DnaChisel/ref/builtin_specifications.html>`_),
-but it is also easy to implement your own constraints and objectives as subclasses
+`this page <https://edinburgh-genome-foundry.github.io/DnaChisel/ref/builtin_specifications.html>`_
+for an overview of available specifications), but it is also easy to implement your own constraints and objectives as subclasses
 of ``dnachisel.Specification``.
 
 DnaChisel also implements features for verification and troubleshooting. For
 instance by generating optimization reports:
 
-```
-from dnachisel.reports import optimization_with_report
-optimization_with_report(target="report.zip", problem=some_problem)
-```
+.. code:: python
+
+    from dnachisel.reports import optimization_with_report
+    optimization_with_report(target="report.zip", problem=some_problem)
 
 Here is an example of summary report:
 
 .. raw:: html
 
     <p align="center">
-    <img alt="report" title="report" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/report_screenshot.jpg" width="600">
+    <img alt="report" title="report" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/report_screenshot.jpg" width="600">
     <br /><br />
     </p>
 
