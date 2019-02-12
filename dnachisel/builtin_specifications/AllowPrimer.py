@@ -62,7 +62,10 @@ class AvoidHeterodimerization(Specification):
         largest_tm = max(melting_temps)
         # hackish penalty to guide optimization:
         penalty = 0.001 * sum(melting_temps) / len(melting_temps)
-        return self.tmax - largest_tm - penalty
+        score = self.tmax - largest_tm - penalty
+        return SpecEvaluation(specification=self, problem=problem, score=score,
+                              locations=[self.location],
+                              message="Largest Tm = %.1f " % largest_tm)
 
     def label_parameters(self):
         return [('primers', len(self.other_primers_sequences)),
@@ -116,9 +119,9 @@ class EnforceMeltingTemperature(Specification):
         predictor = primer3.calcTm if PRIMER3_AVAILABLE else bio_mt.Tm_NN
         tm = predictor(sequence)
         score = 0.5 * (self.maxi - self.mini) - abs(tm - self.target)
-        return SpecEvaluation(self, problem, score=score,
+        return SpecEvaluation(specification=self, problem=problem, score=score,
                               locations=[self.location],
-                              message="Tm = %.1f " % score)
+                              message="Tm = %.1f " % tm)
 
     
 class AllowPrimer(SpecificationsSet):
@@ -161,6 +164,8 @@ class AllowPrimer(SpecificationsSet):
                  max_homology_length=6, avoid_heterodim_with=None,
                  max_heterodim_tm=5,
                  avoided_repeats=((2, 5), (3, 4), (4, 3))):
+        if isinstance(location, tuple):
+            location = Location.from_tuple(location)
         specs = {
             'unique_sequence': AvoidNonUniqueSegments(
                 min_length=max_homology_length, location=location),
