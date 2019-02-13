@@ -71,7 +71,7 @@ You can also define a problem by annotating directly a genbank as follows:
 .. raw:: html
 
     <p align="center">
-    <img alt="report" title="report" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/example_sequence_map.png" width="800">
+    <img alt="report" title="report" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/example_sequence_map.png" width="650">
     <br /><br />
     </p>
 
