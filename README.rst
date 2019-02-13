@@ -20,6 +20,9 @@ DNA Chisel comes with more than 15 types of optimizations and constraints and al
 Example of use
 ---------------
 
+Defining a problem via scripts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 In this basic example we generate a random sequence and optimize it so that
 
 - It will be rid of BsaI sites.
@@ -57,8 +60,58 @@ Here is the code to achieve that:
 DnaChisel implements advanced constraints such as the preservation of coding
 sequences,  or the inclusion or exclusion of advanced patterns (see
 `this page <https://edinburgh-genome-foundry.github.io/DnaChisel/ref/builtin_specifications.html>`_
-for an overview of available specifications), but it is also easy to implement your own constraints and objectives as subclasses
-of ``dnachisel.Specification``.
+for an overview of available specifications), but it is also easy to implement 
+our own constraints and objectives as subclasses of ``dnachisel.Specification``.
+
+
+Defining a problem via Genbank features
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You can also define a problem by annotating directly a genbank as follows:
+
+.. raw:: html
+
+    <p align="center">
+    <img alt="report" title="report" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/example_sequence_map.png" width="800">
+    <br /><br />
+    </p>
+
+In such genbank records:
+
+- Constraints are features of type ``misc_feature`` with a prefix ``@`` followed
+  by the name of the constraints and its parameters, which are the same as in
+  python scripts, expect that the "=" can be replaced by ":" and strings don't
+  take quote, so you'd write for instance ``species=e_coli``. The constraints
+  are colored in blue in the example above.
+- Optimization objectives are features of type ``misc_feature`` with a prefix
+  ``~`` followed by the name of the constraints and its parameters (colored
+  in yellow in the example above)
+
+Here is how you read the file and solve the problem:
+
+.. code:: python
+
+    from dnachisel import DnaOptimizationProblem
+
+    # DEFINE THE OPTIMIZATION PROBLEM
+
+    problem = DnaOptimizationProblem.from_record("my_record.gb")
+    problem.resolve_constraints()
+    problem.optimize()
+    problem.to_record("my_optimized_record.gb")
+
+By default, only the built-in specifications of DnaChisel can be used in the
+annotations ``from_record`` accepts a ``specifications_dict`` argument which allows
+you to define new specifications like ``MyConstraint`` and have them supported by
+the Genbank importer so that you can add annotations with labels like
+``@MyConstraint(par1=...)`` in your genbank. This allows you to build
+completely custom optimization applications on top of DnaChisel.
+
+Speaking about apps, you can try DnaChisel online `here <https://cuba.genomefoundry.org/sculpt_a_sequence>`_.
+Just drop an annotated genbank and you will get a full optimization with report.
+
+
+Reports
+~~~~~~~~
 
 DnaChisel also implements features for verification and troubleshooting. For
 instance by generating optimization reports:
@@ -76,6 +129,9 @@ Here is an example of summary report:
     <img alt="report" title="report" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/report_screenshot.jpg" width="600">
     <br /><br />
     </p>
+
+
+
 
 How it works
 ------------
