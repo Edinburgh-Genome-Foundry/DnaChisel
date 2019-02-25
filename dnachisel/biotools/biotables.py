@@ -26,7 +26,6 @@ def dict_from_csv(filepath, sep=";"):
 
 
 data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
-codons_usage_dir = os.path.join(data_dir, "codon_usage_tables")
 
 # TABLES DEFINITIONS START HERE
 
