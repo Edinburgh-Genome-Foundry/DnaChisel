@@ -285,7 +285,7 @@ def write_optimization_report(target, problem, project_name="unnammed",
         diffs = DiffBlocks.from_sequences(sequence_before, sequence_after,
                                         contract_under=contract_under)
         _, diffs_ax = diffs.plot()
-        diffs_figure_data = pdf_tools.figure_data(diffs_ax.figure)
+        diffs_figure_data = pdf_tools.figure_data(diffs_ax.figure, fmt='svg')
         plt.close(diffs_ax.figure)
 
     with PdfPages(root._file("before_after.pdf").open("wb")) as pdf_io:

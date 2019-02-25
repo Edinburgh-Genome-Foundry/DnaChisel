@@ -1,10 +1,9 @@
 import numpy as np
-
+from python_codon_tables import get_codons_table
 from .CodonSpecification import CodonSpecification
 from ..SpecEvaluation import SpecEvaluation
-from ..biotools import (CODON_USAGE_TABLES, CODONS_TRANSLATIONS,
-                        group_nearby_indices, codons_frequencies_and_positions,
-                        CODON_USAGE_BY_AA)
+from ..biotools import (CODONS_TRANSLATIONS, group_nearby_indices,
+                        codons_frequencies_and_positions)
 from ..Location import Location
 
 
@@ -75,20 +74,29 @@ class CodonOptimize(CodonSpecification):
         self.location = location
         self.species = species
         if species is not None:
-            codon_usage_table = CODON_USAGE_TABLES[self.species]
+            codon_usage_table = get_codons_table(self.species)
+            # codon_usage_table = CODON_USAGE_TABLES[self.species]
         if codon_usage_table is None:
             raise ValueError("Provide either an species name or a codon "
                              "usage table")
+
+        # PRECOMPUTE SOME TABLES (WILL BE PASSED ON TO LOCALIZED PROBLEMS)
         self.codon_usage_table = codon_usage_table
+        if 'codons_frequencies' not in self.codon_usage_table:
+                self.codon_usage_table['codons_frequencies'] = dict([
+                item for aa_data in self.codon_usage_table.values()
+                for item in aa_data.items()
+            ])
+        if 'best_frequencies' not in self.codon_usage_table:
+            self.codon_usage_table['best_frequencies'] = {
+                aa: max(aa_data.values())
+                for aa, aa_data in self.codon_usage_table.items()
+                if aa != 'codons_frequencies'
+            }
 
     def initialize_on_problem(self, problem, role):
         """Get location from sequence if no location provided."""
         return self._copy_with_full_span_if_no_location(problem)
-        # if self.location is None:
-        #     location = Location(0, len(problem.sequence), 1)
-        #     return self.copy_with_changes(location=location)
-        # else:
-        #     return self
 
     def evaluate(self, problem):
         """ Return the sum of all codons frequencies.
@@ -103,7 +111,7 @@ class CodonOptimize(CodonSpecification):
         }[self.mode](problem)
 
     @staticmethod
-    def codon_harmonization_stats(sequence, species):
+    def codon_harmonization_stats(sequence, codon_usage):
         """Return a codon harmonisation score and a suboptimal locations list.
 
         Parameters
@@ -134,11 +142,12 @@ class CodonOptimize(CodonSpecification):
             )
         codons_frequencies, codons_positions = \
             codons_frequencies_and_positions(sequence)
-        codon_usage = CODON_USAGE_BY_AA[species]
 
         score = 0
         nonoptimal_indices = []
         for aa, usage_data in codon_usage.items():
+            if aa in ['best_frequencies', 'codons_frequencies']:
+                continue
             sequence_data = codons_frequencies[aa]
             for codon, usage_freq in usage_data.items():
                 sequence_freq = sequence_data.get(codon, 0)
@@ -182,8 +191,9 @@ class CodonOptimize(CodonSpecification):
             for i in range(int(length / 3))
         ]
         CT = CODONS_TRANSLATIONS
+        print (self.codon_usage_table['codons_frequencies'])
         current_usage, optimal_usage = [np.array(e) for e in zip(*[
-            (self.codon_usage_table[codon],
+            (self.codon_usage_table['codons_frequencies'][codon],
              self.codon_usage_table['best_frequencies'][CT[codon]])
             for codon in codons
         ])]
@@ -197,10 +207,10 @@ class CodonOptimize(CodonSpecification):
                     (self.location, score)
         )
     def evaluate_harmonized(self, problem):
-        """Return the evaluation for mode==harmonized."""
+        """Return the evaluation for mode == harmonized."""
         subsequence = self.location.extract_sequence(problem.sequence)
-        score, nonoptimal_indices = self.codon_harmonization_stats(subsequence,
-                                                                   self.species)
+        score, nonoptimal_indices = self.codon_harmonization_stats(
+            subsequence, self.codon_usage_table)
         locations = self.codons_indices_to_locations(nonoptimal_indices)
         np.random.shuffle(locations)
         return SpecEvaluation(

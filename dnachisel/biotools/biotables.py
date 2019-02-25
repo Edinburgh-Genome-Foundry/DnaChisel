@@ -30,7 +30,10 @@ codons_usage_dir = os.path.join(data_dir, "codon_usage_tables")
 
 # TABLES DEFINITIONS START HERE
 
-COMPLEMENTS = {"A": "T", "T": "A", "C": "G", "G": "C"}
+# COMPLEMENTS = {"A": "T", "T": "A", "C": "G", "G": "C"}
+with open(os.path.join(data_dir, "complements.csv"), "r") as f:
+    COMPLEMENTS = dict([line.split(',')
+                        for line in f.read().splitlines()])
 OTHER_BASES = {
     "A": ["T", "G", "C"],
     "T": ["A", "G", "C"],
@@ -45,36 +48,6 @@ CODONS_SYNONYMS = {
     codon: CODONS_SEQUENCES[CODONS_TRANSLATIONS[codon]]
     for codon in CODONS_TRANSLATIONS
 }
-
-CODON_USAGE_TABLES = {}
-for fname in os.listdir(codons_usage_dir):
-    if not fname.endswith(".csv"):
-        continue
-    organism = "_".join(fname[:-4].split("_")[:-1])
-    with open(os.path.join(codons_usage_dir, fname), "r") as f:
-        CODON_USAGE_TABLES[organism] = table = {
-            line.split(";")[1]: float(line.split(";")[2].strip("\n"))
-            for line in f.readlines()[1:]
-            if line not in ("", "\n")
-        }
-        for (codon, usage) in list(table.items()):
-            table[codon.replace('U', 'T')] = usage
-        table['best_frequencies'] = {
-            aa: max([table[codon] for codon in CODONS_SEQUENCES[aa]])
-            for aa in CODONS_SEQUENCES
-        }
-
-CODON_USAGE_BY_AA = {
-    species: {
-        aa: {
-            codon: species_data[codon]
-            for codon in codons
-        }
-        for aa, codons in CODONS_SEQUENCES.items()
-    }
-    for species, species_data in CODON_USAGE_TABLES.items()
-}
-
 
 AA_LONG_NAMES = dict_from_csv(os.path.join(data_dir, "aa_long_names.csv"))
 

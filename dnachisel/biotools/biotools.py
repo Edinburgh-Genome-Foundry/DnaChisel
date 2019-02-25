@@ -15,7 +15,7 @@ from Bio import SeqIO
 from Bio import Restriction
 
 from .biotables import (CODONS_TRANSLATIONS, NUCLEOTIDE_TO_REGEXPR,
-                        CODONS_SEQUENCES, IUPAC_NOTATION)
+                        COMPLEMENTS, CODONS_SEQUENCES, IUPAC_NOTATION)
 
 
 def complement(dna_sequence):
@@ -25,6 +25,9 @@ def complement(dna_sequence):
 
     Uses BioPython for speed.
     """
+    if len(dna_sequence) <= 30:
+        return "".join([COMPLEMENTS[nuc] for nuc in dna_sequence])
+    # This alternative has overhead but is really fast on long sequences
     return str(Seq(dna_sequence).complement())
 
 

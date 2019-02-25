@@ -33,6 +33,5 @@ from .features_annotations import (
     annotate_pattern_occurrences
 )
 
-from .biotables import (CODONS_SEQUENCES, CODONS_TRANSLATIONS,
-                        CODON_USAGE_TABLES, IUPAC_NOTATION,
-                        NUCLEOTIDE_TO_REGEXPR, CODON_USAGE_BY_AA)
+from .biotables import (CODONS_SEQUENCES, CODONS_TRANSLATIONS, IUPAC_NOTATION,
+                        NUCLEOTIDE_TO_REGEXPR)
