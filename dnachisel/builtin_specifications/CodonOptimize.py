@@ -8,7 +8,7 @@ from ..Location import Location
 
 
 class CodonOptimize(CodonSpecification):
-    """Specification to codon-optimize a coding sequence for a particular species.
+    """Codon-optimize a coding sequence for a particular species.
 
     Several codon-optimization policies exist. At the moment this Specification
     implements a method in which codons are replaced by the most frequent
@@ -17,16 +17,15 @@ class CodonOptimize(CodonSpecification):
     (as long as this doesn't break any Specification or lowers the global
     optimization objective)
 
-    Supported speciess are ``E. coli``, ``S. cerevisiae``, ``H. Sapiens``,
-    ``C. elegans``, ``D. melanogaster``, ``B. subtilis``.
-
     Parameters
     ----------
 
     species
-      Name of the species to codon-optimize for. Supported speciess are
-      ``E. coli``, ``S. cerevisiae``, ``H. Sapiens``, ``C. elegans``,
-      ``D. melanogaster``, ``B. subtilis``.
+      Either a TaxID (this requires a web connection as the corresponding table
+      will be downloaded from the internet) or the name of the species to
+      codon-optimize for (the name must be supported by ``python_codon_tables``
+      e.g. ``e_coli``, ``s_cerevisiae``, ``h_sapiens``, ``c_elegans``,
+      ``b_subtilis``, ``d_melanogaster``).
       Note that the species can be omited if a ``codon_usage_table`` is
       provided instead
 
@@ -46,9 +45,9 @@ class CodonOptimize(CodonSpecification):
       encoded on the (+) strand, or -1 for antisense.
 
     codon_usage_table
-      A dict of the form ``{"TAC": 0.112, "CCT": 0.68}`` giving the RSCU table
-      (relative usage of each codon). Only provide if no ``species`` name
-      was provided.
+      A dict of the form ``{'*': {"TGA": 0.112, "TAA": 0.68}, 'K': ...}``
+      giving the RSCU table (relative usage of each codon). Only provide if
+      no ``species`` parameter was provided.
 
     Examples
     --------
