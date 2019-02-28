@@ -1,7 +1,7 @@
 from ..Specification import Specification
 from ..Location import Location
 from .VoidSpecification import VoidSpecification
-from ..SequencePattern import enzyme_pattern, DnaNotationPattern
+from ..SequencePattern import SequencePattern #enzyme_pattern, DnaNotationPattern
 
 class PatternSpecification(Specification):
     """Class for Specifications such as presence or absence of a pattern.
@@ -29,17 +29,17 @@ class PatternSpecification(Specification):
     shrink_when_localized = True
     priority = 1
 
-    def __init__(self, pattern=None, location=None, boost=1.0, enzyme=None):
+    def __init__(self, pattern=None, location=None, boost=1.0):
         """Initialize."""
-        if enzyme is not None:
-            pattern = enzyme_pattern(enzyme)
+        # if enzyme is not None:
+        #     pattern = enzyme_pattern(enzyme)
         if isinstance(pattern, str):
-            pattern = DnaNotationPattern(pattern)
+            pattern = SequencePattern.from_string(pattern)
         self.pattern = pattern
         if isinstance(location, tuple):
             location = Location.from_tuple(location)
         self.location = location
-        self.enzyme = enzyme
+        # self.enzyme = enzyme
         self.boost = boost
 
     def initialize_on_problem(self, problem, role='constraint'):
@@ -67,7 +67,9 @@ class PatternSpecification(Specification):
         return self.copy_with_changes(location=new_location)
 
     def label_parameters(self):
-        return [('enzyme', self.enzyme) if (self.enzyme is not None)
-                  else (self.pattern.sequence
-                        if hasattr(self.pattern, 'sequence')
-                        else str(self.pattern))]
+        return [('pattern',str(self.pattern))]
+    # def label_parameters(self):
+    #     return [('enzyme', self.enzyme) if (self.enzyme is not None)
+    #               else (self.pattern.sequence
+    #                     if hasattr(self.pattern, 'sequence')
+    #                     else str(self.pattern))]

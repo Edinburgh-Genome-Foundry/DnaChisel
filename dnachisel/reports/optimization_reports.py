@@ -153,7 +153,6 @@ def optimization_with_report(target, problem=None, record=None,
         problem.logger(message="Solving constraints")
         problem.resolve_constraints()
     except NoSolutionError as error:
-        print (error)
         problem.logger(message="No solution found: making report")
         data = write_no_solution_report(target, problem, error)
         start, end, s = error.location.to_tuple()
@@ -227,7 +226,6 @@ def write_no_solution_report(target, problem, error):
                                 .locations_as_features(label_prefix="BREACH")
         start = max(0, error.location.start - 5)
         end = min(len(record), error.location.end + 4)
-        # local_record = crop_record(record, start, end)
         graphical_record = translator.translate_record(record)
         graphical_record = graphical_record.crop((start, end))
         ax, _ = graphical_record.plot(figure_width=min(20, 0.3*(end - start)))
@@ -265,6 +263,33 @@ def write_optimization_report(target, problem, project_name="unnammed",
 
     Parameters
     ----------
+    target
+      Path to a directory or zip file, or "@memory" for returning raw data of
+      a zip file created in-memory.
+    
+    problem
+      A DnaOptimizationProblem to be solved and optimized
+    
+    project_name
+      Name of the project that will appear on the PDF report
+    
+    constraints_evaluations
+      Precomputed constraints evaluations. If None provided, they will be
+      computed again from the problem.
+    
+    objectives_evaluations
+      Precomputed objectives evaluations. If None provided, they will be
+      computed again from the problem.
+      
+    
+    figure_width
+      Width of the report's figure, in inches. The more annotations there will
+      be in the figure, the wider it should be. The default should work for
+      most cases.
+    
+    max_features_in_plots
+      Limit to the number of features to plot (plots with thousands of features
+      may take ages to plot)
 
     """
     if constraints_evaluations is None:
@@ -281,9 +306,10 @@ def write_optimization_report(target, problem, project_name="unnammed",
     sequence_before = sequence_to_biopython_record(problem.sequence_before)
     if GENEBLOCKS_AVAILABLE:
         sequence_after = problem.to_record()
-        contract_under = max(3, int(len(sequence_after)/ 25))
+        contract_under = max(3, int(len(sequence_after) / 10))
         diffs = DiffBlocks.from_sequences(sequence_before, sequence_after,
-                                        contract_under=contract_under)
+                                          use_junk_over=50,
+                                          contract_under=contract_under)
         _, diffs_ax = diffs.plot()
         diffs_figure_data = pdf_tools.figure_data(diffs_ax.figure, fmt='svg')
         plt.close(diffs_ax.figure)

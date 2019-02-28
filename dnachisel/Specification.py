@@ -8,7 +8,6 @@ Notable features implemented here:
 import copy
 import re
 
-from .SequencePattern import DnaNotationPattern, enzyme_pattern
 from .biotools import find_specification_in_feature
 from .Location import Location
 from .SpecEvaluation import SpecEvaluation

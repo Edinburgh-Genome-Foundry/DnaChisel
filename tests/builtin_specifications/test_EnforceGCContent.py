@@ -9,7 +9,7 @@ def test_EnforceGCContents():
     problem = DnaOptimizationProblem(
         sequence=random_dna_sequence(10000, seed=123),
         constraints=[
-            AvoidPattern(enzyme="BsaI"),
+            AvoidPattern("BsaI_site"),
             EnforceGCContent(mini=0.3, maxi=0.7, window=50)
         ],
         objectives=[EnforceGCContent(target=0.4)]

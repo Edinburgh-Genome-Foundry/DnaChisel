@@ -8,7 +8,7 @@ def test_EnforceChoice():
     # enzyme will be chosen and inserted in the sequence depends on the other
     # constraint on GC content
     numpy.random.seed(123)
-    spec = EnforceChoice(enzymes=['BsmBI', 'EcoRI'], location=(2, 8))
+    spec = EnforceChoice(choices=['BsmBI_site', 'EcoRI_site'], location=(2, 8))
 
     problem = DnaOptimizationProblem(
         sequence="AGCCCCCCGT",  constraints=[spec, EnforceGCContent(maxi=0.3)])

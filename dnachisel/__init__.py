@@ -26,15 +26,14 @@ from .SpecEvaluation import SpecEvaluation
 
 from .SequencePattern import (
     DnaNotationPattern,
-    homopolymer_pattern,
-    enzyme_pattern,
-    repeated_kmers
+    HomopolymerPattern,
+    RepeatedKmerPattern,
+    EnzymeSitePattern
 )
 
 from .biotools import (
     blast_sequence,
     complement,
-    crop_record,
     is_palyndromic,
     list_common_enzymes,
     load_record,

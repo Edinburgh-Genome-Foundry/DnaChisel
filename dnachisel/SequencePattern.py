@@ -57,14 +57,18 @@ class SequencePattern:
 
     """
 
+    registered_string_pattern_classes = []
+
     def __init__(self, expression, size=None, name=None, in_both_strands=True,
-                 lookahead='re'):
+                 lookahead='loop'):
         if size is None:
             size = len(expression)
         self.expression = expression
         self.lookahead = lookahead
         if lookahead == 're':
             expression = '(?=(%s))' % expression
+        if "(" not in expression:
+            expression = "(%s)" % expression
         self.lookahead_expression = expression
         self.compiled_expression = re.compile(self.lookahead_expression)
         self.size = size
@@ -102,10 +106,6 @@ class SequencePattern:
                 for loc in self.find_matches(subsequence)
             ]
         matches = self.find_all_re_matches(sequence)
-        # [
-        #     (match.start(), match.start() + len(match.groups()[0]), 1)
-        #     for match in re.finditer(self.compiled_expression, sequence)
-        # ]
 
         if self.in_both_strands:
             reverse = reverse_complement(sequence)
@@ -141,6 +141,14 @@ class SequencePattern:
     def __str__(self):
         return self.expression + ("" if self.name is None else
                                   " (%s)" % self.name)
+    
+    @classmethod
+    def from_string(cls, string):
+        for myclass in cls.registered_string_pattern_classes:
+            pattern = myclass.from_string(string)
+            if pattern is not None:
+                return pattern
+        return SequencePattern(string)
 
 
 class DnaNotationPattern(SequencePattern):
@@ -172,10 +180,6 @@ class DnaNotationPattern(SequencePattern):
             for n in sequence
         ])
         return regexpr
-        # The ?= implements 'lookahead' which enables to find overlapping
-        # patterns. It is followed by (.{S}) where S is the sequence size
-        # to make sure the full group is selected.
-        # return '(?=(%s))(.\{%d\})' % (regexpr, len(sequence))
 
     def all_variants(self):
         """Return all ATGC sequence variants of a sequence"""
@@ -194,12 +198,75 @@ class DnaNotationPattern(SequencePattern):
         """Represent the pattern as PatternType(name) """
         return self.sequence + ("" if self.name is None else
                                 " (%s)" % self.name)
+    @staticmethod
+    def from_string(string):
+        if set(string) <= set(NUCLEOTIDE_TO_REGEXPR.keys()):
+            return DnaNotationPattern(string)
 
 # DEFINITION OF COMMON PATTERNS
 
+class EnzymeSitePattern(DnaNotationPattern):
+    """Class to represent Enzyme site patterns
 
-def homopolymer_pattern(nucleotides, number):
-    """Return a DnaNotationPattern with the sequence of a homopolymer.
+    Examples
+    --------
+
+    >>> enzyme_pattern = EnzymeSitePattern("BsaI")
+    >>> constraint = AvoidPattern(enzyme_pattern)
+
+    """
+
+    def __init__(self, enzyme_name):
+        self.enzyme_site = rest_dict[enzyme_name]["site"]
+        DnaNotationPattern.__init__(self, self.enzyme_site, name=enzyme_name)
+    
+    @staticmethod
+    def from_string(string):
+        """Convert BsmBI_site to EnzymeSitePattern(BsmBI)"""
+        match = re.match("(\S+)_site", string)
+        if match is not None:
+            enzyme_name = match.groups()[0]
+            if enzyme_name in rest_dict:
+                return EnzymeSitePattern(enzyme_name)
+
+    def __str__(self):
+        return "%s(%s)" % (self.name, self.enzyme_site)
+
+        
+
+
+class HomopolymerPattern(DnaNotationPattern):
+    """Homopolymer of the form AAAAAAA, TTTTT, etc.
+
+    Shorthand string version: "7xA", "9xC", etc.
+
+    Examples
+    --------
+
+    >>> pattern = HomopolymerPattern("A", 6)
+    >>> constraint = AvoidPattern(pattern)
+
+    """
+    def __init__(self, nucleotide, number):
+        self.nucleotide = nucleotide
+        self.number = number
+        DnaNotationPattern.__init__(self, number * nucleotide,
+                                    in_both_strands=True)
+    @staticmethod
+    def from_string(string):
+        match = re.match("(\d+)x(\S)$", string)
+        if match is not None:
+            number, nucleotide = match.groups()[0]
+            return HomopolymerPattern(nucleotide, int(number))
+
+    def __str__(self):
+        return "%sx%s" % (self.number, self.nucleotide)
+
+
+class RepeatedKmerPattern(SequencePattern):
+    """Direct repeats like ATT-ATT, ATGC-ATGC-ATGC, etc.
+
+    Shorthand string version: "3x4mer", "5x2mer", etc.
 
     Examples
     --------
@@ -207,65 +274,29 @@ def homopolymer_pattern(nucleotides, number):
     >>> homopolymer("A", 6) # returns DnaNotationPattern("AAAAAA")
 
     """
-    if len(nucleotides) == 1:
-        return DnaNotationPattern(number * nucleotides)
-    else:
-        return SequencePattern(number * ("[%s]" % ("|".join(nucleotides))),
-                               size=number)
+    def __init__(self, n_repeats, kmer_size):
+        self.n_repeats = n_repeats
+        self.kmer_size = kmer_size
+        SequencePattern.__init__(
+            self, size=kmer_size * n_repeats,
+            expression=r"([ATGC]{%d})\1{%d}" % (kmer_size, n_repeats-1),
+            name="%d-repeats %d-mers" % (n_repeats, kmer_size),
+            in_both_strands=False,  # a repeat on a strand is also on the other
+            lookahead='loop')
 
-def enzyme_pattern(enzyme_name):
-    """Return a DnaNotationPattern with the sequence of a homopolymer.
+    @staticmethod
+    def from_string(string):
+        match = re.match("(\d+)x(\d+)mer$", string)
+        if match is not None:
+            n_repeats, kmer_size = match.groups()[0]
+            return RepeatedKmerPattern(int(n_repeats), int(kmer_size))
 
-    Examples
-    --------
+    def __str__(self):
+        return "%sx%smer" % (self.n_repeats, self.kmer_size)
 
-    >>> pattern = enzyme_pattern("BsaI") # returns DnaNotationPattern("GGTCTC")
-    >>> constraint = AvoidPattern(pattern)
-
-    """
-    enzyme_site = rest_dict[enzyme_name]["site"]
-    return DnaNotationPattern(enzyme_site, name=enzyme_name)
-
-
-def repeated_kmers(kmer_size, n_repeats):
-    """Return a SequencePattern matching all k-mers repeated n times.
-
-    Examples
-    --------
-
-    >>> pattern = repeated_kmers(2, 5) # Result will match e.g. ACACACACAC
-    >>> constraint = AvoidPattern(pattern)
-    """
-
-    # FIXME: this regular expression does not support lookahead so we will
-    # need the following special pattern.
-    #     def myfindall(regex, seq):
-    # ...    resultlist=[]
-    # ...    pos=0
-    # ...
-    # ...    while True:
-    # ...       result = regex.search(seq, pos)
-    # ...       if result is None:
-    # ...          break
-    # ...       resultlist.append(seq[result.start():result.end()])
-    # ...       pos = result.start()+1
-    # ...    return resultlist
-        #     def myfindall(regex, seq):
-    # ...    resultlist=[]
-    # ...    pos=0
-    # ...
-    # ...    while True:
-    # ...       result = regex.search(seq, pos)
-    # ...       if result is None:
-    # ...          break
-    # ...       resultlist.append(seq[result.start():result.end()])
-    # ...       pos = result.start()+1
-    # ...    return resultlist
-
-    return SequencePattern(
-        size=kmer_size * n_repeats,
-        expression=r"([ATGC]{%d})\1{%d}" % (kmer_size, n_repeats-1),
-        name="%d-repeats %d-mers" % (n_repeats, kmer_size),
-        in_both_strands=False,  # a kmer repeat one strand is also on the other
-        lookahead='loop'
-    )
+SequencePattern.registered_string_pattern_classes = [
+    HomopolymerPattern,
+    RepeatedKmerPattern,
+    EnzymeSitePattern,
+    DnaNotationPattern
+]

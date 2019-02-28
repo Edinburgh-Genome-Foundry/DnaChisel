@@ -171,7 +171,6 @@ class AvoidNonUniqueSegments(Specification):
             ]
         nonunique_locations = [Location(i, i + self.min_length)
                                for i in nonunique_locations]
-        # print (len(nonunique_locations))
         return SpecEvaluation(
             self, problem, score=-len(nonunique_locations),
             locations=nonunique_locations,

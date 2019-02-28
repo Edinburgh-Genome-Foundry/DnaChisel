@@ -18,7 +18,7 @@ except:
 
 from ..DnaOptimizationProblem import DnaOptimizationProblem
 from ..biotools import gc_content
-from ..SequencePattern import repeated_kmers, homopolymer_pattern
+from ..SequencePattern import RepeatedKmerPattern, HomopolymerPattern
 from ..builtin_specifications import (EnforceGCContent, AvoidPattern,
                                       AvoidHairpins)
 
@@ -202,30 +202,30 @@ def plot_sequence_manufacturability_difficulties(sequence):
     )
 
     plot_constraint_breaches(
-        AvoidPattern(enzyme="BsmBI"), sequence,
+        AvoidPattern("BsmBI_site"), sequence,
         title="BsmBI sites", ax=axes[2]
     )
 
     plot_constraint_breaches(
-        AvoidPattern(enzyme="BsaI"),
+        AvoidPattern("BsaI_site"),
         record, title="BsaI sites", ax=axes[3]
     )
 
     plot_constraint_breaches(
-        AvoidPattern(enzyme="BbsI"),
+        AvoidPattern("BbsI_site"),
         record, title="BbsI sites", ax=axes[4]
     )
 
     for l, n in [("A", 9), ("T", 9), ("G", 6), ("C", 6)]:
-        constraint = AvoidPattern(homopolymer_pattern(l, n))
+        constraint = AvoidPattern(HomopolymerPattern(l, n))
         plot_constraint_breaches(
             constraint, record,
             title="Homopolymers (6+ G or C | 9+ A or T)",
             ax=axes[5]
         )
 
-    for length, n_repeats in (3, 5), (2, 9):
-        pattern = repeated_kmers(length, n_repeats=n_repeats)
+    for kmer_size, n_repeats in (3, 5), (2, 9):
+        pattern = RepeatedKmerPattern(n_repeats=n_repeats, kmer_size=kmer_size)
         constraint = AvoidPattern(pattern)
         plot_constraint_breaches(
             constraint, record,

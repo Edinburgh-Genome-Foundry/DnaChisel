@@ -9,7 +9,7 @@ from Bio.SeqUtils import MeltingTemp as bio_mt
 from ..Specification import Specification, SpecificationsSet
 from ..SpecEvaluation import SpecEvaluation
 from ..Location import Location
-from ..SequencePattern import repeated_kmers
+from ..SequencePattern import RepeatedKmerPattern
 from .VoidSpecification import VoidSpecification
 from .AvoidNonUniqueSegments import AvoidNonUniqueSegments
 from .AvoidPattern import AvoidPattern
@@ -173,7 +173,7 @@ class AllowPrimer(SpecificationsSet):
                 mini=tmin, maxi=tmax, location=location),
            **{
                'repeats_%d_%d' % (k, n): AvoidPattern(
-                   repeated_kmers(k, n), location=location)
+                   RepeatedKmerPattern(k, n), location=location)
                 for (k, n) in avoided_repeats
            }
         }

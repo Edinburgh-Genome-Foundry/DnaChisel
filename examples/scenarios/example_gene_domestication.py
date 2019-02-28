@@ -10,7 +10,7 @@ problem = DnaOptimizationProblem(
     sequence=sequence,
     constraints=[
         EnforceTranslation(),
-        AvoidPattern(enzyme="BsmBI"),
+        AvoidPattern("BsmBI_site"),
         EnforceGCContent(mini=0.4, maxi=0.6, window=60)
     ],
     objectives=[

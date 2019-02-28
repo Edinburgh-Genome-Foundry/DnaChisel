@@ -34,7 +34,7 @@ Here is the code to achieve that:
 
     problem = DnaOptimizationProblem(
         sequence=random_dna_sequence(10000),
-        constraints=[AvoidPattern(enzyme_="BsaI"),
+        constraints=[AvoidPattern("BsaI_site"),
                      EnforceGCContent(mini=0.3, maxi=0.7, window=50)],
         objectives=[CodonOptimize(species='e_coli', location=(500, 1300))]
     )

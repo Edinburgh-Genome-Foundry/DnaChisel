@@ -5,7 +5,7 @@ from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from .EnforceSequence import EnforceSequence
 from ..MutationSpace import MutationSpace
-from ..SequencePattern import DnaNotationPattern, enzyme_pattern
+from ..SequencePattern import SequencePattern, DnaNotationPattern
 from dnachisel.Location import Location
 from ..DnaOptimizationProblem import DnaOptimizationProblem, NoSolutionError
 
@@ -38,18 +38,16 @@ class EnforcePatternOccurence(Specification):
     priority = -1
     genbank_args = ('pattern', 'occurences')
 
-    def __init__(self, pattern=None, occurences=1, location=None, enzyme=None,
+    def __init__(self, pattern=None, occurences=1, location=None,
                  center=True, boost=1.0):
         """Initialize."""
-        if enzyme is not None:
-            pattern = enzyme_pattern(enzyme)
         if isinstance(pattern, str):
-            pattern = DnaNotationPattern(pattern)
+            pattern = SequencePattern.from_string(pattern)
+        print (pattern)
         self.pattern = pattern
         if isinstance(location, tuple):
             location = Location.from_tuple(location)
         self.location = location
-        self.enzyme = enzyme
         self.boost = boost
         self.occurences = occurences
         self.center = center
@@ -146,10 +144,11 @@ class EnforcePatternOccurence(Specification):
         problem.resolve_constraints_locally()  # default resolution method
 
     def label_parameters(self):
-        result = [('enzyme', self.enzyme) if (self.enzyme is not None)
-                  else (self.pattern.sequence
-                        if hasattr(self.pattern, 'sequence')
-                        else str(self.pattern))]
+        # result = [('enzyme', self.enzyme) if (self.enzyme is not None)
+        #           else (self.pattern.sequence
+        #                 if hasattr(self.pattern, 'sequence')
+        #                 else str(self.pattern))]
+        result = [str(self.pattern)]
         if self.occurences != 1:
             result += ['occurence', str(self.occurences)]
         return result

@@ -10,7 +10,7 @@ from dnachisel import (random_dna_sequence, DnaOptimizationProblem,
 def test_optimization_with_report(tmpdir):
     problem = DnaOptimizationProblem(
         sequence=random_dna_sequence(10000, seed=123),
-        constraints=[AvoidPattern(enzyme='BsmBI')]
+        constraints=[AvoidPattern('BsmBI_site')]
     )
 
     target = os.path.join(str(tmpdir), 'with_solution')
@@ -23,7 +23,7 @@ def test_optimization_with_report(tmpdir):
 def test_optimization_with_report_no_solution(tmpdir):
     problem = DnaOptimizationProblem(
         sequence=random_dna_sequence(10000, seed=123),
-        constraints=[AvoidPattern(enzyme='BsmBI'), AvoidChanges()]
+        constraints=[AvoidPattern('BsmBI_site'), AvoidChanges()]
     )
     target = os.path.join(str(tmpdir), 'no_solution')
     os.mkdir(target)

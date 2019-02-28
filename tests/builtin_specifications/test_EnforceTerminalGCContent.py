@@ -10,7 +10,7 @@ def test_basics():
     problem = DnaOptimizationProblem(
         sequence=random_dna_sequence(10000, probas=probas, seed=123),
         constraints=[
-            AvoidPattern(enzyme="BsaI"),
+            AvoidPattern("BsaI_site"),
             EnforceTerminalGCContent(mini=0.2, maxi=0.4, window_size=50)
         ]
     )

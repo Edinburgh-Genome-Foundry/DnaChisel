@@ -4,7 +4,6 @@ from .biotools import (
     blast_sequence,
     change_biopython_record_sequence,
     complement,
-    crop_record,
     dna_pattern_to_regexpr,
     find_specification_in_feature,
     gc_content,

@@ -369,45 +369,6 @@ def find_specification_in_feature(feature):
             return potential_label
     return None
 
-
-def crop_record(record, crop_start, crop_end, features_suffix=" (part)"):
-    """Return the cropped record with possibly cropped features.
-
-    Note that this differs from ``record[start:end]`` in that in the latter
-    expression, cropped features are discarded.
-
-    Parameters
-    ----------
-
-    record
-      A Biopython record
-
-    crop_start, crop_end
-      Start and end of the segment to be cropped.
-
-    features_suffix
-      All cropped features will have their label appended with this suffix.
-    """
-    features = []
-    for feature in record.features:
-        start, end = sorted([feature.location.start, feature.location.end])
-        new_start, new_end = max(start, crop_start), min(end, crop_end)
-        if new_end <= new_start:
-            continue
-        new_start, new_end = new_start - crop_start, new_end - crop_start
-
-        feature = deepcopy(feature)
-        feature.location = FeatureLocation(int(new_start), int(new_end),
-                                           feature.location.strand)
-        label = "".join(feature.qualifiers.get("label", ""))
-        feature.qualifiers["label"] = label + features_suffix
-        features.append(feature)
-
-    new_record = record[crop_start: crop_end]
-    new_record.features = features
-    return new_record
-
-
 def sequences_differences_array(seq1, seq2):
     """Return an array [0, 0, 1, 0, ...] with 1s for sequence differences.
 
@@ -593,3 +554,40 @@ def list_common_enzymes(site_length=(6,), opt_temp=(37,), min_suppliers=1,
         for enzyme_name in Restriction.AllEnzymes.elements()
         if is_valid(enzyme_name)
     ]
+
+# def crop_record(record, crop_start, crop_end, features_suffix=" (part)"):
+#     """Return the cropped record with possibly cropped features.
+
+#     Note that this differs from ``record[start:end]`` in that in the latter
+#     expression, cropped features are discarded.
+
+#     Parameters
+#     ----------
+
+#     record
+#       A Biopython record
+
+#     crop_start, crop_end
+#       Start and end of the segment to be cropped.
+
+#     features_suffix
+#       All cropped features will have their label appended with this suffix.
+#     """
+#     features = []
+#     for feature in record.features:
+#         start, end = sorted([feature.location.start, feature.location.end])
+#         new_start, new_end = max(start, crop_start), min(end, crop_end)
+#         if new_end <= new_start:
+#             continue
+#         new_start, new_end = new_start - crop_start, new_end - crop_start
+
+#         feature = deepcopy(feature)
+#         feature.location = FeatureLocation(int(new_start), int(new_end),
+#                                            feature.location.strand)
+#         label = "".join(feature.qualifiers.get("label", ""))
+#         feature.qualifiers["label"] = label + features_suffix
+#         features.append(feature)
+
+#     new_record = record[crop_start: crop_end]
+#     new_record.features = features
+#     return new_record

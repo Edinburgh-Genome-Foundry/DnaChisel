@@ -7,7 +7,7 @@ import numpy as np
 from ..Specification import Specification
 from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
-from ..SequencePattern import DnaNotationPattern, enzyme_pattern
+from ..SequencePattern import SequencePattern #DnaNotationPattern, enzyme_pattern
 from dnachisel.Location import Location
 from dnachisel.biotools import (group_nearby_indices,
                                 reverse_complement,
@@ -33,17 +33,21 @@ class EnforceChoice(Specification):
     best_possible_score = 0
     enforced_by_nucleotide_restrictions = True
 
-    def __init__(self, choices=None, enzymes=None, location=None, boost=1.0):
+    def __init__(self, choices=None, location=None, boost=1.0):
         """Initialize."""
-        if enzymes is not None:
-            choices = [enzyme_pattern(e) for e in enzymes]
-        if choices is None:
-            raise ValueError('`choices` or `enzymes` should not be None.')
         choices = [
-             choice if isinstance(choice, DnaNotationPattern)
-             else DnaNotationPattern(choice)
-             for choice in choices
+          SequencePattern.from_string(c) if isinstance(c, str) else c
+          for c in choices
         ]
+        # if enzymes is not None:
+        #     choices = [enzyme_pattern(e) for e in enzymes]
+        # if choices is None:
+        #     raise ValueError('`choices` or `enzymes` should not be None.')
+        # choices = [
+        #      choice if isinstance(choice, DnaNotationPattern)
+        #      else DnaNotationPattern(choice)
+        #      for choice in choices
+        # ]
         choices = [
             variant
             for choice in choices

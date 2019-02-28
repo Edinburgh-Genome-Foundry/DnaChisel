@@ -41,7 +41,7 @@ Here is the code to achieve that:
         sequence=random_dna_sequence(10000),
         constraints=[
             EnforceTranslation((500, 1400)),
-            AvoidPattern(enzyme="BsaI"),
+            AvoidPattern("BsaI_site"),
             EnforceGCContent(mini=0.3, maxi=0.7, window=50)
         ],
         objectives=[CodonOptimize(species='e_coli', location=(500, 1400))]

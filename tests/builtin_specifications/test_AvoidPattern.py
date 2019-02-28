@@ -1,14 +1,14 @@
 """Example of use of the AvoidPAttern specification"""
 
 from dnachisel import (DnaOptimizationProblem, random_dna_sequence,
-                       AvoidPattern, repeated_kmers)
+                       AvoidPattern, RepeatedKmerPattern)
 import numpy
 
 def test_avoid_pattern_basics():
     numpy.random.seed(123)
     problem = DnaOptimizationProblem(
         sequence=random_dna_sequence(10000, seed=123),
-        constraints=[AvoidPattern(enzyme="BsaI")]
+        constraints=[AvoidPattern("BsaI_site")]
     )
     assert not problem.all_constraints_pass()
     problem.resolve_constraints()
@@ -28,7 +28,7 @@ def test_avoid_pattern_overlapping_locations():
 def test_avoid_repeated_small_kmers():
     problem = DnaOptimizationProblem(
         sequence="AGAAGAAGAAGAAGAAGATTTTTTTTTTTTTGGAGGAGGAGGACCCCCCCCCCCCGAGG",
-        constraints=[AvoidPattern(repeated_kmers(3, 3))]
+        constraints=[AvoidPattern(RepeatedKmerPattern(3, 3))]
     )
     assert not problem.all_constraints_pass()
     problem.resolve_constraints()

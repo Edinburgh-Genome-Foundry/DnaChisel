@@ -190,7 +190,6 @@ class CodonOptimize(CodonSpecification):
             for i in range(int(length / 3))
         ]
         CT = CODONS_TRANSLATIONS
-        print (self.codon_usage_table['codons_frequencies'])
         current_usage, optimal_usage = [np.array(e) for e in zip(*[
             (self.codon_usage_table['codons_frequencies'][codon],
              self.codon_usage_table['best_frequencies'][CT[codon]])

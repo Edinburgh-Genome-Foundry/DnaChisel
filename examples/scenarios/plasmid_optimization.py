@@ -26,7 +26,7 @@ The final sequence (with the original annotations) is exported to Genbank.
 """
 
 from dnachisel import (DnaOptimizationProblem, AvoidPattern, AvoidChanges,
-                       EnforceTranslation, homopolymer_pattern,
+                       EnforceTranslation, HomopolymerPattern,
                        EnforceGCContent, CodonOptimize, load_record)
 from io import StringIO
 import urllib
@@ -49,12 +49,12 @@ CDS_list = [
 # DEFINE CONSTRAINTS
 
 dna_provider_constraints = [
-    AvoidPattern(enzyme="BsaI"),
-    AvoidPattern(enzyme="AarI"),
-    AvoidPattern(homopolymer_pattern("A", 9)),
-    AvoidPattern(homopolymer_pattern("T", 9)),
-    AvoidPattern(homopolymer_pattern("G", 6)),
-    AvoidPattern(homopolymer_pattern("C", 9)),
+    AvoidPattern("BsaI_site"),
+    AvoidPattern("AarI_site"),
+    AvoidPattern(HomopolymerPattern("A", 9)),
+    AvoidPattern(HomopolymerPattern("T", 9)),
+    AvoidPattern(HomopolymerPattern("G", 6)),
+    AvoidPattern(HomopolymerPattern("C", 9)),
     EnforceGCContent(0.4, 0.65),
     EnforceGCContent(0.25, 0.80, window=50)
 ]

@@ -18,7 +18,7 @@ Example of use
     random_sequence = random_dna_sequence(10000)
     problem = DnaOptimizationProblem(
         sequence=random_sequence,
-        constraints=[AvoidPattern(enzyme_="BsaI"),
+        constraints=[AvoidPattern("BsaI_site"),
                      EnforceGCContent(mini=0.3, maxi=0.7, window=50)],
         objectives=[CodonOptimize(species='e_coli', location=(500, 1300))]
     )

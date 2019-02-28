@@ -7,7 +7,7 @@ numpy.random.seed(123)
 problem = DnaOptimizationProblem(
     sequence=random_dna_sequence(10000),
     constraints=[
-        AvoidPattern(enzyme_pattern("BsaI")),
+        AvoidPattern("BsaI_site"),
         EnforceGCContent(mini=0.3, maxi=0.7, window=50)
     ],
     objectives=[EnforceGCContent(gc_objective=0.4)]

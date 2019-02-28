@@ -28,7 +28,6 @@ def test_EnforceTranlationReversed():
             constraints=[AvoidPattern("AGC"),
                          EnforceTranslation(location=(0, len(sequence), -1))],
         )
-        print (rev_sequence)
         assert not problem.all_constraints_pass()
         problem.resolve_constraints()
         assert problem.all_constraints_pass()

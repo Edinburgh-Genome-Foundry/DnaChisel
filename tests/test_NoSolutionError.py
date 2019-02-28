@@ -5,7 +5,7 @@ from dnachisel import (DnaOptimizationProblem, AvoidChanges, AvoidPattern,
 def test_no_solution_error_frozen_region():
     problem = DnaOptimizationProblem(
         sequence="AAAAATCGTCTCTTTT",
-        constraints=[AvoidChanges(), AvoidPattern(enzyme='BsmBI')]
+        constraints=[AvoidChanges(), AvoidPattern('BsmBI_site')]
     )
     with pytest.raises(NoSolutionError) as err:
         problem.resolve_constraints()
