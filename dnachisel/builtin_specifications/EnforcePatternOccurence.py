@@ -43,7 +43,6 @@ class EnforcePatternOccurence(Specification):
         """Initialize."""
         if isinstance(pattern, str):
             pattern = SequencePattern.from_string(pattern)
-        print (pattern)
         self.pattern = pattern
         if isinstance(location, tuple):
             location = Location.from_tuple(location)

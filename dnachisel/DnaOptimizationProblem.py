@@ -429,7 +429,7 @@ class DnaOptimizationProblem:
             summary = self.constraints_text_summary(failed_only=True)
             raise NoSolutionError(
                 summary +
-                "Optimization can only be done when all constraints are"
+                "Optimization can only be done when all constraints are "
                 "verified.",
                 self
             )

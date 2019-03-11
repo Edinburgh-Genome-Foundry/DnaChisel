@@ -44,6 +44,8 @@ class AvoidChanges(Specification):
         if isinstance(location, tuple):
             location = Location.from_tuple(location)
         self.location = location
+        if (self.location is not None) and self.location.strand == -1:
+            self.location.strand = 1
         self.indices = np.array(indices) if (indices is not None) else None
         self.target_sequence = target_sequence
         # self.passive_objective = passive_objective
@@ -118,11 +120,12 @@ class AvoidChanges(Specification):
                 # return self
                 # TODO: refine using the code hereunder, which sometimes
                 # creates exceptions like "different sequences"
+                
                 new_constraint = self.copy_with_changes(location=new_location)
+                relative_location = new_location + (-self.location.start)
                 new_constraint.target_sequence = \
-                    new_constraint.extract_subsequence(self.target_sequence)
+                    relative_location.extract_sequence(self.target_sequence)
                 return new_constraint
-                # print (new_constraint, new_constraint.target_sequence)
 
 
         elif self.indices is not None:

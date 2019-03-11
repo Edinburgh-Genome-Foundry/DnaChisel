@@ -14,7 +14,6 @@ def test_EnforceTranlation():
         sequence=sequence,
         constraints=[AvoidPattern("AAA"), EnforceTranslation()],
     )
-    print (sequence)
     assert not problem.all_constraints_pass()
     problem.resolve_constraints()
     assert problem.all_constraints_pass()

@@ -97,8 +97,8 @@ class AvoidNonUniqueSegments(Specification):
     >>> constraint= AvoidNonUniqueSegments(10, include_reverse_complement=True)
     >>> problem = DnaOptimizationProblem(sequence, constraints= [contraint])
     >>> print (problem.constraints_summary())
-
     """
+
     best_possible_score = 0
     use_cache = True
     # priority = -1
@@ -112,6 +112,8 @@ class AvoidNonUniqueSegments(Specification):
         if isinstance(location, tuple):
             location = Location.from_tuple(location)
         self.location = location
+        if isinstance(extended_location, tuple):
+            extended_location = Location.from_tuple(extended_location)
         self.extended_location = extended_location
         self.include_reverse_complement = include_reverse_complement
         self.boost = 1.0
@@ -190,6 +192,7 @@ class AvoidNonUniqueSegments(Specification):
         start, end = self.extended_location.start, self.extended_location.end
         for i in range(start, end - self.min_length):
             kmers_locations[extract_kmer(i)].append((i, i + self.min_length))
+        # print (kmers_locations)
         locations = sorted([
             Location(start_, end_)
             for locations_list in kmers_locations.values()
@@ -218,7 +221,7 @@ class AvoidNonUniqueSegments(Specification):
         k = self.min_length
         changing_kmers_zone = (location.extended(k - 1, right=with_righthand)
                                        .overlap_region(self.extended_location))
-        changing_kmer_indices = set(changing_kmers_zone.indices[:-k])
+        changing_kmer_indices = set(changing_kmers_zone.indices[:-k + 1])
         localization_data = {}
         for loc, label in [(self.location, "location"),
                            (self.extended_location, "extended")]:
