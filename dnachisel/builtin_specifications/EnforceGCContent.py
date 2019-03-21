@@ -3,7 +3,7 @@
 import numpy as np
 
 from ..Specification import Specification
-from .VoidSpecification import VoidSpecification
+# from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from ..biotools import group_nearby_segments
 from dnachisel.biotools import gc_content
@@ -60,6 +60,8 @@ class EnforceGCContent(Specification):
         self.window = window
         if isinstance(location, tuple):
             location = Location.from_tuple(location)
+        if location is not None and (location.strand == -1):
+            location = Location(location.start, location.end, 1)
         self.location = location
         self.boost = boost
 
@@ -122,7 +124,8 @@ class EnforceGCContent(Specification):
             return self
         new_location = self.location.overlap_region(location)
         if new_location is None:
-            return VoidSpecification(parent_specification=self)
+            return None 
+ # VoidSpecification(parent_specification=self)
         else:
             extension = 0 if self.window is None else self.window - 1
             extended_location = location.extended(

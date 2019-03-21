@@ -10,7 +10,7 @@ from ..Specification import Specification, SpecificationsSet
 from ..SpecEvaluation import SpecEvaluation
 from ..Location import Location
 from ..SequencePattern import RepeatedKmerPattern
-from .VoidSpecification import VoidSpecification
+# from .VoidSpecification import VoidSpecification
 from .AvoidNonUniqueSegments import AvoidNonUniqueSegments
 from .AvoidPattern import AvoidPattern
 
@@ -46,7 +46,8 @@ class AvoidHeterodimerization(Specification):
     
     def localize(self, location, problem=None):
         if self.location.overlap_region(location) is None:
-            return VoidSpecification(parent_specification=self)
+            return None 
+ # VoidSpecification(parent_specification=self)
         else:
             return self
     

@@ -51,7 +51,12 @@ from .biotools import (
     sequences_differences_segments
 )
 
-from .utils import random_compatible_dna_sequence
+from .utils import (random_compatible_dna_sequence,
+                    plot_constraint_breaches,
+                    plot_gc_content_breaches,
+                    plot_sequence_manufacturability_difficulties)
+                    
+                    
 
 from .version import __version__
 

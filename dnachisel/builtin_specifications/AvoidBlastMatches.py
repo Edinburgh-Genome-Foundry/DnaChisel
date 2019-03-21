@@ -1,7 +1,7 @@
 """Implementation of AvoidBlastMatches."""
 
 from ..Specification import Specification
-from .VoidSpecification import VoidSpecification
+# from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from dnachisel.biotools import blast_sequence, group_nearby_segments
 from dnachisel.Location import Location
@@ -130,7 +130,8 @@ class AvoidBlastMatches(Specification):
         """Localize the evaluation."""
         new_location = self.location.overlap_region(location)
         if new_location is None:
-            return VoidSpecification(parent_specification=self)
+            return None 
+ # VoidSpecification(parent_specification=self)
 
         new_location = location.extended(self.min_align_length - 1,
                                          right=with_righthand)

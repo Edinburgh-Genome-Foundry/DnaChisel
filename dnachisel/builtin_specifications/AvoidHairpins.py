@@ -1,7 +1,7 @@
 """Implementation of AvoidHairpins."""
 
 from ..Specification import Specification
-from .VoidSpecification import VoidSpecification
+# from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from dnachisel.biotools import reverse_complement, group_nearby_segments
 from dnachisel.Location import Location
@@ -69,7 +69,8 @@ class AvoidHairpins(Specification):
         """Localize the spec, make sure no neighbouring hairpin is created."""
         new_location = self.location.overlap_region(location)
         if new_location is None:
-            return VoidSpecification(parent_specification=self)
+            return None 
+ # VoidSpecification(parent_specification=self)
         else:
             new_location.start = max(
                 self.location.start,

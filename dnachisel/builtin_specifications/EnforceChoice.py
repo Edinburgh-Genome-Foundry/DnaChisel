@@ -5,7 +5,7 @@
 import numpy as np
 
 from ..Specification import Specification
-from .VoidSpecification import VoidSpecification
+# from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from ..SequencePattern import SequencePattern #DnaNotationPattern, enzyme_pattern
 from dnachisel.Location import Location

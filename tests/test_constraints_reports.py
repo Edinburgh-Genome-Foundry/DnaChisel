@@ -1,7 +1,7 @@
 import matplotlib
 matplotlib.use("Agg")
 
-from dnachisel.reports import plot_sequence_manufacturability_difficulties
+from dnachisel.utils import plot_sequence_manufacturability_difficulties
 from dnachisel import random_dna_sequence
 
 

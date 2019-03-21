@@ -1,6 +1,6 @@
 """Implements core specification VoidSpecification."""
 from ..Specification import Specification
-from .VoidSpecification import VoidSpecification
+# from .VoidSpecification import VoidSpecification
 from ..Location import Location
 
 class CodonSpecification(Specification):
@@ -19,7 +19,8 @@ class CodonSpecification(Specification):
         if self.location is not None:
             overlap = self.location.overlap_region(location)
             if overlap is None:
-                return VoidSpecification(parent_specification=self)
+                return None 
+ # VoidSpecification(parent_specification=self)
             else:
                 # return self
                 o_start, o_end = overlap.start, overlap.end

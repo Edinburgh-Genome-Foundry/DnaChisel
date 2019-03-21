@@ -36,6 +36,7 @@ class Specification:
     optimize_passively = False
     enforced_by_nucleotide_restrictions = False
     priority = 0
+    is_void = False
 
     def __init__(self, evaluate=None, boost=1.0):
         """Initialize."""
@@ -55,7 +56,7 @@ class Specification:
         that only looks for GC content around the provided location.
 
         If an specification concerns a DNA segment that is completely disjoint
-        from the provided location, this must return a ``VoidSpecification``.
+        from the provided location, this must return None.
 
         Must return an object of class ``Constraint``.
         """

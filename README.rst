@@ -97,11 +97,11 @@ Here is how you read the file and solve the problem:
     problem = DnaOptimizationProblem.from_record("my_record.gb")
     problem.resolve_constraints()
     problem.optimize()
-    problem.to_record("my_optimized_record.gb")
+    problem.optimize_with_report(target="report.zip")
 
 By default, only the built-in specifications of DnaChisel can be used in the
 annotations ``from_record`` accepts a ``specifications_dict`` argument which allows
-you to define new specifications like ``MyConstraint`` and have them supported by
+to define new specifications like ``MyConstraint`` and have them supported by
 the Genbank importer so that you can add annotations with labels like
 ``@MyConstraint(par1=...)`` in your genbank. This allows you to build
 completely custom optimization applications on top of DnaChisel.
@@ -118,8 +118,7 @@ instance by generating optimization reports:
 
 .. code:: python
 
-    from dnachisel.reports import optimization_with_report
-    optimization_with_report(target="report.zip", problem=some_problem)
+    problem.optimize_with_report(target="report.zip")
 
 Here is an example of summary report:
 

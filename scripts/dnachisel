@@ -12,9 +12,9 @@ Where ``source`` is a fasta or Genbank file, and target can be one of:
 """
 
 from docopt import docopt
-from dnachisel.reports import optimization_with_report
+from dnachisel.reports import optimize_with_report
 
 if __name__ == "__main__":
     params = docopt(__doc__)
-    optimization_with_report(params["<target>"], record=params["<source>"],
+    optimize_with_report(params["<target>"], record=params["<source>"],
                              max_random_iters=10000)

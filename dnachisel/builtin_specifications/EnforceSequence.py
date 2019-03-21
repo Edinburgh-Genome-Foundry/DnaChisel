@@ -5,7 +5,7 @@
 import numpy as np
 
 from ..Specification import Specification
-from .VoidSpecification import VoidSpecification
+# from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from dnachisel.Location import Location
 from dnachisel.biotools import (group_nearby_indices,
@@ -83,7 +83,8 @@ class EnforceSequence(Specification):
         start, end = location.start, location.end
         new_location = self.location.overlap_region(location)
         if new_location is None:
-            return VoidSpecification(parent_specification=self)
+            return None 
+ # VoidSpecification(parent_specification=self)
         else:
             if self.location.strand == -1:
                 start = self.location.end - new_location.end

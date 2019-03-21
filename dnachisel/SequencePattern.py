@@ -102,7 +102,10 @@ class SequencePattern:
         if location is not None:
             subsequence = location.extract_sequence(sequence)
             return [
-                loc + location.start
+                (loc + location.start) if (location.strand != -1)
+                else Location(location.end - loc.end,
+                              location.end - loc.start,
+                              strand=-1)
                 for loc in self.find_matches(subsequence)
             ]
         matches = self.find_all_re_matches(sequence)
@@ -111,9 +114,8 @@ class SequencePattern:
             reverse = reverse_complement(sequence)
             L = len(sequence)
             matches += [
-                (L - match.start() - len(match.groups()[0]),
-                 L - match.start(), -1)
-                for match in re.finditer(self.compiled_expression, reverse)
+                (L - end, L - start, -1)
+                for (start, end, strand) in self.find_all_re_matches(reverse)
             ]
 
         return [

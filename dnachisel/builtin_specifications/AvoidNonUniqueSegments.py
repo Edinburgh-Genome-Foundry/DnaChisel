@@ -3,7 +3,7 @@
 from collections import defaultdict
 
 from ..Specification import Specification
-from .VoidSpecification import VoidSpecification
+# from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from dnachisel.biotools import reverse_complement
 from dnachisel.Location import Location
@@ -216,7 +216,8 @@ class AvoidNonUniqueSegments(Specification):
         """Localize the evaluation."""
 
         if location.overlap_region(self.extended_location) is None:
-            return VoidSpecification(parent_specification=self)
+            return None 
+ # VoidSpecification(parent_specification=self)
         extract_kmer = self.get_kmer_extractor(problem.sequence)
         k = self.min_length
         changing_kmers_zone = (location.extended(k - 1, right=with_righthand)

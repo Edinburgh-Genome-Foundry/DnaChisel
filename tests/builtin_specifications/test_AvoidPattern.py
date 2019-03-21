@@ -1,7 +1,7 @@
 """Example of use of the AvoidPAttern specification"""
 
 from dnachisel import (DnaOptimizationProblem, random_dna_sequence,
-                       AvoidPattern, RepeatedKmerPattern)
+                       AvoidPattern, RepeatedKmerPattern, AvoidChanges)
 import numpy
 
 def test_avoid_pattern_basics():
@@ -33,3 +33,16 @@ def test_avoid_repeated_small_kmers():
     assert not problem.all_constraints_pass()
     problem.resolve_constraints()
     assert problem.all_constraints_pass()
+
+def test_pattern_and_reverse():
+    bsmbi = "CGTCTC"
+    bsmbi_rev = "GAGACG"
+    sequence = 10 * bsmbi + 25 * bsmbi_rev + 15 * bsmbi + 15 * bsmbi_rev
+    problem = DnaOptimizationProblem(
+        sequence,
+        constraints=[AvoidPattern('BsmBI_site')],
+        objectives=[AvoidChanges()]
+    )
+    problem.resolve_constraints()
+    problem.optimize()
+    assert sum(problem.sequence_edits_as_array()) < 70

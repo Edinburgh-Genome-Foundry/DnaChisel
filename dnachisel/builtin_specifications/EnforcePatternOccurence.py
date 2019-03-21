@@ -1,7 +1,7 @@
 """Implement AvoidPattern"""
 
 from ..Specification import Specification
-from .VoidSpecification import VoidSpecification
+# from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from .EnforceSequence import EnforceSequence
 from ..MutationSpace import MutationSpace
@@ -85,7 +85,8 @@ class EnforcePatternOccurence(Specification):
         """Localize the evaluation."""
         new_location = self.location.overlap_region(location)
         if new_location is None:
-            return VoidSpecification(parent_specification=self)
+            return None 
+ # VoidSpecification(parent_specification=self)
         else:
             return self
 

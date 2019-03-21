@@ -10,7 +10,6 @@ import flametree
 from ..biotools import (sequence_to_biopython_record,
                         find_specification_in_feature)
 from ..version import __version__
-from ..DnaOptimizationProblem import (DnaOptimizationProblem, NoSolutionError)
 from sequenticon import sequenticon
 
 MATPLOTLIB_AVAILABLE = DFV_AVAILABLE = False
@@ -35,12 +34,8 @@ try:
 except:
     GENEBLOCKS_AVAILABLE = False
 
-try:
-    from pdf_reports import ReportWriter
-    import pdf_reports.tools as pdf_tools
-    PDF_REPORTS_AVAILABLE = True
-except ImportError:
-    PDF_REPORTS_AVAILABLE = False
+from pdf_reports import ReportWriter
+import pdf_reports.tools as pdf_tools
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 ASSETS_DIR = os.path.join(THIS_DIR, "assets")
@@ -98,75 +93,6 @@ class SpecAnnotationsTranslator(BiopythonTranslator):
         if label == "misc_feature":
             label = None
         return label
-
-def optimization_with_report(target, problem=None, record=None,
-                             project_name="Unnamed project",
-                             specifications_dict='default',
-                             **solver_parameters):
-    """Optimize a sequence and write a multi-file report.
-
-    The report's content may vary depending on the success of the optimization
-
-    Parameters
-    ----------
-    target
-      Either a path to a folder that will containt the report, or a path to
-      a zip archive, or "@memory" to return raw data of a zip archive
-      containing the report.
-
-    problem
-      A DnaOptimizationProblem. A ``record`` can be provided instead
-
-    record
-      Either a Biopython record or the path to a Genbank file, provided to
-      serve as a problem definition. The record should have specifications
-      starting with @ or ~ as explained in the documentation.
-
-    project_name
-      Project name to write on PDF reports
-
-    specifications_dict
-      a dictionnary {'@SpecName': SpecClass} allowing the parser to map
-      specifications found in annotations to implemented specifications
-      classes. By default, the dictionnary contains the built-in objectives
-      of DNA chisel, but an extended dictionary can be provided to support
-      custom specifications.
-
-    **solver_parameters
-      Extra keyword arguments passed to ``problem.resolve_constraints()``
-
-    Returns
-    -------
-    (success, message, zip_data)
-      Triplet where success is True/False, message is a one-line string
-      summary indication whether some clash was found, or some solution, or
-      maybe no solution was found because the random searches were too short
-
-    """
-    if problem is None:
-        problem = DnaOptimizationProblem.from_record(
-            record, specifications_dict=specifications_dict)
-    for k, v in solver_parameters.items():
-        problem.__dict__[k] = v
-
-    try:
-        problem.logger(message="Solving constraints")
-        problem.resolve_constraints()
-    except NoSolutionError as error:
-        problem.logger(message="No solution found: making report")
-        data = write_no_solution_report(target, problem, error)
-        start, end, s = error.location.to_tuple()
-        message = ("No solution found in zone [%d, %d]: %s." %
-                   (start, end, str(error)))
-        return False, message, data
-
-    problem.logger(message="Now optimizing the sequence")
-    problem.optimize()
-    problem.logger(message="Success! Generating report.")
-    data = write_optimization_report(
-        target, problem, project_name=project_name)
-    return True, "Optimization successful.", data
-
 
 def write_no_solution_report(target, problem, error):
     """Write a report on incompatibility found in the problem's constraints.
@@ -410,6 +336,74 @@ def write_optimization_report(target, problem, project_name="unnammed",
                       with_objectives=False)
 
     report_writer.write_report(html, root._file("Report.pdf"))
-    # returns zip data if target == '@memory'
     if isinstance(target, str):
         return root._close()
+
+
+# def optimize_with_report(target, problem=None, record=None,
+#                          project_name="Unnamed project",
+#                          specifications_dict='default',
+#                          **solver_parameters):
+#     """Optimize a sequence and write a multi-file report.
+
+#     The report's content may vary depending on the success of the optimization
+
+#     Parameters
+#     ----------
+#     target
+#       Either a path to a folder that will containt the report, or a path to
+#       a zip archive, or "@memory" to return raw data of a zip archive
+#       containing the report.
+
+#     problem
+#       A DnaOptimizationProblem. A ``record`` can be provided instead
+
+#     record
+#       Either a Biopython record or the path to a Genbank file, provided to
+#       serve as a problem definition. The record should have specifications
+#       starting with @ or ~ as explained in the documentation.
+
+#     project_name
+#       Project name to write on PDF reports
+
+#     specifications_dict
+#       a dictionnary {'@SpecName': SpecClass} allowing the parser to map
+#       specifications found in annotations to implemented specifications
+#       classes. By default, the dictionnary contains the built-in objectives
+#       of DNA chisel, but an extended dictionary can be provided to support
+#       custom specifications.
+
+#     **solver_parameters
+#       Extra keyword arguments passed to ``problem.resolve_constraints()``
+
+#     Returns
+#     -------
+#     (success, message, zip_data)
+#       Triplet where success is True/False, message is a one-line string
+#       summary indication whether some clash was found, or some solution, or
+#       maybe no solution was found because the random searches were too short
+
+#     """
+#     if problem is None:
+#         problem = DnaOptimizationProblem.from_record(
+#             record, specifications_dict=specifications_dict)
+#     for k, v in solver_parameters.items():
+#         problem.__dict__[k] = v
+
+#     try:
+#         problem.logger(message="Solving constraints")
+#         problem.resolve_constraints()
+#     except NoSolutionError as error:
+#         problem.logger(message="No solution found: making report")
+#         data = write_no_solution_report(target, problem, error)
+#         start, end, s = error.location.to_tuple()
+#         message = ("No solution found in zone [%d, %d]: %s." %
+#                    (start, end, str(error)))
+#         return False, message, data
+
+#     problem.logger(message="Now optimizing the sequence")
+#     problem.optimize()
+#     problem.logger(message="Success! Generating report.")
+#     data = write_optimization_report(
+#         target, problem, project_name=project_name)
+#     return True, "Optimization successful.", data

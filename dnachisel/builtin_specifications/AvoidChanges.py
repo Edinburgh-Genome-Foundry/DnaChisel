@@ -4,7 +4,7 @@ import numpy as np
 
 from ..Specification import Specification
 from ..SpecEvaluation import SpecEvaluation
-from .VoidSpecification import VoidSpecification
+# from .VoidSpecification import VoidSpecification
 from dnachisel.biotools import (sequences_differences_array,
                                 group_nearby_indices)
 from dnachisel.Location import Location
@@ -115,7 +115,8 @@ class AvoidChanges(Specification):
         if self.location is not None:
             new_location = self.location.overlap_region(location)
             if new_location is None:
-                return VoidSpecification(parent_specification=self)
+                return None 
+ # VoidSpecification(parent_specification=self)
             else:
                 # return self
                 # TODO: refine using the code hereunder, which sometimes
@@ -142,5 +143,5 @@ class AvoidChanges(Specification):
             end = min(location.end, self.location.end)
         else:
             start, end = self.location.start, self.location.end
-
-        return [(i, set(sequence[i])) for i in range(start, end)]
+        return [((start, end), set([sequence[start:end]]))]
+        # return [(i, set(sequence[i])) for i in range(start, end)]

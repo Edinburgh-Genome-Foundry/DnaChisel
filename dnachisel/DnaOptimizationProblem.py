@@ -16,6 +16,8 @@ from .SpecEvaluation import (ProblemObjectivesEvaluations,
                              ProblemConstraintsEvaluations)
 from .Location import Location
 from .MutationSpace import MutationSpace
+from .reports.optimization_reports import (write_optimization_report,
+                                           write_no_solution_report)
 from proglog import default_bar_logger
 
 DEFAULT_SPECIFICATIONS_DICT = {} # completed at library initialization
@@ -154,7 +156,7 @@ class DnaOptimizationProblem:
         ]
         self.objectives = [
             objective.initialize_on_problem(self, role="objective")
-            for objective in self.objectives
+            for objective in  self.objectives
         ]
 
         self.sequence_before = self.sequence
@@ -344,6 +346,8 @@ class DnaOptimizationProblem:
                     if _constraint != constraint
                     if not _constraint.enforced_by_nucleotide_restrictions
                 ]
+                localized_constraints = [cst for cst in localized_constraints
+                                         if cst is not None]
                 passing_localized_constraints = [
                     _constraint
                     for _constraint in localized_constraints
@@ -643,3 +647,45 @@ class DnaOptimizationProblem:
                 is_edit="true")
             for start, end in segments
         ]
+    
+    def optimize_with_report(self, target, project_name="My project"):
+        """Resolve constraints, optimize objectives, write a multi-file report.
+
+        The report's content may vary depending on the optimization's success 
+
+        Parameters
+        ----------
+        target
+        Either a path to a folder that will containt the report, or a path to
+        a zip archive, or "@memory" to return raw data of a zip archive
+        containing the report.
+
+        project_name
+        Project name to write on PDF reports
+
+        **solver_parameters
+        Extra keyword arguments passed to ``problem.resolve_constraints()``
+
+        Returns
+        -------
+        (success, message, zip_data)
+        Triplet where success is True/False, message is a one-line string
+        summary indication whether some clash was found, or some solution, or
+        maybe no solution was found because the random searches were too short
+        """
+        self.logger(message="Solving constraints")
+        try:
+            self.resolve_constraints()
+        except NoSolutionError as error:
+            self.logger(message="No solution found: making report")
+            data = write_no_solution_report(target, self, error)
+            start, end, s = error.location.to_tuple()
+            message = ("No solution found in zone [%d, %d]: %s." %
+                    (start, end, str(error)))
+            return False, message, data
+        self.logger(message="Now optimizing the sequence")
+        self.optimize()
+        self.logger(message="Success! Generating report.")
+        data = write_optimization_report(
+            target, self, project_name=project_name)
+        return True, "Optimization successful.", data

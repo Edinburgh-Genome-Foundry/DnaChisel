@@ -1,7 +1,7 @@
 "Implement EnforceTranslation."
 
 from .CodonSpecification import CodonSpecification
-from .VoidSpecification import VoidSpecification
+# from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from dnachisel.biotools import CODONS_SEQUENCES, translate, reverse_complement
 from dnachisel.Location import Location
@@ -80,13 +80,12 @@ class EnforceTranslation(CodonSpecification):
 
     def initialize_on_problem(self, problem, role):
         """Get translation from the sequence if it is not already set."""
-        # if self.location is None:
-        #     location = Location(0, len(problem.sequence), 1)
-        #     result = self.copy_with_changes()
-        #     result.set_location(location)
-        # else:
-        #     result = self
-        result = self._copy_with_full_span_if_no_location(problem)
+        if self.location is None:
+            location = Location(0, len(problem.sequence), 1)
+            result = self.copy_with_changes()
+            result.set_location(location)
+        else:
+            result = self
         if result.translation is None:
             subsequence = result.location.extract_sequence(problem.sequence)
             translation = translate(subsequence, self.codons_translations)

@@ -1,6 +1,6 @@
 from ..Specification import Specification
 from ..Location import Location
-from .VoidSpecification import VoidSpecification
+# from .VoidSpecification import VoidSpecification
 from ..SequencePattern import SequencePattern #enzyme_pattern, DnaNotationPattern
 
 class PatternSpecification(Specification):
@@ -56,7 +56,8 @@ class PatternSpecification(Specification):
         specification's own location, and the size of the pattern."""
         pattern_size = self.pattern.size
         if self.location.overlap_region(location) is None:
-            return VoidSpecification(parent_specification=self)
+            return None 
+ # VoidSpecification(parent_specification=self)
         else:
             if not self.shrink_when_localized:
                 return self

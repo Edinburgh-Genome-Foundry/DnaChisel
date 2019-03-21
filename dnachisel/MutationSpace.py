@@ -24,14 +24,15 @@ class MutationChoice:
 
 
     """
-    __slots__ = ['segment', 'start', 'end', 'variants']
+    __slots__ = ['segment', 'start', 'end', 'variants', 'is_any_nucleotide']
 
-    def __init__(self, segment, variants):
+    def __init__(self, segment, variants, is_any_nucleotide = False):
         if isinstance(segment, int):
             segment = (segment, segment + 1)
         self.segment = segment
         self.start, self.end = segment
         self.variants = variants
+        self.is_any_nucleotide = is_any_nucleotide
         # self.possible_subsequences = set(m.subsequence for m in mutations)
 
     def random_variant(self, sequence):
@@ -48,13 +49,14 @@ class MutationChoice:
 
         >>> [
         >>>     ((0, 3), {'GTA', 'GCT', 'GTT'}),
-        >>>     ((3, 4), {'ATGC'}),
+        >>>     ((3, 4), {'A', 'T', 'G', 'C'}),
         >>>     ((4, 7), {'ATG', 'ACC', 'CTG'})
         >>> ]
 
         percolated with:
         >>> ((2, 5), {'ATT', 'ATA'})
-        returns
+
+        returns:
         >>> (0, 7), {'GTATACC', 'GTATATG'}
 
         """
@@ -104,25 +106,36 @@ class MutationChoice:
         >>>
 
         """
+        
         if len(self.variants) <= 1:
             return [self]
         variants = list(self.variants)
-        variants_array = np.array([
-            np.fromstring(v, dtype='uint8')
-            for v in self.variants
-        ])
-        variance_array = np.diff(variants_array, axis=0).max(axis=0)
-        varying_indices = variance_array.nonzero()[0]
+        reference = variants[0]
+        # variants_array = np.array([
+        #     np.fromstring(v, dtype='uint8')
+        #     for v in self.variants
+        # ])
+        # variance_array = np.diff(variants_array, axis=0).max(axis=0)
+        # varying_indices = variance_array.nonzero()[0]
+        # result = []
+        # start = varying_indices.min()
+        # end = varying_indices.max() + 1
+        start = -1
+        end = len(reference)
+        for i in range(len(reference)):
+            for variant in variants[1:]:
+                if variant[i] != reference[i]:
+                    if start == -1:
+                        start = i
+                    end = i + 1
+                    break
         result = []
-        start = varying_indices.min()
-        end = varying_indices.max() + 1
-
         if start > 0:
             result.append(MutationChoice((self.start, self.start + start),
-                                         set([variants[0][:start]])))
+                                         set([reference[:start]])))
         result.append(MutationChoice((self.start + start, self.start + end),
                                      set([v[start: end] for v in variants])))
-        if end < len(variants[0]):
+        if end < len(reference):
             result.append(MutationChoice((self.start + end, self.end),
                                          set([v[end:] for v in variants])))
         return result
@@ -161,7 +174,7 @@ class MutationSpace:
             MutationChoice((2, 5), {'TTC', 'TTA', 'TTT'}),
         ])
     """
-    def __init__(self, choices_index):
+    def __init__(self, choices_index, non_none_start=None):
         """
 
         choices_index = [MutationChoice(0-2), MutationChoice(0-2),
@@ -172,14 +185,15 @@ class MutationSpace:
         self.choices_list = []
         if choices_index[0] is not None:
             self.choices_list.append(choices_index[0])
-        for c in choices_index[1:]:
-            if c is None:
-                continue
+        start = 1
+        if non_none_start is not None:
+            start = max(1, non_none_start)
+        subchoices = [c for c in choices_index[start:] if c is not None]
+        for c in subchoices:
             if len(self.choices_list) == 0:
                 self.choices_list = [c]
             elif c != self.choices_list[-1]:
                 self.choices_list.append(c)
-
         self.unsolvable_segments = [
             choice.segment
             for choice in self.choices_list
@@ -230,7 +244,8 @@ class MutationSpace:
             start, end = location.start, location.end
         else:
             start, end = location
-        return MutationSpace(start * [None] + self.choices_index[start:end])
+        return MutationSpace(start * [None] + self.choices_index[start:end],
+                             non_none_start=start)
 
     @property
     def space_size(self):
@@ -305,7 +320,8 @@ class MutationSpace:
             # time by 6% in tests.
             variants = ["ACTG", "CTGA", "TGAC", "GACT"]
             choices_index = [
-                MutationChoice((i, i+1), variants=variants[i % 4])
+                MutationChoice((i, i + 1), variants=variants[i % 4],
+                               is_any_nucleotide=True)
                 for i in range(len(sequence))
             ]
             constraints = problem.constraints
@@ -324,6 +340,8 @@ class MutationSpace:
         for choice in mutation_choices:
             underlying_choices = choices_index[choice.start: choice.end]
             if underlying_choices == []:
+                new_choice = choice
+            elif all(c.is_any_nucleotide for c in underlying_choices):
                 new_choice = choice
             else:
                 new_choice = choice.percolate_with(set(underlying_choices))

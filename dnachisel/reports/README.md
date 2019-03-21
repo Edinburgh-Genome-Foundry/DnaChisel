@@ -1,2 +1,2 @@
 This module is contains templates and methods for reports generation.
-It notably implements the end-to-end method ``optimization_with_report``.
+It notably implements the end-to-end method ``optimize_with_report``.

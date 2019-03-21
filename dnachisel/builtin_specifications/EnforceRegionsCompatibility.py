@@ -3,7 +3,7 @@ import itertools
 
 from ..Specification import Specification
 from ..Location import Location
-from .VoidSpecification import VoidSpecification
+# from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 
 class EnforceRegionsCompatibility(Specification):
@@ -55,7 +55,7 @@ class EnforceRegionsCompatibility(Specification):
         if any(location.overlap_region(rl) for rl in self.locations):
             return self
         else:
-            return VoidSpecification(parent=self)
+            return None #(parent=self)
 
     def __repr__(self):
         return "CompatRegions(%s%s...)" % (self.condition_label,
