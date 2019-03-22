@@ -526,14 +526,19 @@ class DnaOptimizationProblem:
                 _constraint.localized(location, problem=self)
                 for _constraint in self.constraints
             ]
+            localized_constraints = [cst for cst in localized_constraints
+                                     if cst is not None]
+            localized_objectives = [
+                _objective.localized(location, problem=self)
+                for _objective in self.objectives
+            ]
+            localized_objectives = [obj for obj in localized_objectives
+                                    if obj is not None]
             local_problem = DnaOptimizationProblem(
                 sequence=self.sequence,
                 constraints=localized_constraints,
                 mutation_space=mutation_space,
-                objectives=[
-                    _objective.localized(location, problem=self)
-                    for _objective in self.objectives
-                ]
+                objectives=localized_objectives
             )
             self.logger.store(problem=self,
                               local_problem=local_problem,
