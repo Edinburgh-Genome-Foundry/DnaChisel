@@ -258,7 +258,7 @@ class HomopolymerPattern(DnaNotationPattern):
     def from_string(string):
         match = re.match("(\d+)x(\S)$", string)
         if match is not None:
-            number, nucleotide = match.groups()[0]
+            number, nucleotide = match.groups()
             return HomopolymerPattern(nucleotide, int(number))
 
     def __str__(self):
@@ -290,7 +290,7 @@ class RepeatedKmerPattern(SequencePattern):
     def from_string(string):
         match = re.match("(\d+)x(\d+)mer$", string)
         if match is not None:
-            n_repeats, kmer_size = match.groups()[0]
+            n_repeats, kmer_size = match.groups()
             return RepeatedKmerPattern(int(n_repeats), int(kmer_size))
 
     def __str__(self):
