@@ -13,7 +13,7 @@ import subprocess
 from dnachisel import (DnaOptimizationProblem, random_dna_sequence,
                        AvoidBlastMatches)
 
-# THIS CREATES THE BLAST DATABASE IF NOT ALREADY HERE
+# THIS CREATES THE BLAST DATABASE ON YOUR MACHINE IF NOT ALREADY HERE
 
 ecoli_genome_url = (
     "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845"
@@ -49,8 +49,9 @@ problem = DnaOptimizationProblem(
     ]
 )
 
-print ("\nBefore optimization\n")
+print ("\nConstraints validity before optimization\n")
 print (problem.constraints_text_summary())
+print ("\nLet's resolve these problems:\n")
 problem.resolve_constraints()
 print ("\nAfter optimization\n")
 print (problem.constraints_text_summary())

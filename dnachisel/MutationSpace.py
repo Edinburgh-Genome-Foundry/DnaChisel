@@ -97,13 +97,14 @@ class MutationChoice:
         >>>     'ATGAATG',
         >>> ])
         >>> choice.extract_varying_region()
-        >>> Result:
+        
+        Result :
+
         >>> [
         >>>     MutChoice(5-6 A),
         >>>     MutChoice(6-10 TGCG-AATG-TGAA-AAAA),
         >>>     MutChoice(10-12 TG)
         >>> ]
-        >>>
 
         """
         
@@ -111,15 +112,6 @@ class MutationChoice:
             return [self]
         variants = list(self.variants)
         reference = variants[0]
-        # variants_array = np.array([
-        #     np.fromstring(v, dtype='uint8')
-        #     for v in self.variants
-        # ])
-        # variance_array = np.diff(variants_array, axis=0).max(axis=0)
-        # varying_indices = variance_array.nonzero()[0]
-        # result = []
-        # start = varying_indices.min()
-        # end = varying_indices.max() + 1
         start = -1
         end = len(reference)
         for i in range(len(reference)):
@@ -174,41 +166,31 @@ class MutationSpace:
             MutationChoice((2, 5), {'TTC', 'TTA', 'TTT'}),
         ])
     """
-    def __init__(self, choices_index, non_none_start=None):
+    def __init__(self, choices_index, left_padding=0):
         """
 
         choices_index = [MutationChoice(0-2), MutationChoice(0-2),
                          MutationChoice(3-5), MutationChoice(3-5),
                          MutationChoice(3-5), ... ]
         """
-        self.choices_index = choices_index
+        self.choices_index = left_padding * [None] + choices_index
         self.choices_list = []
-        if choices_index[0] is not None:
-            self.choices_list.append(choices_index[0])
-        start = 1
-        if non_none_start is not None:
-            start = max(1, non_none_start)
-        subchoices = [c for c in choices_index[start:] if c is not None]
-        for c in subchoices:
-            if len(self.choices_list) == 0:
-                self.choices_list = [c]
-            elif c != self.choices_list[-1]:
+        self.unsolvable_segments = []
+        self.determined_segments  = []
+        self.multichoices  = []
+        for c in choices_index:
+            if c is None:
+                continue
+            if len(self.choices_list) == 0 or (c != self.choices_list[-1]):
                 self.choices_list.append(c)
-        self.unsolvable_segments = [
-            choice.segment
-            for choice in self.choices_list
-            if len(choice.variants) == 0
-        ]
-        self.determined_segments = [
-            (choice.segment, list(choice.variants)[0])
-            for choice in self.choices_list
-            if len(choice.variants) == 1
-        ]
-        self.multichoices = [
-            choice
-            for choice in self.choices_list
-            if len(choice.variants) > 1
-        ]
+                nvariants = len(c.variants)
+                if nvariants == 0:
+                    self.unsolvable_segments.append(c.segment)
+                elif nvariants == 1:
+                    self.determined_segments.append(
+                        (c.segment, list(c.variants)[0]))
+                else:
+                    self.multichoices.append(c)
 
     @property
     def choices_span(self):
@@ -244,8 +226,8 @@ class MutationSpace:
             start, end = location.start, location.end
         else:
             start, end = location
-        return MutationSpace(start * [None] + self.choices_index[start:end],
-                             non_none_start=start)
+        return MutationSpace(self.choices_index[start: end],
+                             left_padding=start)
 
     @property
     def space_size(self):
@@ -318,11 +300,17 @@ class MutationSpace:
             # the apparition of homopolymers during exhaustive searches
             # (may create 4bp tandem repeats though). also increased solving
             # time by 6% in tests.
-            variants = ["ACTG", "CTGA", "TGAC", "GACT"]
+            # variants = ["ACTG", "CTGA", "TGAC", "GACT"]
+            # choices_index = [
+            #     MutationChoice((i, i + 1), variants=variants[i % 4],
+            #                    is_any_nucleotide=True)
+            #     for i in range(len(sequence))
+            # ]
+            variants = {"A": "ATGC", "T": "TACG", "G": "GCAT", "C": "CGTA"}
             choices_index = [
-                MutationChoice((i, i + 1), variants=variants[i % 4],
+                MutationChoice((i, i + 1), variants=variants[c],
                                is_any_nucleotide=True)
-                for i in range(len(sequence))
+                for i, c in enumerate(sequence)
             ]
             constraints = problem.constraints
         else:
@@ -335,8 +323,6 @@ class MutationSpace:
             for cst in constraints
             for choice in cst.restrict_nucleotides(sequence)
         ], key=lambda choice: (choice.end - choice.start, choice.start))
-        # print (new_constraints, choices_index)
-        # print ("mutation_choices", mutation_choices)
         for choice in mutation_choices:
             underlying_choices = choices_index[choice.start: choice.end]
             if underlying_choices == []:

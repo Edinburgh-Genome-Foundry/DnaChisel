@@ -1,16 +1,15 @@
-"""Minimization of non-unique 9-mers in a coding sequence.
+"""Example of DNA Chisel user-defined specification: Gen9's 9mer score.
 
-This example shows how to create you own ``Objectives`` in DnaChisel.
+Once upon the time there was a DNA synthesis company called Gen9, who accepted
+or refused orders based on sequence features.
 
-The DNA provider Gen9 indicates that repeated 9-mers (i.e. 9-base-pair segments
-of a sequence which have at least another identical twin somewhere else in the
-sequence) create problems for synthesis (maybe due to misannealing ?) and
-should be avoided.
-So too much 9-mers, and synthesis becomes a 9-mer (nightmare), ah ah ah !
-Anyways, Gen9 wants us to get read of these repeated 9-mers and has created
-the following score that we should minimize:
+One of them was the "9mer score", defined as 9 * N / len(sequence) where N is
+the number of non-unique kmers in the sequence.
 
-    score = 9.0 * number_of_non_unique_9mers / sequence_length
+The score can be interpreted as the density of nucleotides which are part of
+a 9mer also present somewhere else in the sequence. These should be avoided
+as they impede the synthesis (certainly at the oligo assembly stage). Too much
+9mers are a... nightmare (ah ah ah pun).
 
 In this script we show how to create a new objective ``MinimizeNinemersScore``
 to minimize this score, and we use it to optimize a coding sequence.
