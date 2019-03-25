@@ -155,9 +155,10 @@ You can install DnaChisel through PIP:
 
     sudo pip install dnachisel[reports]
 
-The ``[reports]`` suffix will install some heavier libraries for report generation,
-you can omit it if you just want to use DNA chisel to edit sequences and generate
-genbanks (for any interactive use, reports are highly recommended).
+The ``[reports]`` suffix will install some heavier libraries
+(Matplotlib, PDF reports, sequenticon) for report generation,
+you can omit it if you just want to use DNA chisel to edit sequences and
+generate genbanks (for any interactive use, reports are highly recommended).
 
 Alternatively, you can unzip the sources in a folder and type
 

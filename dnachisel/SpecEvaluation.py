@@ -15,10 +15,8 @@ from Bio.SeqFeature import SeqFeature
 from .Location import Location
 
 def colors_cycle(lightness_factor=1.0, color_shift=0):
-    if not MATPLOTLIB_AVAILABLE:
-        raise ImportError("Matplotlib is required to use color_cycle() !")
-
-    cycle = itertools.cycle([
+    if MATPLOTLIB_AVAILABLE:
+        cycle = itertools.cycle([
         cm.Paired(color_shift + 0.21 * i % 1.0)
         for i in range(30)
     ])
@@ -27,6 +25,12 @@ def colors_cycle(lightness_factor=1.0, color_shift=0):
                                 for c in rgb_tuple[:3]])
         for rgb_tuple in cycle
     )
+    else:
+        return itertools.cycle([
+            "#f1cccc", "#f1e5cc", "#e3f1cc", "#ccf1e3", "#ccd7f1", "#e0ccf1",
+            "f1cce7"
+        ])
+    
 
 def score_as_text(score):
     raw = str(int(score) if (int(score) == score) else score)

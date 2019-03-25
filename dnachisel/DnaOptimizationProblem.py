@@ -17,7 +17,8 @@ from .SpecEvaluation import (ProblemObjectivesEvaluations,
 from .Location import Location
 from .MutationSpace import MutationSpace
 from .reports.optimization_reports import (write_optimization_report,
-                                           write_no_solution_report)
+                                           write_no_solution_report,
+                                           PDF_REPORTS_AVAILABLE)
 from proglog import default_bar_logger
 
 DEFAULT_SPECIFICATIONS_DICT = {} # completed at library initialization
