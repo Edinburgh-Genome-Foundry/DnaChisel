@@ -3,7 +3,7 @@ python:
   - "3.6"
 # command to install dependencies
 install:
-  - pip install primer3-py
+  - pip install matplotlib primer3-py
   - pip install coveralls pytest-cov==2.6 pytest
   - sudo apt-get install ncbi-blast+
   - pip install -e .

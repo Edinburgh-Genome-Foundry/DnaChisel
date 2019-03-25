@@ -50,6 +50,8 @@ try:
     import pdf_reports.tools as pdf_tools
     PDF_REPORTS_AVAILABLE = True
 except:
+    def ReportsWriter(*a, **kw):
+        return None
     PDF_REPORTS_AVAILABLE = False
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
