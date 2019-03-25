@@ -43,7 +43,7 @@ Infos
 
 .. code:: bash
 
-  pip install dnachisel
+  pip install dnachisel[reports]
 
 **Web documentation:**
 
