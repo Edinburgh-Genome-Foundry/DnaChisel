@@ -45,6 +45,9 @@ Infos
 
   pip install dnachisel[reports]
 
+  (you can omit the ``[reports]`` suffix if you intend to use dnachisel only
+  for sequence optimization, without generating figures or PDF reports)
+
 **Web documentation:**
 
 `<https://edinburgh-genome-foundry.github.io/DnaChisel/>`_
