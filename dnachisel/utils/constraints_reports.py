@@ -15,6 +15,13 @@ except:
     BiopythonTranslator = object
     DFV_AVAILABLE = False
 
+def install_extras_message(libname):
+    return (
+        "Could not load %s (is it installed ?). You can install it separately "
+        " with:  pip install %s\n\n"
+        "Dependencies for generating reports in DNA Chisel with this command:"
+        "\n\npip install dnachisel[reports]" % (
+            libname, libname.lower().replace(" ", "_")))
 
 from ..DnaOptimizationProblem import DnaOptimizationProblem
 from ..biotools import gc_content
@@ -56,6 +63,8 @@ def plot_constraint_breaches(constraint, sequence, title=None, ax=None,
       The matplotlib ax on which the plot was drawn
 
     """
+    if not DFV_AVAILABLE:
+      raise ImportError(install_extras_message("DNA Features Viewer"))
     class Translator(BiopythonTranslator):
         """A Biopython record translator for DNA Features Viewer.
 

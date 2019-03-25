@@ -134,7 +134,7 @@ def write_no_solution_report(target, problem, error):
       A NoSolutionError (carries a message and a location)
     """
     if not MATPLOTLIB_AVAILABLE:
-        raise ImportError(install_reports_extra_message % "Matplotlib")
+        raise ImportError(install_extras_message("Matplotlib"))
     if isinstance(target, str):
         root = flametree.file_tree(target, replace=True)
     else:
