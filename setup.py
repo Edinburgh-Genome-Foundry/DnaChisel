@@ -30,6 +30,7 @@ setup(name='dnachisel',
       install_requires=["numpy", "Biopython", "proglog", 'docopt', 'flametree',
                         'python_codon_tables'],
       extras_require = {
-          'reports': ['pdf_reports', 'sequenticon', 'matplotlib']
+          'reports': ['pdf_reports', 'sequenticon', 'matplotlib',
+                      'dna_features_viewer']
       }
 )
