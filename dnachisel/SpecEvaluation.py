@@ -16,7 +16,7 @@ from .Location import Location
 
 def colors_cycle(lightness_factor=1.0, color_shift=0):
     if not MATPLOTLIB_AVAILABLE:
-        raise ImportError("Matplotlib is required !")
+        raise ImportError("Matplotlib is required to use color_cycle() !")
 
     cycle = itertools.cycle([
         cm.Paired(color_shift + 0.21 * i % 1.0)

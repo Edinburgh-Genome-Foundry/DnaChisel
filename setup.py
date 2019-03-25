@@ -28,4 +28,8 @@ setup(name='dnachisel',
       include_package_data=True,
       scripts=['scripts/dnachisel'],
       install_requires=["numpy", "Biopython", "proglog", 'docopt', 'flametree',
-                        'pdf_reports', 'sequenticon', 'python_codon_tables'])
+                        'python_codon_tables'],
+      extra_require = {
+          'reports': ['pdf_reports', 'sequenticon', 'matplotlib']
+      }
+)

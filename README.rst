@@ -149,11 +149,15 @@ Below is an animation of the algorithm in action:
 Installation
 -------------
 
-You can install DnaChisel through PIP
+You can install DnaChisel through PIP:
 
 .. code::
 
-    sudo pip install dnachisel
+    sudo pip install dnachisel[reports]
+
+The ``[reports]`` suffix will install some heavier libraries for report generation,
+you can omit it if you just want to use DNA chisel to edit sequences and generate
+genbanks (for any interactive use, reports are highly recommended).
 
 Alternatively, you can unzip the sources in a folder and type
 

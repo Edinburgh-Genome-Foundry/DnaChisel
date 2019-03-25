@@ -34,8 +34,12 @@ try:
 except:
     GENEBLOCKS_AVAILABLE = False
 
-from pdf_reports import ReportWriter
-import pdf_reports.tools as pdf_tools
+try:
+    from pdf_reports import ReportWriter
+    import pdf_reports.tools as pdf_tools
+    PDF_REPORTS_AVAILABLE = True
+except:
+    PDF_REPORTS_AVAILABLE = False
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 ASSETS_DIR = os.path.join(THIS_DIR, "assets")
@@ -47,6 +51,10 @@ report_writer = ReportWriter(
     default_stylesheets=(os.path.join(ASSETS_DIR, "style.css"),)
 )
 
+install_reports_extra_message =(
+    "Could not load %s (is it installed ?) you can install all "
+    "dependencies for generating reports in DNA Chisel with this command:\n\n "
+    "pip install dnachisel[reports]")
 
 class SpecAnnotationsTranslator(BiopythonTranslator):
     """Translator of DnaChisel feature-constraints for DNA Features Viewer"""
@@ -112,6 +120,8 @@ def write_no_solution_report(target, problem, error):
     error
       A NoSolutionError (carries a message and a location)
     """
+    if not MATPLOTLIB_AVAILABLE:
+        raise ImportError(install_reports_extra_message % "Matplotlib")
     if isinstance(target, str):
         root = flametree.file_tree(target, replace=True)
     else:
@@ -218,6 +228,8 @@ def write_optimization_report(target, problem, project_name="unnammed",
       may take ages to plot)
 
     """
+    if not PDF_REPORTS_AVAILABLE:
+        raise ImportError(install_reports_extra_message % "PDF Reports")
     if constraints_evaluations is None:
         constraints_evaluations = problem.constraints_evaluations()
     if objectives_evaluations is None:
