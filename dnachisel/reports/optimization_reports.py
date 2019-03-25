@@ -50,7 +50,7 @@ try:
     import pdf_reports.tools as pdf_tools
     PDF_REPORTS_AVAILABLE = True
 except:
-    def ReportsWriter(*a, **kw):
+    def ReportWriter(*a, **kw):
         return None
     PDF_REPORTS_AVAILABLE = False
 
