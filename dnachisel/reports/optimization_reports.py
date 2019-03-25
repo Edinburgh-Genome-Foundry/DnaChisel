@@ -37,9 +37,7 @@ except ImportError:
     class BiopythonTranslator:
         "Class unavailable. Install DNA Features Viewer."
         def __init__(self):
-            raise ImportError("BiopythonTranslator unavailable. Install "
-                              "DNA Features Viewer with:\n"
-                              "pip install dna_features_viewer")
+            raise ImportError(install_extras_message("DNA Features Viewer"))
 
 try:
     from geneblocks import DiffBlocks
@@ -242,9 +240,9 @@ def write_optimization_report(target, problem, project_name="unnammed",
 
     """
     if not PDF_REPORTS_AVAILABLE:
-        raise ImportError(install_reports_extra_message % "PDF Reports")
+        raise ImportError(install_extras_message("PDF Reports"))
     if not SEQUENTICON_AVAILABLE:
-        raise ImportError(install_reports_extra_message % "Sequenticon")
+        raise ImportError(install_extras_message("Sequenticon"))
     if constraints_evaluations is None:
         constraints_evaluations = problem.constraints_evaluations()
     if objectives_evaluations is None:
