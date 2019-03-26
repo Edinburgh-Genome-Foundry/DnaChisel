@@ -104,7 +104,6 @@
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
 </ul>
 
@@ -187,7 +186,7 @@
 <span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">Restriction</span>
 
 <span class="kn">from</span> <span class="nn">.biotables</span> <span class="k">import</span> <span class="p">(</span><span class="n">CODONS_TRANSLATIONS</span><span class="p">,</span> <span class="n">NUCLEOTIDE_TO_REGEXPR</span><span class="p">,</span>
-                        <span class="n">CODONS_SEQUENCES</span><span class="p">,</span> <span class="n">IUPAC_NOTATION</span><span class="p">)</span>
+                        <span class="n">COMPLEMENTS</span><span class="p">,</span> <span class="n">CODONS_SEQUENCES</span><span class="p">,</span> <span class="n">IUPAC_NOTATION</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="complement"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.complement">[docs]</a><span class="k">def</span> <span class="nf">complement</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">):</span>
@@ -197,6 +196,9 @@
 
 <span class="sd">    Uses BioPython for speed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">30</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">COMPLEMENTS</span><span class="p">[</span><span class="n">nuc</span><span class="p">]</span> <span class="k">for</span> <span class="n">nuc</span> <span class="ow">in</span> <span class="n">dna_sequence</span><span class="p">])</span>
+    <span class="c1"># This alternative has overhead but is really fast on long sequences</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">)</span><span class="o">.</span><span class="n">complement</span><span class="p">())</span></div>
 
 
@@ -538,45 +540,6 @@
             <span class="k">return</span> <span class="n">potential_label</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 
-
-<div class="viewcode-block" id="crop_record"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.crop_record">[docs]</a><span class="k">def</span> <span class="nf">crop_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">crop_start</span><span class="p">,</span> <span class="n">crop_end</span><span class="p">,</span> <span class="n">features_suffix</span><span class="o">=</span><span class="s2">&quot; (part)&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return the cropped record with possibly cropped features.</span>
-
-<span class="sd">    Note that this differs from ``record[start:end]`` in that in the latter</span>
-<span class="sd">    expression, cropped features are discarded.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-
-<span class="sd">    record</span>
-<span class="sd">      A Biopython record</span>
-
-<span class="sd">    crop_start, crop_end</span>
-<span class="sd">      Start and end of the segment to be cropped.</span>
-
-<span class="sd">    features_suffix</span>
-<span class="sd">      All cropped features will have their label appended with this suffix.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
-        <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span><span class="p">])</span>
-        <span class="n">new_start</span><span class="p">,</span> <span class="n">new_end</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">crop_start</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">crop_end</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">new_end</span> <span class="o">&lt;=</span> <span class="n">new_start</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="n">new_start</span><span class="p">,</span> <span class="n">new_end</span> <span class="o">=</span> <span class="n">new_start</span> <span class="o">-</span> <span class="n">crop_start</span><span class="p">,</span> <span class="n">new_end</span> <span class="o">-</span> <span class="n">crop_start</span>
-
-        <span class="n">feature</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
-        <span class="n">feature</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">FeatureLocation</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">new_start</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">new_end</span><span class="p">),</span>
-                                           <span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span><span class="p">)</span>
-        <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
-        <span class="n">feature</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span> <span class="o">+</span> <span class="n">features_suffix</span>
-        <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
-
-    <span class="n">new_record</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="n">crop_start</span><span class="p">:</span> <span class="n">crop_end</span><span class="p">]</span>
-    <span class="n">new_record</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">features</span>
-    <span class="k">return</span> <span class="n">new_record</span></div>
-
-
 <div class="viewcode-block" id="sequences_differences_array"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.biotools.sequences_differences_array">[docs]</a><span class="k">def</span> <span class="nf">sequences_differences_array</span><span class="p">(</span><span class="n">seq1</span><span class="p">,</span> <span class="n">seq2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return an array [0, 0, 1, 0, ...] with 1s for sequence differences.</span>
 
@@ -762,6 +725,43 @@
         <span class="k">for</span> <span class="n">enzyme_name</span> <span class="ow">in</span> <span class="n">Restriction</span><span class="o">.</span><span class="n">AllEnzymes</span><span class="o">.</span><span class="n">elements</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">is_valid</span><span class="p">(</span><span class="n">enzyme_name</span><span class="p">)</span>
     <span class="p">]</span></div>
+
+<span class="c1"># def crop_record(record, crop_start, crop_end, features_suffix=&quot; (part)&quot;):</span>
+<span class="c1">#     &quot;&quot;&quot;Return the cropped record with possibly cropped features.</span>
+
+<span class="c1">#     Note that this differs from ``record[start:end]`` in that in the latter</span>
+<span class="c1">#     expression, cropped features are discarded.</span>
+
+<span class="c1">#     Parameters</span>
+<span class="c1">#     ----------</span>
+
+<span class="c1">#     record</span>
+<span class="c1">#       A Biopython record</span>
+
+<span class="c1">#     crop_start, crop_end</span>
+<span class="c1">#       Start and end of the segment to be cropped.</span>
+
+<span class="c1">#     features_suffix</span>
+<span class="c1">#       All cropped features will have their label appended with this suffix.</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     features = []</span>
+<span class="c1">#     for feature in record.features:</span>
+<span class="c1">#         start, end = sorted([feature.location.start, feature.location.end])</span>
+<span class="c1">#         new_start, new_end = max(start, crop_start), min(end, crop_end)</span>
+<span class="c1">#         if new_end &lt;= new_start:</span>
+<span class="c1">#             continue</span>
+<span class="c1">#         new_start, new_end = new_start - crop_start, new_end - crop_start</span>
+
+<span class="c1">#         feature = deepcopy(feature)</span>
+<span class="c1">#         feature.location = FeatureLocation(int(new_start), int(new_end),</span>
+<span class="c1">#                                            feature.location.strand)</span>
+<span class="c1">#         label = &quot;&quot;.join(feature.qualifiers.get(&quot;label&quot;, &quot;&quot;))</span>
+<span class="c1">#         feature.qualifiers[&quot;label&quot;] = label + features_suffix</span>
+<span class="c1">#         features.append(feature)</span>
+
+<span class="c1">#     new_record = record[crop_start: crop_end]</span>
+<span class="c1">#     new_record.features = features</span>
+<span class="c1">#     return new_record</span>
 </pre></div>
 
            </div>

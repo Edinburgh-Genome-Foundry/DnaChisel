@@ -104,7 +104,6 @@
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
 </ul>
 
@@ -173,15 +172,14 @@
 <span></span><span class="s2">&quot;Implement EnforceTranslation.&quot;</span>
 
 <span class="kn">from</span> <span class="nn">.CodonSpecification</span> <span class="k">import</span> <span class="n">CodonSpecification</span>
-<span class="kn">from</span> <span class="nn">.VoidSpecification</span> <span class="k">import</span> <span class="n">VoidSpecification</span>
+<span class="c1"># from .VoidSpecification import VoidSpecification</span>
 <span class="kn">from</span> <span class="nn">..SpecEvaluation</span> <span class="k">import</span> <span class="n">SpecEvaluation</span>
 <span class="kn">from</span> <span class="nn">dnachisel.biotools</span> <span class="k">import</span> <span class="n">CODONS_SEQUENCES</span><span class="p">,</span> <span class="n">translate</span><span class="p">,</span> <span class="n">reverse_complement</span>
 <span class="kn">from</span> <span class="nn">dnachisel.Location</span> <span class="k">import</span> <span class="n">Location</span>
 
 
 <div class="viewcode-block" id="EnforceTranslation"><a class="viewcode-back" href="../../../ref/builtin_specifications.html#dnachisel.builtin_specifications.EnforceTranslation">[docs]</a><span class="k">class</span> <span class="nc">EnforceTranslation</span><span class="p">(</span><span class="n">CodonSpecification</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Enforce that the DNA segment sequence translates to a specific</span>
-<span class="sd">    amino-acid sequence.</span>
+    <span class="sd">&quot;&quot;&quot;Enforce a specific amino-acid sequence translation.</span>
 
 <span class="sd">    This class enforces the standard translation, but it is also possible to</span>
 <span class="sd">    change the class&#39; `codons_sequences` and `codons_translations`</span>
@@ -252,13 +250,12 @@
 
     <span class="k">def</span> <span class="nf">initialize_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get translation from the sequence if it is not already set.&quot;&quot;&quot;</span>
-        <span class="c1"># if self.location is None:</span>
-        <span class="c1">#     location = Location(0, len(problem.sequence), 1)</span>
-        <span class="c1">#     result = self.copy_with_changes()</span>
-        <span class="c1">#     result.set_location(location)</span>
-        <span class="c1"># else:</span>
-        <span class="c1">#     result = self</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_with_full_span_if_no_location</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">()</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">set_location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">translation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">subsequence</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">extract_sequence</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
             <span class="n">translation</span> <span class="o">=</span> <span class="n">translate</span><span class="p">(</span><span class="n">subsequence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codons_translations</span><span class="p">)</span>

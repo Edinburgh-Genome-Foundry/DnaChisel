@@ -104,7 +104,6 @@
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
 </ul>
 
@@ -176,7 +175,7 @@
 
 <span class="kn">from</span> <span class="nn">..Specification</span> <span class="k">import</span> <span class="n">Specification</span>
 <span class="kn">from</span> <span class="nn">..SpecEvaluation</span> <span class="k">import</span> <span class="n">SpecEvaluation</span>
-<span class="kn">from</span> <span class="nn">.VoidSpecification</span> <span class="k">import</span> <span class="n">VoidSpecification</span>
+<span class="c1"># from .VoidSpecification import VoidSpecification</span>
 <span class="kn">from</span> <span class="nn">dnachisel.biotools</span> <span class="k">import</span> <span class="p">(</span><span class="n">sequences_differences_array</span><span class="p">,</span>
                                 <span class="n">group_nearby_indices</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">dnachisel.Location</span> <span class="k">import</span> <span class="n">Location</span>
@@ -216,6 +215,8 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_tuple</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">indices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">target_sequence</span> <span class="o">=</span> <span class="n">target_sequence</span>
         <span class="c1"># self.passive_objective = passive_objective</span>
@@ -285,16 +286,18 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">new_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">new_location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">VoidSpecification</span><span class="p">(</span><span class="n">parent_specification</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span> 
+ <span class="c1"># VoidSpecification(parent_specification=self)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># return self</span>
                 <span class="c1"># TODO: refine using the code hereunder, which sometimes</span>
                 <span class="c1"># creates exceptions like &quot;different sequences&quot;</span>
+                
                 <span class="n">new_constraint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">new_location</span><span class="p">)</span>
+                <span class="n">relative_location</span> <span class="o">=</span> <span class="n">new_location</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">)</span>
                 <span class="n">new_constraint</span><span class="o">.</span><span class="n">target_sequence</span> <span class="o">=</span> \
-                    <span class="n">new_constraint</span><span class="o">.</span><span class="n">extract_subsequence</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_sequence</span><span class="p">)</span>
+                    <span class="n">relative_location</span><span class="o">.</span><span class="n">extract_sequence</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_sequence</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">new_constraint</span>
-                <span class="c1"># print (new_constraint, new_constraint.target_sequence)</span>
 
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -311,8 +314,8 @@
             <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span>
-
-        <span class="k">return</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="nb">set</span><span class="p">(</span><span class="n">sequence</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)]</span></div>
+        <span class="k">return</span> <span class="p">[((</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">),</span> <span class="nb">set</span><span class="p">([</span><span class="n">sequence</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]]))]</span></div>
+        <span class="c1"># return [(i, set(sequence[i])) for i in range(start, end)]</span>
 </pre></div>
 
            </div>

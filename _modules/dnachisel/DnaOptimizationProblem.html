@@ -104,7 +104,6 @@
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
 </ul>
 
@@ -188,6 +187,9 @@
                              <span class="n">ProblemConstraintsEvaluations</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.Location</span> <span class="k">import</span> <span class="n">Location</span>
 <span class="kn">from</span> <span class="nn">.MutationSpace</span> <span class="k">import</span> <span class="n">MutationSpace</span>
+<span class="kn">from</span> <span class="nn">.reports.optimization_reports</span> <span class="k">import</span> <span class="p">(</span><span class="n">write_optimization_report</span><span class="p">,</span>
+                                           <span class="n">write_no_solution_report</span><span class="p">,</span>
+                                           <span class="n">PDF_REPORTS_AVAILABLE</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">proglog</span> <span class="k">import</span> <span class="n">default_bar_logger</span>
 
 <span class="n">DEFAULT_SPECIFICATIONS_DICT</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># completed at library initialization</span>
@@ -326,7 +328,7 @@
         <span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">objective</span><span class="o">.</span><span class="n">initialize_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="s2">&quot;objective&quot;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">objective</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span>
+            <span class="k">for</span> <span class="n">objective</span> <span class="ow">in</span>  <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span>
         <span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">sequence_before</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span>
@@ -516,6 +518,8 @@
                     <span class="k">if</span> <span class="n">_constraint</span> <span class="o">!=</span> <span class="n">constraint</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">_constraint</span><span class="o">.</span><span class="n">enforced_by_nucleotide_restrictions</span>
                 <span class="p">]</span>
+                <span class="n">localized_constraints</span> <span class="o">=</span> <span class="p">[</span><span class="n">cst</span> <span class="k">for</span> <span class="n">cst</span> <span class="ow">in</span> <span class="n">localized_constraints</span>
+                                         <span class="k">if</span> <span class="n">cst</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
                 <span class="n">passing_localized_constraints</span> <span class="o">=</span> <span class="p">[</span>
                     <span class="n">_constraint</span>
                     <span class="k">for</span> <span class="n">_constraint</span> <span class="ow">in</span> <span class="n">localized_constraints</span>
@@ -601,7 +605,7 @@
             <span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">(</span><span class="n">failed_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">NoSolutionError</span><span class="p">(</span>
                 <span class="n">summary</span> <span class="o">+</span>
-                <span class="s2">&quot;Optimization can only be done when all constraints are&quot;</span>
+                <span class="s2">&quot;Optimization can only be done when all constraints are &quot;</span>
                 <span class="s2">&quot;verified.&quot;</span><span class="p">,</span>
                 <span class="bp">self</span>
             <span class="p">)</span>
@@ -694,14 +698,19 @@
                 <span class="n">_constraint</span><span class="o">.</span><span class="n">localized</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">_constraint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints</span>
             <span class="p">]</span>
+            <span class="n">localized_constraints</span> <span class="o">=</span> <span class="p">[</span><span class="n">cst</span> <span class="k">for</span> <span class="n">cst</span> <span class="ow">in</span> <span class="n">localized_constraints</span>
+                                     <span class="k">if</span> <span class="n">cst</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+            <span class="n">localized_objectives</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">_objective</span><span class="o">.</span><span class="n">localized</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">_objective</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span>
+            <span class="p">]</span>
+            <span class="n">localized_objectives</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">localized_objectives</span>
+                                    <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
             <span class="n">local_problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span>
                 <span class="n">sequence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span>
                 <span class="n">constraints</span><span class="o">=</span><span class="n">localized_constraints</span><span class="p">,</span>
                 <span class="n">mutation_space</span><span class="o">=</span><span class="n">mutation_space</span><span class="p">,</span>
-                <span class="n">objectives</span><span class="o">=</span><span class="p">[</span>
-                    <span class="n">_objective</span><span class="o">.</span><span class="n">localized</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">_objective</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span>
-                <span class="p">]</span>
+                <span class="n">objectives</span><span class="o">=</span><span class="n">localized_objectives</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">problem</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                               <span class="n">local_problem</span><span class="o">=</span><span class="n">local_problem</span><span class="p">,</span>
@@ -814,7 +823,49 @@
                 <span class="n">label</span><span class="o">=</span><span class="s2">&quot;was &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_before</span><span class="p">[</span><span class="n">start</span><span class="p">:</span> <span class="n">end</span><span class="p">],</span>
                 <span class="n">is_edit</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="n">segments</span>
-        <span class="p">]</span></div>
+        <span class="p">]</span>
+    
+<div class="viewcode-block" id="DnaOptimizationProblem.optimize_with_report"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.optimize_with_report">[docs]</a>    <span class="k">def</span> <span class="nf">optimize_with_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="s2">&quot;My project&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Resolve constraints, optimize objectives, write a multi-file report.</span>
+
+<span class="sd">        The report&#39;s content may vary depending on the optimization&#39;s success </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        target</span>
+<span class="sd">        Either a path to a folder that will containt the report, or a path to</span>
+<span class="sd">        a zip archive, or &quot;@memory&quot; to return raw data of a zip archive</span>
+<span class="sd">        containing the report.</span>
+
+<span class="sd">        project_name</span>
+<span class="sd">        Project name to write on PDF reports</span>
+
+<span class="sd">        **solver_parameters</span>
+<span class="sd">        Extra keyword arguments passed to ``problem.resolve_constraints()``</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        (success, message, zip_data)</span>
+<span class="sd">        Triplet where success is True/False, message is a one-line string</span>
+<span class="sd">        summary indication whether some clash was found, or some solution, or</span>
+<span class="sd">        maybe no solution was found because the random searches were too short</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Solving constraints&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">resolve_constraints</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">NoSolutionError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;No solution found: making report&quot;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">write_no_solution_report</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+            <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;No solution found in zone [</span><span class="si">%d</span><span class="s2">, </span><span class="si">%d</span><span class="s2">]: </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span>
+                    <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Now optimizing the sequence&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Success! Generating report.&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">write_optimization_report</span><span class="p">(</span>
+            <span class="n">target</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="n">project_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;Optimization successful.&quot;</span><span class="p">,</span> <span class="n">data</span></div></div>
 </pre></div>
 
            </div>

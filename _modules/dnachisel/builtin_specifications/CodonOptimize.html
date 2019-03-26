@@ -104,7 +104,6 @@
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
 </ul>
 
@@ -171,17 +170,16 @@
             
   <h1>Source code for dnachisel.builtin_specifications.CodonOptimize</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
+<span class="kn">from</span> <span class="nn">python_codon_tables</span> <span class="k">import</span> <span class="n">get_codons_table</span>
 <span class="kn">from</span> <span class="nn">.CodonSpecification</span> <span class="k">import</span> <span class="n">CodonSpecification</span>
 <span class="kn">from</span> <span class="nn">..SpecEvaluation</span> <span class="k">import</span> <span class="n">SpecEvaluation</span>
-<span class="kn">from</span> <span class="nn">..biotools</span> <span class="k">import</span> <span class="p">(</span><span class="n">CODON_USAGE_TABLES</span><span class="p">,</span> <span class="n">CODONS_TRANSLATIONS</span><span class="p">,</span>
-                        <span class="n">group_nearby_indices</span><span class="p">,</span> <span class="n">codons_frequencies_and_positions</span><span class="p">,</span>
-                        <span class="n">CODON_USAGE_BY_AA</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..biotools</span> <span class="k">import</span> <span class="p">(</span><span class="n">CODONS_TRANSLATIONS</span><span class="p">,</span> <span class="n">group_nearby_indices</span><span class="p">,</span>
+                        <span class="n">codons_frequencies_and_positions</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..Location</span> <span class="k">import</span> <span class="n">Location</span>
 
 
 <div class="viewcode-block" id="CodonOptimize"><a class="viewcode-back" href="../../../ref/builtin_specifications.html#dnachisel.builtin_specifications.CodonOptimize">[docs]</a><span class="k">class</span> <span class="nc">CodonOptimize</span><span class="p">(</span><span class="n">CodonSpecification</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Specification to codon-optimize a coding sequence for a particular species.</span>
+    <span class="sd">&quot;&quot;&quot;Codon-optimize a coding sequence for a particular species.</span>
 
 <span class="sd">    Several codon-optimization policies exist. At the moment this Specification</span>
 <span class="sd">    implements a method in which codons are replaced by the most frequent</span>
@@ -190,16 +188,15 @@
 <span class="sd">    (as long as this doesn&#39;t break any Specification or lowers the global</span>
 <span class="sd">    optimization objective)</span>
 
-<span class="sd">    Supported speciess are ``E. coli``, ``S. cerevisiae``, ``H. Sapiens``,</span>
-<span class="sd">    ``C. elegans``, ``D. melanogaster``, ``B. subtilis``.</span>
-
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 
 <span class="sd">    species</span>
-<span class="sd">      Name of the species to codon-optimize for. Supported speciess are</span>
-<span class="sd">      ``E. coli``, ``S. cerevisiae``, ``H. Sapiens``, ``C. elegans``,</span>
-<span class="sd">      ``D. melanogaster``, ``B. subtilis``.</span>
+<span class="sd">      Either a TaxID (this requires a web connection as the corresponding table</span>
+<span class="sd">      will be downloaded from the internet) or the name of the species to</span>
+<span class="sd">      codon-optimize for (the name must be supported by ``python_codon_tables``</span>
+<span class="sd">      e.g. ``e_coli``, ``s_cerevisiae``, ``h_sapiens``, ``c_elegans``,</span>
+<span class="sd">      ``b_subtilis``, ``d_melanogaster``).</span>
 <span class="sd">      Note that the species can be omited if a ``codon_usage_table`` is</span>
 <span class="sd">      provided instead</span>
 
@@ -219,9 +216,9 @@
 <span class="sd">      encoded on the (+) strand, or -1 for antisense.</span>
 
 <span class="sd">    codon_usage_table</span>
-<span class="sd">      A dict of the form ``{&quot;TAC&quot;: 0.112, &quot;CCT&quot;: 0.68}`` giving the RSCU table</span>
-<span class="sd">      (relative usage of each codon). Only provide if no ``species`` name</span>
-<span class="sd">      was provided.</span>
+<span class="sd">      A dict of the form ``{&#39;*&#39;: {&quot;TGA&quot;: 0.112, &quot;TAA&quot;: 0.68}, &#39;K&#39;: ...}``</span>
+<span class="sd">      giving the RSCU table (relative usage of each codon). Only provide if</span>
+<span class="sd">      no ``species`` parameter was provided.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -247,20 +244,29 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">species</span> <span class="o">=</span> <span class="n">species</span>
         <span class="k">if</span> <span class="n">species</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">codon_usage_table</span> <span class="o">=</span> <span class="n">CODON_USAGE_TABLES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">]</span>
+            <span class="n">codon_usage_table</span> <span class="o">=</span> <span class="n">get_codons_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">)</span>
+            <span class="c1"># codon_usage_table = CODON_USAGE_TABLES[self.species]</span>
         <span class="k">if</span> <span class="n">codon_usage_table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Provide either an species name or a codon &quot;</span>
                              <span class="s2">&quot;usage table&quot;</span><span class="p">)</span>
+
+        <span class="c1"># PRECOMPUTE SOME TABLES (WILL BE PASSED ON TO LOCALIZED PROBLEMS)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span> <span class="o">=</span> <span class="n">codon_usage_table</span>
+        <span class="k">if</span> <span class="s1">&#39;codons_frequencies&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">[</span><span class="s1">&#39;codons_frequencies&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([</span>
+                <span class="n">item</span> <span class="k">for</span> <span class="n">aa_data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">aa_data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">])</span>
+        <span class="k">if</span> <span class="s1">&#39;best_frequencies&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">[</span><span class="s1">&#39;best_frequencies&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">aa</span><span class="p">:</span> <span class="nb">max</span><span class="p">(</span><span class="n">aa_data</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+                <span class="k">for</span> <span class="n">aa</span><span class="p">,</span> <span class="n">aa_data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">aa</span> <span class="o">!=</span> <span class="s1">&#39;codons_frequencies&#39;</span>
+            <span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">initialize_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get location from sequence if no location provided.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_with_full_span_if_no_location</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
-        <span class="c1"># if self.location is None:</span>
-        <span class="c1">#     location = Location(0, len(problem.sequence), 1)</span>
-        <span class="c1">#     return self.copy_with_changes(location=location)</span>
-        <span class="c1"># else:</span>
-        <span class="c1">#     return self</span>
 
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Return the sum of all codons frequencies.</span>
@@ -275,7 +281,7 @@
         <span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">](</span><span class="n">problem</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">codon_harmonization_stats</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">species</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">codon_harmonization_stats</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">codon_usage</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a codon harmonisation score and a suboptimal locations list.</span>
 
 <span class="sd">        Parameters</span>
@@ -306,11 +312,12 @@
             <span class="p">)</span>
         <span class="n">codons_frequencies</span><span class="p">,</span> <span class="n">codons_positions</span> <span class="o">=</span> \
             <span class="n">codons_frequencies_and_positions</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
-        <span class="n">codon_usage</span> <span class="o">=</span> <span class="n">CODON_USAGE_BY_AA</span><span class="p">[</span><span class="n">species</span><span class="p">]</span>
 
         <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">nonoptimal_indices</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">aa</span><span class="p">,</span> <span class="n">usage_data</span> <span class="ow">in</span> <span class="n">codon_usage</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">aa</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;best_frequencies&#39;</span><span class="p">,</span> <span class="s1">&#39;codons_frequencies&#39;</span><span class="p">]:</span>
+                <span class="k">continue</span>
             <span class="n">sequence_data</span> <span class="o">=</span> <span class="n">codons_frequencies</span><span class="p">[</span><span class="n">aa</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">codon</span><span class="p">,</span> <span class="n">usage_freq</span> <span class="ow">in</span> <span class="n">usage_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">sequence_freq</span> <span class="o">=</span> <span class="n">sequence_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">codon</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -355,7 +362,7 @@
         <span class="p">]</span>
         <span class="n">CT</span> <span class="o">=</span> <span class="n">CODONS_TRANSLATIONS</span>
         <span class="n">current_usage</span><span class="p">,</span> <span class="n">optimal_usage</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[</span>
-            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">[</span><span class="n">codon</span><span class="p">],</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">[</span><span class="s1">&#39;codons_frequencies&#39;</span><span class="p">][</span><span class="n">codon</span><span class="p">],</span>
              <span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">[</span><span class="s1">&#39;best_frequencies&#39;</span><span class="p">][</span><span class="n">CT</span><span class="p">[</span><span class="n">codon</span><span class="p">]])</span>
             <span class="k">for</span> <span class="n">codon</span> <span class="ow">in</span> <span class="n">codons</span>
         <span class="p">])]</span>
@@ -369,10 +376,10 @@
                     <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
         <span class="p">)</span>
     <span class="k">def</span> <span class="nf">evaluate_harmonized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the evaluation for mode==harmonized.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the evaluation for mode == harmonized.&quot;&quot;&quot;</span>
         <span class="n">subsequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">extract_sequence</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
-        <span class="n">score</span><span class="p">,</span> <span class="n">nonoptimal_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codon_harmonization_stats</span><span class="p">(</span><span class="n">subsequence</span><span class="p">,</span>
-                                                                   <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">)</span>
+        <span class="n">score</span><span class="p">,</span> <span class="n">nonoptimal_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codon_harmonization_stats</span><span class="p">(</span>
+            <span class="n">subsequence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">)</span>
         <span class="n">locations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codons_indices_to_locations</span><span class="p">(</span><span class="n">nonoptimal_indices</span><span class="p">)</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">locations</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span>

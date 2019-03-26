@@ -115,7 +115,6 @@
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
 </ul>
 
@@ -259,34 +258,6 @@ the different codons in the sequence.</p>
 <dd><p>Return the complement of the DNA sequence.</p>
 <p>For instance <code class="docutils literal"><span class="pre">complement(&quot;ATGCCG&quot;)</span></code> returns <code class="docutils literal"><span class="pre">&quot;TACGGC&quot;</span></code>.</p>
 <p>Uses BioPython for speed.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.crop_record">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">crop_record</code><span class="sig-paren">(</span><em>record</em>, <em>crop_start</em>, <em>crop_end</em>, <em>features_suffix=' (part)'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#crop_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.crop_record" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the cropped record with possibly cropped features.</p>
-<p>Note that this differs from <code class="docutils literal"><span class="pre">record[start:end]</span></code> in that in the latter
-expression, cropped features are discarded.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>record</strong></p>
-<blockquote>
-<div><p>A Biopython record</p>
-</div></blockquote>
-<p><strong>crop_start, crop_end</strong></p>
-<blockquote>
-<div><p>Start and end of the segment to be cropped.</p>
-</div></blockquote>
-<p><strong>features_suffix</strong></p>
-<blockquote class="last">
-<div><p>All cropped features will have their label appended with this suffix.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="function">

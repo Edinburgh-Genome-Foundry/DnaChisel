@@ -104,7 +104,6 @@
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
 </ul>
 
@@ -175,7 +174,7 @@
 
 <span class="kn">from</span> <span class="nn">..Specification</span> <span class="k">import</span> <span class="n">Specification</span>
 <span class="kn">from</span> <span class="nn">..Location</span> <span class="k">import</span> <span class="n">Location</span>
-<span class="kn">from</span> <span class="nn">.VoidSpecification</span> <span class="k">import</span> <span class="n">VoidSpecification</span>
+<span class="c1"># from .VoidSpecification import VoidSpecification</span>
 <span class="kn">from</span> <span class="nn">..SpecEvaluation</span> <span class="k">import</span> <span class="n">SpecEvaluation</span>
 
 <div class="viewcode-block" id="EnforceRegionsCompatibility"><a class="viewcode-back" href="../../../ref/builtin_specifications.html#dnachisel.builtin_specifications.EnforceRegionsCompatibility">[docs]</a><span class="k">class</span> <span class="nc">EnforceRegionsCompatibility</span><span class="p">(</span><span class="n">Specification</span><span class="p">):</span>
@@ -227,7 +226,7 @@
         <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span><span class="n">rl</span><span class="p">)</span> <span class="k">for</span> <span class="n">rl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">locations</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">VoidSpecification</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span> <span class="c1">#(parent=self)</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;CompatRegions(</span><span class="si">%s%s</span><span class="s2">...)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition_label</span><span class="p">,</span>

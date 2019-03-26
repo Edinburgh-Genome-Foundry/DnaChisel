@@ -104,7 +104,6 @@
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
 </ul>
 
@@ -173,7 +172,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;Implementation of AvoidHairpins.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">..Specification</span> <span class="k">import</span> <span class="n">Specification</span>
-<span class="kn">from</span> <span class="nn">.VoidSpecification</span> <span class="k">import</span> <span class="n">VoidSpecification</span>
+<span class="c1"># from .VoidSpecification import VoidSpecification</span>
 <span class="kn">from</span> <span class="nn">..SpecEvaluation</span> <span class="k">import</span> <span class="n">SpecEvaluation</span>
 <span class="kn">from</span> <span class="nn">dnachisel.biotools</span> <span class="k">import</span> <span class="n">reverse_complement</span><span class="p">,</span> <span class="n">group_nearby_segments</span>
 <span class="kn">from</span> <span class="nn">dnachisel.Location</span> <span class="k">import</span> <span class="n">Location</span>
@@ -241,7 +240,8 @@
         <span class="sd">&quot;&quot;&quot;Localize the spec, make sure no neighbouring hairpin is created.&quot;&quot;&quot;</span>
         <span class="n">new_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">new_location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">VoidSpecification</span><span class="p">(</span><span class="n">parent_specification</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span> 
+ <span class="c1"># VoidSpecification(parent_specification=self)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">new_location</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span>

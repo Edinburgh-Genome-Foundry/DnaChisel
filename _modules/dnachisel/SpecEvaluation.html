@@ -104,7 +104,6 @@
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
 </ul>
 
@@ -187,18 +186,22 @@
 <span class="kn">from</span> <span class="nn">.Location</span> <span class="k">import</span> <span class="n">Location</span>
 
 <span class="k">def</span> <span class="nf">colors_cycle</span><span class="p">(</span><span class="n">lightness_factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">color_shift</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">MATPLOTLIB_AVAILABLE</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Matplotlib is required !&quot;</span><span class="p">)</span>
-
-    <span class="n">cycle</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">cycle</span><span class="p">([</span>
-        <span class="n">cm</span><span class="o">.</span><span class="n">Paired</span><span class="p">(</span><span class="n">color_shift</span> <span class="o">+</span> <span class="mf">0.21</span> <span class="o">*</span> <span class="n">i</span> <span class="o">%</span> <span class="mf">1.0</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-    <span class="p">])</span>
-    <span class="k">return</span> <span class="p">(</span>
-        <span class="s1">&#39;#</span><span class="si">%02x%02x%02x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="mi">255</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">lightness_factor</span><span class="p">)</span>
-                                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">rgb_tuple</span><span class="p">[:</span><span class="mi">3</span><span class="p">]])</span>
-        <span class="k">for</span> <span class="n">rgb_tuple</span> <span class="ow">in</span> <span class="n">cycle</span>
-    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">MATPLOTLIB_AVAILABLE</span><span class="p">:</span>
+        <span class="n">cycle</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">cycle</span><span class="p">([</span>
+            <span class="n">cm</span><span class="o">.</span><span class="n">Paired</span><span class="p">(</span><span class="n">color_shift</span> <span class="o">+</span> <span class="mf">0.21</span> <span class="o">*</span> <span class="n">i</span> <span class="o">%</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+        <span class="p">])</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="s1">&#39;#</span><span class="si">%02x%02x%02x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="mi">255</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">lightness_factor</span><span class="p">)</span>
+                                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">rgb_tuple</span><span class="p">[:</span><span class="mi">3</span><span class="p">]])</span>
+            <span class="k">for</span> <span class="n">rgb_tuple</span> <span class="ow">in</span> <span class="n">cycle</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">itertools</span><span class="o">.</span><span class="n">cycle</span><span class="p">([</span>
+            <span class="s2">&quot;#f1cccc&quot;</span><span class="p">,</span> <span class="s2">&quot;#f1e5cc&quot;</span><span class="p">,</span> <span class="s2">&quot;#e3f1cc&quot;</span><span class="p">,</span> <span class="s2">&quot;#ccf1e3&quot;</span><span class="p">,</span> <span class="s2">&quot;#ccd7f1&quot;</span><span class="p">,</span> <span class="s2">&quot;#e0ccf1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;f1cce7&quot;</span>
+        <span class="p">])</span>
+    
 
 <span class="k">def</span> <span class="nf">score_as_text</span><span class="p">(</span><span class="n">score</span><span class="p">):</span>
     <span class="n">raw</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="o">==</span> <span class="n">score</span><span class="p">)</span> <span class="k">else</span> <span class="n">score</span><span class="p">)</span>

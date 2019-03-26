@@ -109,7 +109,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#specevaluation">SpecEvaluation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-dnachisel.Location">Location</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-dnachisel.MutationSpace">MutationSpace</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-dnachisel.SequencePattern">SequencePattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sequencepattern">SequencePattern</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="reports.html">Reports</a></li>
@@ -121,7 +121,6 @@
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
 </ul>
 
@@ -332,6 +331,35 @@ e.g. for the mutation of a whole codon <code class="docutils literal"><span clas
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="dnachisel.DnaOptimizationProblem.optimize_with_report">
+<code class="descname">optimize_with_report</code><span class="sig-paren">(</span><em>target</em>, <em>project_name='My project'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem.html#DnaOptimizationProblem.optimize_with_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.optimize_with_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolve constraints, optimize objectives, write a multi-file report.</p>
+<p>The report’s content may vary depending on the optimization’s success</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>target</strong></p>
+<p><strong>Either a path to a folder that will containt the report, or a path to</strong></p>
+<p><strong>a zip archive, or “&#64;memory” to return raw data of a zip archive</strong></p>
+<p><strong>containing the report.</strong></p>
+<p><strong>project_name</strong></p>
+<p><strong>Project name to write on PDF reports</strong></p>
+<p><strong>**solver_parameters</strong></p>
+<p><strong>Extra keyword arguments passed to ``problem.resolve_constraints()``</strong></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">(success, message, zip_data)</p>
+<p>Triplet where success is True/False, message is a one-line string</p>
+<p>summary indication whether some clash was found, or some solution, or</p>
+<p class="last">maybe no solution was found because the random searches were too short</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="dnachisel.DnaOptimizationProblem.resolve_constraint">
 <code class="descname">resolve_constraint</code><span class="sig-paren">(</span><em>constraint</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem.html#DnaOptimizationProblem.resolve_constraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.resolve_constraint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resolve a constraint through successive localizations.</p>
@@ -453,7 +481,7 @@ each mutation (and not compute it for the whole sequence), so
 <code class="docutils literal"><span class="pre">EnforceGCContent.localized(location)</span></code> will return an specification
 that only looks for GC content around the provided location.</p>
 <p>If an specification concerns a DNA segment that is completely disjoint
-from the provided location, this must return a <code class="docutils literal"><span class="pre">VoidSpecification</span></code>.</p>
+from the provided location, this must return None.</p>
 <p>Must return an object of class <code class="docutils literal"><span class="pre">Constraint</span></code>.</p>
 </dd></dl>
 
@@ -854,7 +882,7 @@ qualifiers.</p>
 <p>Define MutationSpace</p>
 <dl class="class">
 <dt id="dnachisel.MutationSpace.MutationChoice">
-<em class="property">class </em><code class="descclassname">dnachisel.MutationSpace.</code><code class="descname">MutationChoice</code><span class="sig-paren">(</span><em>segment</em>, <em>variants</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace.html#MutationChoice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationChoice" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">dnachisel.MutationSpace.</code><code class="descname">MutationChoice</code><span class="sig-paren">(</span><em>segment</em>, <em>variants</em>, <em>is_any_nucleotide=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace.html#MutationChoice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationChoice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represent a segment of a sequence with several possible variants.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -889,13 +917,14 @@ are applying Python range, so</p>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;ATGAATG&#39;</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">choice</span><span class="o">.</span><span class="n">extract_varying_region</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Result</span><span class="p">:</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span>
+</pre></div>
+</div>
+<p>Result :</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">MutChoice</span><span class="p">(</span><span class="mi">5</span><span class="o">-</span><span class="mi">6</span> <span class="n">A</span><span class="p">),</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">MutChoice</span><span class="p">(</span><span class="mi">6</span><span class="o">-</span><span class="mi">10</span> <span class="n">TGCG</span><span class="o">-</span><span class="n">AATG</span><span class="o">-</span><span class="n">TGAA</span><span class="o">-</span><span class="n">AAAA</span><span class="p">),</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">MutChoice</span><span class="p">(</span><span class="mi">10</span><span class="o">-</span><span class="mi">12</span> <span class="n">TG</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">]</span>
-<span class="go">&gt;&gt;&gt;</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -906,14 +935,14 @@ are applying Python range, so</p>
 <dd><p>Return a mutation restriction</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;GTA&#39;</span><span class="p">,</span> <span class="s1">&#39;GCT&#39;</span><span class="p">,</span> <span class="s1">&#39;GTT&#39;</span><span class="p">}),</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;ATGC&#39;</span><span class="p">}),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;T&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">}),</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;ATG&#39;</span><span class="p">,</span> <span class="s1">&#39;ACC&#39;</span><span class="p">,</span> <span class="s1">&#39;CTG&#39;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">]</span>
 </pre></div>
 </div>
 <p>percolated with:
-&gt;&gt;&gt; ((2, 5), {‘ATT’, ‘ATA’})
-returns
+&gt;&gt;&gt; ((2, 5), {‘ATT’, ‘ATA’})</p>
+<p>returns:
 &gt;&gt;&gt; (0, 7), {‘GTATACC’, ‘GTATATG’}</p>
 </dd></dl>
 
@@ -927,7 +956,7 @@ returns
 
 <dl class="class">
 <dt id="dnachisel.MutationSpace.MutationSpace">
-<em class="property">class </em><code class="descclassname">dnachisel.MutationSpace.</code><code class="descname">MutationSpace</code><span class="sig-paren">(</span><em>choices_index</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace.html#MutationSpace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">dnachisel.MutationSpace.</code><code class="descname">MutationSpace</code><span class="sig-paren">(</span><em>choices_index</em>, <em>left_padding=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace.html#MutationSpace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for mutation space (set of sequence segments and their variants).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1008,9 +1037,46 @@ or to</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-dnachisel.SequencePattern">
-<span id="sequencepattern"></span><h2>SequencePattern<a class="headerlink" href="#module-dnachisel.SequencePattern" title="Permalink to this headline">¶</a></h2>
-<p>Implements the SequencePattern, DnaNotationPattern classes.</p>
+<div class="section" id="sequencepattern">
+<h2>SequencePattern<a class="headerlink" href="#sequencepattern" title="Permalink to this headline">¶</a></h2>
+<p>Specifications <code class="docutils literal"><span class="pre">AvoidPattern</span></code>, <code class="docutils literal"><span class="pre">EnforcePatternOccurence</span></code> accept a Pattern
+as argument. The pattern can be provided either as a string or as a class:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="46%" />
+<col width="28%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Pattern Class</th>
+<th class="head">As string</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Restriction site</td>
+<td><code class="docutils literal"><span class="pre">EnzymeSitePattern('BsmBI')</span></code></td>
+<td><code class="docutils literal"><span class="pre">'BsmBI_site'</span></code></td>
+</tr>
+<tr class="row-odd"><td>Homopolymer</td>
+<td><code class="docutils literal"><span class="pre">HomopolymerPattern(&quot;A&quot;,</span> <span class="pre">6)</span></code></td>
+<td><code class="docutils literal"><span class="pre">'6xA'</span></code></td>
+</tr>
+<tr class="row-even"><td>Direct repeats</td>
+<td><code class="docutils literal"><span class="pre">RepeatedKmerPattern(3,</span> <span class="pre">2)</span></code></td>
+<td><code class="docutils literal"><span class="pre">'3x2mer'</span></code></td>
+</tr>
+<tr class="row-odd"><td>DNA notation</td>
+<td><code class="docutils literal"><span class="pre">DnaNotationPattern('ANNKA')</span></code></td>
+<td><code class="docutils literal"><span class="pre">'ANNKA'</span></code></td>
+</tr>
+<tr class="row-even"><td>Regular Expression</td>
+<td><code class="docutils literal"><span class="pre">SequencePattern('A[CG]*A')</span></code></td>
+<td><code class="docutils literal"><span class="pre">'A[CG]*A'</span></code></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-dnachisel.SequencePattern"></span><p>Implements the SequencePattern, DnaNotationPattern classes.</p>
 <p>These classes are responsible for looking for a pattern in a sequence
 (including overlapping patterns !), separating patterns with fixed size
 and patterns with maximal size (from problem localization purposes).</p>
@@ -1037,8 +1103,48 @@ both strands of sequences.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="dnachisel.SequencePattern.EnzymeSitePattern">
+<em class="property">class </em><code class="descclassname">dnachisel.SequencePattern.</code><code class="descname">EnzymeSitePattern</code><span class="sig-paren">(</span><em>enzyme_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#EnzymeSitePattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.EnzymeSitePattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to represent Enzyme site patterns</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">enzyme_pattern</span> <span class="o">=</span> <span class="n">EnzymeSitePattern</span><span class="p">(</span><span class="s2">&quot;BsaI&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">constraint</span> <span class="o">=</span> <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">enzyme_pattern</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="staticmethod">
+<dt id="dnachisel.SequencePattern.EnzymeSitePattern.from_string">
+<em class="property">static </em><code class="descname">from_string</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#EnzymeSitePattern.from_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.EnzymeSitePattern.from_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert BsmBI_site to EnzymeSitePattern(BsmBI)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dnachisel.SequencePattern.HomopolymerPattern">
+<em class="property">class </em><code class="descclassname">dnachisel.SequencePattern.</code><code class="descname">HomopolymerPattern</code><span class="sig-paren">(</span><em>nucleotide</em>, <em>number</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#HomopolymerPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.HomopolymerPattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Homopolymer of the form AAAAAAA, TTTTT, etc.</p>
+<p>Shorthand string version: “7xA”, “9xC”, etc.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pattern</span> <span class="o">=</span> <span class="n">HomopolymerPattern</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">constraint</span> <span class="o">=</span> <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="dnachisel.SequencePattern.RepeatedKmerPattern">
+<em class="property">class </em><code class="descclassname">dnachisel.SequencePattern.</code><code class="descname">RepeatedKmerPattern</code><span class="sig-paren">(</span><em>n_repeats</em>, <em>kmer_size</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#RepeatedKmerPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.RepeatedKmerPattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Direct repeats like ATT-ATT, ATGC-ATGC-ATGC, etc.</p>
+<p>Shorthand string version: “3x4mer”, “5x2mer”, etc.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">RepeatedKmerPattern</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># dimers repeated 3 times</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
 <dt id="dnachisel.SequencePattern.SequencePattern">
-<em class="property">class </em><code class="descclassname">dnachisel.SequencePattern.</code><code class="descname">SequencePattern</code><span class="sig-paren">(</span><em>expression</em>, <em>size=None</em>, <em>name=None</em>, <em>in_both_strands=True</em>, <em>lookahead='re'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#SequencePattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.SequencePattern" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">dnachisel.SequencePattern.</code><code class="descname">SequencePattern</code><span class="sig-paren">(</span><em>expression</em>, <em>size=None</em>, <em>name=None</em>, <em>in_both_strands=True</em>, <em>lookahead='loop'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#SequencePattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.SequencePattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pattern/ that will be looked for in a DNA sequence.</p>
 <p>Use this class for matching regular expression patterns, and
 DnaNotationPattern for matching explicit sequences or sequences using Ns
@@ -1113,38 +1219,6 @@ returned</p>
 </table>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.SequencePattern.enzyme_pattern">
-<code class="descclassname">dnachisel.SequencePattern.</code><code class="descname">enzyme_pattern</code><span class="sig-paren">(</span><em>enzyme_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#enzyme_pattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.enzyme_pattern" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a DnaNotationPattern with the sequence of a homopolymer.</p>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pattern</span> <span class="o">=</span> <span class="n">enzyme_pattern</span><span class="p">(</span><span class="s2">&quot;BsaI&quot;</span><span class="p">)</span> <span class="c1"># returns DnaNotationPattern(&quot;GGTCTC&quot;)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">constraint</span> <span class="o">=</span> <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.SequencePattern.homopolymer_pattern">
-<code class="descclassname">dnachisel.SequencePattern.</code><code class="descname">homopolymer_pattern</code><span class="sig-paren">(</span><em>nucleotides</em>, <em>number</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#homopolymer_pattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.homopolymer_pattern" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a DnaNotationPattern with the sequence of a homopolymer.</p>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">homopolymer</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="c1"># returns DnaNotationPattern(&quot;AAAAAA&quot;)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.SequencePattern.repeated_kmers">
-<code class="descclassname">dnachisel.SequencePattern.</code><code class="descname">repeated_kmers</code><span class="sig-paren">(</span><em>kmer_size</em>, <em>n_repeats</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern.html#repeated_kmers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.repeated_kmers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a SequencePattern matching all k-mers repeated n times.</p>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pattern</span> <span class="o">=</span> <span class="n">repeated_kmers</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="c1"># Result will match e.g. ACACACACAC</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">constraint</span> <span class="o">=</span> <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
-</pre></div>
-</div>
 </dd></dl>
 
 </div>

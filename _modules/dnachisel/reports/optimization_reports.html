@@ -104,7 +104,6 @@
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
 </ul>
 
@@ -182,8 +181,20 @@
 <span class="kn">from</span> <span class="nn">..biotools</span> <span class="k">import</span> <span class="p">(</span><span class="n">sequence_to_biopython_record</span><span class="p">,</span>
                         <span class="n">find_specification_in_feature</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..version</span> <span class="k">import</span> <span class="n">__version__</span>
-<span class="kn">from</span> <span class="nn">..DnaOptimizationProblem</span> <span class="k">import</span> <span class="p">(</span><span class="n">DnaOptimizationProblem</span><span class="p">,</span> <span class="n">NoSolutionError</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">sequenticon</span> <span class="k">import</span> <span class="n">sequenticon</span>
+
+<span class="k">def</span> <span class="nf">install_extras_message</span><span class="p">(</span><span class="n">libname</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="s2">&quot;Could not load </span><span class="si">%s</span><span class="s2"> (is it installed ?). You can install it separately &quot;</span>
+        <span class="s2">&quot; with:  pip install </span><span class="si">%s</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Install all dependencies for generating DNA Chisel reports with:&quot;</span>
+        <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">pip install dnachisel[reports]&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="n">libname</span><span class="p">,</span> <span class="n">libname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)))</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">sequenticon</span> <span class="k">import</span> <span class="n">sequenticon</span>
+    <span class="n">SEQUENTICON_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">SEQUENTICON_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="n">MATPLOTLIB_AVAILABLE</span> <span class="o">=</span> <span class="n">DFV_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="k">try</span><span class="p">:</span>
@@ -197,9 +208,7 @@
     <span class="k">class</span> <span class="nc">BiopythonTranslator</span><span class="p">:</span>
         <span class="s2">&quot;Class unavailable. Install DNA Features Viewer.&quot;</span>
         <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;BiopythonTranslator unavailable. Install &quot;</span>
-                              <span class="s2">&quot;DNA Features Viewer with:</span><span class="se">\n</span><span class="s2">&quot;</span>
-                              <span class="s2">&quot;pip install dna_features_viewer&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="n">install_extras_message</span><span class="p">(</span><span class="s2">&quot;DNA Features Viewer&quot;</span><span class="p">))</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">geneblocks</span> <span class="k">import</span> <span class="n">DiffBlocks</span>
@@ -211,7 +220,9 @@
     <span class="kn">from</span> <span class="nn">pdf_reports</span> <span class="k">import</span> <span class="n">ReportWriter</span>
     <span class="kn">import</span> <span class="nn">pdf_reports.tools</span> <span class="k">as</span> <span class="nn">pdf_tools</span>
     <span class="n">PDF_REPORTS_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">ReportWriter</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
     <span class="n">PDF_REPORTS_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="n">THIS_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
@@ -224,6 +235,10 @@
     <span class="n">default_stylesheets</span><span class="o">=</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ASSETS_DIR</span><span class="p">,</span> <span class="s2">&quot;style.css&quot;</span><span class="p">),)</span>
 <span class="p">)</span>
 
+<span class="n">install_reports_extra_message</span> <span class="o">=</span><span class="p">(</span>
+    <span class="s2">&quot;Could not load </span><span class="si">%s</span><span class="s2"> (is it installed ?). You can install all &quot;</span>
+    <span class="s2">&quot;dependencies for generating reports in DNA Chisel with this command:</span><span class="se">\n\n</span><span class="s2"> &quot;</span>
+    <span class="s2">&quot;pip install dnachisel[reports]&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SpecAnnotationsTranslator"><a class="viewcode-back" href="../../../ref/reports.html#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator">[docs]</a><span class="k">class</span> <span class="nc">SpecAnnotationsTranslator</span><span class="p">(</span><span class="n">BiopythonTranslator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Translator of DnaChisel feature-constraints for DNA Features Viewer&quot;&quot;&quot;</span>
@@ -271,76 +286,6 @@
             <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">label</span></div>
 
-<div class="viewcode-block" id="optimization_with_report"><a class="viewcode-back" href="../../../ref/reports.html#dnachisel.reports.optimization_reports.optimization_with_report">[docs]</a><span class="k">def</span> <span class="nf">optimization_with_report</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">record</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                             <span class="n">project_name</span><span class="o">=</span><span class="s2">&quot;Unnamed project&quot;</span><span class="p">,</span>
-                             <span class="n">specifications_dict</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span>
-                             <span class="o">**</span><span class="n">solver_parameters</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Optimize a sequence and write a multi-file report.</span>
-
-<span class="sd">    The report&#39;s content may vary depending on the success of the optimization</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    target</span>
-<span class="sd">      Either a path to a folder that will containt the report, or a path to</span>
-<span class="sd">      a zip archive, or &quot;@memory&quot; to return raw data of a zip archive</span>
-<span class="sd">      containing the report.</span>
-
-<span class="sd">    problem</span>
-<span class="sd">      A DnaOptimizationProblem. A ``record`` can be provided instead</span>
-
-<span class="sd">    record</span>
-<span class="sd">      Either a Biopython record or the path to a Genbank file, provided to</span>
-<span class="sd">      serve as a problem definition. The record should have specifications</span>
-<span class="sd">      starting with @ or ~ as explained in the documentation.</span>
-
-<span class="sd">    project_name</span>
-<span class="sd">      Project name to write on PDF reports</span>
-
-<span class="sd">    specifications_dict</span>
-<span class="sd">      a dictionnary {&#39;@SpecName&#39;: SpecClass} allowing the parser to map</span>
-<span class="sd">      specifications found in annotations to implemented specifications</span>
-<span class="sd">      classes. By default, the dictionnary contains the built-in objectives</span>
-<span class="sd">      of DNA chisel, but an extended dictionary can be provided to support</span>
-<span class="sd">      custom specifications.</span>
-
-<span class="sd">    **solver_parameters</span>
-<span class="sd">      Extra keyword arguments passed to ``problem.resolve_constraints()``</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    (success, message, zip_data)</span>
-<span class="sd">      Triplet where success is True/False, message is a one-line string</span>
-<span class="sd">      summary indication whether some clash was found, or some solution, or</span>
-<span class="sd">      maybe no solution was found because the random searches were too short</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">problem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="o">.</span><span class="n">from_record</span><span class="p">(</span>
-            <span class="n">record</span><span class="p">,</span> <span class="n">specifications_dict</span><span class="o">=</span><span class="n">specifications_dict</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">solver_parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">problem</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">problem</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Solving constraints&quot;</span><span class="p">)</span>
-        <span class="n">problem</span><span class="o">.</span><span class="n">resolve_constraints</span><span class="p">()</span>
-    <span class="k">except</span> <span class="n">NoSolutionError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-        <span class="nb">print</span> <span class="p">(</span><span class="n">error</span><span class="p">)</span>
-        <span class="n">problem</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;No solution found: making report&quot;</span><span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">write_no_solution_report</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
-        <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;No solution found in zone [</span><span class="si">%d</span><span class="s2">, </span><span class="si">%d</span><span class="s2">]: </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span>
-                   <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)))</span>
-        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">data</span>
-
-    <span class="n">problem</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Now optimizing the sequence&quot;</span><span class="p">)</span>
-    <span class="n">problem</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
-    <span class="n">problem</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Success! Generating report.&quot;</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">write_optimization_report</span><span class="p">(</span>
-        <span class="n">target</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="n">project_name</span><span class="p">)</span>
-    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;Optimization successful.&quot;</span><span class="p">,</span> <span class="n">data</span></div>
-
-
 <div class="viewcode-block" id="write_no_solution_report"><a class="viewcode-back" href="../../../ref/reports.html#dnachisel.reports.optimization_reports.write_no_solution_report">[docs]</a><span class="k">def</span> <span class="nf">write_no_solution_report</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">error</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Write a report on incompatibility found in the problem&#39;s constraints.</span>
 
@@ -359,6 +304,8 @@
 <span class="sd">    error</span>
 <span class="sd">      A NoSolutionError (carries a message and a location)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">MATPLOTLIB_AVAILABLE</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="n">install_extras_message</span><span class="p">(</span><span class="s2">&quot;Matplotlib&quot;</span><span class="p">))</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">flametree</span><span class="o">.</span><span class="n">file_tree</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -399,7 +346,6 @@
                                 <span class="o">.</span><span class="n">locations_as_features</span><span class="p">(</span><span class="n">label_prefix</span><span class="o">=</span><span class="s2">&quot;BREACH&quot;</span><span class="p">)</span>
         <span class="n">start</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span>
         <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">),</span> <span class="n">error</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)</span>
-        <span class="c1"># local_record = crop_record(record, start, end)</span>
         <span class="n">graphical_record</span> <span class="o">=</span> <span class="n">translator</span><span class="o">.</span><span class="n">translate_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
         <span class="n">graphical_record</span> <span class="o">=</span> <span class="n">graphical_record</span><span class="o">.</span><span class="n">crop</span><span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">))</span>
         <span class="n">ax</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">graphical_record</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figure_width</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mf">0.3</span><span class="o">*</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)))</span>
@@ -437,8 +383,39 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    target</span>
+<span class="sd">      Path to a directory or zip file, or &quot;@memory&quot; for returning raw data of</span>
+<span class="sd">      a zip file created in-memory.</span>
+<span class="sd">    </span>
+<span class="sd">    problem</span>
+<span class="sd">      A DnaOptimizationProblem to be solved and optimized</span>
+<span class="sd">    </span>
+<span class="sd">    project_name</span>
+<span class="sd">      Name of the project that will appear on the PDF report</span>
+<span class="sd">    </span>
+<span class="sd">    constraints_evaluations</span>
+<span class="sd">      Precomputed constraints evaluations. If None provided, they will be</span>
+<span class="sd">      computed again from the problem.</span>
+<span class="sd">    </span>
+<span class="sd">    objectives_evaluations</span>
+<span class="sd">      Precomputed objectives evaluations. If None provided, they will be</span>
+<span class="sd">      computed again from the problem.</span>
+<span class="sd">      </span>
+<span class="sd">    </span>
+<span class="sd">    figure_width</span>
+<span class="sd">      Width of the report&#39;s figure, in inches. The more annotations there will</span>
+<span class="sd">      be in the figure, the wider it should be. The default should work for</span>
+<span class="sd">      most cases.</span>
+<span class="sd">    </span>
+<span class="sd">    max_features_in_plots</span>
+<span class="sd">      Limit to the number of features to plot (plots with thousands of features</span>
+<span class="sd">      may take ages to plot)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">PDF_REPORTS_AVAILABLE</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="n">install_extras_message</span><span class="p">(</span><span class="s2">&quot;PDF Reports&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">SEQUENTICON_AVAILABLE</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="n">install_extras_message</span><span class="p">(</span><span class="s2">&quot;Sequenticon&quot;</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">constraints_evaluations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">constraints_evaluations</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">objectives_evaluations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -453,11 +430,12 @@
     <span class="n">sequence_before</span> <span class="o">=</span> <span class="n">sequence_to_biopython_record</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence_before</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">GENEBLOCKS_AVAILABLE</span><span class="p">:</span>
         <span class="n">sequence_after</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">to_record</span><span class="p">()</span>
-        <span class="n">contract_under</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sequence_after</span><span class="p">)</span><span class="o">/</span> <span class="mi">25</span><span class="p">))</span>
+        <span class="n">contract_under</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sequence_after</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">))</span>
         <span class="n">diffs</span> <span class="o">=</span> <span class="n">DiffBlocks</span><span class="o">.</span><span class="n">from_sequences</span><span class="p">(</span><span class="n">sequence_before</span><span class="p">,</span> <span class="n">sequence_after</span><span class="p">,</span>
-                                        <span class="n">contract_under</span><span class="o">=</span><span class="n">contract_under</span><span class="p">)</span>
+                                          <span class="n">use_junk_over</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                                          <span class="n">contract_under</span><span class="o">=</span><span class="n">contract_under</span><span class="p">)</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">diffs_ax</span> <span class="o">=</span> <span class="n">diffs</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
-        <span class="n">diffs_figure_data</span> <span class="o">=</span> <span class="n">pdf_tools</span><span class="o">.</span><span class="n">figure_data</span><span class="p">(</span><span class="n">diffs_ax</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
+        <span class="n">diffs_figure_data</span> <span class="o">=</span> <span class="n">pdf_tools</span><span class="o">.</span><span class="n">figure_data</span><span class="p">(</span><span class="n">diffs_ax</span><span class="o">.</span><span class="n">figure</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;svg&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">diffs_ax</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
 
     <span class="k">with</span> <span class="n">PdfPages</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s2">&quot;before_after.pdf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;wb&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">pdf_io</span><span class="p">:</span>
@@ -556,7 +534,6 @@
                       <span class="n">with_objectives</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">report_writer</span><span class="o">.</span><span class="n">write_report</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="n">root</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s2">&quot;Report.pdf&quot;</span><span class="p">))</span>
-    <span class="c1"># returns zip data if target == &#39;@memory&#39;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">root</span><span class="o">.</span><span class="n">_close</span><span class="p">()</span></div>
 </pre></div>

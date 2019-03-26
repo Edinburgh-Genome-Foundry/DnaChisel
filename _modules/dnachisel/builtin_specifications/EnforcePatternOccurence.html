@@ -104,7 +104,6 @@
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
 </ul>
 
@@ -173,11 +172,11 @@
 <span></span><span class="sd">&quot;&quot;&quot;Implement AvoidPattern&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">..Specification</span> <span class="k">import</span> <span class="n">Specification</span>
-<span class="kn">from</span> <span class="nn">.VoidSpecification</span> <span class="k">import</span> <span class="n">VoidSpecification</span>
+<span class="c1"># from .VoidSpecification import VoidSpecification</span>
 <span class="kn">from</span> <span class="nn">..SpecEvaluation</span> <span class="k">import</span> <span class="n">SpecEvaluation</span>
 <span class="kn">from</span> <span class="nn">.EnforceSequence</span> <span class="k">import</span> <span class="n">EnforceSequence</span>
 <span class="kn">from</span> <span class="nn">..MutationSpace</span> <span class="k">import</span> <span class="n">MutationSpace</span>
-<span class="kn">from</span> <span class="nn">..SequencePattern</span> <span class="k">import</span> <span class="n">DnaNotationPattern</span><span class="p">,</span> <span class="n">enzyme_pattern</span>
+<span class="kn">from</span> <span class="nn">..SequencePattern</span> <span class="k">import</span> <span class="n">SequencePattern</span><span class="p">,</span> <span class="n">DnaNotationPattern</span>
 <span class="kn">from</span> <span class="nn">dnachisel.Location</span> <span class="k">import</span> <span class="n">Location</span>
 <span class="kn">from</span> <span class="nn">..DnaOptimizationProblem</span> <span class="k">import</span> <span class="n">DnaOptimizationProblem</span><span class="p">,</span> <span class="n">NoSolutionError</span>
 
@@ -210,18 +209,15 @@
     <span class="n">priority</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
     <span class="n">genbank_args</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;pattern&#39;</span><span class="p">,</span> <span class="s1">&#39;occurences&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">occurences</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">occurences</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">boost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">enzyme</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">pattern</span> <span class="o">=</span> <span class="n">enzyme_pattern</span><span class="p">(</span><span class="n">enzyme</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">pattern</span> <span class="o">=</span> <span class="n">DnaNotationPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="n">SequencePattern</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="n">pattern</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_tuple</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span> <span class="o">=</span> <span class="n">enzyme</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">boost</span> <span class="o">=</span> <span class="n">boost</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">occurences</span> <span class="o">=</span> <span class="n">occurences</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">center</span>
@@ -260,7 +256,8 @@
         <span class="sd">&quot;&quot;&quot;Localize the evaluation.&quot;&quot;&quot;</span>
         <span class="n">new_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">new_location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">VoidSpecification</span><span class="p">(</span><span class="n">parent_specification</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span> 
+ <span class="c1"># VoidSpecification(parent_specification=self)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
 
@@ -318,10 +315,11 @@
         <span class="n">problem</span><span class="o">.</span><span class="n">resolve_constraints_locally</span><span class="p">()</span>  <span class="c1"># default resolution method</span>
 
     <span class="k">def</span> <span class="nf">label_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;enzyme&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
-                  <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">sequence</span>
-                        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="s1">&#39;sequence&#39;</span><span class="p">)</span>
-                        <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">))]</span>
+        <span class="c1"># result = [(&#39;enzyme&#39;, self.enzyme) if (self.enzyme is not None)</span>
+        <span class="c1">#           else (self.pattern.sequence</span>
+        <span class="c1">#                 if hasattr(self.pattern, &#39;sequence&#39;)</span>
+        <span class="c1">#                 else str(self.pattern))]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">)]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">occurences</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;occurence&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">occurences</span><span class="p">)]</span>
         <span class="k">return</span> <span class="n">result</span></div>

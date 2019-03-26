@@ -104,7 +104,6 @@
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
 </ul>
 
@@ -229,14 +228,18 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">registered_string_pattern_classes</span> <span class="o">=</span> <span class="p">[]</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">in_both_strands</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">lookahead</span><span class="o">=</span><span class="s1">&#39;re&#39;</span><span class="p">):</span>
+                 <span class="n">lookahead</span><span class="o">=</span><span class="s1">&#39;loop&#39;</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lookahead</span> <span class="o">=</span> <span class="n">lookahead</span>
         <span class="k">if</span> <span class="n">lookahead</span> <span class="o">==</span> <span class="s1">&#39;re&#39;</span><span class="p">:</span>
             <span class="n">expression</span> <span class="o">=</span> <span class="s1">&#39;(?=(</span><span class="si">%s</span><span class="s1">))&#39;</span> <span class="o">%</span> <span class="n">expression</span>
+        <span class="k">if</span> <span class="s2">&quot;(&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">expression</span><span class="p">:</span>
+            <span class="n">expression</span> <span class="o">=</span> <span class="s2">&quot;(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">expression</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lookahead_expression</span> <span class="o">=</span> <span class="n">expression</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compiled_expression</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lookahead_expression</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
@@ -270,22 +273,20 @@
         <span class="k">if</span> <span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">subsequence</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">extract_sequence</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">[</span>
-                <span class="n">loc</span> <span class="o">+</span> <span class="n">location</span><span class="o">.</span><span class="n">start</span>
+                <span class="p">(</span><span class="n">loc</span> <span class="o">+</span> <span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">else</span> <span class="n">Location</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="n">loc</span><span class="o">.</span><span class="n">end</span><span class="p">,</span>
+                              <span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="n">loc</span><span class="o">.</span><span class="n">start</span><span class="p">,</span>
+                              <span class="n">strand</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="n">subsequence</span><span class="p">)</span>
             <span class="p">]</span>
         <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_all_re_matches</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
-        <span class="c1"># [</span>
-        <span class="c1">#     (match.start(), match.start() + len(match.groups()[0]), 1)</span>
-        <span class="c1">#     for match in re.finditer(self.compiled_expression, sequence)</span>
-        <span class="c1"># ]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_both_strands</span><span class="p">:</span>
             <span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
             <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
             <span class="n">matches</span> <span class="o">+=</span> <span class="p">[</span>
-                <span class="p">(</span><span class="n">L</span> <span class="o">-</span> <span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">]),</span>
-                 <span class="n">L</span> <span class="o">-</span> <span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">(),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compiled_expression</span><span class="p">,</span> <span class="n">reverse</span><span class="p">)</span>
+                <span class="p">(</span><span class="n">L</span> <span class="o">-</span> <span class="n">end</span><span class="p">,</span> <span class="n">L</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_all_re_matches</span><span class="p">(</span><span class="n">reverse</span><span class="p">)</span>
             <span class="p">]</span>
 
         <span class="k">return</span> <span class="p">[</span>
@@ -312,7 +313,15 @@
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">expression</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span>
-                                  <span class="s2">&quot; (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+                                  <span class="s2">&quot; (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">myclass</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">registered_string_pattern_classes</span><span class="p">:</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="n">myclass</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">pattern</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">pattern</span>
+        <span class="k">return</span> <span class="n">SequencePattern</span><span class="p">(</span><span class="n">string</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DnaNotationPattern"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SequencePattern.DnaNotationPattern">[docs]</a><span class="k">class</span> <span class="nc">DnaNotationPattern</span><span class="p">(</span><span class="n">SequencePattern</span><span class="p">):</span>
@@ -344,10 +353,6 @@
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">sequence</span>
         <span class="p">])</span>
         <span class="k">return</span> <span class="n">regexpr</span></div>
-        <span class="c1"># The ?= implements &#39;lookahead&#39; which enables to find overlapping</span>
-        <span class="c1"># patterns. It is followed by (.{S}) where S is the sequence size</span>
-        <span class="c1"># to make sure the full group is selected.</span>
-        <span class="c1"># return &#39;(?=(%s))(.\{%d\})&#39; % (regexpr, len(sequence))</span>
 
 <div class="viewcode-block" id="DnaNotationPattern.all_variants"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SequencePattern.DnaNotationPattern.all_variants">[docs]</a>    <span class="k">def</span> <span class="nf">all_variants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return all ATGC sequence variants of a sequence&quot;&quot;&quot;</span>
@@ -365,82 +370,109 @@
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Represent the pattern as PatternType(name) &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span>
-                                <span class="s2">&quot; (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+                                <span class="s2">&quot; (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">string</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">set</span><span class="p">(</span><span class="n">NUCLEOTIDE_TO_REGEXPR</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">return</span> <span class="n">DnaNotationPattern</span><span class="p">(</span><span class="n">string</span><span class="p">)</span></div>
 
 <span class="c1"># DEFINITION OF COMMON PATTERNS</span>
 
-
-<div class="viewcode-block" id="homopolymer_pattern"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SequencePattern.homopolymer_pattern">[docs]</a><span class="k">def</span> <span class="nf">homopolymer_pattern</span><span class="p">(</span><span class="n">nucleotides</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a DnaNotationPattern with the sequence of a homopolymer.</span>
+<div class="viewcode-block" id="EnzymeSitePattern"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SequencePattern.EnzymeSitePattern">[docs]</a><span class="k">class</span> <span class="nc">EnzymeSitePattern</span><span class="p">(</span><span class="n">DnaNotationPattern</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class to represent Enzyme site patterns</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
-<span class="sd">    &gt;&gt;&gt; homopolymer(&quot;A&quot;, 6) # returns DnaNotationPattern(&quot;AAAAAA&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; enzyme_pattern = EnzymeSitePattern(&quot;BsaI&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; constraint = AvoidPattern(enzyme_pattern)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nucleotides</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">DnaNotationPattern</span><span class="p">(</span><span class="n">number</span> <span class="o">*</span> <span class="n">nucleotides</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">SequencePattern</span><span class="p">(</span><span class="n">number</span> <span class="o">*</span> <span class="p">(</span><span class="s2">&quot;[</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nucleotides</span><span class="p">))),</span>
-                               <span class="n">size</span><span class="o">=</span><span class="n">number</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="enzyme_pattern"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SequencePattern.enzyme_pattern">[docs]</a><span class="k">def</span> <span class="nf">enzyme_pattern</span><span class="p">(</span><span class="n">enzyme_name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a DnaNotationPattern with the sequence of a homopolymer.</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enzyme_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enzyme_site</span> <span class="o">=</span> <span class="n">rest_dict</span><span class="p">[</span><span class="n">enzyme_name</span><span class="p">][</span><span class="s2">&quot;site&quot;</span><span class="p">]</span>
+        <span class="n">DnaNotationPattern</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">enzyme_site</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">enzyme_name</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="EnzymeSitePattern.from_string"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SequencePattern.EnzymeSitePattern.from_string">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert BsmBI_site to EnzymeSitePattern(BsmBI)&quot;&quot;&quot;</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;(\S+)_site&quot;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">enzyme_name</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">enzyme_name</span> <span class="ow">in</span> <span class="n">rest_dict</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">EnzymeSitePattern</span><span class="p">(</span><span class="n">enzyme_name</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">enzyme_site</span><span class="p">)</span></div>
+
+        
+
+
+<div class="viewcode-block" id="HomopolymerPattern"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SequencePattern.HomopolymerPattern">[docs]</a><span class="k">class</span> <span class="nc">HomopolymerPattern</span><span class="p">(</span><span class="n">DnaNotationPattern</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Homopolymer of the form AAAAAAA, TTTTT, etc.</span>
+
+<span class="sd">    Shorthand string version: &quot;7xA&quot;, &quot;9xC&quot;, etc.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
-<span class="sd">    &gt;&gt;&gt; pattern = enzyme_pattern(&quot;BsaI&quot;) # returns DnaNotationPattern(&quot;GGTCTC&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; pattern = HomopolymerPattern(&quot;A&quot;, 6)</span>
 <span class="sd">    &gt;&gt;&gt; constraint = AvoidPattern(pattern)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">enzyme_site</span> <span class="o">=</span> <span class="n">rest_dict</span><span class="p">[</span><span class="n">enzyme_name</span><span class="p">][</span><span class="s2">&quot;site&quot;</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">DnaNotationPattern</span><span class="p">(</span><span class="n">enzyme_site</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">enzyme_name</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nucleotide</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nucleotide</span> <span class="o">=</span> <span class="n">nucleotide</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">number</span>
+        <span class="n">DnaNotationPattern</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span> <span class="o">*</span> <span class="n">nucleotide</span><span class="p">,</span>
+                                    <span class="n">in_both_strands</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;(\d+)x(\S)$&quot;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">number</span><span class="p">,</span> <span class="n">nucleotide</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">HomopolymerPattern</span><span class="p">(</span><span class="n">nucleotide</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">number</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">x</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nucleotide</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="repeated_kmers"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SequencePattern.repeated_kmers">[docs]</a><span class="k">def</span> <span class="nf">repeated_kmers</span><span class="p">(</span><span class="n">kmer_size</span><span class="p">,</span> <span class="n">n_repeats</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a SequencePattern matching all k-mers repeated n times.</span>
+<div class="viewcode-block" id="RepeatedKmerPattern"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SequencePattern.RepeatedKmerPattern">[docs]</a><span class="k">class</span> <span class="nc">RepeatedKmerPattern</span><span class="p">(</span><span class="n">SequencePattern</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Direct repeats like ATT-ATT, ATGC-ATGC-ATGC, etc.</span>
+
+<span class="sd">    Shorthand string version: &quot;3x4mer&quot;, &quot;5x2mer&quot;, etc.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
-<span class="sd">    &gt;&gt;&gt; pattern = repeated_kmers(2, 5) # Result will match e.g. ACACACACAC</span>
-<span class="sd">    &gt;&gt;&gt; constraint = AvoidPattern(pattern)</span>
+<span class="sd">    &gt;&gt;&gt; RepeatedKmerPattern(3, 2) # dimers repeated 3 times</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_repeats</span><span class="p">,</span> <span class="n">kmer_size</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_repeats</span> <span class="o">=</span> <span class="n">n_repeats</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kmer_size</span> <span class="o">=</span> <span class="n">kmer_size</span>
+        <span class="n">SequencePattern</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">kmer_size</span> <span class="o">*</span> <span class="n">n_repeats</span><span class="p">,</span>
+            <span class="n">expression</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;([ATGC]{</span><span class="si">%d</span><span class="s2">})\1{</span><span class="si">%d</span><span class="s2">}&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kmer_size</span><span class="p">,</span> <span class="n">n_repeats</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">-repeats </span><span class="si">%d</span><span class="s2">-mers&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n_repeats</span><span class="p">,</span> <span class="n">kmer_size</span><span class="p">),</span>
+            <span class="n">in_both_strands</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># a repeat on a strand is also on the other</span>
+            <span class="n">lookahead</span><span class="o">=</span><span class="s1">&#39;loop&#39;</span><span class="p">)</span>
 
-    <span class="c1"># FIXME: this regular expression does not support lookahead so we will</span>
-    <span class="c1"># need the following special pattern.</span>
-    <span class="c1">#     def myfindall(regex, seq):</span>
-    <span class="c1"># ...    resultlist=[]</span>
-    <span class="c1"># ...    pos=0</span>
-    <span class="c1"># ...</span>
-    <span class="c1"># ...    while True:</span>
-    <span class="c1"># ...       result = regex.search(seq, pos)</span>
-    <span class="c1"># ...       if result is None:</span>
-    <span class="c1"># ...          break</span>
-    <span class="c1"># ...       resultlist.append(seq[result.start():result.end()])</span>
-    <span class="c1"># ...       pos = result.start()+1</span>
-    <span class="c1"># ...    return resultlist</span>
-        <span class="c1">#     def myfindall(regex, seq):</span>
-    <span class="c1"># ...    resultlist=[]</span>
-    <span class="c1"># ...    pos=0</span>
-    <span class="c1"># ...</span>
-    <span class="c1"># ...    while True:</span>
-    <span class="c1"># ...       result = regex.search(seq, pos)</span>
-    <span class="c1"># ...       if result is None:</span>
-    <span class="c1"># ...          break</span>
-    <span class="c1"># ...       resultlist.append(seq[result.start():result.end()])</span>
-    <span class="c1"># ...       pos = result.start()+1</span>
-    <span class="c1"># ...    return resultlist</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;(\d+)x(\d+)mer$&quot;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">n_repeats</span><span class="p">,</span> <span class="n">kmer_size</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">RepeatedKmerPattern</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">n_repeats</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">kmer_size</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">SequencePattern</span><span class="p">(</span>
-        <span class="n">size</span><span class="o">=</span><span class="n">kmer_size</span> <span class="o">*</span> <span class="n">n_repeats</span><span class="p">,</span>
-        <span class="n">expression</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;([ATGC]{</span><span class="si">%d</span><span class="s2">})\1{</span><span class="si">%d</span><span class="s2">}&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kmer_size</span><span class="p">,</span> <span class="n">n_repeats</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">-repeats </span><span class="si">%d</span><span class="s2">-mers&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n_repeats</span><span class="p">,</span> <span class="n">kmer_size</span><span class="p">),</span>
-        <span class="n">in_both_strands</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># a kmer repeat one strand is also on the other</span>
-        <span class="n">lookahead</span><span class="o">=</span><span class="s1">&#39;loop&#39;</span>
-    <span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">x</span><span class="si">%s</span><span class="s2">mer&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_repeats</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kmer_size</span><span class="p">)</span></div>
+
+<span class="n">SequencePattern</span><span class="o">.</span><span class="n">registered_string_pattern_classes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">HomopolymerPattern</span><span class="p">,</span>
+    <span class="n">RepeatedKmerPattern</span><span class="p">,</span>
+    <span class="n">EnzymeSitePattern</span><span class="p">,</span>
+    <span class="n">DnaNotationPattern</span>
+<span class="p">]</span>
 </pre></div>
 
            </div>

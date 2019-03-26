@@ -117,7 +117,6 @@
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/non_unique_kmers_minimization.html">Minimization of the number of repeated kmers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
 </ul>
 
@@ -216,7 +215,7 @@
 <td>Do not introduce any new stop codon in that frame.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#dnachisel.builtin_specifications.CodonOptimize" title="dnachisel.builtin_specifications.CodonOptimize"><code class="xref py py-obj docutils literal"><span class="pre">CodonOptimize</span></code></a></td>
-<td>Specification to codon-optimize a coding sequence for a particular species.</td>
+<td>Codon-optimize a coding sequence for a particular species.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceGCContent" title="dnachisel.builtin_specifications.EnforceGCContent"><code class="xref py py-obj docutils literal"><span class="pre">EnforceGCContent</span></code></a></td>
 <td>Specification on the local or global proportion of G/C nucleotides.</td>
@@ -231,7 +230,7 @@
 <td>Enforces a (possibly degenerate) sequence at some location.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceTranslation" title="dnachisel.builtin_specifications.EnforceTranslation"><code class="xref py py-obj docutils literal"><span class="pre">EnforceTranslation</span></code></a></td>
-<td>Enforce that the DNA segment sequence translates to a specific amino-acid sequence.</td>
+<td>Enforce a specific amino-acid sequence translation.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#dnachisel.builtin_specifications.SequenceLengthBounds" title="dnachisel.builtin_specifications.SequenceLengthBounds"><code class="xref py py-obj docutils literal"><span class="pre">SequenceLengthBounds</span></code></a></td>
 <td>Checks that the sequence length is between bounds.</td>
@@ -453,7 +452,7 @@ complement of the sequence (or sub sequence if <cite>location</cite> is not None
 
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.AvoidPattern">
-<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">AvoidPattern</code><span class="sig-paren">(</span><em>pattern=None</em>, <em>location=None</em>, <em>boost=1.0</em>, <em>enzyme=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidPattern.html#AvoidPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidPattern" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">AvoidPattern</code><span class="sig-paren">(</span><em>pattern=None</em>, <em>location=None</em>, <em>boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidPattern.html#AvoidPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidPattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enforce that the given pattern is absent in the sequence.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -489,23 +488,23 @@ when editing it with quasi-synonymous mutations.</p>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.CodonOptimize">
 <em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">CodonOptimize</code><span class="sig-paren">(</span><em>species=None</em>, <em>location=None</em>, <em>mode='best_codon'</em>, <em>codon_usage_table=None</em>, <em>boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/CodonOptimize.html#CodonOptimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.CodonOptimize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specification to codon-optimize a coding sequence for a particular species.</p>
+<dd><p>Codon-optimize a coding sequence for a particular species.</p>
 <p>Several codon-optimization policies exist. At the moment this Specification
 implements a method in which codons are replaced by the most frequent
 codon in the species.</p>
 <p>(as long as this doesn’t break any Specification or lowers the global
 optimization objective)</p>
-<p>Supported speciess are <code class="docutils literal"><span class="pre">E.</span> <span class="pre">coli</span></code>, <code class="docutils literal"><span class="pre">S.</span> <span class="pre">cerevisiae</span></code>, <code class="docutils literal"><span class="pre">H.</span> <span class="pre">Sapiens</span></code>,
-<code class="docutils literal"><span class="pre">C.</span> <span class="pre">elegans</span></code>, <code class="docutils literal"><span class="pre">D.</span> <span class="pre">melanogaster</span></code>, <code class="docutils literal"><span class="pre">B.</span> <span class="pre">subtilis</span></code>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>species</strong></p>
 <blockquote>
-<div><p>Name of the species to codon-optimize for. Supported speciess are
-<code class="docutils literal"><span class="pre">E.</span> <span class="pre">coli</span></code>, <code class="docutils literal"><span class="pre">S.</span> <span class="pre">cerevisiae</span></code>, <code class="docutils literal"><span class="pre">H.</span> <span class="pre">Sapiens</span></code>, <code class="docutils literal"><span class="pre">C.</span> <span class="pre">elegans</span></code>,
-<code class="docutils literal"><span class="pre">D.</span> <span class="pre">melanogaster</span></code>, <code class="docutils literal"><span class="pre">B.</span> <span class="pre">subtilis</span></code>.
+<div><p>Either a TaxID (this requires a web connection as the corresponding table
+will be downloaded from the internet) or the name of the species to
+codon-optimize for (the name must be supported by <code class="docutils literal"><span class="pre">python_codon_tables</span></code>
+e.g. <code class="docutils literal"><span class="pre">e_coli</span></code>, <code class="docutils literal"><span class="pre">s_cerevisiae</span></code>, <code class="docutils literal"><span class="pre">h_sapiens</span></code>, <code class="docutils literal"><span class="pre">c_elegans</span></code>,
+<code class="docutils literal"><span class="pre">b_subtilis</span></code>, <code class="docutils literal"><span class="pre">d_melanogaster</span></code>).
 Note that the species can be omited if a <code class="docutils literal"><span class="pre">codon_usage_table</span></code> is
 provided instead</p>
 </div></blockquote>
@@ -528,9 +527,9 @@ encoded on the (+) strand, or -1 for antisense.</p>
 </div></blockquote>
 <p><strong>codon_usage_table</strong></p>
 <blockquote class="last">
-<div><p>A dict of the form <code class="docutils literal"><span class="pre">{&quot;TAC&quot;:</span> <span class="pre">0.112,</span> <span class="pre">&quot;CCT&quot;:</span> <span class="pre">0.68}</span></code> giving the RSCU table
-(relative usage of each codon). Only provide if no <code class="docutils literal"><span class="pre">species</span></code> name
-was provided.</p>
+<div><p>A dict of the form <code class="docutils literal"><span class="pre">{'*':</span> <span class="pre">{&quot;TGA&quot;:</span> <span class="pre">0.112,</span> <span class="pre">&quot;TAA&quot;:</span> <span class="pre">0.68},</span> <span class="pre">'K':</span> <span class="pre">...}</span></code>
+giving the RSCU table (relative usage of each codon). Only provide if
+no <code class="docutils literal"><span class="pre">species</span></code> parameter was provided.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -595,7 +594,7 @@ if both parameters are provided</p>
 
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.EnforcePatternOccurence">
-<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">EnforcePatternOccurence</code><span class="sig-paren">(</span><em>pattern=None</em>, <em>occurences=1</em>, <em>location=None</em>, <em>enzyme=None</em>, <em>center=True</em>, <em>boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforcePatternOccurence.html#EnforcePatternOccurence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforcePatternOccurence" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">EnforcePatternOccurence</code><span class="sig-paren">(</span><em>pattern=None</em>, <em>occurences=1</em>, <em>location=None</em>, <em>center=True</em>, <em>boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforcePatternOccurence.html#EnforcePatternOccurence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforcePatternOccurence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enforce a number of occurences of the given pattern in the sequence.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -663,8 +662,7 @@ for instance ATTCGCGTYTTKWNAA</p>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.EnforceTranslation">
 <em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">EnforceTranslation</code><span class="sig-paren">(</span><em>location=None</em>, <em>translation=None</em>, <em>boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforceTranslation.html#EnforceTranslation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforceTranslation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enforce that the DNA segment sequence translates to a specific
-amino-acid sequence.</p>
+<dd><p>Enforce a specific amino-acid sequence translation.</p>
 <p>This class enforces the standard translation, but it is also possible to
 change the class’ <cite>codons_sequences</cite> and <cite>codons_translations</cite>
 dictionnaries for more exotic kind of translations</p>
