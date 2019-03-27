@@ -59,5 +59,18 @@ MutationSpace
 SequencePattern
 ~~~~~~~~~~~~~~~~~~~~~~~
 
+Specifications ``AvoidPattern``, ``EnforcePatternOccurence`` accept a Pattern
+as argument. The pattern can be provided either as a string or as a class:
+
+================== ================================= ====================
+     Name                Pattern Class                    As string
+================== ================================= ====================
+Restriction site    ``EnzymeSitePattern('BsmBI')``    ``'BsmBI_site'``
+Homopolymer         ``HomopolymerPattern("A", 6)``    ``'6xA'``
+Direct repeats      ``RepeatedKmerPattern(3, 2)``     ``'3x2mer'``
+DNA notation        ``DnaNotationPattern('ANNKA')``   ``'ANNKA'``
+Regular Expression  ``SequencePattern('A[CG]*A')``    ``'A[CG]*A'``
+================== ================================= ====================
+
 .. automodule:: dnachisel.SequencePattern
    :members:

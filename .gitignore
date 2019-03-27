@@ -48,6 +48,6 @@ nosetests.xml
 .pypirc
 
 examples/reports
-examples/features/downloaded_data
+examples/builtin_specifications_examples/downloaded_data
 
 .cache

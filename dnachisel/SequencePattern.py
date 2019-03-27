@@ -273,7 +273,7 @@ class RepeatedKmerPattern(SequencePattern):
     Examples
     --------
 
-    >>> homopolymer("A", 6) # returns DnaNotationPattern("AAAAAA")
+    >>> RepeatedKmerPattern(3, 2) # dimers repeated 3 times
 
     """
     def __init__(self, n_repeats, kmer_size):

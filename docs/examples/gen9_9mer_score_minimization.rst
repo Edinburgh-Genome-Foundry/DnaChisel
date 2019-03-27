@@ -3,4 +3,4 @@
 Minimization of the number of repeated kmers
 ---------------------------------------------
 
-.. literalinclude:: ../../examples/non_unique_kmers_minimization.py
+.. literalinclude:: ../../examples/gen9_9mer_score_minimization.py

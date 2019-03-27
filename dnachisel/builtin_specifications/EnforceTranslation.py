@@ -8,8 +8,7 @@ from dnachisel.Location import Location
 
 
 class EnforceTranslation(CodonSpecification):
-    """Enforce that the DNA segment sequence translates to a specific
-    amino-acid sequence.
+    """Enforce a specific amino-acid sequence translation.
 
     This class enforces the standard translation, but it is also possible to
     change the class' `codons_sequences` and `codons_translations`
