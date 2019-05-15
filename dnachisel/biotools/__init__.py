@@ -23,7 +23,8 @@ from .biotools import (
     subdivide_window,
     translate,
     windows_overlap,
-    codons_frequencies_and_positions
+    codons_frequencies_and_positions,
+    dict_to_pretty_string
 )
 
 from .features_annotations import (

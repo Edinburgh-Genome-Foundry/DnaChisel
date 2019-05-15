@@ -32,6 +32,19 @@ def test_codon_optimize_harmonized():
     problem.optimize()
     assert (-350 < problem.objective_scores_sum())
 
+def test_codon_optimize_harmonized_short_sequence():
+    protein = "DDDKKKKKK"
+    sequence = reverse_translate(protein)
+    harmonization = CodonOptimize(species='b_subtilis', mode='harmonized')
+    problem = DnaOptimizationProblem(
+                sequence=sequence,
+                constraints=[EnforceTranslation()],
+                objectives=[harmonization]
+            )
+    assert problem.objective_scores_sum() < -7
+    problem.optimize()
+    assert -1 < problem.objective_scores_sum()
+
 
 
 def test_codon_optimize_as_hard_constraint():

@@ -104,12 +104,11 @@ class SpecAnnotationsTranslator(BiopythonTranslator):
         else:
             return "#eeeafa"
 
-    @staticmethod
-    def compute_feature_label(f):
+    def compute_feature_label(self, f):
         is_edit = f.qualifiers.get("is_edit", "false")
         if "true" in [is_edit, is_edit[0]]:
             return None
-        default = BiopythonTranslator.compute_feature_label(f)
+        default = BiopythonTranslator.compute_feature_label(self, f)
         label = None if (f.type != "misc_feature") else default
         if label == "misc_feature":
             label = None

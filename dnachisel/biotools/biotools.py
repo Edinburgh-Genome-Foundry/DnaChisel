@@ -4,6 +4,7 @@ import subprocess
 import time
 import itertools
 from copy import deepcopy
+import json
 
 import numpy as np
 from Bio.Seq import Seq
@@ -121,12 +122,18 @@ def random_protein_sequence(length, seed=None):
     return "M" + "".join(aa_choices) + "*"
 
 
-def reverse_translate(protein_sequence):
+def reverse_translate(protein_sequence, randomize_codons=False):
     """Return a DNA sequence which translates to the provided protein sequence
 
     Note: at the moment, the first valid codon found is used for each
     amino-acid (so it is deterministic but no codon-optimization is done).
     """
+    if randomize_codons:
+        random_indices = np.random.randint(0, 1000, len(protein_sequence))
+        return "".join([
+            CODONS_SEQUENCES[aa][random_indice % len(CODONS_SEQUENCES[aa])]
+            for aa, random_indice in zip(protein_sequence, random_indices)
+        ])
     return "".join([
         CODONS_SEQUENCES[aa][0]
         for aa in protein_sequence
@@ -555,39 +562,22 @@ def list_common_enzymes(site_length=(6,), opt_temp=(37,), min_suppliers=1,
         if is_valid(enzyme_name)
     ]
 
-# def crop_record(record, crop_start, crop_end, features_suffix=" (part)"):
-#     """Return the cropped record with possibly cropped features.
 
-#     Note that this differs from ``record[start:end]`` in that in the latter
-#     expression, cropped features are discarded.
+def round_all_numbers_in_dict(d, rounding_digits=2, outplace=True):
+    """ Return a new version of dict d with all floats rounded to N digits."""
+    if outplace:
+        d = deepcopy(d)
+    for k, v in d.items():
+        if isinstance(v, float):
+            d[k] = np.round(v, rounding_digits)
+        if isinstance(v, dict):
+            round_all_numbers_in_dict(v, rounding_digits, outplace=False)
+    return d
 
-#     Parameters
-#     ----------
-
-#     record
-#       A Biopython record
-
-#     crop_start, crop_end
-#       Start and end of the segment to be cropped.
-
-#     features_suffix
-#       All cropped features will have their label appended with this suffix.
-#     """
-#     features = []
-#     for feature in record.features:
-#         start, end = sorted([feature.location.start, feature.location.end])
-#         new_start, new_end = max(start, crop_start), min(end, crop_end)
-#         if new_end <= new_start:
-#             continue
-#         new_start, new_end = new_start - crop_start, new_end - crop_start
-
-#         feature = deepcopy(feature)
-#         feature.location = FeatureLocation(int(new_start), int(new_end),
-#                                            feature.location.strand)
-#         label = "".join(feature.qualifiers.get("label", ""))
-#         feature.qualifiers["label"] = label + features_suffix
-#         features.append(feature)
-
-#     new_record = record[crop_start: crop_end]
-#     new_record.features = features
-#     return new_record
+def dict_to_pretty_string(d, rounding_digits=2, indent=2):
+    """Return a nicely JSON-like formatted string to print a dict."""
+    d = round_all_numbers_in_dict(d, rounding_digits)
+    formatted_text = json.dumps(d, indent=indent)
+    for char in '{}",':
+        formatted_text = formatted_text.replace(char, '')
+    return formatted_text

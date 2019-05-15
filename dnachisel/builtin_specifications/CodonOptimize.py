@@ -3,7 +3,8 @@ from python_codon_tables import get_codons_table
 from .CodonSpecification import CodonSpecification
 from ..SpecEvaluation import SpecEvaluation
 from ..biotools import (CODONS_TRANSLATIONS, group_nearby_indices,
-                        codons_frequencies_and_positions)
+                        codons_frequencies_and_positions,
+                        dict_to_pretty_string)
 from ..Location import Location
 
 
@@ -109,8 +110,8 @@ class CodonOptimize(CodonSpecification):
 
         }[self.mode](problem)
 
-    @staticmethod
-    def codon_harmonization_stats(sequence, codon_usage):
+
+    def codon_harmonization_stats(self, sequence):
         """Return a codon harmonisation score and a suboptimal locations list.
 
         Parameters
@@ -139,22 +140,19 @@ class CodonOptimize(CodonSpecification):
             raise ValueError(
                 "Coding sequence with size %d not multiple of 3)" % length
             )
-        codons_frequencies, codons_positions = \
-            codons_frequencies_and_positions(sequence)
-
+        # codons_frequencies, codons_positions = \
+        #     codons_frequencies_and_positions(sequence)
         score = 0
-        nonoptimal_indices = []
-        for aa, usage_data in codon_usage.items():
-            if aa in ['best_frequencies', 'codons_frequencies']:
-                continue
-            sequence_data = codons_frequencies[aa]
-            for codon, usage_freq in usage_data.items():
-                sequence_freq = sequence_data.get(codon, 0)
-                frequency_diff = abs(sequence_freq - usage_freq)
-                score -= frequency_diff * sequence_data['total']
-                if sequence_freq > usage_freq:
-                    nonoptimal_indices += codons_positions[codon]
-        return score, nonoptimal_indices
+        nonoptimal_aa_indices = []
+        codons_positions, aa_comparisons = self.compare_frequencies(sequence) 
+        for aa, data in aa_comparisons.items():
+            total = data.pop('total')
+            for codon, codon_freq in data.items():
+                frequency_diff = codon_freq['sequence'] - codon_freq['table']
+                score -= total * abs(frequency_diff)
+                if codon_freq['sequence'] > codon_freq['table']:
+                    nonoptimal_aa_indices += codons_positions[codon]
+        return score, [3 * i for i in nonoptimal_aa_indices]
 
     def codons_indices_to_locations(self, indices):
         """Convert a list of codon positions to a list of Locations"""
@@ -208,7 +206,7 @@ class CodonOptimize(CodonSpecification):
         """Return the evaluation for mode == harmonized."""
         subsequence = self.location.extract_sequence(problem.sequence)
         score, nonoptimal_indices = self.codon_harmonization_stats(
-            subsequence, self.codon_usage_table)
+            subsequence)
         locations = self.codons_indices_to_locations(nonoptimal_indices)
         np.random.shuffle(locations)
         return SpecEvaluation(
@@ -228,3 +226,54 @@ class CodonOptimize(CodonSpecification):
 
     def label_parameters(self):
         return ["(custom table)" if self.species is None else self.species]
+    
+    def compare_frequencies(self, sequence, text_mode=False):
+        """Return a dict indicating differences between codons frequencies in
+        the sequence and in this specifications's codons usage table.
+
+        Returns
+        -------
+
+        positions, comparisons
+          (if text_mode = False)
+        
+        a formatted print-ready string
+          (if text_mode = True)
+
+        >>> {
+        >>>   "K": {
+        >>>     "total": 6,
+        >>>     "AAA": {
+        >>>         "sequence": 1.0,
+        >>>         "table": 0.7
+        >>>     },
+        >>>     ...
+        >>>   },
+        >>>   "D": ...
+        >>> }
+
+        """
+        frequencies, positions = \
+            codons_frequencies_and_positions(sequence)
+        frequencies = {
+            aa: data
+            for aa, data in frequencies.items()
+            if data['total']
+        }
+        comparisons = {
+            aa: {
+                'total': seq_data['total'],
+                **{
+                    codon: {
+                        'sequence': seq_data[codon],
+                        'table': table_data
+                    }
+                    for codon, table_data in self.codon_usage_table[aa].items()
+                }
+            }
+            for aa, seq_data in frequencies.items()
+        }
+        if text_mode:
+            return dict_to_pretty_string(comparisons)
+        else:
+            return positions, comparisons
