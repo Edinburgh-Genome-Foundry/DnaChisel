@@ -258,7 +258,7 @@ class DnaOptimizationProblem:
             if not e.passes
         ])
 
-        iters = range(3*self.max_random_iters)
+        iters = range(3 * self.max_random_iters)
         for i in self.logger.iter_bar(mutation=iters):
 
             if all(e.passes for e in evaluations):
@@ -372,7 +372,7 @@ class DnaOptimizationProblem:
                         constraint.resolution_heuristic(local_problem)
                     else:
                         local_problem.resolve_constraints_locally()
-                    self.sequence = local_problem.sequence
+                    self.change_sequence(local_problem.sequence)
                     break
                 except NoSolutionError as error:
                     if extension == self.local_extensions[-1]:
@@ -386,6 +386,8 @@ class DnaOptimizationProblem:
                         raise error
                     else:
                         continue
+    def change_sequence(self, new_sequence):
+        self.sequence = new_sequence
 
     def resolve_constraints(self, final_check=True):
         """Solve a particular constraint using local, targeted searches.
@@ -416,7 +418,8 @@ class DnaOptimizationProblem:
                 if not cst.evaluate(self).passes:
                     raise NoSolutionError(
                         'The solving of all constraints failed to solve'
-                        ' all constraints. This is an unintended behavior,'
+                        ' all constraints, as some appear unsolved at the end'
+                        ' of the optimization. This is an unintended behavior,'
                         ' likely due to a complex problem. Try running the'
                         ' solver on the same sequence again, or report the'
                         ' error to the maintainers:\n\n' +

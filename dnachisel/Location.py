@@ -106,6 +106,10 @@ class Location:
     def __add__(self, number):
         """Return the location shifted by the number"""
         return Location(self.start + number, self.end + number, self.strand)
+    
+    def __sub__(self, number):
+        """Return the location shifted by the number"""
+        return Location(self.start - number, self.end - number, self.strand)
 
     def __repr__(self):
         """Represent"""

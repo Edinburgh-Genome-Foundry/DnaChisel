@@ -212,12 +212,13 @@ class AvoidNonUniqueSegments(Specification):
                     "of non-unique segments %s" % locations)
 
 
-    def localized(self, location, problem, with_righthand=True):
+    def localized(self, location, problem=None, with_righthand=True):
         """Localize the evaluation."""
 
         if location.overlap_region(self.extended_location) is None:
-            return None 
- # VoidSpecification(parent_specification=self)
+            return None
+        if problem is None:
+            return self
         extract_kmer = self.get_kmer_extractor(problem.sequence)
         k = self.min_length
         changing_kmers_zone = (location.extended(k - 1, right=with_righthand)
@@ -239,5 +240,15 @@ class AvoidNonUniqueSegments(Specification):
         return self.copy_with_changes(localization_data=localization_data,
                                       location=changing_kmers_zone)
 
+    def shifted(self, shift):
+        """Shift the location of the specification.
+        This will also shift the extended location.
+        """
+        new_location = None if self.location is None else self.location + shift
+        extended_location = (None if self.extended_location is None
+                             else self.extended_location + shift)
+        return self.copy_with_changes(location=new_location,
+                                      extended_location=extended_location,
+                                      derived_from=self)
     def label_parameters(self):
         return [('min_length', str(self.min_length))]

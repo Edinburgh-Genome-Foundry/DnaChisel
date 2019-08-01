@@ -118,7 +118,7 @@ class SpecEvaluation:
         message = self.message
         if wrapped:
             indents = 6 if (role == 'constraint') else 11
-            indent = indents*' ' + "│ "
+            indent = indents * ' ' + "│ "
             message = "\n".join(
                 textwrap.wrap(message, width=80, initial_indent=indent,
                               subsequent_indent=indent)

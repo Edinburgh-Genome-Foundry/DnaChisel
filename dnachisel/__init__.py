@@ -1,5 +1,6 @@
 from .DnaOptimizationProblem import (DnaOptimizationProblem, NoSolutionError,
                                      DEFAULT_SPECIFICATIONS_DICT)
+from .CircularDnaOptimizationProblem import CircularDnaOptimizationProblem
 from .Location import Location
 
 from .builtin_specifications import (

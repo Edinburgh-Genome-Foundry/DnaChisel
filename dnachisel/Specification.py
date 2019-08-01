@@ -70,6 +70,19 @@ class Specification:
         new_specification = copy.copy(self)
         new_specification.__dict__.update(kwargs)
         return new_specification
+    
+    def shifted(self, shift):
+        """Shift the location of the specification.
+
+        Some specification classes may have a special method to do side effects
+        when shifting the location.
+        
+        Location shifting is used in particular when solving circular DNA
+        optimization problems.
+        """
+        new_location = None if self.location is None else self.location + shift
+        return self.copy_with_changes(location=new_location,
+                                      derived_from=self)
 
     def initialize_on_problem(self, problem, role="constraint"):
         """Complete specification initialization when the sequence gets known.
