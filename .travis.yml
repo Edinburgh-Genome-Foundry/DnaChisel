@@ -4,7 +4,7 @@ python:
 # command to install dependencies
 install:
   - pip install matplotlib primer3-py
-  - pip install coveralls pytest-cov==2.6 pytest
+  - pip install coveralls pytest-cov==2.6 pytest==3.2.3
   - sudo apt-get install ncbi-blast+
   - pip install -e .[reports]
 # command to run tests
