@@ -1,12 +1,15 @@
 """Implement AvoidPattern"""
 
 from ..Specification import Specification
+
+
 # from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from .EnforceSequence import EnforceSequence
 from ..MutationSpace import MutationSpace
 from ..SequencePattern import SequencePattern, DnaNotationPattern
-from dnachisel.Location import Location
+from ..Location import Location
+from ..biotools import reverse_complement
 from ..DnaOptimizationProblem import DnaOptimizationProblem, NoSolutionError
 
 
@@ -36,10 +39,11 @@ class EnforcePatternOccurence(Specification):
 
     best_possible_score = 0
     priority = -1
-    genbank_args = ('pattern', 'occurences')
+    genbank_args = ("pattern", "occurences")
 
-    def __init__(self, pattern=None, occurences=1, location=None,
-                 center=True, boost=1.0):
+    def __init__(
+        self, pattern=None, occurences=1, location=None, center=True, boost=1.0
+    ):
         """Initialize."""
         if isinstance(pattern, str):
             pattern = SequencePattern.from_string(pattern)
@@ -71,32 +75,37 @@ class EnforcePatternOccurence(Specification):
             if self.occurences == 0:
                 message = "Failed. Pattern not found."
             else:
-                message = ("Failed. Pattern found %d times instead of %d"
-                           " wanted, at locations %s") % (len(matches),
-                                                          self.occurences,
-                                                          matches)
+                message = (
+                    "Failed. Pattern found %d times instead of %d"
+                    " wanted, at locations %s"
+                ) % (len(matches), self.occurences, matches)
         return SpecEvaluation(
-            self, problem, score, message=message,
+            self,
+            problem,
+            score,
+            message=message,
             locations=[self.location],
-            data=dict(matches=matches)
+            data=dict(matches=matches),
         )
 
     def localized(self, location, problem=None):
         """Localize the evaluation."""
         new_location = self.location.overlap_region(location)
         if new_location is None:
-            return None 
- # VoidSpecification(parent_specification=self)
+            return None
+        # VoidSpecification(parent_specification=self)
         else:
             return self
 
-
-    def insert_pattern_in_problem(self, problem):
+    def insert_pattern_in_problem(self, problem, reverse=False):
         """Insert the pattern in the problem's sequence by successive tries.
 
         This heuristic is attempted to get the number of occurences in the
         pattern from 0 to some number
         """
+        sequence_to_insert = self.pattern.sequence
+        if reverse:
+            sequence_to_insert = reverse_complement(sequence_to_insert)
         L = self.pattern.size
         starts = range(self.location.start, self.location.end - L)
         if self.center:
@@ -104,10 +113,12 @@ class EnforcePatternOccurence(Specification):
             starts = sorted(starts, key=lambda s: abs(s - center))
         for start in starts:
             new_location = Location(start, start + L, self.location.strand)
-            new_constraint = EnforceSequence(sequence=self.pattern.sequence,
-                                             location=new_location)
+            new_constraint = EnforceSequence(
+                sequence=sequence_to_insert, location=new_location
+            )
             new_space = MutationSpace.from_optimization_problem(
-                problem, new_constraints=[new_constraint])
+                problem, new_constraints=[new_constraint]
+            )
             if len(new_space.unsolvable_segments) > 0:
                 continue
             new_sequence = new_space.constrain_sequence(problem.sequence)
@@ -116,20 +127,23 @@ class EnforcePatternOccurence(Specification):
                 sequence=new_sequence,
                 constraints=new_constraints,
                 mutation_space=new_space,
-                logger=None
+                logger=None,
             )
-            assert self.evaluate(new_problem).passes
-            try:
-                new_problem.resolve_constraints()
-                problem.sequence = new_problem.sequence
-                return
-            except NoSolutionError:
-                pass
+            if self.evaluate(new_problem).passes:
+                try:
+                    new_problem.resolve_constraints()
+                    problem.sequence = new_problem.sequence
+                    return
+                except NoSolutionError:
+                    pass
+        if (not reverse) and (self.pattern.in_both_strands):
+            self.insert_pattern_in_problem(problem, reverse=True)
+            return
         raise NoSolutionError(
-            problem=problem, location=self.location,
-            message='Insertion of pattern %s in %s failed' % (
-                self.pattern.sequence, self.location
-            )
+            problem=problem,
+            location=self.location,
+            message="Insertion of pattern %s in %s failed"
+            % (self.pattern.sequence, self.location),
         )
 
     def resolution_heuristic(self, problem):
@@ -138,8 +152,23 @@ class EnforcePatternOccurence(Specification):
             evaluation = self.evaluate(problem)
             if evaluation.passes:
                 return
-            if len(evaluation.data["matches"]) == self.occurences - 1:
-                self.insert_pattern_in_problem(problem)
+            n_matches = len(evaluation.data["matches"])
+            if n_matches < self.occurences:
+                other_constraints = [
+                    c for c in problem.constraints if c is not self
+                ]
+                new_problem = problem
+                for i in range(self.occurences - n_matches):
+                    new_occurence_cst = self.copy_with_changes(
+                        occurences=n_matches + i + 1
+                    )
+                    new_problem = DnaOptimizationProblem(
+                        sequence=new_problem.sequence,
+                        constraints=other_constraints + [new_occurence_cst],
+                        mutation_space=problem.mutation_space
+                    )
+                    new_occurence_cst.insert_pattern_in_problem(new_problem)
+                problem.sequence = new_problem.sequence
                 return
         problem.resolve_constraints_locally()  # default resolution method
 
@@ -150,5 +179,5 @@ class EnforcePatternOccurence(Specification):
         #                 else str(self.pattern))]
         result = [str(self.pattern)]
         if self.occurences != 1:
-            result += ['occurence', str(self.occurences)]
+            result += ["occurence", str(self.occurences)]
         return result

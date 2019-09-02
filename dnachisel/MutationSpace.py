@@ -39,6 +39,10 @@ class MutationChoice:
         """Return one of the variants, randomly."""
         subsequence = sequence[self.start: self.end]
         variants = [v for v in self.variants if v != subsequence]
+        # the sorting of variants seems essential to ensure reproducibility
+        # between sessions. 
+        # it does not slow down the global algorithm (or less than 3%)
+        variants = sorted(variants)
         return variants[np.random.randint(len(variants))]
 
     def percolate_with(self, others):
@@ -209,8 +213,10 @@ class MutationSpace:
         for choice in self.choices_list:
             variants = choice.variants
             if len(choice.variants) == 0:
+                print(choice, sequence)
                 raise ValueError("Cannot constrain a sequence when some "
-                                 "positions are unsolvable")
+                                 "positions are unsolvable, in location "
+                                 "(%d-%d)" % (choice.start, choice.end))
             elif len(variants) == 1:
                 variant = list(variants)[0]
                 new_sequence[choice.start:choice.end] = variant.encode()
