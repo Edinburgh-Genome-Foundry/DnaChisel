@@ -389,7 +389,7 @@ class DnaOptimizationProblem:
     def change_sequence(self, new_sequence):
         self.sequence = new_sequence
 
-    def resolve_constraints(self, final_check=True):
+    def resolve_constraints(self, final_check=True, cst_filter=None):
         """Solve a particular constraint using local, targeted searches.
 
         Parameters
@@ -397,11 +397,21 @@ class DnaOptimizationProblem:
 
         constraint
           The ``Specification`` object for which the sequence should be solved
+        
+        final_check
+          If True, a final check of that all constraints pass will be run at
+          the end of the process, when constraints have been resolved one by
+          one, to check that the solving of one constraint didn't undo the
+          solving of another.
+        
+        cst_filter
+          An optional filter to only resolve a subset function (constraint => True/False)
 
         """
         constraints = [
             c for c in self.constraints
             if not c.enforced_by_nucleotide_restrictions
+            and ((cst_filter is None) or cst_filter(c))
         ]
         if len(constraints) == 0:
             return
@@ -414,17 +424,20 @@ class DnaOptimizationProblem:
                 self.logger(constraint__index=len(constraints))
                 raise error
         if final_check:
-            for cst in self.constraints:
-                if not cst.evaluate(self).passes:
-                    raise NoSolutionError(
-                        'The solving of all constraints failed to solve'
-                        ' all constraints, as some appear unsolved at the end'
-                        ' of the optimization. This is an unintended behavior,'
-                        ' likely due to a complex problem. Try running the'
-                        ' solver on the same sequence again, or report the'
-                        ' error to the maintainers:\n\n' +
-                        self.constraints_text_summary(failed_only=True),
-                        problem=self)
+            self.perform_final_check()
+    
+    def perform_final_check(self):
+        for cst in self.constraints:
+            if not cst.evaluate(self).passes:
+                raise NoSolutionError(
+                    'The solving of all constraints failed to solve'
+                    ' all constraints, as some appear unsolved at the end'
+                    ' of the optimization. This is an unintended behavior,'
+                    ' likely due to a complex problem. Try running the'
+                    ' solver on the same sequence again, or report the'
+                    ' error to the maintainers:\n\n' +
+                    self.constraints_text_summary(failed_only=True),
+                    problem=self)
 
 
 

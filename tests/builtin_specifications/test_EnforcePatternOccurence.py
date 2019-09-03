@@ -3,7 +3,7 @@ of a sequence."""
 
 from dnachisel import (EnforceTranslation, DnaOptimizationProblem,
                        random_dna_sequence, Location, EnforcePatternOccurence)
-
+import dnachisel as dc
 import numpy
 #numpy.random.seed(123)
 
@@ -32,3 +32,45 @@ def test_enforce_pattern_basics():
         assert not problem.all_constraints_pass()
         problem.resolve_constraints()
         assert problem.all_constraints_pass()
+
+def test_insert_and_erase_pattern():
+    numpy.random.seed(123)
+    protein = dc.random_protein_sequence(100)
+    pattern = "ATGC"
+
+    # CREATE A SEQUENCE WITH 0 PATTERN OCCURENCES
+
+    sequence = dc.random_compatible_dna_sequence(
+        sequence_length=300,
+        constraints=[
+            dc.EnforceTranslation(translation=protein),
+            dc.AvoidPattern(pattern)
+        ]
+    )
+
+    # NOW INCREASE PATTERN OCCURENCES FROM 0 TO 5
+
+    problem = dc.DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[
+            dc.EnforcePatternOccurence(pattern, occurences=5),
+            dc.EnforceTranslation()
+        ]
+    )
+    assert problem.constraints[0].evaluate(problem).score == -5
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+    sequence = problem.sequence
+
+    # NOW DECREASE THE NUMBER OF OCCURENCES FROM 5 TO 2
+
+    problem = dc.DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[
+            dc.EnforcePatternOccurence(pattern, occurences=2),
+            dc.EnforceTranslation()
+        ]
+    )
+    assert problem.constraints[0].evaluate(problem).score == -3
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()

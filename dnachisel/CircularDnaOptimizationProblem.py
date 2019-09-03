@@ -116,9 +116,15 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
 
     def resolve_constraints(self, final_check=True):
         problem = self._circularized_view(with_constraints=True)
-        problem.resolve_constraints(final_check=final_check)
         L = len(self.sequence)
+        central_loc = Location(L, 2 * L)
+        for c in problem.constraints:
+            if c.location.overlap_region(central_loc) is not None:
+                problem.resolve_constraint(c)
+        
         self.sequence = problem.sequence[L : 2 * L]
+        if final_check:
+            self.perform_final_check()
 
     def optimize(self):
         problem = self._circularized_view(
