@@ -8,7 +8,7 @@ import os
 import dnachisel as dc
 import numpy as np
 
-def experiment(seed=123):
+def experiment_1(seed=123):
     """A DNA chisel optimization whose results produced the file
     test_determinism.py"""
     np.random.seed(seed)
@@ -37,22 +37,45 @@ def experiment(seed=123):
 
     return (problem.sequence)
 
-def create_test_sequences_file():
+def create_test_sequences_file_1():
     """File test_sequences.csv has been created by running this function"""
     sequences_by_seed = [
-        (seed, experiment(seed))
+        (seed, experiment_1(seed))
         for seed in (123, 456, 789)
     ]
-    with open("test_sequences.csv", "w") as f:
+    with open("test_sequences_1.csv", "w") as f:
         f.write("\n".join([
             "%d,%s" % (seed, sequence)
             for (seed, sequence) in sequences_by_seed
         ]))
 
-def test_determinism():
-    path = os.path.join('tests', 'test_determinism', 'test_sequences.csv')
+def test_determinism_1():
+    path = os.path.join('tests', 'test_determinism', 'test_sequences_1.csv')
     with open(path, "r") as f:
         for line in f.read().split('\n'):
             seed, sequence = line.split(",")
-            assert sequence == experiment(int(seed))
-    
+            assert sequence == experiment_1(int(seed))
+
+
+def experiment_2(seed=123):
+    np.random.seed(seed)
+    sequence = dc.reverse_translate(dc.random_protein_sequence(1000))
+    problem = dc.DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[
+            dc.EnforceTranslation(),
+            dc.EnforceGCContent(mini=0.4, maxi=0.6, window=50)
+        ],
+        objectives=[dc.CodonOptimize(species='e_coli')],
+        logger=None
+    )
+    problem.resolve_constraints()
+    problem.optimize()
+    return (problem.sequence)
+
+def test_determinism_2():
+    path = os.path.join('tests', 'test_determinism', 'test_sequences_2.csv')
+    with open(path, "r") as f:
+        for line in f.read().split('\n'):
+            seed, sequence = line.split(",")
+            assert sequence == experiment_2(int(seed))

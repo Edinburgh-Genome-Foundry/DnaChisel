@@ -213,7 +213,6 @@ class MutationSpace:
         for choice in self.choices_list:
             variants = choice.variants
             if len(choice.variants) == 0:
-                print(choice, sequence)
                 raise ValueError("Cannot constrain a sequence when some "
                                  "positions are unsolvable, in location "
                                  "(%d-%d)" % (choice.start, choice.end))
@@ -279,8 +278,27 @@ class MutationSpace:
         new_sequence = bytearray(sequence.encode())
         choice_start, choice_end = self.choices_span
         encoded_segment = sequence[choice_start: choice_end].encode()
+        def sort_variants_by_distance_to_current(choice):
+            """This function iterates through the variants of a given choice
+            using not the alphabetical (which would bias AC over GT) but rather
+            a kind of 'least-change' order, which biases towards solutions
+            close to the current sequence.
+
+            Impact on overall algorithm speed is < 0.5%"""
+            current = sequence[choice.segment[0]: choice.segment[1]]
+            alphasort = {
+                v: i
+                for i, v in enumerate(sorted(choice.variants))
+            }
+            def sort_key(v):
+                return (abs(alphasort[v] - alphasort[current]), v)
+            return sorted(choice.variants, key=sort_key)
+
         variants_slots = [
-             [(choice_.segment, v.encode()) for v in choice_.variants]
+             [
+                 (choice_.segment, v.encode())
+                 for v in sort_variants_by_distance_to_current(choice_)
+             ]
              for choice_ in self.multichoices
         ]
         for variants in itertools.product(*variants_slots):

@@ -196,6 +196,7 @@ class CodonOptimize(CodonSpecification):
         non_optimality = optimal_usage - current_usage
         nonoptimal_indices = 3 * np.nonzero(non_optimality)[0]
         locations = self.codons_indices_to_locations(nonoptimal_indices)
+        # print (locations)
         score = -non_optimality.sum()
         return SpecEvaluation(
             self, problem, score=score, locations=locations,

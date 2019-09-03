@@ -5,7 +5,8 @@ from dnachisel import (DnaOptimizationProblem, AvoidChanges, AvoidPattern,
 def test_no_solution_error_frozen_region():
     problem = DnaOptimizationProblem(
         sequence="AAAAATCGTCTCTTTT",
-        constraints=[AvoidChanges(), AvoidPattern('BsmBI_site')]
+        constraints=[AvoidChanges(), AvoidPattern('BsmBI_site')],
+        logger=None
     )
     with pytest.raises(NoSolutionError) as err:
         problem.resolve_constraints()
@@ -14,7 +15,8 @@ def test_no_solution_error_frozen_region():
 def test_no_solution_error_random_search():
     problem = DnaOptimizationProblem(
         sequence="TTTTTTTTTTTTTTTTTTTTTTTTTTTT",
-        constraints=[AvoidChanges((0, 10)), EnforceGCContent(mini=0.8)]
+        constraints=[AvoidChanges((0, 10)), EnforceGCContent(mini=0.8)],
+        logger=None
     )
     with pytest.raises(NoSolutionError) as err:
         problem.resolve_constraints()
@@ -24,7 +26,8 @@ def test_no_solution_error_random_search():
 def test_no_solution_error_exhaustive_search():
     problem = DnaOptimizationProblem(
         sequence="TTTTTTT",
-        constraints=[AvoidChanges((0, 4)), EnforceGCContent(mini=0.8)]
+        constraints=[AvoidChanges((0, 4)), EnforceGCContent(mini=0.8)],
+        logger=None
     )
     with pytest.raises(NoSolutionError) as err:
         problem.resolve_constraints()
