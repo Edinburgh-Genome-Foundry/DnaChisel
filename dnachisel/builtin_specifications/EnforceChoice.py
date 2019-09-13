@@ -2,16 +2,13 @@
 
 # TODO: factorize with self.sequence ?
 
-import numpy as np
-
 from ..Specification import Specification
-# from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
-from ..SequencePattern import SequencePattern #DnaNotationPattern, enzyme_pattern
+from ..SequencePattern import SequencePattern
 from dnachisel.Location import Location
-from dnachisel.biotools import (group_nearby_indices,
-                                reverse_complement,
-                                IUPAC_NOTATION)
+from dnachisel.biotools import (
+    reverse_complement,
+)
 
 
 class EnforceChoice(Specification):
@@ -29,6 +26,7 @@ class EnforceChoice(Specification):
       ``Location(10, 45, 1)`` or simply ``(10, 45, 1)``
 
     """
+
     localization_interval_length = 6  # used when optimizing
     best_possible_score = 0
     enforced_by_nucleotide_restrictions = True
@@ -36,8 +34,8 @@ class EnforceChoice(Specification):
     def __init__(self, choices=None, location=None, boost=1.0):
         """Initialize."""
         choices = [
-          SequencePattern.from_string(c) if isinstance(c, str) else c
-          for c in choices
+            SequencePattern.from_string(c) if isinstance(c, str) else c
+            for c in choices
         ]
         # if enzymes is not None:
         #     choices = [enzyme_pattern(e) for e in enzymes]
@@ -49,9 +47,7 @@ class EnforceChoice(Specification):
         #      for choice in choices
         # ]
         choices = [
-            variant
-            for choice in choices
-            for variant in choice.all_variants()
+            variant for choice in choices for variant in choice.all_variants()
         ]
         self.choices = choices
         if isinstance(location, tuple):
@@ -59,7 +55,7 @@ class EnforceChoice(Specification):
         self.location = location
         self.boost = boost
 
-    def initialize_on_problem(self, problem, role='constraint'):
+    def initialized_on_problem(self, problem, role="constraint"):
         """Find out what sequence it is that we are supposed to conserve."""
         # if self.location is None:
         #     location = Location(0, len(problem.sequence), 1)
@@ -68,9 +64,11 @@ class EnforceChoice(Specification):
         #     result = self
         result = self._copy_with_full_span_if_no_location(problem)
         if not all([len(c) == len(result.location) for c in result.choices]):
-            raise ValueError("All sequence choices should have the same "
-                             "length as the region on which the spec is "
-                             "applied.")
+            raise ValueError(
+                "All sequence choices should have the same "
+                "length as the region on which the spec is "
+                "applied."
+            )
         return result
 
     def evaluate(self, problem):

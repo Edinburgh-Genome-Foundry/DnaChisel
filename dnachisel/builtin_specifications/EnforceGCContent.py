@@ -65,7 +65,7 @@ class EnforceGCContent(Specification):
         self.location = location
         self.boost = boost
 
-    def initialize_on_problem(self, problem, role=None):
+    def initialized_on_problem(self, problem, role=None):
         return self._copy_with_full_span_if_no_location(problem)
         # if self.location is None:
         #     location = Location(0, len(problem.sequence))
@@ -152,3 +152,14 @@ class EnforceGCContent(Specification):
             show_window * [('window',
                             ("%d" % self.window) if self.window else '')]
         )
+    
+    def short_label(self):
+        if self.target is not None:
+            result = "%d%% GC" % (np.round(100 * self.target))
+        else:
+            result = "%d-%d%% GC" % (np.round(100 * self.mini),
+                                     np.round(100 * self.maxi))
+        if self.window is not None:
+            result += "/%dbp" % self.window
+        return result
+            

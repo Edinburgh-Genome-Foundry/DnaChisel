@@ -31,8 +31,7 @@ data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
 
 # COMPLEMENTS = {"A": "T", "T": "A", "C": "G", "G": "C"}
 with open(os.path.join(data_dir, "complements.csv"), "r") as f:
-    COMPLEMENTS = dict([line.split(',')
-                        for line in f.read().splitlines()])
+    COMPLEMENTS = dict([line.split(",") for line in f.read().splitlines()])
 OTHER_BASES = {
     "A": ["T", "G", "C"],
     "T": ["A", "G", "C"],
@@ -41,22 +40,18 @@ OTHER_BASES = {
 }
 
 CODONS_TRANSLATIONS = dict_from_csv(
-    os.path.join(data_dir, "codons_translations.csv"))
+    os.path.join(data_dir, "codons_translations.csv")
+)
 CODONS_SEQUENCES = reverse_table(CODONS_TRANSLATIONS)
 CODONS_SYNONYMS = {
     codon: CODONS_SEQUENCES[CODONS_TRANSLATIONS[codon]]
     for codon in CODONS_TRANSLATIONS
 }
 
-AA_LONG_NAMES = dict_from_csv(os.path.join(data_dir, "aa_long_names.csv"))
-
 NUCLEOTIDE_TO_REGEXPR = dict_from_csv(
-    os.path.join(data_dir, "nucleotide_to_regexpr.csv"))
-
+    os.path.join(data_dir, "nucleotide_to_regexpr.csv")
+)
 
 
 iupac_file = os.path.join(data_dir, "iupac_notation.csv")
-IUPAC_NOTATION = {
-    k: set(v)
-    for k, v in dict_from_csv(iupac_file).items()
-}
+IUPAC_NOTATION = {k: set(v) for k, v in dict_from_csv(iupac_file).items()}

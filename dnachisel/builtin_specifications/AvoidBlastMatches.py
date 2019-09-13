@@ -56,7 +56,7 @@ class AvoidBlastMatches(Specification):
         self.ungapped = ungapped
         self.culling_limit = culling_limit
 
-    def initialize_on_problem(self, problem, role):
+    def initialized_on_problem(self, problem, role):
         return self._copy_with_full_span_if_no_location(problem)
         # if self.location is None:
         #     location = Location(0, len(problem.sequence), 1)

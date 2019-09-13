@@ -27,7 +27,7 @@ class AvoidStopCodons(EnforceTranslation):
         self.boost = boost
         self.location = location
 
-    def initialize_on_problem(self, problem, role):
+    def initialized_on_problem(self, problem, role):
         """Get translation from the sequence if it is not already set."""
         if self.location is None:
             location = Location(0, len(problem.sequence), 1)

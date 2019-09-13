@@ -10,28 +10,47 @@ try:
     import matplotlib.pyplot as plt
     from matplotlib.backends.backend_pdf import PdfPages
     from dna_features_viewer import BiopythonTranslator
+
     DFV_AVAILABLE = True
 except:
     BiopythonTranslator = object
     DFV_AVAILABLE = False
+
+try:
+    import pandas
+    PANDAS_AVAILABLE = True
+except:
+    PANDAS_AVAILABLE = False
+
+from ..DnaOptimizationProblem import DnaOptimizationProblem
+from ..biotools import gc_content
+from ..SequencePattern import RepeatedKmerPattern, HomopolymerPattern
+from ..builtin_specifications import (
+    EnforceGCContent,
+    AvoidPattern,
+    AvoidHairpins,
+)
+from ..Location import Location
+
 
 def install_extras_message(libname):
     return (
         "Could not load %s (is it installed ?). You can install it separately "
         " with:  pip install %s\n\n"
         "Install all dependencies for generating DNA Chisel reports with:"
-        "\n\npip install dnachisel[reports]" % (
-            libname, libname.lower().replace(" ", "_")))
-
-from ..DnaOptimizationProblem import DnaOptimizationProblem
-from ..biotools import gc_content
-from ..SequencePattern import RepeatedKmerPattern, HomopolymerPattern
-from ..builtin_specifications import (EnforceGCContent, AvoidPattern,
-                                      AvoidHairpins)
+        "\n\npip install dnachisel[reports]"
+        % (libname, libname.lower().replace(" ", "_"))
+    )
 
 
-def plot_constraint_breaches(constraint, sequence, title=None, ax=None,
-                             show_locations=False, show_feature_labels=False):
+def plot_constraint_breaches(
+    constraint,
+    sequence,
+    title=None,
+    ax=None,
+    show_locations=False,
+    show_feature_labels=False,
+):
     """Plot all breaches in a sequence for a single constraint.
 
     Parameters
@@ -64,7 +83,8 @@ def plot_constraint_breaches(constraint, sequence, title=None, ax=None,
 
     """
     if not DFV_AVAILABLE:
-      raise ImportError(install_extras_message("DNA Features Viewer"))
+        raise ImportError(install_extras_message("DNA Features Viewer"))
+
     class Translator(BiopythonTranslator):
         """A Biopython record translator for DNA Features Viewer.
 
@@ -93,11 +113,13 @@ def plot_constraint_breaches(constraint, sequence, title=None, ax=None,
     problem = DnaOptimizationProblem(sequence, constraints=[constraint])
     evals = problem.constraints_evaluations().filter("failing")
     breaches_record = problem.to_record(
-        with_original_features=False, with_objectives=False,
-        with_constraints=False
+        with_original_features=False,
+        with_objectives=False,
+        with_constraints=False,
     )
     breaches_record.features = evals.locations_as_features(
-        with_specifications=False, merge_overlapping=True)
+        with_specifications=False, merge_overlapping=True
+    )
 
     if record is not None:
         for feature in record.features:
@@ -113,8 +135,10 @@ def plot_constraint_breaches(constraint, sequence, title=None, ax=None,
         ax.set_title(title, fontweight="bold", loc="left")
     return ax
 
-def plot_gc_content_breaches(sequence, window=70, mini=0.35, maxi=0.65,
-                             ax=None, title=None):
+
+def plot_gc_content_breaches(
+    sequence, window=70, mini=0.35, maxi=0.65, ax=None, title=None
+):
     """Plot a profile of GC content along the sequence.
     The regions with out-of-bound GC are highlighted.
 
@@ -149,15 +173,14 @@ def plot_gc_content_breaches(sequence, window=70, mini=0.35, maxi=0.65,
         fig, ax = plt.subplots(1, figsize=(12, 3))
     gc_inbound = +gc
     gc_inbound[(gc < mini) | (gc > maxi)] = np.nan
-    ax.plot(xx, gc_inbound, alpha=0.2, c='b')
+    ax.plot(xx, gc_inbound, alpha=0.2, c="b")
 
     for limit, whr in (mini, gc < mini), (maxi, gc > maxi):
         ax.axhline(limit, c="k", lw=0.5, ls=":")
         gc_bad = +gc
         gc_bad[1 - whr] = np.nan
-        ax.plot(xx, gc_bad, alpha=0.1, c='r')
-        ax.fill_between(xx, gc, y2=limit, where=whr, alpha=0.6,
-                        facecolor="r")
+        ax.plot(xx, gc_bad, alpha=0.1, c="r")
+        ax.fill_between(xx, gc, y2=limit, where=whr, alpha=0.6, facecolor="r")
 
     ax.set_xlim(0, len(gc))
     ax.set_ylim(0, 1)
@@ -194,57 +217,123 @@ def plot_sequence_manufacturability_difficulties(sequence):
         record = sequence
 
     nplots = 8
-    fig, axes = plt.subplots(nplots, 1, figsize=(10, 1.4 * nplots),
-                             sharex=True, facecolor="white")
+    fig, axes = plt.subplots(
+        nplots, 1, figsize=(10, 1.4 * nplots), sharex=True, facecolor="white"
+    )
 
     mini, maxi, window = 0.25, 0.80, 50
     plot_gc_content_breaches(
-        sequence, window=window, mini=mini,
-        maxi=maxi, ax=axes[0],
-        title="GC content (window= %d)" % window
+        sequence,
+        window=window,
+        mini=mini,
+        maxi=maxi,
+        ax=axes[0],
+        title="GC content (window= %d)" % window,
     )
 
     plot_constraint_breaches(
         EnforceGCContent(mini=mini, maxi=maxi, window=window),
-        record, ax=axes[1],
-        title="Zones of extreme GC content (Gen9-type short window)"
+        record,
+        ax=axes[1],
+        title="Zones of extreme GC content (Gen9-type short window)",
     )
 
     plot_constraint_breaches(
-        AvoidPattern("BsmBI_site"), sequence,
-        title="BsmBI sites", ax=axes[2]
+        AvoidPattern("BsmBI_site"), sequence, title="BsmBI sites", ax=axes[2]
     )
 
     plot_constraint_breaches(
-        AvoidPattern("BsaI_site"),
-        record, title="BsaI sites", ax=axes[3]
+        AvoidPattern("BsaI_site"), record, title="BsaI sites", ax=axes[3]
     )
 
     plot_constraint_breaches(
-        AvoidPattern("BbsI_site"),
-        record, title="BbsI sites", ax=axes[4]
+        AvoidPattern("BbsI_site"), record, title="BbsI sites", ax=axes[4]
     )
 
     for l, n in [("A", 9), ("T", 9), ("G", 6), ("C", 6)]:
         constraint = AvoidPattern(HomopolymerPattern(l, n))
         plot_constraint_breaches(
-            constraint, record,
+            constraint,
+            record,
             title="Homopolymers (6+ G or C | 9+ A or T)",
-            ax=axes[5]
+            ax=axes[5],
         )
 
     for kmer_size, n_repeats in (3, 5), (2, 9):
         pattern = RepeatedKmerPattern(n_repeats=n_repeats, kmer_size=kmer_size)
         constraint = AvoidPattern(pattern)
         plot_constraint_breaches(
-            constraint, record,
-            title="Repeats (5 x 3bp, 9 x 2bp)", ax=axes[6]
+            constraint, record, title="Repeats (5 x 3bp, 9 x 2bp)", ax=axes[6]
         )
 
     plot_constraint_breaches(
         AvoidHairpins(stem_size=20, hairpin_window=200),
-        record, title="Hairpins", ax=axes[7]
+        record,
+        title="Hairpins",
+        ax=axes[7],
     )
 
     fig.tight_layout()
     return axes
+
+
+def constraints_breaches_dataframe(constraints, sequences):
+    """
+    Examples
+    --------
+
+    >>> import dnachisel as dc
+    >>> from dnachisel.utils import constraints_breaches_dataframe
+    >>> sequences = [
+    >>>     ("SEQ 1", "ATTGTGCATGTGACAC"),
+    >>>     ("SEQ 2", "ACATGTGTTGTGACAC"),
+    >>>     ("SEQ 3", "TTGTGCACACATGTGA"), 
+    >>> ]
+    >>> constraints = [
+    >>>     dc.AvoidPattern('ATTG'),
+    >>>     dc.EnforceGCContent(0.4, 0.6),
+    >>>     dc.AvoidNonUniqueSegments(5)
+    >>> ]
+    >>> dataframe = constraints_breaches_dataframe(constraints, sequences)
+    """
+    if not PANDAS_AVAILABLE:
+        raise ImportError(install_extras_message("Pandas"))
+    if isinstance(sequences, dict):
+        sequences = list(sequences.items())
+    if hasattr(sequences[0], "id"):
+        sequences = [(s.id, s) for s in sequences]
+
+    def breaches(constraint, sequence):
+        problem = DnaOptimizationProblem(sequence, mutation_space={})
+        new_constraint = constraint.initialized_on_problem(problem)
+        evaluation = new_constraint.evaluate(problem)
+        return ", ".join(map(str, evaluation.locations))
+
+    dataframe_records = [
+        dict(
+            [("sequence", name)]
+            + [
+                (constraint.short_label(), breaches(constraint, sequence))
+                for constraint in constraints
+            ]
+        )
+        for (name, sequence) in sequences
+    ]
+
+    return pandas.DataFrame.from_records(dataframe_records, index="sequence")
+
+
+
+EXAMPLE_MANUFACTURING_CONSTRAINTS = [
+    AvoidPattern("BsaI_site"),
+    AvoidPattern("BsmBI_site"),
+    AvoidPattern("BbsI_site"),
+    AvoidPattern("9xA"),
+    AvoidPattern("9xT"),
+    AvoidPattern("6xG"),
+    AvoidPattern("6xC"),
+    AvoidPattern("5x3mer"),
+    AvoidPattern("9x2mer"),
+    AvoidHairpins(stem_size=20, hairpin_window=200),
+    EnforceGCContent(mini=0.3, maxi=0.7, window=100),
+]

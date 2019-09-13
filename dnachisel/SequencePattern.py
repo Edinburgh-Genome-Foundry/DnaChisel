@@ -13,10 +13,13 @@ homopolymers, repeats, enzymatic restriction sites.
 import re
 import itertools
 from .Location import Location
-from .biotools import (dna_pattern_to_regexpr, is_palyndromic,
-                       reverse_complement, NUCLEOTIDE_TO_REGEXPR,
-                       IUPAC_NOTATION)
+from .biotools import (
+    reverse_complement,
+    NUCLEOTIDE_TO_REGEXPR,
+    IUPAC_NOTATION,
+)
 from Bio.Restriction.Restriction_Dictionary import rest_dict
+
 
 class SequencePattern:
     """Pattern/ that will be looked for in a DNA sequence.
@@ -59,14 +62,20 @@ class SequencePattern:
 
     registered_string_pattern_classes = []
 
-    def __init__(self, expression, size=None, name=None, in_both_strands=True,
-                 lookahead='loop'):
+    def __init__(
+        self,
+        expression,
+        size=None,
+        name=None,
+        in_both_strands=True,
+        lookahead="loop",
+    ):
         if size is None:
             size = len(expression)
         self.expression = expression
         self.lookahead = lookahead
-        if lookahead == 're':
-            expression = '(?=(%s))' % expression
+        if lookahead == "re":
+            expression = "(?=(%s))" % expression
         if "(" not in expression:
             expression = "(%s)" % expression
         self.lookahead_expression = expression
@@ -74,7 +83,6 @@ class SequencePattern:
         self.size = size
         self.name = name
         self.in_both_strands = in_both_strands
-
 
     def find_matches(self, sequence, location=None):
         """Return the locations where the sequence matches the expression.
@@ -102,10 +110,11 @@ class SequencePattern:
         if location is not None:
             subsequence = location.extract_sequence(sequence)
             return [
-                (loc + location.start) if (location.strand != -1)
-                else Location(location.end - loc.end,
-                              location.end - loc.start,
-                              strand=-1)
+                (loc + location.start)
+                if (location.strand != -1)
+                else Location(
+                    location.end - loc.end, location.end - loc.start, strand=-1
+                )
                 for loc in self.find_matches(subsequence)
             ]
         matches = self.find_all_re_matches(sequence)
@@ -118,12 +127,10 @@ class SequencePattern:
                 for (start, end, strand) in self.find_all_re_matches(reverse)
             ]
 
-        return [
-            Location(start, end, strand)
-            for start, end, strand in matches
-        ]
+        return [Location(start, end, strand) for start, end, strand in matches]
+
     def find_all_re_matches(self, sequence):
-        if self.lookahead == 'loop':
+        if self.lookahead == "loop":
             matches = []
             position = 0
             while True:
@@ -132,7 +139,7 @@ class SequencePattern:
                     return matches
                 start, end = result.start(), result.end()
                 matches.append((start + position, end + position, 1))
-                sequence = sequence[start + 1:]
+                sequence = sequence[start + 1 :]
                 position += start + 1
         else:
             return [
@@ -141,9 +148,10 @@ class SequencePattern:
             ]
 
     def __str__(self):
-        return self.expression + ("" if self.name is None else
-                                  " (%s)" % self.name)
-    
+        return self.expression + (
+            "" if self.name is None else " (%s)" % self.name
+        )
+
     @classmethod
     def from_string(cls, string):
         for myclass in cls.registered_string_pattern_classes:
@@ -160,16 +168,18 @@ class DnaNotationPattern(SequencePattern):
     both strands of sequences.
     """
 
-    def __init__(self, sequence, name=None, in_both_strands='auto'):
+    def __init__(self, sequence, name=None, in_both_strands="auto"):
         """Initialize"""
-        if in_both_strands == 'auto':
-            in_both_strands = not is_palyndromic(sequence)
+        if in_both_strands == "auto":
+            # If the pattern sequence is palydromic there is no use looking
+            # for the pattern in both strands
+            in_both_strands = not (reverse_complement(sequence) == sequence)
         SequencePattern.__init__(
             self,
             size=len(sequence),
             expression=self.dna_sequence_to_regexpr(sequence),
             name=name,
-            in_both_strands=in_both_strands
+            in_both_strands=in_both_strands,
         )
         self.sequence = sequence
 
@@ -177,35 +187,38 @@ class DnaNotationPattern(SequencePattern):
     def dna_sequence_to_regexpr(sequence):
         """Return a regular expression to find the pattern in a sequence."""
 
-        regexpr = ''.join([
-            NUCLEOTIDE_TO_REGEXPR[n]
-            for n in sequence
-        ])
+        regexpr = "".join([NUCLEOTIDE_TO_REGEXPR[n] for n in sequence])
         return regexpr
 
     def all_variants(self):
         """Return all ATGC sequence variants of a sequence"""
-        return[
+        return [
             "".join(nucleotides)
-            for nucleotides in itertools.product(*[
-                IUPAC_NOTATION[n] for n in self.sequence
-            ])
+            for nucleotides in itertools.product(
+                *[IUPAC_NOTATION[n] for n in self.sequence]
+            )
         ]
 
     def __repr__(self):
         """Represent the pattern as PatternType(name) """
-        return self.sequence + ("" if self.name is None else
-                                " (%s)" % self.name)
+        return self.sequence + (
+            "" if self.name is None else " (%s)" % self.name
+        )
+
     def __str__(self):
         """Represent the pattern as PatternType(name) """
-        return self.sequence + ("" if self.name is None else
-                                " (%s)" % self.name)
+        return self.sequence + (
+            "" if self.name is None else " (%s)" % self.name
+        )
+
     @staticmethod
     def from_string(string):
         if set(string) <= set(NUCLEOTIDE_TO_REGEXPR.keys()):
             return DnaNotationPattern(string)
 
+
 # DEFINITION OF COMMON PATTERNS
+
 
 class EnzymeSitePattern(DnaNotationPattern):
     """Class to represent Enzyme site patterns
@@ -221,11 +234,11 @@ class EnzymeSitePattern(DnaNotationPattern):
     def __init__(self, enzyme_name):
         self.enzyme_site = rest_dict[enzyme_name]["site"]
         DnaNotationPattern.__init__(self, self.enzyme_site, name=enzyme_name)
-    
+
     @staticmethod
     def from_string(string):
         """Convert BsmBI_site to EnzymeSitePattern(BsmBI)"""
-        match = re.match("(\S+)_site", string)
+        match = re.match(r"(\S+)_site", string)
         if match is not None:
             enzyme_name = match.groups()[0]
             if enzyme_name in rest_dict:
@@ -233,8 +246,6 @@ class EnzymeSitePattern(DnaNotationPattern):
 
     def __str__(self):
         return "%s(%s)" % (self.name, self.enzyme_site)
-
-        
 
 
 class HomopolymerPattern(DnaNotationPattern):
@@ -249,14 +260,17 @@ class HomopolymerPattern(DnaNotationPattern):
     >>> constraint = AvoidPattern(pattern)
 
     """
+
     def __init__(self, nucleotide, number):
         self.nucleotide = nucleotide
         self.number = number
-        DnaNotationPattern.__init__(self, number * nucleotide,
-                                    in_both_strands=True)
+        DnaNotationPattern.__init__(
+            self, number * nucleotide, in_both_strands=True
+        )
+
     @staticmethod
     def from_string(string):
-        match = re.match("(\d+)x(\S)$", string)
+        match = re.match(r"(\d+)x(\S)$", string)
         if match is not None:
             number, nucleotide = match.groups()
             return HomopolymerPattern(nucleotide, int(number))
@@ -276,19 +290,22 @@ class RepeatedKmerPattern(SequencePattern):
     >>> RepeatedKmerPattern(3, 2) # dimers repeated 3 times
 
     """
+
     def __init__(self, n_repeats, kmer_size):
         self.n_repeats = n_repeats
         self.kmer_size = kmer_size
         SequencePattern.__init__(
-            self, size=kmer_size * n_repeats,
-            expression=r"([ATGC]{%d})\1{%d}" % (kmer_size, n_repeats-1),
+            self,
+            size=kmer_size * n_repeats,
+            expression=r"([ATGC]{%d})\1{%d}" % (kmer_size, n_repeats - 1),
             name="%d-repeats %d-mers" % (n_repeats, kmer_size),
             in_both_strands=False,  # a repeat on a strand is also on the other
-            lookahead='loop')
+            lookahead="loop",
+        )
 
     @staticmethod
     def from_string(string):
-        match = re.match("(\d+)x(\d+)mer$", string)
+        match = re.match(r"(\d+)x(\d+)mer$", string)
         if match is not None:
             n_repeats, kmer_size = match.groups()
             return RepeatedKmerPattern(int(n_repeats), int(kmer_size))
@@ -296,9 +313,10 @@ class RepeatedKmerPattern(SequencePattern):
     def __str__(self):
         return "%sx%smer" % (self.n_repeats, self.kmer_size)
 
+
 SequencePattern.registered_string_pattern_classes = [
     HomopolymerPattern,
     RepeatedKmerPattern,
     EnzymeSitePattern,
-    DnaNotationPattern
+    DnaNotationPattern,
 ]

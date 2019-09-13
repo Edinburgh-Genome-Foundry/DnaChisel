@@ -56,13 +56,8 @@ class EnforcePatternOccurence(Specification):
         self.center = center
         self.boost = boost
 
-    def initialize_on_problem(self, problem, role=None):
+    def initialized_on_problem(self, problem, role=None):
         return self._copy_with_full_span_if_no_location(problem)
-        # if self.location is None:
-        #     location = Location(0, len(problem.sequence))
-        #     return self.copy_with_changes(location=location)
-        # else:
-        #     return self
 
     def evaluate(self, problem):
         """Score the difference between expected and observed n_occurences."""

@@ -4,6 +4,8 @@ import itertools
 import numpy as np
 from .biotools import windows_overlap
 
+# TODO: better in-code docs
+
 class MutationChoice:
     """Represent a segment of a sequence with several possible variants.
 
@@ -24,9 +26,10 @@ class MutationChoice:
 
 
     """
-    __slots__ = ['segment', 'start', 'end', 'variants', 'is_any_nucleotide']
 
-    def __init__(self, segment, variants, is_any_nucleotide = False):
+    __slots__ = ["segment", "start", "end", "variants", "is_any_nucleotide"]
+
+    def __init__(self, segment, variants, is_any_nucleotide=False):
         if isinstance(segment, int):
             segment = (segment, segment + 1)
         self.segment = segment
@@ -37,19 +40,23 @@ class MutationChoice:
 
     def random_variant(self, sequence):
         """Return one of the variants, randomly."""
-        subsequence = sequence[self.start: self.end]
+        subsequence = sequence[self.start : self.end]
         variants = [v for v in self.variants if v != subsequence]
         # the sorting of variants seems essential to ensure reproducibility
-        # between sessions. 
+        # between sessions.
         # it does not slow down the global algorithm (or less than 3%)
         variants = sorted(variants)
         return variants[np.random.randint(len(variants))]
 
-    def percolate_with(self, others):
-        """Return a mutation restriction
+    def merge_with(self, others):
+        """Merge this mutation choice with others to form a single choice
 
         Examples:
         --------
+
+        >>> ((2, 5), {'ATT', 'ATA'})
+
+       percolated with:
 
         >>> [
         >>>     ((0, 3), {'GTA', 'GCT', 'GTT'}),
@@ -57,10 +64,8 @@ class MutationChoice:
         >>>     ((4, 7), {'ATG', 'ACC', 'CTG'})
         >>> ]
 
-        percolated with:
-        >>> ((2, 5), {'ATT', 'ATA'})
-
-        returns:
+        returns the only choices on the full interval which are compatible with
+        at least one choice in each of the MutationChoices
         >>> (0, 7), {'GTATACC', 'GTATATG'}
 
         """
@@ -74,20 +79,21 @@ class MutationChoice:
                 istart, iend = windows_overlap(other.segment, self.segment)
                 slot = []
                 for variant in other.variants:
-                    subseq = variant[istart - other.start: iend - other.start]
-                    subcandidate = candidate[istart - self.start:
-                                             iend - self.start]
+                    subseq = variant[istart - other.start : iend - other.start]
+                    subcandidate = candidate[
+                        istart - self.start : iend - self.start
+                    ]
                     if subseq == subcandidate:
                         slot.append(variant)
                 slots.append(slot)
             for subseqs in itertools.product(*slots):
                 seq = "".join(subseqs)
-                matching_seq = seq[self.start - others_start:
-                                   self.end - others_start]
+                matching_seq = seq[
+                    self.start - others_start : self.end - others_start
+                ]
                 if matching_seq == candidate:
                     final_variants.add(seq)
-        return MutationChoice(segment=final_segment,
-                              variants=final_variants)
+        return MutationChoice(segment=final_segment, variants=final_variants)
 
     def extract_varying_region(self):
         """Return MutationChoices for the central varying region and 2 flanks.
@@ -111,7 +117,7 @@ class MutationChoice:
         >>> ]
 
         """
-        
+
         if len(self.variants) <= 1:
             return [self]
         variants = list(self.variants)
@@ -127,13 +133,24 @@ class MutationChoice:
                     break
         result = []
         if start > 0:
-            result.append(MutationChoice((self.start, self.start + start),
-                                         set([reference[:start]])))
-        result.append(MutationChoice((self.start + start, self.start + end),
-                                     set([v[start: end] for v in variants])))
+            result.append(
+                MutationChoice(
+                    (self.start, self.start + start), set([reference[:start]])
+                )
+            )
+        result.append(
+            MutationChoice(
+                (self.start + start, self.start + end),
+                set([v[start:end] for v in variants]),
+            )
+        )
         if end < len(reference):
-            result.append(MutationChoice((self.start + end, self.end),
-                                         set([v[end:] for v in variants])))
+            result.append(
+                MutationChoice(
+                    (self.start + end, self.end),
+                    set([v[end:] for v in variants]),
+                )
+            )
         return result
 
     def __repr__(self):
@@ -170,6 +187,7 @@ class MutationSpace:
             MutationChoice((2, 5), {'TTC', 'TTA', 'TTT'}),
         ])
     """
+
     def __init__(self, choices_index, left_padding=0):
         """
 
@@ -180,8 +198,8 @@ class MutationSpace:
         self.choices_index = left_padding * [None] + choices_index
         self.choices_list = []
         self.unsolvable_segments = []
-        self.determined_segments  = []
-        self.multichoices  = []
+        self.determined_segments = []
+        self.multichoices = []
         for c in choices_index:
             if c is None:
                 continue
@@ -192,7 +210,8 @@ class MutationSpace:
                     self.unsolvable_segments.append(c.segment)
                 elif nvariants == 1:
                     self.determined_segments.append(
-                        (c.segment, list(c.variants)[0]))
+                        (c.segment, list(c.variants)[0])
+                    )
                 else:
                     self.multichoices.append(c)
 
@@ -213,17 +232,18 @@ class MutationSpace:
         for choice in self.choices_list:
             variants = choice.variants
             if len(choice.variants) == 0:
-                raise ValueError("Cannot constrain a sequence when some "
-                                 "positions are unsolvable, in location "
-                                 "(%d-%d)" % (choice.start, choice.end))
+                raise ValueError(
+                    "Cannot constrain a sequence when some "
+                    "positions are unsolvable, in location "
+                    "(%d-%d)" % (choice.start, choice.end)
+                )
             elif len(variants) == 1:
                 variant = list(variants)[0]
-                new_sequence[choice.start:choice.end] = variant.encode()
-            elif sequence[choice.start: choice.end] not in variants:
+                new_sequence[choice.start : choice.end] = variant.encode()
+            elif sequence[choice.start : choice.end] not in variants:
                 variant = list(variants)[0]
-                new_sequence[choice.start:choice.end] = variant.encode()
+                new_sequence[choice.start : choice.end] = variant.encode()
         return new_sequence.decode()
-
 
     def localized(self, location):
         """Return a new version with only mutations overlaping the location."""
@@ -231,18 +251,16 @@ class MutationSpace:
             start, end = location.start, location.end
         else:
             start, end = location
-        return MutationSpace(self.choices_index[start: end],
-                             left_padding=start)
+        return MutationSpace(self.choices_index[start:end], left_padding=start)
 
     @property
     def space_size(self):
         """Return the number of possible mutations"""
         if len(self.multichoices) == 0:
             return 0
-        return np.prod([1.0] + [
-            len(choice.variants)
-            for choice in self.multichoices
-        ])
+        return np.prod(
+            [1.0] + [len(choice.variants) for choice in self.multichoices]
+        )
 
     def pick_random_mutations(self, n_mutations, sequence):
         """Draw N random mutations"""
@@ -250,34 +268,32 @@ class MutationSpace:
         if n_mutations == 1:
             index = np.random.randint(len(self.multichoices))
             choice = self.multichoices[index]
-            return [
-                (choice.segment,
-                 choice.random_variant(sequence=sequence))
-            ]
+            return [(choice.segment, choice.random_variant(sequence=sequence))]
 
         return [
             (choice_.segment, choice_.random_variant(sequence=sequence))
             for choice_ in [
                 self.multichoices[i]
-                for i in np.random.choice(len(self.multichoices), n_mutations,
-                                          replace=False)
+                for i in np.random.choice(
+                    len(self.multichoices), n_mutations, replace=False
+                )
             ]
         ]
-
 
     def apply_random_mutations(self, n_mutations, sequence):
         """Return a sequence with n random mutations applied."""
         new_sequence = bytearray(sequence.encode())
         for segment, seq in self.pick_random_mutations(n_mutations, sequence):
             start, end = segment
-            new_sequence[start: end] = seq.encode()
+            new_sequence[start:end] = seq.encode()
         return new_sequence.decode()
 
     def all_variants(self, sequence):
         """Iterate through all sequence variants in this mutation space."""
         new_sequence = bytearray(sequence.encode())
         choice_start, choice_end = self.choices_span
-        encoded_segment = sequence[choice_start: choice_end].encode()
+        encoded_segment = sequence[choice_start:choice_end].encode()
+
         def sort_variants_by_distance_to_current(choice):
             """This function iterates through the variants of a given choice
             using not the alphabetical (which would bias AC over GT) but rather
@@ -285,26 +301,25 @@ class MutationSpace:
             close to the current sequence.
 
             Impact on overall algorithm speed is < 0.5%"""
-            current = sequence[choice.segment[0]: choice.segment[1]]
-            alphasort = {
-                v: i
-                for i, v in enumerate(sorted(choice.variants))
-            }
+            current = sequence[choice.segment[0] : choice.segment[1]]
+            alphasort = {v: i for i, v in enumerate(sorted(choice.variants))}
+
             def sort_key(v):
                 return (abs(alphasort[v] - alphasort[current]), v)
+
             return sorted(choice.variants, key=sort_key)
 
         variants_slots = [
-             [
-                 (choice_.segment, v.encode())
-                 for v in sort_variants_by_distance_to_current(choice_)
-             ]
-             for choice_ in self.multichoices
+            [
+                (choice_.segment, v.encode())
+                for v in sort_variants_by_distance_to_current(choice_)
+            ]
+            for choice_ in self.multichoices
         ]
         for variants in itertools.product(*variants_slots):
-            new_sequence[choice_start: choice_end] = encoded_segment
+            new_sequence[choice_start:choice_end] = encoded_segment
             for ((start, end), variant) in variants:
-                new_sequence[start: end] = variant
+                new_sequence[start:end] = variant
             yield new_sequence.decode()
 
     @staticmethod
@@ -319,42 +334,35 @@ class MutationSpace:
         sequence = problem.sequence
 
         if new_constraints is None:
-            # The use of different nucleotide orders by arrays of 4
-            # "randomizes" the considered sequence variants, thus reducing
-            # the apparition of homopolymers during exhaustive searches
-            # (may create 4bp tandem repeats though). also increased solving
-            # time by 6% in tests.
-            # variants = ["ACTG", "CTGA", "TGAC", "GACT"]
-            # choices_index = [
-            #     MutationChoice((i, i + 1), variants=variants[i % 4],
-            #                    is_any_nucleotide=True)
-            #     for i in range(len(sequence))
-            # ]
             variants = {"A": "ATGC", "T": "TACG", "G": "GCAT", "C": "CGTA"}
             choices_index = [
-                MutationChoice((i, i + 1), variants=variants[c],
-                               is_any_nucleotide=True)
+                MutationChoice(
+                    (i, i + 1), variants=variants[c], is_any_nucleotide=True
+                )
                 for i, c in enumerate(sequence)
             ]
             constraints = problem.constraints
         else:
             choices_index = [c for c in problem.mutation_space.choices_index]
             constraints = new_constraints
-        mutation_choices = sorted([
-            choice
-            if isinstance(choice, MutationChoice)
-            else MutationChoice(segment=choice[0], variants=set(choice[1]))
-            for cst in constraints
-            for choice in cst.restrict_nucleotides(sequence)
-        ], key=lambda choice: (choice.end - choice.start, choice.start))
+        mutation_choices = sorted(
+            [
+                choice
+                if isinstance(choice, MutationChoice)
+                else MutationChoice(segment=choice[0], variants=set(choice[1]))
+                for cst in constraints
+                for choice in cst.restrict_nucleotides(sequence)
+            ],
+            key=lambda choice: (choice.end - choice.start, choice.start),
+        )
         for choice in mutation_choices:
-            underlying_choices = choices_index[choice.start: choice.end]
+            underlying_choices = choices_index[choice.start : choice.end]
             if underlying_choices == []:
                 new_choice = choice
             elif all(c.is_any_nucleotide for c in underlying_choices):
                 new_choice = choice
             else:
-                new_choice = choice.percolate_with(set(underlying_choices))
+                new_choice = choice.merge_with(set(underlying_choices))
             for choice in new_choice.extract_varying_region():
                 if choice.end > len(choices_index):
                     choices_index += (choice.end - len(choices_index)) * [None]

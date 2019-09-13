@@ -7,6 +7,7 @@ a subsequence from a sequence, etc.
 from .biotools import reverse_complement
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 
+
 class Location:
     """Represent a segment of a sequence, with a start, end, and strand.
 
@@ -29,7 +30,8 @@ class Location:
       Either 1 or -1 for sense or anti-sense orientation.
 
     """
-    __slots__ = ['strand', 'start', 'end']
+
+    __slots__ = ["strand", "start", "end"]
 
     def __init__(self, start, end, strand=None):
         """Initialize."""
@@ -51,8 +53,14 @@ class Location:
         else:
             return None
 
-    def extended(self, extension_length, lower_limit=0, upper_limit=None,
-                 left=True, right=True):
+    def extended(
+        self,
+        extension_length,
+        lower_limit=0,
+        upper_limit=None,
+        left=True,
+        right=True,
+    ):
         """Extend the location of a few basepairs on each side."""
 
         if left:
@@ -71,7 +79,7 @@ class Location:
 
     def extract_sequence(self, sequence):
         """Return the subsequence read at the given location."""
-        result = sequence[self.start:self.end]
+        result = sequence[self.start : self.end]
         if self.strand == -1:
             return reverse_complement(result)
         else:
@@ -106,7 +114,7 @@ class Location:
     def __add__(self, number):
         """Return the location shifted by the number"""
         return Location(self.start + number, self.end + number, self.strand)
-    
+
     def __sub__(self, number):
         """Return the location shifted by the number"""
         return Location(self.start - number, self.end - number, self.strand)
@@ -156,12 +164,15 @@ class Location:
     def to_biopython_feature(self, feature_type="misc_feature", **qualifiers):
         """Return a Biopython SeqFeature with same location and custom
         qualifiers."""
-        return SeqFeature(self.to_biopython_location(),
-                          type=feature_type,
-                          qualifiers=qualifiers)
+        return SeqFeature(
+            self.to_biopython_location(),
+            type=feature_type,
+            qualifiers=qualifiers,
+        )
 
 
 class MultiLocation:
     "TODO: Implement when necessary"
+
     def __init__(self, locations):
         self.locations = locations

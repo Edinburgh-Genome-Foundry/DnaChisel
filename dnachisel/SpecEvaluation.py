@@ -1,42 +1,23 @@
 # -*- coding: utf-8 -*-
-"""Classes for Objective Evaluations."""
+"""Implements the SpecEvaluation class
 
+SpecEvaluation is a class describing the result of an the evaluation of a
+*DnaOptimizationProblem* by a *Specification*. It contains a score, a message,
+a list of *Locations* of sub-optimal regions.
+
+Several evaluations can be grouped using classes
+*ProblemConstraintsEvaluations* and *ProblemObjectivesEvaluations*, which
+implement methods for printing or exporting as Genbank a set of evaluations.
+"""
 
 import textwrap
 import itertools
-try:
-    import matplotlib.cm as cm
-    MATPLOTLIB_AVAILABLE = True
-except:
-    MATPLOTLIB_AVAILABLE = False
 
 from Bio.SeqFeature import SeqFeature
-
+from .biotools import score_to_formatted_string
+from .reports import colors_cycle
 from .Location import Location
 
-def colors_cycle(lightness_factor=1.0, color_shift=0):
-    if MATPLOTLIB_AVAILABLE:
-        cycle = itertools.cycle([
-            cm.Paired(color_shift + 0.21 * i % 1.0)
-            for i in range(30)
-        ])
-        return (
-            '#%02x%02x%02x' % tuple([int(255 * c * lightness_factor)
-                                    for c in rgb_tuple[:3]])
-            for rgb_tuple in cycle
-        )
-    else:
-        return itertools.cycle([
-            "#f1cccc", "#f1e5cc", "#e3f1cc", "#ccf1e3", "#ccd7f1", "#e0ccf1",
-            "f1cce7"
-        ])
-    
-
-def score_as_text(score):
-    raw = str(int(score) if (int(score) == score) else score)
-    as_float = "%.02f" % score
-    as_eng = "%.02E." % score
-    return min([raw, as_float, as_eng], key=len).rjust(9)
 
 class SpecEvaluation:
     """Store relevant infos about the evaluation of an objective on a problem.
@@ -74,31 +55,44 @@ class SpecEvaluation:
 
     """
 
-    def __init__(self, specification, problem, score, locations=None,
-                 message=None, data=None):
+    def __init__(
+        self,
+        specification,
+        problem,
+        score,
+        locations=None,
+        message=None,
+        data=None,
+    ):
         """Initialize."""
         self.specification = specification
         self.problem = problem
         self.score = score
         self.passes = score >= 0
-        self.is_optimal = (score == specification.best_possible_score)
+        self.is_optimal = score == specification.best_possible_score
         self.locations = locations
         self.message = self.default_message if message is None else message
         self.data = {} if data is None else data
 
-
-
     @property
     def default_message(self):
         """Return the default message for console/reports."""
-        return "Score: %s. Locations: %s" % (score_as_text(self.score),
-                                             self.locations)
-    @property
-    def score_as_text(self):
-        return score_as_text(self.score)
+        return "Score: %s. Locations: %s" % (
+            score_to_formatted_string(self.score),
+            self.locations,
+        )
 
-    def to_text(self, role='constraint', wrapped=True):
+    @property
+    def score_to_formatted_string(self):
+        return score_to_formatted_string(self.score)
+
+    def to_text(self, role="constraint", wrapped=True):
         """Return a string representation of the evaluation.
+
+        Example output for a constraint:
+
+        >>> FAIL ┍ AvoidNonUniqueSegments[10-1000](min_length:9)
+        >>>      │ Score:        -2. Locations: [232-241, 233-242]
 
         Parameters
         ----------
@@ -117,28 +111,40 @@ class SpecEvaluation:
         """
         message = self.message
         if wrapped:
-            indents = 6 if (role == 'constraint') else 11
-            indent = indents * ' ' + "│ "
+            indents = 6 if (role == "constraint") else 11
+            indent = indents * " " + "│ "
             message = "\n".join(
-                textwrap.wrap(message, width=80, initial_indent=indent,
-                              subsequent_indent=indent)
+                textwrap.wrap(
+                    message,
+                    width=80,
+                    initial_indent=indent,
+                    subsequent_indent=indent,
+                )
             )
 
         if role == "objective":
             return "{optimal}{score} ┍ {spec} \n{message}".format(
-                self=self, optimal="✔" if self.is_optimal else " ",
+                self=self,
+                optimal="✔" if self.is_optimal else " ",
                 spec=self.specification.label(with_location=True),
-                score=score_as_text(self.score), message=message
+                score=score_to_formatted_string(self.score),
+                message=message,
             )
         else:
             return "{passes} ┍ {spec}\n{message}".format(
-                self=self, passes="✔PASS" if self.passes else " FAIL",
+                self=self,
+                passes="✔PASS" if self.passes else " FAIL",
                 spec=self.specification.label(with_location=True),
-                message=message)
+                message=message,
+            )
 
-    def locations_to_biopython_features(self, feature_type="misc_feature",
-                                        color="red", label_prefix="",
-                                        merge_overlapping=False):
+    def locations_to_biopython_features(
+        self,
+        feature_type="misc_feature",
+        color="red",
+        label_prefix="",
+        merge_overlapping=False,
+    ):
         """Return a list of locations (of breach/suboptimality) as annotations.
 
         Parameters
@@ -152,22 +158,29 @@ class SpecEvaluation:
         label_prefix
           The locations will be labelled of the form
           "prefix NameOfSpecification()"
+        
+        merge_overlapping
+          If true, then overlapping locations (0-5, 2-9) will be merged into a
+          single one (0-9).
         """
         locations = self.locations
         if merge_overlapping:
             locations = Location.merge_overlapping_locations(locations)
         return [
-            SeqFeature(location.to_biopython_location(), type=feature_type,
-                       qualifiers=dict(
-                           label=label_prefix + " " + str(self.specification),
-                           color=color
-            ))
+            SeqFeature(
+                location.to_biopython_location(),
+                type=feature_type,
+                qualifiers=dict(
+                    label=label_prefix + " " + str(self.specification),
+                    color=color,
+                ),
+            )
             for location in locations
         ]
 
 
 class SpecEvaluations:
-    """Base class for the collective handling of lists of SpecEvaluations.
+    """Base class for handling lists of SpecEvaluations.
 
     See ProblemObjectivesEvaluations and ProblemConstraintsEvaluations for
     the useful subclasses.
@@ -181,6 +194,7 @@ class SpecEvaluations:
       (optional) problem on which the evaluations were carried.
 
     """
+
     color_lightness = 1.0
     color_shift = 0
 
@@ -206,14 +220,12 @@ class SpecEvaluations:
 
         Scores are multiplied by their respective boost factor.
         """
-        result = sum([
-            ev.specification.boost * ev.score
-            for ev in self.evaluations
-        ])
+        result = sum(
+            [ev.specification.boost * ev.score for ev in self.evaluations]
+        )
         if as_text:
-            result = score_as_text(result)
+            result = score_to_formatted_string(result)
         return result
-
 
     def filter(self, eval_filter):
         """Create a new instance with a subset of the evaluations.
@@ -227,25 +239,29 @@ class SpecEvaluations:
                 "passing": lambda e: e.passes,
                 "failing": lambda e: not e.passes,
                 "optimal": lambda e: e.is_optimal,
-                "suboptimal": lambda e: not e.is_optimal
+                "suboptimal": lambda e: not e.is_optimal,
             }[eval_filter]
-        return self.__class__(evaluations=[
-            ev for ev in self.evaluations if eval_filter(ev)
-        ], problem=self.problem)
+        return self.__class__(
+            evaluations=[ev for ev in self.evaluations if eval_filter(ev)],
+            problem=self.problem,
+        )
 
     def to_text(self):
-        """Return a long representation of the evaluations."""
-        return "\n".join(["===> %s" % self.text_summary_message()] + [
-            e.to_text(role=self.specifications_role)
-            for e in self.evaluations
-        ]) + "\n\n"
+        """Return a long representation of the evaluations list."""
+        return (
+            "\n".join(
+                ["===> %s" % self.text_summary_message()]
+                + [
+                    e.to_text(role=self.specifications_role)
+                    for e in self.evaluations
+                ]
+            )
+            + "\n\n"
+        )
 
     def evaluations_with_locations(self):
         """Return the list of all evaluations whose location is not None."""
-        return [
-            ev for ev in self.evaluations
-            if ev.locations is not None
-        ]
+        return [ev for ev in self.evaluations if ev.locations is not None]
 
     def success_and_failures_as_features(self, feature_type="misc_feature"):
         """Return all evaluations as Biopython features.
@@ -259,16 +275,21 @@ class SpecEvaluations:
             ev.specification.to_biopython_feature(
                 feature_type=feature_type,
                 color=self.success_failure_color(ev),
-                passes='true' if ev.passes else 'false',
-                is_optimal='true' if ev.is_optimal else 'false',
+                passes="true" if ev.passes else "false",
+                is_optimal="true" if ev.is_optimal else "false",
             )
             for ev in self.evaluations
-            if ev.specification.__dict__.get('location', False)
+            if ev.specification.__dict__.get("location", False)
         ]
 
-    def locations_as_features(self, features_type="misc_feature",
-                              with_specifications=True, label_prefix="From",
-                              colors="cycle", merge_overlapping=False):
+    def locations_as_features(
+        self,
+        features_type="misc_feature",
+        with_specifications=True,
+        label_prefix="From",
+        colors="cycle",
+        merge_overlapping=False,
+    ):
         """Return all locations from all evaluations as biopython features.
 
         Parameters
@@ -286,25 +307,28 @@ class SpecEvaluations:
           "From AvoidPattern(100-200)", to indicate where the breach belongs.
 
         colors
-          Either a list of colors (one for each specification) or "cycle"
-          for cycling through predefined colors. The colors are applied to all
-          breaches.
+          Either a list of colors (one for each specification), e.g.
+          ['red', '#7aab71', ...] or "cycle" for cycling through predefined
+          colors. The colors are applied to all breaches.
 
         """
         if colors == "cycle":
-            cycle = colors_cycle(lightness_factor=self.color_lightness,
-                                 color_shift=self.color_shift)
+            cycle = colors_cycle(
+                lightness_factor=self.color_lightness,
+                color_shift=self.color_shift,
+            )
             colors = [next(cycle) for ev in self.evaluations]
         features = [
             location.to_biopython_feature(
                 feature_type="misc_feature",
                 specification=label_prefix + " " + str(ev.specification),
-                color=color
+                color=color,
             )
             for (ev, color) in zip(self.evaluations_with_locations(), colors)
             for location in (
                 Location.merge_overlapping_locations(ev.locations)
-                if merge_overlapping else ev.locations
+                if merge_overlapping
+                else ev.locations
             )
         ]
         if with_specifications:
@@ -313,10 +337,10 @@ class SpecEvaluations:
                     feature_type="misc_feature",
                     label=str(ev.specification),
                     role=self.specifications_role,
-                    color=color
+                    color=color,
                 )
                 for ev, color in zip(self.evaluations, colors)
-                if ev.specification.__dict__.get('location', False)
+                if ev.specification.__dict__.get("location", False)
             ]
         return features
 
@@ -337,10 +361,13 @@ class ProblemConstraintsEvaluations(SpecEvaluations):
         The ``problem`` is a DnaChisel DnaOptimizationProblem.
 
         """
-        return ProblemConstraintsEvaluations([
-            specification.evaluate(problem)
-            for specification in problem.constraints
-        ], problem=problem)
+        return ProblemConstraintsEvaluations(
+            [
+                specification.evaluate(problem)
+                for specification in problem.constraints
+            ],
+            problem=problem,
+        )
 
     def success_failure_color(self, evaluation):
         """Return color #60f979 if evaluation.passes else #f96c60."""
@@ -354,12 +381,14 @@ class ProblemConstraintsEvaluations(SpecEvaluations):
         else:
             return "FAILURE: %d constraints evaluations failed" % len(failed)
 
+
 class ProblemObjectivesEvaluations(SpecEvaluations):
     """Special multi-evaluation class for all objectives of a same problem.
 
     See submethod ``.from_problem``
 
     """
+
     color_lightness = 0.8
     color_shift = 0.14
 
@@ -372,10 +401,13 @@ class ProblemObjectivesEvaluations(SpecEvaluations):
         The ``problem`` is a DnaChisel DnaOptimizationProblem.
 
         """
-        return ProblemObjectivesEvaluations([
-            specification.evaluate(problem)
-            for specification in problem.objectives
-        ], problem=problem)
+        return ProblemObjectivesEvaluations(
+            [
+                specification.evaluate(problem)
+                for specification in problem.objectives
+            ],
+            problem=problem,
+        )
 
     def success_failure_color(self, evaluation):
         """Return color #cbf960 if evaluation is optimal else #f9a260."""

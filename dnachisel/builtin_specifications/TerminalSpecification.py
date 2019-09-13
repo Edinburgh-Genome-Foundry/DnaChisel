@@ -36,7 +36,7 @@ class TerminalSpecification(Specification):
         return SpecEvaluation(self, problem, score=score, locations=locations,
                               message=message)
 
-    def initialize_on_problem(self, problem, role):
+    def initialized_on_problem(self, problem, role):
         """Find out what sequence it is that we are supposed to conserve."""
         if not hasattr(self, 'ends_locations') or self.ends_locations is None:
             L = len(problem.sequence)

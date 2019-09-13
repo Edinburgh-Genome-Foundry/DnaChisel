@@ -119,7 +119,7 @@ class AvoidNonUniqueSegments(Specification):
         self.boost = 1.0
         self.localization_data = localization_data
 
-    def initialize_on_problem(self, problem, role='constraint'):
+    def initialized_on_problem(self, problem, role='constraint'):
         """Location is the full sequence by default."""
         def location_or_default(location):
             default = Location(0, len(problem.sequence), 1)
@@ -203,7 +203,7 @@ class AvoidNonUniqueSegments(Specification):
 
         if locations == []:
             return SpecEvaluation(
-                self, problem, score=0,
+                self, problem, score=0, locations=[],
                 message="Passed: no nonunique %d-mer found." % self.min_length)
         return SpecEvaluation(
             self, problem, score=-len(locations),
@@ -252,3 +252,6 @@ class AvoidNonUniqueSegments(Specification):
                                       derived_from=self)
     def label_parameters(self):
         return [('min_length', str(self.min_length))]
+    
+    def short_label(self):
+        return "All %dbp unique" % self.min_length

@@ -7,21 +7,26 @@ constraints, objectives.
 from Bio.SeqRecord import SeqRecord
 from Bio import SeqIO
 
-from .biotools.biotools import (sequence_to_biopython_record,
-                                find_specification_in_feature,
-                                sequences_differences_array,
-                                sequences_differences_segments)
+from .biotools import (
+    sequence_to_biopython_record,
+    find_specification_in_feature,
+    sequences_differences_array,
+    sequences_differences_segments,
+)
 from .Specification import Specification, SpecificationsSet
-from .SpecEvaluation import (ProblemObjectivesEvaluations,
-                             ProblemConstraintsEvaluations)
+from .SpecEvaluation import (
+    ProblemObjectivesEvaluations,
+    ProblemConstraintsEvaluations,
+)
 from .Location import Location
 from .MutationSpace import MutationSpace
-from .reports.optimization_reports import (write_optimization_report,
-                                           write_no_solution_report,
-                                           PDF_REPORTS_AVAILABLE)
+from .reports.optimization_reports import (
+    write_optimization_report,
+    write_no_solution_report,
+)
 from proglog import default_bar_logger
 
-DEFAULT_SPECIFICATIONS_DICT = {} # completed at library initialization
+DEFAULT_SPECIFICATIONS_DICT = {}  # completed at library initialization
 
 
 class NoSolutionError(Exception):
@@ -39,6 +44,7 @@ class NoSolutionError(Exception):
 
     def __str__(self):
         return self.message
+
 
 class DnaOptimizationProblem:
     """Problem specifications: sequence, constraints, optimization objectives.
@@ -115,8 +121,14 @@ class DnaOptimizationProblem:
     n_mutations = 2
     local_extensions = (0, 5)
 
-    def __init__(self, sequence, constraints=None, objectives=None,
-                 logger='bar', mutation_space=None):
+    def __init__(
+        self,
+        sequence,
+        constraints=None,
+        objectives=None,
+        logger="bar",
+        mutation_space=None,
+    ):
         """Initialize"""
         if isinstance(sequence, SeqRecord):
             self.record = sequence
@@ -127,19 +139,21 @@ class DnaOptimizationProblem:
         self.constraints = [] if constraints is None else list(constraints)
         self.objectives = [] if objectives is None else list(objectives)
         self.logger = default_bar_logger(
-            logger, bars=('objective', 'constraint', 'location'),
-            ignored_bars=('mutation',), min_time_interval=0.2)
+            logger,
+            bars=("objective", "constraint", "location"),
+            ignored_bars=("mutation",),
+            min_time_interval=0.2,
+        )
         self.mutation_space = mutation_space
         self.initialize()
 
     def initialize(self):
         """Variables initialization before solving."""
 
-        #Uncompress SpecificationSets into
+        # Uncompress SpecificationSets into
         for specs in (self.constraints, self.objectives):
             specsets = [
-                spec for spec in specs
-                if isinstance(spec, SpecificationsSet)
+                spec for spec in specs if isinstance(spec, SpecificationsSet)
             ]
             specs_in_sets = [
                 spec
@@ -150,14 +164,13 @@ class DnaOptimizationProblem:
                 specs.remove(specset)
             specs.extend(specs_in_sets)
 
-
         self.constraints = [
-            constraint.initialize_on_problem(self, role="constraint")
+            constraint.initialized_on_problem(self, role="constraint")
             for constraint in self.constraints
         ]
         self.objectives = [
-            objective.initialize_on_problem(self, role="objective")
-            for objective in  self.objectives
+            objective.initialized_on_problem(self, role="objective")
+            for objective in self.objectives
         ]
 
         self.sequence_before = self.sequence
@@ -166,7 +179,8 @@ class DnaOptimizationProblem:
         if self.mutation_space is None:
             self.mutation_space = MutationSpace.from_optimization_problem(self)
             self.sequence = self.mutation_space.constrain_sequence(
-                self.sequence)
+                self.sequence
+            )
 
     @property
     def constraints_before(self):
@@ -232,7 +246,7 @@ class DnaOptimizationProblem:
         self.sequence = sequence_before
         raise NoSolutionError(
             "Exhaustive search failed to satisfy all constraints.",
-            problem=self
+            problem=self,
         )
 
     def resolve_constraints_by_random_mutations(self):
@@ -252,11 +266,7 @@ class DnaOptimizationProblem:
         """
 
         evaluations = self.constraints_evaluations()
-        score = sum([
-            e.score
-            for e in evaluations
-            if not e.passes
-        ])
+        score = sum([e.score for e in evaluations if not e.passes])
 
         iters = range(3 * self.max_random_iters)
         for i in self.logger.iter_bar(mutation=iters):
@@ -266,14 +276,11 @@ class DnaOptimizationProblem:
                 return
             previous_sequence = self.sequence
             self.sequence = self.mutation_space.apply_random_mutations(
-                n_mutations=self.n_mutations, sequence=self.sequence)
+                n_mutations=self.n_mutations, sequence=self.sequence
+            )
 
             evaluations = self.constraints_evaluations()
-            new_score = sum([
-                e.score
-                for e in evaluations
-                if not e.passes
-            ])
+            new_score = sum([e.score for e in evaluations if not e.passes])
 
             if new_score > score:
                 score = new_score
@@ -285,7 +292,7 @@ class DnaOptimizationProblem:
             "problem.max_random_iters = 5000 # or even 10000, 20000, etc.\n\n"
             "If the problem persists, you may be in presence of a complex or "
             "unsolvable problem.",
-            problem=self
+            problem=self,
         )
 
     def resolve_constraints_locally(self):
@@ -303,8 +310,9 @@ class DnaOptimizationProblem:
             return
 
         locations = sorted(evaluation.locations)
-        iterator = self.logger.iter_bar(location=locations,
-                                        bar_message=lambda loc: str(loc))
+        iterator = self.logger.iter_bar(
+            location=locations, bar_message=lambda loc: str(loc)
+        )
         for i, location in enumerate(iterator):
             for extension in self.local_extensions:
                 new_location = location.extended(extension)
@@ -314,16 +322,20 @@ class DnaOptimizationProblem:
                         error = NoSolutionError(
                             location=new_location,
                             problem=self,
-                            message='Constraint breach in region that cannot '
-                                    'be mutated.'
+                            message="Constraint breach in region that cannot "
+                            "be mutated.",
                         )
                         error.location = new_location
                         error.constraint = constraint
                         error.message = "While solving %s in %s:\n\n%s" % (
-                            constraint, new_location, str(error)
+                            constraint,
+                            new_location,
+                            str(error),
                         )
-                        self.logger(location__index=len(locations),
-                                    location__message='Cold exit')
+                        self.logger(
+                            location__index=len(locations),
+                            location__message="Cold exit",
+                        )
                         raise error
                     else:
                         continue
@@ -332,12 +344,15 @@ class DnaOptimizationProblem:
                 # This blocks solves the problem of overlapping breaches,
                 # which can make the local optimization impossible.
                 if (i < (len(locations) - 1)) and (
-                   locations[i + 1].overlap_region(new_location)):
+                    locations[i + 1].overlap_region(new_location)
+                ):
                     this_local_constraint = constraint.localized(
-                        new_location, with_righthand=False, problem=self)
+                        new_location, with_righthand=False, problem=self
+                    )
                 else:
                     this_local_constraint = constraint.localized(
-                        new_location, problem=self)
+                        new_location, problem=self
+                    )
 
                 if this_local_constraint.evaluate(self).passes:
                     continue
@@ -347,8 +362,9 @@ class DnaOptimizationProblem:
                     if _constraint != constraint
                     if not _constraint.enforced_by_nucleotide_restrictions
                 ]
-                localized_constraints = [cst for cst in localized_constraints
-                                         if cst is not None]
+                localized_constraints = [
+                    cst for cst in localized_constraints if cst is not None
+                ]
                 passing_localized_constraints = [
                     _constraint
                     for _constraint in localized_constraints
@@ -356,19 +372,23 @@ class DnaOptimizationProblem:
                 ]
                 local_problem = self.__class__(
                     sequence=self.sequence,
-                    constraints=([this_local_constraint] +
-                                 passing_localized_constraints),
-                    mutation_space=mutation_space
+                    constraints=(
+                        [this_local_constraint] + passing_localized_constraints
+                    ),
+                    mutation_space=mutation_space,
                 )
-                self.logger.store(problem=self,
-                                  local_problem=local_problem,
-                                  location=location)
-                local_problem.randomization_threshold = \
+                self.logger.store(
+                    problem=self,
+                    local_problem=local_problem,
+                    location=location,
+                )
+                local_problem.randomization_threshold = (
                     self.randomization_threshold
+                )
                 local_problem.max_random_iters = self.max_random_iters
                 local_problem.n_mutations = self.n_mutations
                 try:
-                    if hasattr(constraint, 'resolution_heuristic'):
+                    if hasattr(constraint, "resolution_heuristic"):
                         constraint.resolution_heuristic(local_problem)
                     else:
                         local_problem.resolve_constraints_locally()
@@ -379,13 +399,18 @@ class DnaOptimizationProblem:
                         error.location = new_location
                         error.constraint = constraint
                         error.message = "While solving %s in %s:\n\n%s" % (
-                            constraint, new_location, str(error)
+                            constraint,
+                            new_location,
+                            str(error),
                         )
-                        self.logger(location__index=len(locations),
-                                    location__message='Cold exit')
+                        self.logger(
+                            location__index=len(locations),
+                            location__message="Cold exit",
+                        )
                         raise error
                     else:
                         continue
+
     def change_sequence(self, new_sequence):
         self.sequence = new_sequence
 
@@ -397,27 +422,29 @@ class DnaOptimizationProblem:
 
         constraint
           The ``Specification`` object for which the sequence should be solved
-        
+
         final_check
           If True, a final check of that all constraints pass will be run at
           the end of the process, when constraints have been resolved one by
           one, to check that the solving of one constraint didn't undo the
           solving of another.
-        
+
         cst_filter
           An optional filter to only resolve a subset function (constraint => True/False)
 
         """
         constraints = [
-            c for c in self.constraints
+            c
+            for c in self.constraints
             if not c.enforced_by_nucleotide_restrictions
             and ((cst_filter is None) or cst_filter(c))
         ]
         if len(constraints) == 0:
             return
         constraints = sorted(constraints, key=lambda c: -c.priority)
-        for constraint in self.logger.iter_bar(constraint=constraints,
-                                               bar_message=lambda c: str(c)):
+        for constraint in self.logger.iter_bar(
+            constraint=constraints, bar_message=lambda c: str(c)
+        ):
             try:
                 self.resolve_constraint(constraint=constraint)
             except NoSolutionError as error:
@@ -425,21 +452,20 @@ class DnaOptimizationProblem:
                 raise error
         if final_check:
             self.perform_final_check()
-    
+
     def perform_final_check(self):
         for cst in self.constraints:
             if not cst.evaluate(self).passes:
                 raise NoSolutionError(
-                    'The solving of all constraints failed to solve'
-                    ' all constraints, as some appear unsolved at the end'
-                    ' of the optimization. This is an unintended behavior,'
-                    ' likely due to a complex problem. Try running the'
-                    ' solver on the same sequence again, or report the'
-                    ' error to the maintainers:\n\n' +
-                    self.constraints_text_summary(failed_only=True),
-                    problem=self)
-
-
+                    "The solving of all constraints failed to solve"
+                    " all constraints, as some appear unsolved at the end"
+                    " of the optimization. This is an unintended behavior,"
+                    " likely due to a complex problem. Try running the"
+                    " solver on the same sequence again, or report the"
+                    " error to the maintainers:\n\n"
+                    + self.constraints_text_summary(failed_only=True),
+                    problem=self,
+                )
 
     # SPECIFICATIONS
 
@@ -449,16 +475,18 @@ class DnaOptimizationProblem:
         if not self.all_constraints_pass():
             summary = self.constraints_text_summary(failed_only=True)
             raise NoSolutionError(
-                summary +
-                "Optimization can only be done when all constraints are "
+                summary
+                + "Optimization can only be done when all constraints are "
                 "verified.",
-                self
+                self,
             )
 
-        if all([obj.best_possible_score is not None
-                for obj in self.objectives]):
-            best_possible_score = sum([obj.best_possible_score
-                                       for obj in self.objectives])
+        if all(
+            [obj.best_possible_score is not None for obj in self.objectives]
+        ):
+            best_possible_score = sum(
+                [obj.best_possible_score for obj in self.objectives]
+            )
         else:
             best_possible_score = None
 
@@ -474,8 +502,9 @@ class DnaOptimizationProblem:
                 if score > current_best_score:
                     current_best_score = score
                     current_best_sequence = self.sequence
-                    if ((best_possible_score is not None) and
-                            (current_best_score >= best_possible_score)):
+                    if (best_possible_score is not None) and (
+                        current_best_score >= best_possible_score
+                    ):
                         self.logger(mutation__index=space_size)
                         break
             self.sequence = self.sequence_before
@@ -488,26 +517,35 @@ class DnaOptimizationProblem:
 
         if not self.all_constraints_pass():
             summary = self.constraints_text_summary()
-            raise ValueError(summary + "Optimization can only be done when all"
-                             " constraints are verified")
+            raise ValueError(
+                summary + "Optimization can only be done when all"
+                " constraints are verified"
+            )
         score = self.objective_scores_sum()
 
-        if all([obj.best_possible_score is not None
-                for obj in self.objectives]):
-            best_possible_score = sum([obj.best_possible_score * obj.boost
-                                       for obj in self.objectives])
+        if all(
+            [obj.best_possible_score is not None for obj in self.objectives]
+        ):
+            best_possible_score = sum(
+                [
+                    obj.best_possible_score * obj.boost
+                    for obj in self.objectives
+                ]
+            )
         else:
             best_possible_score = None
         iters = self.max_random_iters
         for iteration in self.logger.iter_bar(mutation=range(iters)):
-            if ((best_possible_score is not None) and
-                    (score >= best_possible_score)):
+            if (best_possible_score is not None) and (
+                score >= best_possible_score
+            ):
                 self.logger(mutation__index=iters)
                 break
 
             previous_sequence = self.sequence
             self.sequence = self.mutation_space.apply_random_mutations(
-                n_mutations=self.n_mutations, sequence=self.sequence)
+                n_mutations=self.n_mutations, sequence=self.sequence
+            )
             if self.all_constraints_pass():
                 new_score = self.objective_scores_sum()
                 if new_score > score:
@@ -522,19 +560,21 @@ class DnaOptimizationProblem:
 
         evaluation = objective.evaluate(self)
         locations = evaluation.locations
-        if ((objective.best_possible_score is not None) and
-                (evaluation.score == objective.best_possible_score)):
+        if (objective.best_possible_score is not None) and (
+            evaluation.score == objective.best_possible_score
+        ):
             return
         if locations is None:
             raise ValueError(
-                ("With %s:" % objective) +
-                "max_objective_by_localization requires either that"
+                ("With %s:" % objective)
+                + "max_objective_by_localization requires either that"
                 " locations be provided or that the objective evaluation"
                 " returns locations."
             )
 
-        for location in self.logger.iter_bar(location=locations,
-                                             bar_message=lambda l: str(l)):
+        for location in self.logger.iter_bar(
+            location=locations, bar_message=lambda l: str(l)
+        ):
             mutation_space = self.mutation_space.localized(location)
             if mutation_space.space_size == 0:
                 continue
@@ -543,27 +583,31 @@ class DnaOptimizationProblem:
                 _constraint.localized(location, problem=self)
                 for _constraint in self.constraints
             ]
-            localized_constraints = [cst for cst in localized_constraints
-                                     if cst is not None]
+            localized_constraints = [
+                cst for cst in localized_constraints if cst is not None
+            ]
             localized_objectives = [
                 _objective.localized(location, problem=self)
                 for _objective in self.objectives
             ]
-            localized_objectives = [obj for obj in localized_objectives
-                                    if obj is not None]
+            localized_objectives = [
+                obj for obj in localized_objectives if obj is not None
+            ]
             local_problem = DnaOptimizationProblem(
                 sequence=self.sequence,
                 constraints=localized_constraints,
                 mutation_space=mutation_space,
-                objectives=localized_objectives
+                objectives=localized_objectives,
             )
-            self.logger.store(problem=self,
-                              local_problem=local_problem,
-                              location=location)
-            local_problem.randomization_threshold = self.randomization_threshold
+            self.logger.store(
+                problem=self, local_problem=local_problem, location=location
+            )
+            local_problem.randomization_threshold = (
+                self.randomization_threshold
+            )
             local_problem.max_random_iters = self.max_random_iters
             local_problem.n_mutations = self.n_mutations
-            if hasattr(objective, 'optimization_heuristic'):
+            if hasattr(objective, "optimization_heuristic"):
                 objective.optimization_heuristic(local_problem)
             else:
                 space_size = local_problem.mutation_space.space_size
@@ -578,77 +622,85 @@ class DnaOptimizationProblem:
         """Maximize the objective via local, targeted mutations."""
 
         objectives = [
-            obj for obj in self.objectives
-            if not obj.optimize_passively
+            obj for obj in self.objectives if not obj.optimize_passively
         ]
         if len(objectives) == 0:
             return
-        for objective in self.logger.iter_bar(objective=objectives,
-                                              bar_message=lambda o: str(o)):
+        for objective in self.logger.iter_bar(
+            objective=objectives, bar_message=lambda o: str(o)
+        ):
             self.optimize_objective(objective=objective)
 
     @staticmethod
     def from_record(record, specifications_dict="default"):
+        """TODO: docs"""
         if isinstance(record, str):
             if record.lower().endswith((".fa", ".fasta")):
-                record = SeqIO.read(record, 'fasta')
+                record = SeqIO.read(record, "fasta")
             elif record.lower().endswith((".gb", ".gbk")):
-                record = SeqIO.read(record, 'genbank')
+                record = SeqIO.read(record, "genbank")
             else:
-                raise ValueError("Record is either a Biopython record or a "
-                                 "file path ending in .gb, .gbk, .fa, .fasta.")
+                raise ValueError(
+                    "Record is either a Biopython record or a "
+                    "file path ending in .gb, .gbk, .fa, .fasta."
+                )
         if specifications_dict == "default":
             specifications_dict = DEFAULT_SPECIFICATIONS_DICT
-        parameters = dict(
-            sequence=record,
-            constraints=[],
-            objectives=[]
-        )
+        parameters = dict(sequence=record, constraints=[], objectives=[])
         for feature in record.features:
             if feature.type != "misc_feature":
                 continue
             if find_specification_in_feature(feature) is None:
                 continue
             role, spec = Specification.from_biopython_feature(
-                feature, specifications_dict)
+                feature, specifications_dict
+            )
             parameters[role + "s"].append(spec)
 
         return DnaOptimizationProblem(**parameters)
 
-    def to_record(self, filepath=None, features_type="misc_feature",
-                  with_original_features=True,
-                  with_original_spec_features=False,
-                  with_constraints=True,
-                  with_objectives=True,
-                  with_sequence_edits=False,
-                  colors_dict=None):
+    def to_record(
+        self,
+        filepath=None,
+        features_type="misc_feature",
+        with_original_features=True,
+        with_original_spec_features=False,
+        with_constraints=True,
+        with_objectives=True,
+        with_sequence_edits=False,
+        colors_dict=None,
+    ):
         record = sequence_to_biopython_record(self.sequence)
 
         record.features = []
         if with_constraints:
             record.features += [
-                cst.to_biopython_feature(role="constraint",
-                                         feature_type=features_type,
-                                         colors_dict=colors_dict)
+                cst.to_biopython_feature(
+                    role="constraint",
+                    feature_type=features_type,
+                    colors_dict=colors_dict,
+                )
                 for cst in self.constraints
-                if cst.__dict__.get('location', False)
+                if cst.__dict__.get("location", False)
             ]
         if with_objectives:
             record.features += [
-                obj.to_biopython_feature(role="objective",
-                                         feature_type=features_type,
-                                         colors_dict=colors_dict)
+                obj.to_biopython_feature(
+                    role="objective",
+                    feature_type=features_type,
+                    colors_dict=colors_dict,
+                )
                 for obj in self.objectives
             ]
         if with_original_features and (self.record is not None):
             record.features += [
-                f for f in self.record.features
-                if with_original_spec_features or
-                not find_specification_in_feature(f)
+                f
+                for f in self.record.features
+                if with_original_spec_features
+                or not find_specification_in_feature(f)
             ]
         if with_sequence_edits:
             record.features += self.sequence_edits_as_features()
-
 
         if filepath is not None:
             SeqIO.write(record, filepath, "genbank")
@@ -658,22 +710,22 @@ class DnaOptimizationProblem:
     def sequence_edits_as_array(self):
         return sequences_differences_array(self.sequence, self.sequence_before)
 
-
     def sequence_edits_as_features(self, feature_type="misc_feature"):
 
-        segments = sequences_differences_segments(self.sequence,
-                                                  self.sequence_before)
+        segments = sequences_differences_segments(
+            self.sequence, self.sequence_before
+        )
         return [
             Location(start, end).to_biopython_feature(
-                label="was " + self.sequence_before[start: end],
-                is_edit="true")
+                label="was " + self.sequence_before[start:end], is_edit="true"
+            )
             for start, end in segments
         ]
-    
+
     def optimize_with_report(self, target, project_name="My project"):
         """Resolve constraints, optimize objectives, write a multi-file report.
 
-        The report's content may vary depending on the optimization's success 
+        The report's content may vary depending on the optimization's success.
 
         Parameters
         ----------
@@ -702,12 +754,16 @@ class DnaOptimizationProblem:
             self.logger(message="No solution found: making report")
             data = write_no_solution_report(target, self, error)
             start, end, s = error.location.to_tuple()
-            message = ("No solution found in zone [%d, %d]: %s." %
-                    (start, end, str(error)))
+            message = "No solution found in zone [%d, %d]: %s." % (
+                start,
+                end,
+                str(error),
+            )
             return False, message, data
         self.logger(message="Now optimizing the sequence")
         self.optimize()
         self.logger(message="Success! Generating report.")
         data = write_optimization_report(
-            target, self, project_name=project_name)
+            target, self, project_name=project_name
+        )
         return True, "Optimization successful.", data

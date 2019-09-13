@@ -40,7 +40,7 @@ class AvoidHairpins(Specification):
         self.location = location
         self.boost = boost
 
-    def initialize_on_problem(self, problem, role):
+    def initialized_on_problem(self, problem, role):
         return self._copy_with_full_span_if_no_location(problem)
         # if self.location is None:
         #     location = Location(0, len(problem.sequence), 1)
@@ -84,3 +84,8 @@ class AvoidHairpins(Specification):
     def label_parameters(self):
         return [('stem_size', str(self.stem_size)),
                 ('hairpin_window', str(self.hairpin_window))]
+    
+    def short_label(self):
+        stem = self.stem_size
+        inside = self.hairpin_window - 2  * self.stem_size
+        return "No %d-%d-%dbp hairpin" % (stem, inside, stem)

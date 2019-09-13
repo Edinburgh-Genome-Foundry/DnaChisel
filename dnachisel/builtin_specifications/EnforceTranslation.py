@@ -1,6 +1,7 @@
 "Implement EnforceTranslation."
 
 from .CodonSpecification import CodonSpecification
+
 # from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from dnachisel.biotools import CODONS_SEQUENCES, translate, reverse_complement
@@ -47,8 +48,8 @@ class EnforceTranslation(CodonSpecification):
         self.set_location(location)
         self.boost = boost
 
-        self.initialize_translation_from_problem = (translation is None)
-        self.initialize_location_from_problem = (location is None)
+        self.initialize_translation_from_problem = translation is None
+        self.initialize_location_from_problem = location is None
 
     def set_location(self, location):
         """Check that the location length is valid before setting it."""
@@ -59,25 +60,32 @@ class EnforceTranslation(CodonSpecification):
                     "Location %s has length %d" % (location, len(location))
                 )
 
-            if ((self.translation is not None) and
-                    (len(location) != 3 * len(self.translation))):
+            if (self.translation is not None) and (
+                len(location) != 3 * len(self.translation)
+            ):
                 raise ValueError(
-                    ("Window size (%d bp) incompatible with translation "
-                     "(%d aa)") % (len(location), len(self.translation))
+                    (
+                        "Window size (%d bp) incompatible with translation "
+                        "(%d aa)"
+                    )
+                    % (len(location), len(self.translation))
                 )
         self.location = location
 
     def set_translation(self, translation):
         """Check that the translation length is valid before setting it."""
         if (translation is not None) and (self.location is not None):
-            if (len(self.location) != 3 * len(self.translation)):
+            if len(self.location) != 3 * len(self.translation):
                 raise ValueError(
-                    ("Window size (%d bp) incompatible with translation "
-                     "(%d aa)") % (len(self.location), len(self.translation))
+                    (
+                        "Window size (%d bp) incompatible with translation "
+                        "(%d aa)"
+                    )
+                    % (len(self.location), len(self.translation))
                 )
         self.translation = translation
 
-    def initialize_on_problem(self, problem, role):
+    def initialized_on_problem(self, problem, role):
         """Get translation from the sequence if it is not already set."""
         if self.location is None:
             location = Location(0, len(problem.sequence), 1)
@@ -94,8 +102,11 @@ class EnforceTranslation(CodonSpecification):
 
     def evaluate(self, problem):
         """Score is the number of wrong-translation codons."""
-        location = (self.location if self.location is not None else
-                    Location(0, len(problem.sequence)))
+        location = (
+            self.location
+            if self.location is not None
+            else Location(0, len(problem.sequence))
+        )
         subsequence = location.extract_sequence(problem.sequence)
         translation = translate(subsequence, self.codons_translations)
         errors = [
@@ -104,23 +115,31 @@ class EnforceTranslation(CodonSpecification):
             if translation[ind] != self.translation[ind]
         ]
         errors_locations = [
-            Location(3 * ind, 3 * (ind + 1)) if self.location.strand >= 0 else
-            Location(start=self.location.end - 3 * (ind + 1),
-                     end=self.location.end - 3 * ind,
-                     strand=-1)
+            Location(3 * ind, 3 * (ind + 1))
+            if self.location.strand >= 0
+            else Location(
+                start=self.location.end - 3 * (ind + 1),
+                end=self.location.end - 3 * ind,
+                strand=-1,
+            )
             for ind in errors
         ]
-        success = (len(errors) == 0)
-        return SpecEvaluation(self, problem, score=-len(errors),
-                              locations=errors_locations,
-                              message="All OK." if success else
-                              "Wrong translation at indices %s" % errors)
+        success = len(errors) == 0
+        return SpecEvaluation(
+            self,
+            problem,
+            score=-len(errors),
+            locations=errors_locations,
+            message="All OK."
+            if success
+            else "Wrong translation at indices %s" % errors,
+        )
 
     def localized_on_window(self, new_location, start_codon, end_codon):
         new_translation = self.translation[start_codon:end_codon]
-        return self.__class__(new_location,
-                              translation=new_translation,
-                              boost=self.boost)
+        return self.__class__(
+            new_location, translation=new_translation, boost=self.boost
+        )
 
     def restrict_nucleotides(self, sequence, location=None):
         if self.codons_sequences is None:
@@ -133,19 +152,27 @@ class EnforceTranslation(CodonSpecification):
         if strand == 1:
 
             return [
-                ((i, i + 3), set(self.codons_sequences[
-                    self.translation[int((i - start) / 3)]
-                ]))
+                (
+                    (i, i + 3),
+                    set(
+                        self.codons_sequences[
+                            self.translation[int((i - start) / 3)]
+                        ]
+                    ),
+                )
                 for i in range(start, end, 3)
             ]
         else:
             return [
-                ((i, i + 3), set(
-                    reverse_complement(n)
-                    for n in self.codons_sequences[
-                        self.translation[-int((i - start) / 3) - 1]
-                    ]
-                ))
+                (
+                    (i, i + 3),
+                    set(
+                        reverse_complement(n)
+                        for n in self.codons_sequences[
+                            self.translation[-int((i - start) / 3) - 1]
+                        ]
+                    ),
+                )
                 for i in range(start, end, 3)
             ]
 

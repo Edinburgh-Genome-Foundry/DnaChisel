@@ -40,7 +40,7 @@ class EnforceSequence(Specification):
         self.location = location
         self.boost = boost
 
-    def initialize_on_problem(self, problem, role):
+    def initialized_on_problem(self, problem, role):
         """Find out what sequence it is that we are supposed to conserve."""
         return self._copy_with_full_span_if_no_location(problem)
         # if self.location is None:
@@ -83,8 +83,7 @@ class EnforceSequence(Specification):
         start, end = location.start, location.end
         new_location = self.location.overlap_region(location)
         if new_location is None:
-            return None 
- # VoidSpecification(parent_specification=self)
+            return None
         else:
             if self.location.strand == -1:
                 start = self.location.end - new_location.end
