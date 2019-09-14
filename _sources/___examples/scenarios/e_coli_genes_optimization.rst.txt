@@ -1,0 +1,6 @@
+.. _pattern-insertion:
+
+E. coli genes optimization
+-------------------------------
+
+.. literalinclude:: ../../examples/scenarios/ecoli_genes_optimization.py

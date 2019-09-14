@@ -1,197 +1,263 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>DNA Chisel &mdash; DnaChisel 0.1.0 documentation</title>
-  
-
-  
-  
-  
-  
-
-  
-
-  
-  
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>DNA Chisel documentation</title>
     
+      <link rel="stylesheet" href="_static/pygments.css">
+      <link rel="stylesheet" href="_static/theme.css">
+      <link rel="stylesheet" href="_static/css/custom.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
 
-  
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
 
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="_static/css/main.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="DnaChisel 0.1.0 documentation" href="#"/>
-        <link rel="next" title="DnaChisel Reference manual" href="ref/ref.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
-</head>
-
-<body class="wy-body-for-nav" role="document">
-
-   
-  <div class="wy-grid-for-nav">
-
+      
+      <script src="_static/theme-vendors.js"></script>
+      <script src="_static/theme.js" defer></script>
     
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="DNA Chisel API reference" href="ref/ref.html" /> 
+  </head>
 
-          
-            <a href="#" class="icon icon-home"> DnaChisel
-          
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="#" class="home-link">
+    
+      <img class="logo" src="_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
 
-          
-            
-            <img src="_static/html_logo.png" class="logo" />
-          
-          </a>
+  <div class="links">
+    <navlinks class="can-hide">
 
-          
-            
-            
-              <div class="version">
-                0.1.0
-              </div>
-            
-          
+  
+    <div class="nav-item">
+      <a href="##more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="ref/ref.html#dna-chisel-api-reference"
+         class="nav-link ">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="##more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
 
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
 
-          
-        </div>
 
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">DNA Chisel</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="ref/ref.html">DnaChisel Reference manual</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Examples</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
-</ul>
+    </navlinks>
+  </div>
+</navbar>
 
-            
-          
-        </div>
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
       </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">DnaChisel</a>
-        
-      </nav>
-
-
-      
-      <div class="wy-nav-content">
-        <div class="rst-content">
+        <sidebar @toggle-sidebar="toggleSidebar">
           
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="#">Docs</a> &raquo;</li>
-        
-      <li>DNA Chisel</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
+          <navlinks>
             
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-    
-  </ul>
 
   
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+    <div class="nav-item">
+      <a href="##more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="ref/ref.html#dna-chisel-api-reference"
+         class="nav-link ">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="##more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
             
-  <a class="reference internal image-reference" href="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/title.png"><img alt="[logo]" class="align-center" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/title.png" style="width: 500px;" /></a>
-<div class="section" id="dna-chisel">
-<h1>DNA Chisel<a class="headerlink" href="#dna-chisel" title="Permalink to this headline">¶</a></h1>
-<a class="reference external image-reference" href="https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel"><img alt="Travis CI build status" src="https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel.svg?branch=master" /></a>
-<p>DNA Chisel is a Python library to optimize the nucleotides of DNA sequences with respect to a set of constraints and optimization objectives. It can be used for codon-optimizing the genes of a sequence for a particular organism, modifying a sequence to meet the constraints of a DNA provider while preserving genes, and much more.</p>
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="##more-biology-software">DNA Chisel documentation</a></span>
+      </p>
+      <ul class="">
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="ref/ref.html#dna-chisel-api-reference">DNA Chisel API reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="ref/core_classes.html" class="reference internal ">Core Classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="##more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="#">Docs</a> &raquo;</li>
+    
+    <li>DNA Chisel documentation</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="next">
+    <a href="ref/ref.html"
+       title="next chapter">DNA Chisel API reference →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#e5e5f9; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style><div class="section" id="dna-chisel-documentation">
+<h1><a class="toc-backref" href="#id2">DNA Chisel documentation</a><a class="headerlink" href="#dna-chisel-documentation" title="Permalink to this headline">¶</a></h1>
+<div style='text-align: left; margin-bottom: 4em'>
+    <a href="https://twitter.com/share" class="twitter-share-button"
+    data-text="DNA Chisel - A Python library for DNA sequence design and optimization" data-size="large"
+    data-hashtags="synbio,software">Tweet
+    </a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+    if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
+    fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+    </script>
+    <iframe src="http://ghbtns.com/github-btn.html?user=Edinburgh-Genome-Foundry&repo=dnachisel&type=watch&count=true&size=large"
+    allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30px" margin-bottom="30px"></iframe>
+</div><div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#dna-chisel-documentation" id="id2">DNA Chisel documentation</a></p>
+<ul>
+<li><p><a class="reference internal" href="#example-of-use" id="id3">Example of use</a></p>
+<ul>
+<li><p><a class="reference internal" href="#defining-a-problem-via-scripts" id="id4">Defining a problem via scripts</a></p></li>
+<li><p><a class="reference internal" href="#defining-a-problem-via-genbank-features" id="id5">Defining a problem via Genbank features</a></p></li>
+<li><p><a class="reference internal" href="#reports" id="id6">Reports</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#how-it-works" id="id7">How it works</a></p></li>
+<li><p><a class="reference internal" href="#installation" id="id8">Installation</a></p></li>
+<li><p><a class="reference internal" href="#license-mit" id="id9">License = MIT</a></p></li>
+<li><p><a class="reference internal" href="#more-biology-software" id="id10">More biology software</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<p align="center">
+<img alt="DNA Chisel Logo" title="DNA Chisel" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/title.png" width="450">
+<br /><br />
+</p><a class="reference external image-reference" href="https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel"><img alt="Travis CI build status" src="https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel.svg?branch=master" /></a>
+<a class="reference external image-reference" href="https://coveralls.io/github/Edinburgh-Genome-Foundry/DnaChisel?branch=master"><img alt="https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/DnaChisel/badge.svg?branch=master" src="https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/DnaChisel/badge.svg?branch=master" /></a>
+<p>DNA Chisel (complete documentation <a class="reference external" href="https://edinburgh-genome-foundry.github.io/DnaChisel/">here</a>) is a Python library to optimize the nucleotides of DNA sequences with respect to a set of constraints and optimization objectives. It can be used for codon-optimizing the genes of a sequence for a particular organism, modifying a sequence to meet the constraints of a DNA provider while preserving genes, and much more.</p>
 <p>DNA Chisel comes with more than 15 types of optimizations and constraints and allows users to define new specifications in Python, making the library suitable for a large range of automated sequence design applications, or complex custom design projects.</p>
 <div class="section" id="example-of-use">
-<h2>Example of use<a class="headerlink" href="#example-of-use" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Example of use</a><a class="headerlink" href="#example-of-use" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="defining-a-problem-via-scripts">
+<h3><a class="toc-backref" href="#id4">Defining a problem via scripts</a><a class="headerlink" href="#defining-a-problem-via-scripts" title="Permalink to this headline">¶</a></h3>
 <p>In this basic example we generate a random sequence and optimize it so that</p>
 <ul class="simple">
-<li>It will be rid of BsaI sites.</li>
-<li>GC content will be between 30% and 70% on every 50bp window.</li>
-<li>The reading frame at position 500-1300 will be codon-optimized for <em>E. coli</em>.</li>
+<li><p>It will be rid of BsaI sites.</p></li>
+<li><p>GC content will be between 30% and 70% on every 50bp window.</p></li>
+<li><p>The reading frame at position 500-1400 will be codon-optimized for <em>E. coli</em>.</p></li>
 </ul>
 <p>Here is the code to achieve that:</p>
-<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dnachisel</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dnachisel</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># DEFINE THE OPTIMIZATION PROBLEM</span>
 
 <span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span>
     <span class="n">sequence</span><span class="o">=</span><span class="n">random_dna_sequence</span><span class="p">(</span><span class="mi">10000</span><span class="p">),</span>
-    <span class="n">constraints</span><span class="o">=</span><span class="p">[</span><span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;BsaI_site&quot;</span><span class="p">),</span>
-                 <span class="n">EnforceGCContent</span><span class="p">(</span><span class="n">mini</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">50</span><span class="p">)],</span>
-    <span class="n">objectives</span><span class="o">=</span><span class="p">[</span><span class="n">CodonOptimize</span><span class="p">(</span><span class="n">species</span><span class="o">=</span><span class="s1">&#39;e_coli&#39;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1300</span><span class="p">))]</span>
+    <span class="n">constraints</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">EnforceTranslation</span><span class="p">((</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1400</span><span class="p">)),</span>
+        <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;BsaI_site&quot;</span><span class="p">),</span>
+        <span class="n">EnforceGCContent</span><span class="p">(</span><span class="n">mini</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="p">],</span>
+    <span class="n">objectives</span><span class="o">=</span><span class="p">[</span><span class="n">CodonOptimize</span><span class="p">(</span><span class="n">species</span><span class="o">=</span><span class="s1">&#39;e_coli&#39;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1400</span><span class="p">))]</span>
 <span class="p">)</span>
 
 <span class="c1"># SOLVE THE CONSTRAINTS, OPTIMIZE WITH RESPECT TO THE OBJECTIVE</span>
@@ -201,125 +267,122 @@
 
 <span class="c1"># PRINT SUMMARIES TO CHECK THAT CONSTRAINTS PASS</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">objectives_text_summary</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">objectives_text_summary</span><span class="p">())</span>
 </pre></div>
 </div>
 <p>DnaChisel implements advanced constraints such as the preservation of coding
-sequences,  or the inclusion or exclusion of advanced patterns, as well as
-some common biological objectives (such as codon optimization, GC content), but it
-is also very easy to implement new constraints and objectives.</p>
+sequences,  or the inclusion or exclusion of advanced patterns (see
+<a class="reference external" href="https://edinburgh-genome-foundry.github.io/DnaChisel/ref/builtin_specifications.html">this page</a>
+for an overview of available specifications), but it is also easy to implement
+our own constraints and objectives as subclasses of <code class="docutils literal notranslate"><span class="pre">dnachisel.Specification</span></code>.</p>
 </div>
+<div class="section" id="defining-a-problem-via-genbank-features">
+<h3><a class="toc-backref" href="#id5">Defining a problem via Genbank features</a><a class="headerlink" href="#defining-a-problem-via-genbank-features" title="Permalink to this headline">¶</a></h3>
+<p>You can also define a problem by annotating directly a genbank as follows:</p>
+<p align="center">
+<img alt="report" title="report" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/example_sequence_map.png" width="650">
+<br /><br />
+</p><p>In such genbank records:</p>
+<ul class="simple">
+<li><p>Constraints are features of type <code class="docutils literal notranslate"><span class="pre">misc_feature</span></code> with a prefix <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> followed
+by the name of the constraints and its parameters, which are the same as in
+python scripts, expect that the “=” can be replaced by “:” and strings don’t
+take quote, so you’d write for instance <code class="docutils literal notranslate"><span class="pre">species=e_coli</span></code>. The constraints
+are colored in blue in the example above.</p></li>
+<li><p>Optimization objectives are features of type <code class="docutils literal notranslate"><span class="pre">misc_feature</span></code> with a prefix
+<code class="docutils literal notranslate"><span class="pre">~</span></code> followed by the name of the constraints and its parameters (colored
+in yellow in the example above)</p></li>
+</ul>
+<p>Here is how you read the file and solve the problem:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dnachisel</span> <span class="kn">import</span> <span class="n">DnaOptimizationProblem</span>
+
+<span class="c1"># DEFINE THE OPTIMIZATION PROBLEM</span>
+
+<span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="o">.</span><span class="n">from_record</span><span class="p">(</span><span class="s2">&quot;my_record.gb&quot;</span><span class="p">)</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">resolve_constraints</span><span class="p">()</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">optimize_with_report</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;report.zip&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>By default, only the built-in specifications of DnaChisel can be used in the
+annotations <code class="docutils literal notranslate"><span class="pre">from_record</span></code> accepts a <code class="docutils literal notranslate"><span class="pre">specifications_dict</span></code> argument which allows
+to define new specifications like <code class="docutils literal notranslate"><span class="pre">MyConstraint</span></code> and have them supported by
+the Genbank importer so that you can add annotations with labels like
+<code class="docutils literal notranslate"><span class="pre">&#64;MyConstraint(par1=...)</span></code> in your genbank. This allows you to build
+completely custom optimization applications on top of DnaChisel.</p>
+<p>Speaking about apps, you can try DnaChisel online <a class="reference external" href="https://cuba.genomefoundry.org/sculpt_a_sequence">here</a>.
+Just drop an annotated genbank and you will get a full optimization with report.</p>
+</div>
+<div class="section" id="reports">
+<h3><a class="toc-backref" href="#id6">Reports</a><a class="headerlink" href="#reports" title="Permalink to this headline">¶</a></h3>
+<p>DnaChisel also implements features for verification and troubleshooting. For
+instance by generating optimization reports:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">problem</span><span class="o">.</span><span class="n">optimize_with_report</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;report.zip&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here is an example of summary report:</p>
+<p align="center">
+<img alt="report" title="report" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/report_screenshot.jpg" width="600">
+<br /><br />
+</p></div>
+</div>
+<div class="section" id="how-it-works">
+<h2><a class="toc-backref" href="#id7">How it works</a><a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
+<p>DnaChisel hunts down every constraint breach and suboptimal region by recreating local version of the problem around these regions. Each type of constraint can be locally <em>reduced</em> and solved in its own way, to ensure fast and reliable resolution.</p>
+<p>Below is an animation of the algorithm in action:</p>
+<p align="center">
+<img alt="DNA Chisel algorithm" title="DNA Chisel" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/dnachisel_algorithm.gif" width="800">
+<br />
+</p></div>
 <div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>You can install DnaChisel through PIP</p>
-<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">dnachisel</span>
+<h2><a class="toc-backref" href="#id8">Installation</a><a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>You can install DnaChisel through PIP:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">dnachisel</span><span class="p">[</span><span class="n">reports</span><span class="p">]</span>
 </pre></div>
 </div>
+<p>The <code class="docutils literal notranslate"><span class="pre">[reports]</span></code> suffix will install some heavier libraries
+(Matplotlib, PDF reports, sequenticon) for report generation,
+you can omit it if you just want to use DNA chisel to edit sequences and
+generate genbanks (for any interactive use, reports are highly recommended).</p>
 <p>Alternatively, you can unzip the sources in a folder and type</p>
-<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
-</pre></div>
-</div>
-<p>To be able to generate plots and reports, run</p>
-<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">dna_features_viewer</span> <span class="n">weasyprint</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="license-mit">
-<h2>License = MIT<a class="headerlink" href="#license-mit" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id9">License = MIT</a><a class="headerlink" href="#license-mit" title="Permalink to this headline">¶</a></h2>
 <p>DnaChisel is an open-source software originally written at the <a class="reference external" href="http://edinburgh-genome-foundry.github.io/home.html">Edinburgh Genome Foundry</a> by <a class="reference external" href="https://github.com/Zulko">Zulko</a>
-and <a class="reference external" href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel">released on Github</a> under the MIT licence (¢ Edinburg Genome Foundry).</p>
-<p>Everyone is welcome to contribute !</p>
-<a href="https://twitter.com/share" class="twitter-share-button"
-data-text="DnaChisel - A Python library for DNA sequence design and optimization" data-size="large" data-hashtags="Bioprinting">Tweet
-</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
-if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
-fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-</script>
-<iframe src="http://ghbtns.com/github-btn.html?user=Edinburgh-Genome-Foundry&repo=dnachisel&type=watch&count=true&size=large"
-allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30px" margin-bottom="30px"></iframe><a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#e5e5f9; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style><div class="toctree-wrapper compound">
+and <a class="reference external" href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel">released on Github</a> under the MIT licence (¢ Edinburg Genome Foundry). Everyone is welcome to contribute !</p>
+</div>
+<div class="section" id="more-biology-software">
+<h2><a class="toc-backref" href="#id10">More biology software</a><a class="headerlink" href="#more-biology-software" title="Permalink to this headline">¶</a></h2>
+<a class="reference external image-reference" href="https://edinburgh-genome-foundry.github.io/"><img alt="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Edinburgh-Genome-Foundry.github.io/master/static/imgs/logos/egf-codon-horizontal.png" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Edinburgh-Genome-Foundry.github.io/master/static/imgs/logos/egf-codon-horizontal.png" /></a>
+<p>DNA Chisel is part of the <a class="reference external" href="https://edinburgh-genome-foundry.github.io/">EGF Codons</a> synthetic biology software suite for DNA design, manufacturing and validation.</p>
+<div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Examples</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
-</ul>
 </div>
 </div>
 </div>
 
 
-           </div>
-           <div class="articleComments">
-            
-           </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="ref/ref.html" class="btn btn-neutral float-right" title="DnaChisel Reference manual" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-    </div>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2017, Edinburgh Genome Foundry.
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
-        </div>
-      </div>
-
-    </section>
-
-  </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
-  </script>
-   
-
-</body>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="next">
+    <a href="ref/ref.html"
+       title="next chapter">DNA Chisel API reference →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
 </html>

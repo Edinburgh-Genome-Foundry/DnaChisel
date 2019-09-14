@@ -1,10 +1,13 @@
 .. _reference:
 
-DnaChisel Reference manual
-==========================
+DNA Chisel API reference
+========================
+
+
+
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    core_classes
    reports

@@ -1,0 +1,303 @@
+
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnachisel.biotools.sequences_operations</title>
+    
+      <link rel="stylesheet" href="../../../_static/pygments.css">
+      <link rel="stylesheet" href="../../../_static/theme.css">
+      <link rel="stylesheet" href="../../../_static/css/custom.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+      
+      <script src="../../../_static/theme-vendors.js"></script>
+      <script src="../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" /> 
+  </head>
+
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../index.html" class="home-link">
+    
+      <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../ref/ref.html#dna-chisel-api-reference"
+         class="nav-link ">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../ref/ref.html#dna-chisel-api-reference"
+         class="nav-link ">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">DNA Chisel documentation</a></span>
+      </p>
+      <ul class="">
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../ref/ref.html#dna-chisel-api-reference">DNA Chisel API reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../ref/core_classes.html" class="reference internal ">Core Classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnachisel.biotools.sequences_operations</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for dnachisel.biotools.sequences_operations</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">itertools</span>
+
+<span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="k">import</span> <span class="n">Seq</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">.biotables</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">NUCLEOTIDE_TO_REGEXPR</span><span class="p">,</span>
+    <span class="n">COMPLEMENTS</span><span class="p">,</span>
+    <span class="n">CODONS_SEQUENCES</span><span class="p">,</span>
+    <span class="n">IUPAC_NOTATION</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="complement"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.complement">[docs]</a><span class="k">def</span> <span class="nf">complement</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the complement of the DNA sequence.</span>
+
+<span class="sd">    For instance ``complement(&quot;ATGCCG&quot;)`` returns ``&quot;TACGGC&quot;``.</span>
+
+<span class="sd">    Uses BioPython for speed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">30</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">COMPLEMENTS</span><span class="p">[</span><span class="n">nuc</span><span class="p">]</span> <span class="k">for</span> <span class="n">nuc</span> <span class="ow">in</span> <span class="n">dna_sequence</span><span class="p">])</span>
+    <span class="c1"># This alternative has overhead but is really fast on long sequences</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">)</span><span class="o">.</span><span class="n">complement</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="reverse_complement"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.reverse_complement">[docs]</a><span class="k">def</span> <span class="nf">reverse_complement</span><span class="p">(</span><span class="n">sequence</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the reverse-complement of the DNA sequence.</span>
+
+<span class="sd">    For instance ``complement(&quot;ATGCCG&quot;)`` returns ``&quot;GCCGTA&quot;``.</span>
+
+<span class="sd">    Uses BioPython for speed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">complement</span><span class="p">(</span><span class="n">sequence</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="reverse_translate"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.reverse_translate">[docs]</a><span class="k">def</span> <span class="nf">reverse_translate</span><span class="p">(</span><span class="n">protein_sequence</span><span class="p">,</span> <span class="n">randomize_codons</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a DNA sequence which translates to the provided protein sequence</span>
+
+<span class="sd">    Note: at the moment, the first valid codon found is used for each</span>
+<span class="sd">    amino-acid (so it is deterministic but no codon-optimization is done).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">randomize_codons</span><span class="p">:</span>
+        <span class="n">random_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">protein_sequence</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">CODONS_SEQUENCES</span><span class="p">[</span><span class="n">aa</span><span class="p">][</span><span class="n">random_indice</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">CODONS_SEQUENCES</span><span class="p">[</span><span class="n">aa</span><span class="p">])]</span>
+                <span class="k">for</span> <span class="n">aa</span><span class="p">,</span> <span class="n">random_indice</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">protein_sequence</span><span class="p">,</span> <span class="n">random_indices</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">CODONS_SEQUENCES</span><span class="p">[</span><span class="n">aa</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">aa</span> <span class="ow">in</span> <span class="n">protein_sequence</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="translate"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.translate">[docs]</a><span class="k">def</span> <span class="nf">translate</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">,</span> <span class="n">translation_table</span><span class="o">=</span><span class="s2">&quot;Bacterial&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Translate the DNA sequence into an amino-acids sequence &quot;MLKYQT...&quot;.</span>
+<span class="sd">    If ``translation_table`` is the name or number of  NCBI genetic table,</span>
+<span class="sd">    Biopython will be used. See here for options:</span>
+
+<span class="sd">    http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc25</span>
+
+<span class="sd">    ``translation_table`` can also be a dictionnary of the form</span>
+<span class="sd">    ``{&quot;ATT&quot;: &quot;M&quot;, &quot;CTC&quot;: &quot;X&quot;, etc.}`` for more exotic translation tables</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">translation_table</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">translation_table</span><span class="p">[</span><span class="n">dna_sequence</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">)</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">translation_table</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="dna_pattern_to_regexpr"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.dna_pattern_to_regexpr">[docs]</a><span class="k">def</span> <span class="nf">dna_pattern_to_regexpr</span><span class="p">(</span><span class="n">dna_pattern</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a regular expression pattern for the provided DNA pattern</span>
+
+<span class="sd">    For instance ``dna_pattern_to_regexpr(&#39;ATTNN&#39;)`` returns</span>
+<span class="sd">    ``&quot;ATT[A|T|G|C][A|T|G|C]&quot;``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">NUCLEOTIDE_TO_REGEXPR</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">dna_pattern</span><span class="p">])</span></div>
+
+
+<span class="k">def</span> <span class="nf">all_iupac_variants</span><span class="p">(</span><span class="n">iupac_sequence</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return all unambiguous possible versions of the given sequence.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nucleotides</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">nucleotides</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span>
+            <span class="o">*</span><span class="p">[</span><span class="n">IUPAC_NOTATION</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">iupac_sequence</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="p">]</span>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
+</html>

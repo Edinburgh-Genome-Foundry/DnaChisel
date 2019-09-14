@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnachisel.biotools.enzymes_operations</title>
+    
+      <link rel="stylesheet" href="../../../_static/pygments.css">
+      <link rel="stylesheet" href="../../../_static/theme.css">
+      <link rel="stylesheet" href="../../../_static/css/custom.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+      
+      <script src="../../../_static/theme-vendors.js"></script>
+      <script src="../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" /> 
+  </head>
+
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../index.html" class="home-link">
+    
+      <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../ref/ref.html#dna-chisel-api-reference"
+         class="nav-link ">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../ref/ref.html#dna-chisel-api-reference"
+         class="nav-link ">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">DNA Chisel documentation</a></span>
+      </p>
+      <ul class="">
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../ref/ref.html#dna-chisel-api-reference">DNA Chisel API reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../ref/core_classes.html" class="reference internal ">Core Classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnachisel.biotools.enzymes_operations</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for dnachisel.biotools.enzymes_operations</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Methods for enzymes operations.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.sequences_operations</span> <span class="k">import</span> <span class="n">all_iupac_variants</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">Restriction</span>
+
+
+<div class="viewcode-block" id="list_common_enzymes"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.list_common_enzymes">[docs]</a><span class="k">def</span> <span class="nf">list_common_enzymes</span><span class="p">(</span>
+    <span class="n">site_length</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,),</span> <span class="n">opt_temp</span><span class="o">=</span><span class="p">(</span><span class="mi">37</span><span class="p">,),</span> <span class="n">min_suppliers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">site_unlike</span><span class="o">=</span><span class="p">()</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a list of enzyme names with the given constraints.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    site_length</span>
+<span class="sd">      List of accepted site lengths (6, 4, ...)</span>
+
+<span class="sd">    opt_temp</span>
+<span class="sd">      List of accepted optimal temperatures for the enzyme</span>
+
+<span class="sd">    min_suppliers</span>
+<span class="sd">      Minimal number registered suppliers in the Biopython data. A minimum</span>
+<span class="sd">      of 3 known suppliers returns the most common enzymes.</span>
+
+<span class="sd">    site_unlike</span>
+<span class="sd">      List of (ambiguous or unambiguous) DNA sequences that should NOT be</span>
+<span class="sd">      recognized by the selected enzymes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">site_unlike</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">variant</span>
+            <span class="k">for</span> <span class="n">enzyme</span> <span class="ow">in</span> <span class="n">site_unlike</span>
+            <span class="k">for</span> <span class="n">variant</span> <span class="ow">in</span> <span class="n">all_iupac_variants</span><span class="p">(</span>
+                <span class="n">Restriction</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">enzyme</span><span class="p">]</span><span class="o">.</span><span class="n">site</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="n">enzyme_name</span><span class="p">):</span>
+        <span class="n">enzyme</span> <span class="o">=</span> <span class="n">Restriction</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">enzyme_name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">enzyme</span><span class="o">.</span><span class="n">site</span><span class="p">)</span> <span class="ow">in</span> <span class="n">site_length</span>
+            <span class="ow">and</span> <span class="n">enzyme</span><span class="o">.</span><span class="n">opt_temp</span> <span class="ow">in</span> <span class="n">opt_temp</span>
+            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">enzyme</span><span class="o">.</span><span class="n">supplier_list</span><span class="p">())</span> <span class="o">&gt;=</span> <span class="n">min_suppliers</span>
+            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="nb">set</span><span class="p">(</span><span class="n">all_iupac_variants</span><span class="p">(</span><span class="n">enzyme</span><span class="o">.</span><span class="n">site</span><span class="p">))</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">site_unlike</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="o">==</span> <span class="mi">0</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">enzyme_name</span>
+        <span class="k">for</span> <span class="n">enzyme_name</span> <span class="ow">in</span> <span class="n">Restriction</span><span class="o">.</span><span class="n">AllEnzymes</span><span class="o">.</span><span class="n">elements</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">is_valid</span><span class="p">(</span><span class="n">enzyme_name</span><span class="p">)</span>
+    <span class="p">]</span></div>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
+</html>

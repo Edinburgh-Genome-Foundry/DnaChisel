@@ -1,0 +1,70 @@
+
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
+
+/* FIXES A SPHINX-MERMAID OPACITY PROBLEM */
+.content .section {
+    opacity: 1.0 !important;
+}
+.section {
+    opacity: 1.0 !important;
+}
+
+/* MAKES MAIN TEXT LARGER */
+
+.content:not(.custom) {
+    max-width: 840px;
+}
+
+.sig-name.descname {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+code, pre {
+    font-family: 'Roboto Mono', 'Inconsolata', monospace;
+}
+
+dt {
+    line-height: 1.5em;
+    margin-bottom: 1em;
+}
+
+dt.field-odd, dt.field-even, p.rubric {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #4d6a86
+}
+
+dd {
+    margin-inline-start: 10px;
+}
+
+dd.field-odd p strong {
+  margin-left: 1em;
+}
+
+dd.field-odd blockquote {
+
+}
+
+dl.method, dl.function {
+    margin-top: 2em;
+    margin-bottom: 3em;
+}
+
+.sig-param:after {
+    content: ' ';
+    width: 1.5em;
+}
+
+.toc-backref {
+    color: inherit;
+}
+
+.contents.topic p.topic-title {
+    display: none;
+}
+
+.contents.topic {
+    margin-bottom: 3em;
+}

@@ -1,213 +1,237 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Biotools &mdash; DnaChisel 0.1.0 documentation</title>
-  
-
-  
-  
-  
-  
-
-  
-
-  
-  
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Biotools</title>
     
+      <link rel="stylesheet" href="../_static/pygments.css">
+      <link rel="stylesheet" href="../_static/theme.css">
+      <link rel="stylesheet" href="../_static/css/custom.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
-  
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
 
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../_static/css/main.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="DnaChisel 0.1.0 documentation" href="../index.html"/>
-        <link rel="up" title="DnaChisel Reference manual" href="ref.html"/>
-        <link rel="next" title="Built-in Specifications" href="builtin_specifications.html"/>
-        <link rel="prev" title="Reports" href="reports.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
-</head>
-
-<body class="wy-body-for-nav" role="document">
-
-   
-  <div class="wy-grid-for-nav">
-
+      
+      <script src="../_static/theme-vendors.js"></script>
+      <script src="../_static/theme.js" defer></script>
     
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="next" title="Built-in Specifications" href="builtin_specifications.html" />
+  <link rel="prev" title="Reports" href="reports.html" /> 
+  </head>
 
-          
-            <a href="../index.html" class="icon icon-home"> DnaChisel
-          
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
 
-          
-            
-            <img src="../_static/html_logo.png" class="logo" />
-          
-          </a>
+  <div class="links">
+    <navlinks class="can-hide">
 
-          
-            
-            
-              <div class="version">
-                0.1.0
-              </div>
-            
-          
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="ref.html#dna-chisel-api-reference"
+         class="nav-link  router-link-active">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
 
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
 
-          
-        </div>
 
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
           
+          <navlinks>
             
+
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="ref.html#dna-chisel-api-reference"
+         class="nav-link  router-link-active">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
             
-              
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">DNA Chisel documentation</a></span>
+      </p>
+      <ul class="">
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="ref.html#dna-chisel-api-reference">DNA Chisel API reference</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 "><a href="core_classes.html" class="reference internal ">Core Classes</a>
+
             
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">Biotools</a>
+
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">DNA Chisel</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="ref.html">DnaChisel Reference manual</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="core_classes.html">Core Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reports.html">Reports</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Biotools</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#features-annotations">Features annotations</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="builtin_specifications.html">Built-in Specifications</a></li>
-</ul>
-</li>
-</ul>
-<p class="caption"><span class="caption-text">Examples</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
-</ul>
+                
+                  <li class="toctree-l2"><a href="#biotools" class="reference internal">Biotools</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
 
             
-          
-        </div>
-      </div>
-    </nav>
+          </li>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">DnaChisel</a>
-        
-      </nav>
-
-
-      
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="../index.html">Docs</a> &raquo;</li>
-        
-          <li><a href="ref.html">DnaChisel Reference manual</a> &raquo;</li>
-        
-      <li>Biotools</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-            
-            <a href="../_sources/ref/biotools.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-    
-  </ul>
-
+      </ul>
+    </div>
   
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-            
-  <div class="section" id="module-dnachisel.biotools.biotools">
-<span id="biotools"></span><h1>Biotools<a class="headerlink" href="#module-dnachisel.biotools.biotools" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.all_iupac_variants">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">all_iupac_variants</code><span class="sig-paren">(</span><em>iupac_sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#all_iupac_variants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.all_iupac_variants" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return all unambiguous possible versions of the given sequence.</p>
-</dd></dl>
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../examples.html" class="reference internal ">Examples</a>
 
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="ref.html">DNA Chisel API reference</a> &raquo;</li>
+    
+    <li>Biotools</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="reports.html"
+       title="previous chapter">← Reports</a>
+  </li>
+  <li class="next">
+    <a href="builtin_specifications.html"
+       title="next chapter">Built-in Specifications →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <div class="section" id="biotools">
+<h1><a class="toc-backref" href="#id1">Biotools</a><a class="headerlink" href="#biotools" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#biotools" id="id1">Biotools</a></p></li>
+</ul>
+</div>
+<span class="target" id="module-dnachisel.biotools"></span><p>Biologically-related useful methods.</p>
 <dl class="function">
-<dt id="dnachisel.biotools.biotools.blast_sequence">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">blast_sequence</code><span class="sig-paren">(</span><em>sequence</em>, <em>blast_db=None</em>, <em>subject_sequences=None</em>, <em>subject=None</em>, <em>word_size=4</em>, <em>perc_identity=80</em>, <em>num_alignments=1000</em>, <em>ungapped=False</em>, <em>num_threads=3</em>, <em>culling_limit=None</em>, <em>e_value=None</em>, <em>use_megablast=True</em>, <em>dust='no'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#blast_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.blast_sequence" title="Permalink to this definition">¶</a></dt>
+<dt id="dnachisel.biotools.blast_sequence">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">blast_sequence</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">blast_db=None</em>, <em class="sig-param">subject_sequences=None</em>, <em class="sig-param">subject=None</em>, <em class="sig-param">word_size=4</em>, <em class="sig-param">perc_identity=80</em>, <em class="sig-param">num_alignments=1000</em>, <em class="sig-param">ungapped=False</em>, <em class="sig-param">num_threads=3</em>, <em class="sig-param">culling_limit=None</em>, <em class="sig-param">e_value=None</em>, <em class="sig-param">use_megablast=True</em>, <em class="sig-param">dust='no'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/blast_sequence.html#blast_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.blast_sequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Biopython BLAST record of the given sequence BLASTed
 against the provided database.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sequence</strong></p>
-<blockquote class="last">
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sequence</strong></p>
+<blockquote>
 <div><p>An ATGC sequence</p>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_record</span> <span class="o">=</span> <span class="n">blast_sequence</span><span class="p">(</span><span class="s2">&quot;ATTGTGCGTGTGTGCGT&quot;</span><span class="p">,</span> <span class="s2">&quot;blastdb/ecoli&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_record</span> <span class="o">=</span> <span class="n">blast_sequence</span><span class="p">(</span><span class="s2">&quot;ATTGTGCGTGTGTGCGT&quot;</span><span class="p">,</span> <span class="s2">&quot;blastdb/ecoli&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">alignment</span> <span class="ow">in</span> <span class="n">blast_record</span><span class="o">.</span><span class="n">alignments</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="k">for</span> <span class="n">hit</span> <span class="ow">in</span> <span class="n">alignment</span><span class="o">.</span><span class="n">hsps</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span> <span class="p">(</span><span class="n">hit</span><span class="o">.</span><span class="n">identities</span><span class="p">)</span>
@@ -216,429 +240,38 @@ against the provided database.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="dnachisel.biotools.biotools.change_biopython_record_sequence">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">change_biopython_record_sequence</code><span class="sig-paren">(</span><em>record</em>, <em>new_seq</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#change_biopython_record_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.change_biopython_record_sequence" title="Permalink to this definition">¶</a></dt>
+<dt id="dnachisel.biotools.change_biopython_record_sequence">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">change_biopython_record_sequence</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">new_seq</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#change_biopython_record_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.change_biopython_record_sequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a version of the record with the sequence set to new_seq</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="dnachisel.biotools.biotools.codons_frequencies_and_positions">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">codons_frequencies_and_positions</code><span class="sig-paren">(</span><em>sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#codons_frequencies_and_positions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.codons_frequencies_and_positions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return dicts indicating codons frequencies and positions.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sequence</strong></p>
-<blockquote>
-<div><p>A sequence with length divisible by 3 (like an ORF)</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">codons_frequencies</p>
-<blockquote>
-<div><p>A dict <code class="docutils literal"><span class="pre">{'K':</span> <span class="pre">{'total':</span> <span class="pre">60,</span> <span class="pre">'AAA':</span> <span class="pre">0.5,</span> <span class="pre">'AAG':</span> <span class="pre">0.4}},</span> <span class="pre">'M':</span> <span class="pre">{...}</span> <span class="pre">...}</span></code>
-providing the frequency of each version of each codon in the given
-sequence.</p>
-</div></blockquote>
-<p>codons_positions</p>
-<blockquote class="last">
-<div><p>A dict <code class="docutils literal"><span class="pre">{'ATA':</span> <span class="pre">[2,</span> <span class="pre">55,</span> <span class="pre">1],</span> <span class="pre">'ATG':</span> <span class="pre">[0]</span> <span class="pre">...}</span></code> indicating the position of
-the different codons in the sequence.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.complement">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">complement</code><span class="sig-paren">(</span><em>dna_sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#complement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.complement" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the complement of the DNA sequence.</p>
-<p>For instance <code class="docutils literal"><span class="pre">complement(&quot;ATGCCG&quot;)</span></code> returns <code class="docutils literal"><span class="pre">&quot;TACGGC&quot;</span></code>.</p>
-<p>Uses BioPython for speed.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.dna_pattern_to_regexpr">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">dna_pattern_to_regexpr</code><span class="sig-paren">(</span><em>dna_pattern</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#dna_pattern_to_regexpr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.dna_pattern_to_regexpr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a regular expression pattern for the provided DNA pattern</p>
-<p>For instance <code class="docutils literal"><span class="pre">dna_pattern_to_regexpr('ATTNN')</span></code> returns
-<code class="docutils literal"><span class="pre">&quot;ATT[A|T|G|C][A|T|G|C]&quot;</span></code>.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.find_specification_in_feature">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">find_specification_in_feature</code><span class="sig-paren">(</span><em>feature</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#find_specification_in_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.find_specification_in_feature" title="Permalink to this definition">¶</a></dt>
+<dt id="dnachisel.biotools.find_specification_in_feature">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">find_specification_in_feature</code><span class="sig-paren">(</span><em class="sig-param">feature</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#find_specification_in_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.find_specification_in_feature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Analyse a Biopython feature to find a DnaChisel Specification in it.</p>
 <p>The specification should start with either “&#64;” or “~”, in the feature’s
 field “label” or “note”.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="dnachisel.biotools.biotools.gc_content">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">gc_content</code><span class="sig-paren">(</span><em>sequence</em>, <em>window_size=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#gc_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.gc_content" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute global or local GC content.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sequence</strong></p>
-<blockquote>
-<div><p>An ATGC DNA sequence (upper case!)</p>
-</div></blockquote>
-<p><strong>window_size</strong></p>
-<blockquote>
-<div><p>If provided, the local GC content for the different sliding windows of
-this size is returned, else the global GC content is returned.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A number between 0 and 1 indication the proportion</p>
-<blockquote class="last">
-<div><p>of GC content. If window_size is provided, returns
-a list of len(sequence)-window_size values indicating
-the local GC contents (sliding-window method). The i-th value
-indicates the GC content in the window [i, i+window_size]</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.group_nearby_indices">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">group_nearby_indices</code><span class="sig-paren">(</span><em>indices</em>, <em>max_gap=None</em>, <em>max_group_spread=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#group_nearby_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.group_nearby_indices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of groups of the different indices.</p>
-<p>Indices are considered from smaller to larger and placed into groups</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>max_gap</strong></p>
-<blockquote>
-<div><p>Maximal allowed difference between two consecutive numbers of a group</p>
-</div></blockquote>
-<p><strong>max_group_spread</strong></p>
-<blockquote class="last">
-<div><p>Maximal allowed difference between the smallest and largest elements
-of a group.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.group_nearby_segments">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">group_nearby_segments</code><span class="sig-paren">(</span><em>segments</em>, <em>max_start_gap=None</em>, <em>max_start_spread=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#group_nearby_segments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.group_nearby_segments" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of groups of the different indices.</p>
-<p>Indices are considered from smaller to larger and placed into groups</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>max_gap</strong></p>
-<blockquote>
-<div><p>Maximal allowed difference between two consecutive numbers of a group</p>
-</div></blockquote>
-<p><strong>max_group_spread</strong></p>
-<blockquote class="last">
-<div><p>Maximal allowed difference between the smallest and largest elements
-of a group.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.is_palyndromic">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">is_palyndromic</code><span class="sig-paren">(</span><em>dna_sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#is_palyndromic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.is_palyndromic" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return True if the DNA sequence is equal to its reverse complement.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.list_common_enzymes">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">list_common_enzymes</code><span class="sig-paren">(</span><em>site_length=(6</em>, <em>)</em>, <em>opt_temp=(37</em>, <em>)</em>, <em>min_suppliers=1</em>, <em>site_unlike=()</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#list_common_enzymes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.list_common_enzymes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of enzyme names with the given constraints.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>site_length</strong></p>
-<blockquote>
-<div><p>List of accepted site lengths (6, 4, …)</p>
-</div></blockquote>
-<p><strong>opt_temp</strong></p>
-<blockquote>
-<div><p>List of accepted optimal temperatures for the enzyme</p>
-</div></blockquote>
-<p><strong>min_suppliers</strong></p>
-<blockquote>
-<div><p>Minimal number registered suppliers in the Biopython data. A minimum
-of 3 known suppliers returns the most common enzymes.</p>
-</div></blockquote>
-<p><strong>site_unlike</strong></p>
-<blockquote class="last">
-<div><p>List of (ambiguous or unambiguous) DNA sequences that should NOT be
-recognized by the selected enzymes.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.load_record">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">load_record</code><span class="sig-paren">(</span><em>filename</em>, <em>linear=True</em>, <em>name='unnamed'</em>, <em>fmt='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#load_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.load_record" title="Permalink to this definition">¶</a></dt>
+<dt id="dnachisel.biotools.load_record">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">load_record</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">linear=True</em>, <em class="sig-param">name='unnamed'</em>, <em class="sig-param">fmt='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#load_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.load_record" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a FASTA/Genbank/… record</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="dnachisel.biotools.biotools.random_dna_sequence">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">random_dna_sequence</code><span class="sig-paren">(</span><em>length</em>, <em>gc_share=None</em>, <em>probas=None</em>, <em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#random_dna_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.random_dna_sequence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a random DNA sequence (“ATGGCGT…”) with the specified length.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>length</strong></p>
-<blockquote>
-<div><p>Length of the DNA sequence.</p>
-</div></blockquote>
-<p><strong>proba</strong></p>
-<blockquote>
-<div><p>Frequencies for the different nucleotides, for instance
-<code class="docutils literal"><span class="pre">probas={&quot;A&quot;:0.2,</span> <span class="pre">&quot;T&quot;:0.3,</span> <span class="pre">&quot;G&quot;:0.3,</span> <span class="pre">&quot;C&quot;:0.2}</span></code>.
-If not specified, all nucleotides are equiprobable (p=0.25).</p>
-</div></blockquote>
-<p><strong>seed</strong></p>
-<blockquote class="last">
-<div><p>The seed to feed to the random number generator. When a seed is provided
-the random results depend deterministically on the seed, thus enabling
-reproducibility</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.random_protein_sequence">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">random_protein_sequence</code><span class="sig-paren">(</span><em>length</em>, <em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#random_protein_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.random_protein_sequence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a random protein sequence “MNQTW…YL*” of the specified length.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>length</strong></p>
-<blockquote>
-<div><p>Length of the protein sequence (in number of amino-acids). Note that the
-sequence will always start with <code class="docutils literal"><span class="pre">&quot;M&quot;</span></code> and end with a stop codon <code class="docutils literal"><span class="pre">&quot;*&quot;</span></code>
-with (length-2) random amino-acids in the middle</p>
-</div></blockquote>
-<p><strong>seed</strong></p>
-<blockquote class="last">
-<div><p>The seed to feed to the random number generator. When a seed is provided
-the random results depend deterministically on the seed, thus enabling
-reproducibility</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.reverse_complement">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">reverse_complement</code><span class="sig-paren">(</span><em>sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#reverse_complement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.reverse_complement" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the reverse-complement of the DNA sequence.</p>
-<p>For instance <code class="docutils literal"><span class="pre">complement(&quot;ATGCCG&quot;)</span></code> returns <code class="docutils literal"><span class="pre">&quot;GCCGTA&quot;</span></code>.</p>
-<p>Uses BioPython for speed.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.reverse_translate">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">reverse_translate</code><span class="sig-paren">(</span><em>protein_sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#reverse_translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.reverse_translate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a DNA sequence which translates to the provided protein sequence</p>
-<p>Note: at the moment, the first valid codon found is used for each
-amino-acid (so it is deterministic but no codon-optimization is done).</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.sequence_to_biopython_record">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">sequence_to_biopython_record</code><span class="sig-paren">(</span><em>sequence</em>, <em>id='&lt;unknown id&gt;'</em>, <em>name='&lt;unknown name&gt;'</em>, <em>features=()</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#sequence_to_biopython_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.sequence_to_biopython_record" title="Permalink to this definition">¶</a></dt>
+<dt id="dnachisel.biotools.sequence_to_biopython_record">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">sequence_to_biopython_record</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">id='&lt;unknown id&gt;'</em>, <em class="sig-param">name='&lt;unknown name&gt;'</em>, <em class="sig-param">features=()</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#sequence_to_biopython_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.sequence_to_biopython_record" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a SeqRecord of the sequence, ready to be Genbanked.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="dnachisel.biotools.biotools.sequences_differences">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">sequences_differences</code><span class="sig-paren">(</span><em>seq1</em>, <em>seq2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#sequences_differences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.sequences_differences" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of nucleotides that differ in the two sequences.</p>
-<p>seq1, seq2 should be strings of DNA sequences e.g. “ATGCTGTGC”</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.sequences_differences_array">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">sequences_differences_array</code><span class="sig-paren">(</span><em>seq1</em>, <em>seq2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#sequences_differences_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.sequences_differences_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return an array [0, 0, 1, 0, …] with 1s for sequence differences.</p>
-<p>seq1, seq2 should both be ATGC strings.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.sequences_differences_segments">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">sequences_differences_segments</code><span class="sig-paren">(</span><em>seq1</em>, <em>seq2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#sequences_differences_segments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.sequences_differences_segments" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the list of segments on which sequence seq1 differs from seq2.</p>
-<p>The list is of the form [(start1, end1), (start2, end2), etc.]</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>seq1, seq2</strong></p>
-<blockquote class="last">
-<div><p>ATGC sequences to be compared</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.subdivide_window">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">subdivide_window</code><span class="sig-paren">(</span><em>window</em>, <em>max_span</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#subdivide_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.subdivide_window" title="Permalink to this definition">¶</a></dt>
-<dd><p>Subdivide a window (start, end) into windows of size &lt; max_span
-(start, i_1), (i_1, i_2), … (i_n, end)</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.translate">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">translate</code><span class="sig-paren">(</span><em>dna_sequence</em>, <em>translation_table='Bacterial'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.translate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Translate the DNA sequence into an amino-acids sequence “MLKYQT…”.
-If <code class="docutils literal"><span class="pre">translation_table</span></code> is the name or number of  NCBI genetic table,
-Biopython will be used. See here for options:</p>
-<p><a class="reference external" href="http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc25">http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc25</a></p>
-<p><code class="docutils literal"><span class="pre">translation_table</span></code> can also be a dictionnary of the form
-<code class="docutils literal"><span class="pre">{&quot;ATT&quot;:</span> <span class="pre">&quot;M&quot;,</span> <span class="pre">&quot;CTC&quot;:</span> <span class="pre">&quot;X&quot;,</span> <span class="pre">etc.}</span></code> for more exotic translation tables</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.biotools.windows_overlap">
-<code class="descclassname">dnachisel.biotools.biotools.</code><code class="descname">windows_overlap</code><span class="sig-paren">(</span><em>window1</em>, <em>window2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/biotools.html#windows_overlap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.biotools.windows_overlap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the overlap span between two windows.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>window1, window2</strong></p>
-<blockquote>
-<div><p>Each window is a couple of the form (start, end) indicating the range of
-a segment of integers.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">None</p>
-<blockquote>
-<div><p>In case the two windows do not overlap.</p>
-</div></blockquote>
-<p>[start, end]</p>
-<blockquote class="last">
-<div><p>The coordinates of the overlap segment if there is one.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<div class="section" id="features-annotations">
-<h2>Features annotations<a class="headerlink" href="#features-annotations" title="Permalink to this headline">¶</a></h2>
-
-            <style>
-            /* mermaid issue 527 workaround */
-            .section {
-                opacity: 1.0 !important;
-            }
-            </style>
-            <script>mermaid.initialize({startOnLoad:true});</script><div class="mermaid">
-            graph TD;
-  a[annotate_record] --&gt;|used by| d[annotate_differences]
-  a --&gt;|used by| o[annotate_pattern_occurences]
-        </div><span class="target" id="module-dnachisel.biotools.features_annotations"></span><dl class="function">
-<dt id="dnachisel.biotools.features_annotations.annotate_differences">
-<code class="descclassname">dnachisel.biotools.features_annotations.</code><code class="descname">annotate_differences</code><span class="sig-paren">(</span><em>record</em>, <em>reference</em>, <em>feature_type='misc_feature'</em>, <em>prefix='#'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/features_annotations.html#annotate_differences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.features_annotations.annotate_differences" title="Permalink to this definition">¶</a></dt>
-<dd><p>Annotate differences between two records in a new record.</p>
-<p>Returns a version of SeqRecord <code class="docutils literal"><span class="pre">record</span></code> where differences with the
-references are annotated as new features.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>record</strong></p>
-<blockquote>
-<div><p>The SeqRecord to be compared to the reference</p>
-</div></blockquote>
-<p><strong>reference</strong></p>
-<blockquote>
-<div><p>The reference SeqRecord. Must be the same size as <code class="docutils literal"><span class="pre">reference</span></code></p>
-</div></blockquote>
-<p><strong>feature_type</strong></p>
-<blockquote>
-<div><p>The type of the features added to mark differences.</p>
-</div></blockquote>
-<p><strong>prefix</strong></p>
-<blockquote class="last">
-<div><p>Each new feature will be labeled “po” where p is the prefix and o the
-original sequence at the feature’s location. For instance “#A” or “#TT”.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.features_annotations.annotate_pattern_occurrences">
-<code class="descclassname">dnachisel.biotools.features_annotations.</code><code class="descname">annotate_pattern_occurrences</code><span class="sig-paren">(</span><em>record</em>, <em>pattern</em>, <em>feature_type='misc_feature'</em>, <em>prefix='!'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/features_annotations.html#annotate_pattern_occurrences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.features_annotations.annotate_pattern_occurrences" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a new record annotated w. all occurences of pattern in sequence.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>record</strong></p>
-<blockquote>
-<div><p>A Biopython record</p>
-</div></blockquote>
-<p><strong>pattern</strong></p>
-<blockquote>
-<div><p>A DnaChisel SequencePattern object (such as DnaPAttern)</p>
-</div></blockquote>
-<p><strong>feature_type</strong></p>
-<blockquote class="last">
-<div><p>Type of the annotations in the returned record</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.features_annotations.annotate_record">
-<code class="descclassname">dnachisel.biotools.features_annotations.</code><code class="descname">annotate_record</code><span class="sig-paren">(</span><em>seqrecord</em>, <em>location='full'</em>, <em>feature_type='misc_feature'</em>, <em>margin=0</em>, <em>**qualifiers</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/features_annotations.html#annotate_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.features_annotations.annotate_record" title="Permalink to this definition">¶</a></dt>
+<dt id="dnachisel.biotools.annotate_record">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">annotate_record</code><span class="sig-paren">(</span><em class="sig-param">seqrecord</em>, <em class="sig-param">location='full'</em>, <em class="sig-param">feature_type='misc_feature'</em>, <em class="sig-param">margin=0</em>, <em class="sig-param">**qualifiers</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#annotate_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.annotate_record" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a feature to a Biopython SeqRecord.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>seqrecord</strong></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seqrecord</strong></p>
 <blockquote>
 <div><p>The biopython seqrecord to be annotated.</p>
 </div></blockquote>
@@ -655,89 +288,354 @@ original sequence at the feature’s location. For instance “#A” or “#TT�
 <div><p>Number of extra bases added on each side of the given location.</p>
 </div></blockquote>
 <p><strong>qualifiers</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>Dictionnary that will be the Biopython feature’s <cite>qualifiers</cite> attribute.</p>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.annotate_differences">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">annotate_differences</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">reference</em>, <em class="sig-param">feature_type='misc_feature'</em>, <em class="sig-param">prefix='#'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#annotate_differences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.annotate_differences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Annotate differences between two records in a new record.</p>
+<p>Returns a version of SeqRecord <code class="docutils literal notranslate"><span class="pre">record</span></code> where differences with the
+references are annotated as new features.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>record</strong></p>
+<blockquote>
+<div><p>The SeqRecord to be compared to the reference</p>
+</div></blockquote>
+<p><strong>reference</strong></p>
+<blockquote>
+<div><p>The reference SeqRecord. Must be the same size as <code class="docutils literal notranslate"><span class="pre">reference</span></code></p>
+</div></blockquote>
+<p><strong>feature_type</strong></p>
+<blockquote>
+<div><p>The type of the features added to mark differences.</p>
+</div></blockquote>
+<p><strong>prefix</strong></p>
+<blockquote>
+<div><p>Each new feature will be labeled “po” where p is the prefix and o the
+original sequence at the feature’s location. For instance “#A” or “#TT”.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.annotate_pattern_occurrences">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">annotate_pattern_occurrences</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">pattern</em>, <em class="sig-param">feature_type='misc_feature'</em>, <em class="sig-param">prefix='!'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#annotate_pattern_occurrences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.annotate_pattern_occurrences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new record annotated w. all occurences of pattern in sequence.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>record</strong></p>
+<blockquote>
+<div><p>A Biopython record</p>
+</div></blockquote>
+<p><strong>pattern</strong></p>
+<blockquote>
+<div><p>A DnaChisel SequencePattern object (such as DnaPAttern)</p>
+</div></blockquote>
+<p><strong>feature_type</strong></p>
+<blockquote>
+<div><p>Type of the annotations in the returned record</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.complement">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">complement</code><span class="sig-paren">(</span><em class="sig-param">dna_sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#complement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.complement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the complement of the DNA sequence.</p>
+<p>For instance <code class="docutils literal notranslate"><span class="pre">complement(&quot;ATGCCG&quot;)</span></code> returns <code class="docutils literal notranslate"><span class="pre">&quot;TACGGC&quot;</span></code>.</p>
+<p>Uses BioPython for speed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.reverse_complement">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">reverse_complement</code><span class="sig-paren">(</span><em class="sig-param">sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#reverse_complement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.reverse_complement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the reverse-complement of the DNA sequence.</p>
+<p>For instance <code class="docutils literal notranslate"><span class="pre">complement(&quot;ATGCCG&quot;)</span></code> returns <code class="docutils literal notranslate"><span class="pre">&quot;GCCGTA&quot;</span></code>.</p>
+<p>Uses BioPython for speed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.reverse_translate">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">reverse_translate</code><span class="sig-paren">(</span><em class="sig-param">protein_sequence</em>, <em class="sig-param">randomize_codons=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#reverse_translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.reverse_translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a DNA sequence which translates to the provided protein sequence</p>
+<p>Note: at the moment, the first valid codon found is used for each
+amino-acid (so it is deterministic but no codon-optimization is done).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.dna_pattern_to_regexpr">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">dna_pattern_to_regexpr</code><span class="sig-paren">(</span><em class="sig-param">dna_pattern</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#dna_pattern_to_regexpr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.dna_pattern_to_regexpr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a regular expression pattern for the provided DNA pattern</p>
+<p>For instance <code class="docutils literal notranslate"><span class="pre">dna_pattern_to_regexpr('ATTNN')</span></code> returns
+<code class="docutils literal notranslate"><span class="pre">&quot;ATT[A|T|G|C][A|T|G|C]&quot;</span></code>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.translate">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">translate</code><span class="sig-paren">(</span><em class="sig-param">dna_sequence</em>, <em class="sig-param">translation_table='Bacterial'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate the DNA sequence into an amino-acids sequence “MLKYQT…”.
+If <code class="docutils literal notranslate"><span class="pre">translation_table</span></code> is the name or number of  NCBI genetic table,
+Biopython will be used. See here for options:</p>
+<p><a class="reference external" href="http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc25">http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc25</a></p>
+<p><code class="docutils literal notranslate"><span class="pre">translation_table</span></code> can also be a dictionnary of the form
+<code class="docutils literal notranslate"><span class="pre">{&quot;ATT&quot;:</span> <span class="pre">&quot;M&quot;,</span> <span class="pre">&quot;CTC&quot;:</span> <span class="pre">&quot;X&quot;,</span> <span class="pre">etc.}</span></code> for more exotic translation tables</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.list_common_enzymes">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">list_common_enzymes</code><span class="sig-paren">(</span><em class="sig-param">site_length=(6</em>, <em class="sig-param">)</em>, <em class="sig-param">opt_temp=(37</em>, <em class="sig-param">)</em>, <em class="sig-param">min_suppliers=1</em>, <em class="sig-param">site_unlike=()</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/enzymes_operations.html#list_common_enzymes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.list_common_enzymes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of enzyme names with the given constraints.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>site_length</strong></p>
+<blockquote>
+<div><p>List of accepted site lengths (6, 4, …)</p>
+</div></blockquote>
+<p><strong>opt_temp</strong></p>
+<blockquote>
+<div><p>List of accepted optimal temperatures for the enzyme</p>
+</div></blockquote>
+<p><strong>min_suppliers</strong></p>
+<blockquote>
+<div><p>Minimal number registered suppliers in the Biopython data. A minimum
+of 3 known suppliers returns the most common enzymes.</p>
+</div></blockquote>
+<p><strong>site_unlike</strong></p>
+<blockquote>
+<div><p>List of (ambiguous or unambiguous) DNA sequences that should NOT be
+recognized by the selected enzymes.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.gc_content">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">gc_content</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">window_size=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/gc_content.html#gc_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.gc_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute global or local GC content.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sequence</strong></p>
+<blockquote>
+<div><p>An ATGC DNA sequence (upper case!)</p>
+</div></blockquote>
+<p><strong>window_size</strong></p>
+<blockquote>
+<div><p>If provided, the local GC content for the different sliding windows of
+this size is returned, else the global GC content is returned.</p>
+</div></blockquote>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A number between 0 and 1 indication the proportion</p>
+<blockquote>
+<div><p>of GC content. If window_size is provided, returns
+a list of len(sequence)-window_size values indicating
+the local GC contents (sliding-window method). The i-th value
+indicates the GC content in the window [i, i+window_size]</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.group_nearby_indices">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">group_nearby_indices</code><span class="sig-paren">(</span><em class="sig-param">indices</em>, <em class="sig-param">max_gap=None</em>, <em class="sig-param">max_group_spread=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/indices_operations.html#group_nearby_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.group_nearby_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of groups of the different indices.</p>
+<p>Indices are considered from smaller to larger and placed into groups</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>max_gap</strong></p>
+<blockquote>
+<div><p>Maximal allowed difference between two consecutive numbers of a group</p>
+</div></blockquote>
+<p><strong>max_group_spread</strong></p>
+<blockquote>
+<div><p>Maximal allowed difference between the smallest and largest elements
+of a group.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.group_nearby_segments">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">group_nearby_segments</code><span class="sig-paren">(</span><em class="sig-param">segments</em>, <em class="sig-param">max_start_gap=None</em>, <em class="sig-param">max_start_spread=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/indices_operations.html#group_nearby_segments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.group_nearby_segments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of groups of the different indices.</p>
+<p>Indices are considered from smaller to larger and placed into groups</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>max_gap</strong></p>
+<blockquote>
+<div><p>Maximal allowed difference between two consecutive numbers of a group</p>
+</div></blockquote>
+<p><strong>max_group_spread</strong></p>
+<blockquote>
+<div><p>Maximal allowed difference between the smallest and largest elements
+of a group.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.subdivide_window">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">subdivide_window</code><span class="sig-paren">(</span><em class="sig-param">window</em>, <em class="sig-param">max_span</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/indices_operations.html#subdivide_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.subdivide_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subdivide a window (start, end) into windows of size &lt; max_span
+(start, i_1), (i_1, i_2), … (i_n, end)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.windows_overlap">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">windows_overlap</code><span class="sig-paren">(</span><em class="sig-param">window1</em>, <em class="sig-param">window2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/indices_operations.html#windows_overlap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.windows_overlap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the overlap span between two windows.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>window1, window2</strong></p>
+<blockquote>
+<div><p>Each window is a couple of the form (start, end) indicating the range of
+a segment of integers.</p>
+</div></blockquote>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+<blockquote>
+<div><p>In case the two windows do not overlap.</p>
+</div></blockquote>
+<p>[start, end]</p>
+<blockquote>
+<div><p>The coordinates of the overlap segment if there is one.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.sequences_differences">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">sequences_differences</code><span class="sig-paren">(</span><em class="sig-param">seq1</em>, <em class="sig-param">seq2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_differences.html#sequences_differences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.sequences_differences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of nucleotides that differ in the two sequences.</p>
+<p>seq1, seq2 should be strings of DNA sequences e.g. “ATGCTGTGC”</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.sequences_differences_array">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">sequences_differences_array</code><span class="sig-paren">(</span><em class="sig-param">seq1</em>, <em class="sig-param">seq2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_differences.html#sequences_differences_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.sequences_differences_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an array [0, 0, 1, 0, …] with 1s for sequence differences.</p>
+<p>seq1, seq2 should both be ATGC strings.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.sequences_differences_segments">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">sequences_differences_segments</code><span class="sig-paren">(</span><em class="sig-param">seq1</em>, <em class="sig-param">seq2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_differences.html#sequences_differences_segments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.sequences_differences_segments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the list of segments on which sequence seq1 differs from seq2.</p>
+<p>The list is of the form [(start1, end1), (start2, end2), etc.]</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seq1, seq2</strong></p>
+<blockquote>
+<div><p>ATGC sequences to be compared</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.dict_to_pretty_string">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">dict_to_pretty_string</code><span class="sig-paren">(</span><em class="sig-param">d</em>, <em class="sig-param">rounding_digits=2</em>, <em class="sig-param">indent=2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/formatting_operations.html#dict_to_pretty_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.dict_to_pretty_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a nicely JSON-like formatted string to print a dict.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.round_all_numbers_in_dict">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">round_all_numbers_in_dict</code><span class="sig-paren">(</span><em class="sig-param">d</em>, <em class="sig-param">rounding_digits=2</em>, <em class="sig-param">outplace=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/formatting_operations.html#round_all_numbers_in_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.round_all_numbers_in_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new version of dict d with all floats rounded to N digits.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.score_to_formatted_string">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">score_to_formatted_string</code><span class="sig-paren">(</span><em class="sig-param">score</em>, <em class="sig-param">characters=9</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/formatting_operations.html#score_to_formatted_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.score_to_formatted_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform a number (score) into a best-format string.</p>
+<p>The format will be either int (2234), float (10.234) or engineering
+(1.20E5), whichever is shorter. The score is then padded with left
+whitespaces to obtained the desired number of <code class="docutils literal notranslate"><span class="pre">characters</span></code>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.random_dna_sequence">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">random_dna_sequence</code><span class="sig-paren">(</span><em class="sig-param">length</em>, <em class="sig-param">gc_share=None</em>, <em class="sig-param">probas=None</em>, <em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/random_sequences.html#random_dna_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.random_dna_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a random DNA sequence (“ATGGCGT…”) with the specified length.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>length</strong></p>
+<blockquote>
+<div><p>Length of the DNA sequence.</p>
+</div></blockquote>
+<p><strong>proba</strong></p>
+<blockquote>
+<div><p>Frequencies for the different nucleotides, for instance
+<code class="docutils literal notranslate"><span class="pre">probas={&quot;A&quot;:0.2,</span> <span class="pre">&quot;T&quot;:0.3,</span> <span class="pre">&quot;G&quot;:0.3,</span> <span class="pre">&quot;C&quot;:0.2}</span></code>.
+If not specified, all nucleotides are equiprobable (p=0.25).</p>
+</div></blockquote>
+<p><strong>seed</strong></p>
+<blockquote>
+<div><p>The seed to feed to the random number generator. When a seed is provided
+the random results depend deterministically on the seed, thus enabling
+reproducibility</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.random_protein_sequence">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">random_protein_sequence</code><span class="sig-paren">(</span><em class="sig-param">length</em>, <em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/random_sequences.html#random_protein_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.random_protein_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a random protein sequence “MNQTW…YL*” of the specified length.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>length</strong></p>
+<blockquote>
+<div><p>Length of the protein sequence (in number of amino-acids). Note that the
+sequence will always start with <code class="docutils literal notranslate"><span class="pre">&quot;M&quot;</span></code> and end with a stop codon <code class="docutils literal notranslate"><span class="pre">&quot;*&quot;</span></code>
+with (length-2) random amino-acids in the middle</p>
+</div></blockquote>
+<p><strong>seed</strong></p>
+<blockquote>
+<div><p>The seed to feed to the random number generator. When a seed is provided
+the random results depend deterministically on the seed, thus enabling
+reproducibility</p>
+</div></blockquote>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
-</div>
 
 
-           </div>
-           <div class="articleComments">
-            
-           </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="builtin_specifications.html" class="btn btn-neutral float-right" title="Built-in Specifications" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="reports.html" class="btn btn-neutral" title="Reports" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2017, Edinburgh Genome Foundry.
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
-        </div>
-      </div>
-
-    </section>
-
-  </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'0.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
-  </script>
-   
-
-</body>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="reports.html"
+       title="previous chapter">← Reports</a>
+  </li>
+  <li class="next">
+    <a href="builtin_specifications.html"
+       title="next chapter">Built-in Specifications →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
 </html>

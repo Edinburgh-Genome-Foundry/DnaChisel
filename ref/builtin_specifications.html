@@ -1,257 +1,290 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Built-in Specifications &mdash; DnaChisel 0.1.0 documentation</title>
-  
-
-  
-  
-  
-  
-
-  
-
-  
-  
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Built-in Specifications</title>
     
+      <link rel="stylesheet" href="../_static/pygments.css">
+      <link rel="stylesheet" href="../_static/theme.css">
+      <link rel="stylesheet" href="../_static/css/custom.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
-  
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
 
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../_static/css/main.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="DnaChisel 0.1.0 documentation" href="../index.html"/>
-        <link rel="up" title="DnaChisel Reference manual" href="ref.html"/>
-        <link rel="prev" title="Biotools" href="biotools.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
-</head>
-
-<body class="wy-body-for-nav" role="document">
-
-   
-  <div class="wy-grid-for-nav">
-
+      
+      <script src="../_static/theme-vendors.js"></script>
+      <script src="../_static/theme.js" defer></script>
     
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="next" title="Examples" href="../examples.html" />
+  <link rel="prev" title="Biotools" href="biotools.html" /> 
+  </head>
 
-          
-            <a href="../index.html" class="icon icon-home"> DnaChisel
-          
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
 
-          
-            
-            <img src="../_static/html_logo.png" class="logo" />
-          
-          </a>
+  <div class="links">
+    <navlinks class="can-hide">
 
-          
-            
-            
-              <div class="version">
-                0.1.0
-              </div>
-            
-          
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="ref.html#dna-chisel-api-reference"
+         class="nav-link  router-link-active">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
 
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
 
-          
-        </div>
 
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
           
+          <navlinks>
             
+
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="ref.html#dna-chisel-api-reference"
+         class="nav-link  router-link-active">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
             
-              
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">DNA Chisel documentation</a></span>
+      </p>
+      <ul class="">
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="ref.html#dna-chisel-api-reference">DNA Chisel API reference</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 "><a href="core_classes.html" class="reference internal ">Core Classes</a>
+
             
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">Built-in Specifications</a>
+
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">DNA Chisel</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="ref.html">DnaChisel Reference manual</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="core_classes.html">Core Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reports.html">Reports</a></li>
-<li class="toctree-l2"><a class="reference internal" href="biotools.html">Biotools</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Built-in Specifications</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#summary">Summary</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#full-reference">Full reference</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p class="caption"><span class="caption-text">Examples</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
-</ul>
-
+                
+                  <li class="toctree-l2"><a href="#summary" class="reference internal">Summary</a></li>
+                
+                  <li class="toctree-l2"><a href="#api-details" class="reference internal">API Details</a></li>
+                
+              </ul>
             
-          
-        </div>
-      </div>
-    </nav>
+          </li>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">DnaChisel</a>
-        
-      </nav>
-
-
-      
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="../index.html">Docs</a> &raquo;</li>
-        
-          <li><a href="ref.html">DnaChisel Reference manual</a> &raquo;</li>
-        
-      <li>Built-in Specifications</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-            
-            <a href="../_sources/ref/builtin_specifications.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-    
-  </ul>
-
+      </ul>
+    </div>
   
-  <hr/>
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="ref.html">DNA Chisel API reference</a> &raquo;</li>
+    
+    <li>Built-in Specifications</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="biotools.html"
+       title="previous chapter">← Biotools</a>
+  </li>
+  <li class="next">
+    <a href="../examples.html"
+       title="next chapter">Examples →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
             
   <div class="section" id="built-in-specifications">
 <h1>Built-in Specifications<a class="headerlink" href="#built-in-specifications" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-default">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#dnachisel.builtin_specifications.AllowPrimer" title="dnachisel.builtin_specifications.AllowPrimer"><code class="xref py py-obj docutils literal"><span class="pre">AllowPrimer</span></code></a></td>
-<td>Enforce various specifications for enabling primers at the location.</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AllowPrimer" title="dnachisel.builtin_specifications.AllowPrimer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AllowPrimer</span></code></a></p></td>
+<td><p>Enforce various specifications for enabling primers at the location.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidBlastMatches" title="dnachisel.builtin_specifications.AvoidBlastMatches"><code class="xref py py-obj docutils literal"><span class="pre">AvoidBlastMatches</span></code></a></td>
-<td>Enforce that the given pattern is absent in the sequence.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidBlastMatches" title="dnachisel.builtin_specifications.AvoidBlastMatches"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidBlastMatches</span></code></a></p></td>
+<td><p>Enforce that the given pattern is absent in the sequence.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidChanges" title="dnachisel.builtin_specifications.AvoidChanges"><code class="xref py py-obj docutils literal"><span class="pre">AvoidChanges</span></code></a></td>
-<td>Specify that some locations of the sequence should not be changed.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidChanges" title="dnachisel.builtin_specifications.AvoidChanges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidChanges</span></code></a></p></td>
+<td><p>Specify that some locations of the sequence should not be changed.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidHairpins" title="dnachisel.builtin_specifications.AvoidHairpins"><code class="xref py py-obj docutils literal"><span class="pre">AvoidHairpins</span></code></a></td>
-<td>Avoid Hairpin patterns as defined by the IDT guidelines.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidHairpins" title="dnachisel.builtin_specifications.AvoidHairpins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidHairpins</span></code></a></p></td>
+<td><p>Avoid Hairpin patterns as defined by the IDT guidelines.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidNonUniqueSegments" title="dnachisel.builtin_specifications.AvoidNonUniqueSegments"><code class="xref py py-obj docutils literal"><span class="pre">AvoidNonUniqueSegments</span></code></a></td>
-<td>Avoid sub-sequence which have repeats elsewhere in the sequence.</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidHeterodimerization</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidPattern" title="dnachisel.builtin_specifications.AvoidPattern"><code class="xref py py-obj docutils literal"><span class="pre">AvoidPattern</span></code></a></td>
-<td>Enforce that the given pattern is absent in the sequence.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidNonUniqueSegments" title="dnachisel.builtin_specifications.AvoidNonUniqueSegments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidNonUniqueSegments</span></code></a></p></td>
+<td><p>Avoid sub-sequence which have repeats elsewhere in the sequence.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidStopCodons" title="dnachisel.builtin_specifications.AvoidStopCodons"><code class="xref py py-obj docutils literal"><span class="pre">AvoidStopCodons</span></code></a></td>
-<td>Do not introduce any new stop codon in that frame.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidPattern" title="dnachisel.builtin_specifications.AvoidPattern"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidPattern</span></code></a></p></td>
+<td><p>Enforce that the given pattern is absent in the sequence.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#dnachisel.builtin_specifications.CodonOptimize" title="dnachisel.builtin_specifications.CodonOptimize"><code class="xref py py-obj docutils literal"><span class="pre">CodonOptimize</span></code></a></td>
-<td>Codon-optimize a coding sequence for a particular species.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidStopCodons" title="dnachisel.builtin_specifications.AvoidStopCodons"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidStopCodons</span></code></a></p></td>
+<td><p>Do not introduce any new stop codon in that frame.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceGCContent" title="dnachisel.builtin_specifications.EnforceGCContent"><code class="xref py py-obj docutils literal"><span class="pre">EnforceGCContent</span></code></a></td>
-<td>Specification on the local or global proportion of G/C nucleotides.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.CodonOptimize" title="dnachisel.builtin_specifications.CodonOptimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CodonOptimize</span></code></a></p></td>
+<td><p>Codon-optimize a coding sequence for a particular species.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#dnachisel.builtin_specifications.EnforcePatternOccurence" title="dnachisel.builtin_specifications.EnforcePatternOccurence"><code class="xref py py-obj docutils literal"><span class="pre">EnforcePatternOccurence</span></code></a></td>
-<td>Enforce a number of occurences of the given pattern in the sequence.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceGCContent" title="dnachisel.builtin_specifications.EnforceGCContent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceGCContent</span></code></a></p></td>
+<td><p>Specification on the local or global proportion of G/C nucleotides.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceRegionsCompatibility" title="dnachisel.builtin_specifications.EnforceRegionsCompatibility"><code class="xref py py-obj docutils literal"><span class="pre">EnforceRegionsCompatibility</span></code></a></td>
-<td>Ensure that different subregions satisfy compatibility constraints.</td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceMeltingTemperature</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceSequence" title="dnachisel.builtin_specifications.EnforceSequence"><code class="xref py py-obj docutils literal"><span class="pre">EnforceSequence</span></code></a></td>
-<td>Enforces a (possibly degenerate) sequence at some location.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforcePatternOccurence" title="dnachisel.builtin_specifications.EnforcePatternOccurence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforcePatternOccurence</span></code></a></p></td>
+<td><p>Enforce a number of occurences of the given pattern in the sequence.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceTranslation" title="dnachisel.builtin_specifications.EnforceTranslation"><code class="xref py py-obj docutils literal"><span class="pre">EnforceTranslation</span></code></a></td>
-<td>Enforce a specific amino-acid sequence translation.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceRegionsCompatibility" title="dnachisel.builtin_specifications.EnforceRegionsCompatibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceRegionsCompatibility</span></code></a></p></td>
+<td><p>Ensure that different subregions satisfy compatibility constraints.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#dnachisel.builtin_specifications.SequenceLengthBounds" title="dnachisel.builtin_specifications.SequenceLengthBounds"><code class="xref py py-obj docutils literal"><span class="pre">SequenceLengthBounds</span></code></a></td>
-<td>Checks that the sequence length is between bounds.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceSequence" title="dnachisel.builtin_specifications.EnforceSequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceSequence</span></code></a></p></td>
+<td><p>Enforces a (possibly degenerate) sequence at some location.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceTranslation" title="dnachisel.builtin_specifications.EnforceTranslation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceTranslation</span></code></a></p></td>
+<td><p>Enforce a specific amino-acid sequence translation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.SequenceLengthBounds" title="dnachisel.builtin_specifications.SequenceLengthBounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceLengthBounds</span></code></a></p></td>
+<td><p>Checks that the sequence length is between bounds.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="section" id="full-reference">
-<h2>Full reference<a class="headerlink" href="#full-reference" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="api-details">
+<h2>API Details<a class="headerlink" href="#api-details" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="allowprimer">
+<h3>AllowPrimer<a class="headerlink" href="#allowprimer" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.AllowPrimer">
-<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">AllowPrimer</code><span class="sig-paren">(</span><em>location=None</em>, <em>tmin=50</em>, <em>tmax=70</em>, <em>max_homology_length=6</em>, <em>avoid_heterodim_with=None</em>, <em>max_heterodim_tm=5</em>, <em>avoided_repeats=((2</em>, <em>5)</em>, <em>(3</em>, <em>4)</em>, <em>(4</em>, <em>3))</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AllowPrimer.html#AllowPrimer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AllowPrimer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AllowPrimer</code><span class="sig-paren">(</span><em class="sig-param">location=None</em>, <em class="sig-param">tmin=50</em>, <em class="sig-param">tmax=70</em>, <em class="sig-param">max_homology_length=6</em>, <em class="sig-param">avoid_heterodim_with=None</em>, <em class="sig-param">max_heterodim_tm=5</em>, <em class="sig-param">avoided_repeats=((2</em>, <em class="sig-param">5)</em>, <em class="sig-param">(3</em>, <em class="sig-param">4)</em>, <em class="sig-param">(4</em>, <em class="sig-param">3))</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AllowPrimer.html#AllowPrimer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AllowPrimer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enforce various specifications for enabling primers at the location.</p>
 <p>This is useful for making sure that you will be able to conduct a PCR or
 sanger sequencing with a primer annealing at a particular location of
 the sequence.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>location</strong></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>location</strong></p>
 <blockquote>
 <div><p>The exact location where the primer will anneal, i.e. the subsequence
 under this location will be the sequence</p>
@@ -265,7 +298,7 @@ instance 55 and 70. When the used as an optimization objective the
 <p><strong>max_homology_length</strong></p>
 <blockquote>
 <div><p>Maximal length of any homology between the subsequence at that location
-and anywhere else in the sequence</p>
+and anywhere else in the whole sequence.</p>
 </div></blockquote>
 <p><strong>avoid_heterodim_with</strong></p>
 <blockquote>
@@ -278,26 +311,25 @@ the optimised location should have no annealing.</p>
 and the other sequences in “avoid_heterodim_with”</p>
 </div></blockquote>
 <p><strong>avoided_repeats</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>Properties of the repeated patterns avoided. List of pairs (K, N)
 meaning “avoid K-mers repeated N times in a row”.</p>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
+</div>
+<div class="section" id="avoidblastmatches">
+<h3>AvoidBlastMatches<a class="headerlink" href="#avoidblastmatches" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.AvoidBlastMatches">
-<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">AvoidBlastMatches</code><span class="sig-paren">(</span><em>blast_db=None</em>, <em>sequences=None</em>, <em>word_size=4</em>, <em>perc_identity=100</em>, <em>num_alignments=100000</em>, <em>num_threads=3</em>, <em>min_align_length=20</em>, <em>ungapped=True</em>, <em>e_value=1e+80</em>, <em>culling_limit=1</em>, <em>location=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidBlastMatches.html#AvoidBlastMatches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidBlastMatches" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidBlastMatches</code><span class="sig-paren">(</span><em class="sig-param">blast_db=None</em>, <em class="sig-param">sequences=None</em>, <em class="sig-param">word_size=4</em>, <em class="sig-param">perc_identity=100</em>, <em class="sig-param">num_alignments=100000</em>, <em class="sig-param">num_threads=3</em>, <em class="sig-param">min_align_length=20</em>, <em class="sig-param">ungapped=True</em>, <em class="sig-param">e_value=1e+80</em>, <em class="sig-param">culling_limit=1</em>, <em class="sig-param">location=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidBlastMatches.html#AvoidBlastMatches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidBlastMatches" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enforce that the given pattern is absent in the sequence.</p>
 <p>Uses NCBI Blast+. Only local BLAST is supported/tested as for now</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>blast_db</strong></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>blast_db</strong></p>
 <blockquote>
 <div><p>Path to a local BLAST database. These databases can be obtained with
 NCBI’s <cite>makeblastdb</cite>. Omit the extension, e.g. <cite>ecoli_db/ecoli_db</cite>.</p>
@@ -320,26 +352,25 @@ perfect matches are considered.</p>
 <div><p>Number of threads/CPU cores to use for the BLAST algorithm.</p>
 </div></blockquote>
 <p><strong>min_align_length</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>Minimal length that an alignment should have to be considered.</p>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
+</div>
+<div class="section" id="avoidchanges">
+<h3>AvoidChanges<a class="headerlink" href="#avoidchanges" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.AvoidChanges">
-<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">AvoidChanges</code><span class="sig-paren">(</span><em>location=None</em>, <em>indices=None</em>, <em>target_sequence=None</em>, <em>boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidChanges.html#AvoidChanges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidChanges" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidChanges</code><span class="sig-paren">(</span><em class="sig-param">location=None</em>, <em class="sig-param">indices=None</em>, <em class="sig-param">target_sequence=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidChanges.html#AvoidChanges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidChanges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specify that some locations of the sequence should not be changed.</p>
-<p><code class="docutils literal"><span class="pre">AvoidChanges</span></code> Specifications are used to constrain the mutations space
+<p><code class="docutils literal notranslate"><span class="pre">AvoidChanges</span></code> Specifications are used to constrain the mutations space
 of DNA OptimizationProblem.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>location</strong></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>location</strong></p>
 <blockquote>
 <div><p>Location object indicating the position of the segment that must be
 left unchanged. Alternatively,
@@ -351,27 +382,26 @@ is the whole sequence.</p>
 <div><p>List of indices that must be left unchanged.</p>
 </div></blockquote>
 <p><strong>target_sequence</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>At the moment, this is rather an internal variable. Do not use unless
 you’re not afraid of side effects.</p>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
+</div>
+<div class="section" id="avoidhairpins">
+<h3>AvoidHairpins<a class="headerlink" href="#avoidhairpins" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.AvoidHairpins">
-<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">AvoidHairpins</code><span class="sig-paren">(</span><em>stem_size=20</em>, <em>hairpin_window=200</em>, <em>location=None</em>, <em>boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidHairpins.html#AvoidHairpins"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidHairpins" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidHairpins</code><span class="sig-paren">(</span><em class="sig-param">stem_size=20</em>, <em class="sig-param">hairpin_window=200</em>, <em class="sig-param">location=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidHairpins.html#AvoidHairpins"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidHairpins" title="Permalink to this definition">¶</a></dt>
 <dd><p>Avoid Hairpin patterns as defined by the IDT guidelines.</p>
 <p>A hairpin is defined by a sequence segment which has a reverse complement
 “nearby” in a given window.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>stem_size</strong></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>stem_size</strong></p>
 <blockquote>
 <div><p>Size of the stem of a hairpin, i.e. the length of the sequence which
 should have a reverse complement nearby to be considered a hairpin.</p>
@@ -381,26 +411,27 @@ should have a reverse complement nearby to be considered a hairpin.</p>
 <div><p>The window in which the stem’s reverse complement should be searched for.</p>
 </div></blockquote>
 <p><strong>boost</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>Multiplicative factor, importance of this objective in a multi-objective
 optimization.</p>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
+</div>
+<div class="section" id="avoidnonuniquesegments">
+<h3>AvoidNonUniqueSegments<a class="headerlink" href="#avoidnonuniquesegments" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.AvoidNonUniqueSegments">
-<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">AvoidNonUniqueSegments</code><span class="sig-paren">(</span><em>min_length</em>, <em>location=None</em>, <em>extended_location=None</em>, <em>include_reverse_complement=True</em>, <em>boost=1.0</em>, <em>localization_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidNonUniqueSegments.html#AvoidNonUniqueSegments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidNonUniqueSegments" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidNonUniqueSegments</code><span class="sig-paren">(</span><em class="sig-param">min_length</em>, <em class="sig-param">location=None</em>, <em class="sig-param">extended_location=None</em>, <em class="sig-param">include_reverse_complement=True</em>, <em class="sig-param">boost=1.0</em>, <em class="sig-param">localization_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidNonUniqueSegments.html#AvoidNonUniqueSegments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidNonUniqueSegments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Avoid sub-sequence which have repeats elsewhere in the sequence.</p>
 <p>NOTE: For sequences with subsequences appearing more than 2 times, the
 specification may not work as a problem constraint, but will work as a
 problem optimization objective.</p>
 <p>You can define a location L and an extended location L* (by default they
 are both the full sequence)</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span>         <span class="p">[</span><span class="o">===</span> <span class="n">L</span> <span class="o">===</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span>         <span class="p">[</span><span class="o">===</span> <span class="n">L</span> <span class="o">===</span><span class="p">]</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span>      <span class="p">[</span><span class="o">===========</span> <span class="n">L</span><span class="o">*</span> <span class="o">==========</span><span class="p">]</span>
 <span class="go">&gt;&gt;&gt;</span>
@@ -411,18 +442,16 @@ are both the full sequence)</p>
 above min_length has more than 1 occurence in L*”.</p>
 <p>Some specific cases</p>
 <ul class="simple">
-<li>L = L* = Sequence. In this case the full sequence will have only unique
-kmers above a certain size (no self-homology).</li>
-<li>L &lt; L*, L* = Sequence. The segment L will have no self-homology and no
+<li><p>L = L* = Sequence. In this case the full sequence will have only unique
+kmers above a certain size (no self-homology).</p></li>
+<li><p>L &lt; L*, L* = Sequence. The segment L will have no self-homology and no
 homology to the rest of the sequence above a certain size. But there
-can be self-homologies elsewhere in the sequence.</li>
-<li>L = L*. segment L will have no self-homology.</li>
+can be self-homologies elsewhere in the sequence.</p></li>
+<li><p>L = L*. segment L will have no self-homology.</p></li>
 </ul>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>min_length</strong></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>min_length</strong></p>
 <blockquote>
 <div><p>Minimal length of sequences to be considered repeats</p>
 </div></blockquote>
@@ -432,16 +461,14 @@ can be self-homologies elsewhere in the sequence.</li>
 are searched in the full sequence.</p>
 </div></blockquote>
 <p><strong>include_reverse_complement</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>If True, the sequence repeats are also searched for in the reverse
 complement of the sequence (or sub sequence if <cite>location</cite> is not None).</p>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dnachisel</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dnachisel</span> <span class="k">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sequence</span> <span class="o">=</span> <span class="n">random_dna_sequence</span><span class="p">(</span><span class="mi">50000</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">constraint</span><span class="o">=</span> <span class="n">AvoidNonUniqueSegments</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">include_reverse_complement</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span> <span class="p">[</span><span class="n">contraint</span><span class="p">])</span>
@@ -450,62 +477,61 @@ complement of the sequence (or sub sequence if <cite>location</cite> is not None
 </div>
 </dd></dl>
 
+</div>
+<div class="section" id="avoidpattern">
+<h3>AvoidPattern<a class="headerlink" href="#avoidpattern" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.AvoidPattern">
-<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">AvoidPattern</code><span class="sig-paren">(</span><em>pattern=None</em>, <em>location=None</em>, <em>boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidPattern.html#AvoidPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidPattern" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidPattern</code><span class="sig-paren">(</span><em class="sig-param">pattern=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidPattern.html#AvoidPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidPattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enforce that the given pattern is absent in the sequence.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>pattern</strong></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pattern</strong></p>
 <blockquote>
 <div><p>A SequencePattern or DnaNotationPattern</p>
 </div></blockquote>
-<p><strong>enzyme</strong></p>
-<blockquote>
-<div><p>Enzyme name, can be provided instead of pattern or dna_pattern</p>
-</div></blockquote>
 <p><strong>location</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>Location of the DNA segment on which to enforce the pattern e.g.
-<code class="docutils literal"><span class="pre">Location(10,</span> <span class="pre">45,</span> <span class="pre">1)</span></code></p>
+<code class="docutils literal notranslate"><span class="pre">Location(10,</span> <span class="pre">45,</span> <span class="pre">1)</span></code></p>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
+</div>
+<div class="section" id="avoidstopcodons">
+<h3>AvoidStopCodons<a class="headerlink" href="#avoidstopcodons" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.AvoidStopCodons">
-<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">AvoidStopCodons</code><span class="sig-paren">(</span><em>location=None</em>, <em>boost=1.0</em>, <em>translation='legacy'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidStopCodons.html#AvoidStopCodons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidStopCodons" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidStopCodons</code><span class="sig-paren">(</span><em class="sig-param">location=None</em>, <em class="sig-param">boost=1.0</em>, <em class="sig-param">translation='legacy'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidStopCodons.html#AvoidStopCodons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidStopCodons" title="Permalink to this definition">¶</a></dt>
 <dd><p>Do not introduce any new stop codon in that frame.</p>
 <p>This can be used for research purposes, to avoid breaking a reading frame
 when editing it with quasi-synonymous mutations.</p>
 </dd></dl>
 
+</div>
+<div class="section" id="codonoptimize">
+<h3>CodonOptimize<a class="headerlink" href="#codonoptimize" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.CodonOptimize">
-<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">CodonOptimize</code><span class="sig-paren">(</span><em>species=None</em>, <em>location=None</em>, <em>mode='best_codon'</em>, <em>codon_usage_table=None</em>, <em>boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/CodonOptimize.html#CodonOptimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.CodonOptimize" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">CodonOptimize</code><span class="sig-paren">(</span><em class="sig-param">species=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">mode='best_codon'</em>, <em class="sig-param">codon_usage_table=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/CodonOptimize.html#CodonOptimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.CodonOptimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Codon-optimize a coding sequence for a particular species.</p>
 <p>Several codon-optimization policies exist. At the moment this Specification
 implements a method in which codons are replaced by the most frequent
 codon in the species.</p>
 <p>(as long as this doesn’t break any Specification or lowers the global
 optimization objective)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>species</strong></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>species</strong></p>
 <blockquote>
 <div><p>Either a TaxID (this requires a web connection as the corresponding table
 will be downloaded from the internet) or the name of the species to
-codon-optimize for (the name must be supported by <code class="docutils literal"><span class="pre">python_codon_tables</span></code>
-e.g. <code class="docutils literal"><span class="pre">e_coli</span></code>, <code class="docutils literal"><span class="pre">s_cerevisiae</span></code>, <code class="docutils literal"><span class="pre">h_sapiens</span></code>, <code class="docutils literal"><span class="pre">c_elegans</span></code>,
-<code class="docutils literal"><span class="pre">b_subtilis</span></code>, <code class="docutils literal"><span class="pre">d_melanogaster</span></code>).
-Note that the species can be omited if a <code class="docutils literal"><span class="pre">codon_usage_table</span></code> is
+codon-optimize for (the name must be supported by <code class="docutils literal notranslate"><span class="pre">python_codon_tables</span></code>
+e.g. <code class="docutils literal notranslate"><span class="pre">e_coli</span></code>, <code class="docutils literal notranslate"><span class="pre">s_cerevisiae</span></code>, <code class="docutils literal notranslate"><span class="pre">h_sapiens</span></code>, <code class="docutils literal notranslate"><span class="pre">c_elegans</span></code>,
+<code class="docutils literal notranslate"><span class="pre">b_subtilis</span></code>, <code class="docutils literal notranslate"><span class="pre">d_melanogaster</span></code>).
+Note that the species can be omited if a <code class="docutils literal notranslate"><span class="pre">codon_usage_table</span></code> is
 provided instead</p>
 </div></blockquote>
 <p><strong>mode</strong></p>
@@ -513,7 +539,7 @@ provided instead</p>
 <div><p>Either ‘best_codon’ or ‘harmonized’. For ‘best_codon’, the optimization
 will always replace a codon with the most-frequent triplet possible.
 For ‘harmonized’, the optimization will bring the relative frequencies of
-the different triplets as close as possible as the frequencies in the
+the different triplets as close as possible to the frequencies in the
 reference species.</p>
 </div></blockquote>
 <p><strong>location</strong></p>
@@ -526,17 +552,15 @@ that is a multiple of 3. The location strand is either 1 if the gene is
 encoded on the (+) strand, or -1 for antisense.</p>
 </div></blockquote>
 <p><strong>codon_usage_table</strong></p>
-<blockquote class="last">
-<div><p>A dict of the form <code class="docutils literal"><span class="pre">{'*':</span> <span class="pre">{&quot;TGA&quot;:</span> <span class="pre">0.112,</span> <span class="pre">&quot;TAA&quot;:</span> <span class="pre">0.68},</span> <span class="pre">'K':</span> <span class="pre">...}</span></code>
+<blockquote>
+<div><p>A dict of the form <code class="docutils literal notranslate"><span class="pre">{'*':</span> <span class="pre">{&quot;TGA&quot;:</span> <span class="pre">0.112,</span> <span class="pre">&quot;TAA&quot;:</span> <span class="pre">0.68},</span> <span class="pre">'K':</span> <span class="pre">...}</span></code>
 giving the RSCU table (relative usage of each codon). Only provide if
-no <code class="docutils literal"><span class="pre">species</span></code> parameter was provided.</p>
+no <code class="docutils literal notranslate"><span class="pre">species</span></code> parameter was provided.</p>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">objective</span> <span class="o">=</span> <span class="n">CodonOptimizationSpecification</span><span class="p">(</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">objective</span> <span class="o">=</span> <span class="n">CodonOptimizationSpecification</span><span class="p">(</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">species</span> <span class="o">=</span> <span class="s2">&quot;E. coli&quot;</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span> <span class="c1"># coordinates of a gene</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">strand</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -545,26 +569,27 @@ no <code class="docutils literal"><span class="pre">species</span></code> parame
 </div>
 </dd></dl>
 
+</div>
+<div class="section" id="enforcegccontent">
+<h3>EnforceGCContent<a class="headerlink" href="#enforcegccontent" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.EnforceGCContent">
-<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">EnforceGCContent</code><span class="sig-paren">(</span><em>mini=0</em>, <em>maxi=1.0</em>, <em>target=None</em>, <em>window=None</em>, <em>location=None</em>, <em>boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforceGCContent.html#EnforceGCContent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforceGCContent" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">EnforceGCContent</code><span class="sig-paren">(</span><em class="sig-param">mini=0</em>, <em class="sig-param">maxi=1.0</em>, <em class="sig-param">target=None</em>, <em class="sig-param">window=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforceGCContent.html#EnforceGCContent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforceGCContent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specification on the local or global proportion of G/C nucleotides.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>mini</strong></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mini</strong></p>
 <blockquote>
-<div><p>Minimal proportion of G-C (e.g. <code class="docutils literal"><span class="pre">0.35</span></code>)</p>
+<div><p>Minimal proportion of G-C (e.g. <code class="docutils literal notranslate"><span class="pre">0.35</span></code>)</p>
 </div></blockquote>
 <p><strong>maxi</strong></p>
 <blockquote>
-<div><p>Maximal proportion of G-C (e.g. <code class="docutils literal"><span class="pre">0.75</span></code>)</p>
+<div><p>Maximal proportion of G-C (e.g. <code class="docutils literal notranslate"><span class="pre">0.75</span></code>)</p>
 </div></blockquote>
 <p><strong>target</strong></p>
 <blockquote>
-<div><p>Target proportion of GC (e.g. <code class="docutils literal"><span class="pre">0.4</span></code>), which can be used instead of
-<code class="docutils literal"><span class="pre">mini</span></code> and <code class="docutils literal"><span class="pre">maxi</span></code> when using the specification as an optimization
+<div><p>Target proportion of GC (e.g. <code class="docutils literal notranslate"><span class="pre">0.4</span></code>), which can be used instead of
+<code class="docutils literal notranslate"><span class="pre">mini</span></code> and <code class="docutils literal notranslate"><span class="pre">maxi</span></code> when using the specification as an optimization
 objective.</p>
 </div></blockquote>
 <p><strong>window</strong></p>
@@ -574,17 +599,15 @@ If not provided, the global GC content of the whole sequence is
 considered</p>
 </div></blockquote>
 <p><strong>location</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>Location objet indicating that the Specification only applies to a
-subsegment of the sequence. Make sure it is bigger than <code class="docutils literal"><span class="pre">window</span></code>
+subsegment of the sequence. Make sure it is bigger than <code class="docutils literal notranslate"><span class="pre">window</span></code>
 if both parameters are provided</p>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Enforce global GC content between 40 and 70 percent.</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Enforce global GC content between 40 and 70 percent.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Specification</span> <span class="o">=</span> <span class="n">GCContentSpecification</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Enforce 30-80 percent local GC content over 50-nucleotides windows</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Specification</span> <span class="o">=</span> <span class="n">GCContentSpecification</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
@@ -592,15 +615,16 @@ if both parameters are provided</p>
 </div>
 </dd></dl>
 
+</div>
+<div class="section" id="enforcepatternoccurence">
+<h3>EnforcePatternOccurence<a class="headerlink" href="#enforcepatternoccurence" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.EnforcePatternOccurence">
-<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">EnforcePatternOccurence</code><span class="sig-paren">(</span><em>pattern=None</em>, <em>occurences=1</em>, <em>location=None</em>, <em>center=True</em>, <em>boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforcePatternOccurence.html#EnforcePatternOccurence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforcePatternOccurence" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">EnforcePatternOccurence</code><span class="sig-paren">(</span><em class="sig-param">pattern=None</em>, <em class="sig-param">occurences=1</em>, <em class="sig-param">location=None</em>, <em class="sig-param">center=True</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforcePatternOccurence.html#EnforcePatternOccurence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforcePatternOccurence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enforce a number of occurences of the given pattern in the sequence.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>pattern</strong></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pattern</strong></p>
 <blockquote>
 <div><p>A SequencePattern or DnaNotationPattern</p>
 </div></blockquote>
@@ -615,62 +639,63 @@ if both parameters are provided</p>
 <p><strong>location</strong></p>
 <blockquote>
 <div><p>Location of the DNA segment on which to enforce the pattern e.g.
-<code class="docutils literal"><span class="pre">Location(10,</span> <span class="pre">45,</span> <span class="pre">1)</span></code></p>
+<code class="docutils literal notranslate"><span class="pre">Location(10,</span> <span class="pre">45,</span> <span class="pre">1)</span></code></p>
 </div></blockquote>
 <p><strong>center</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>If true, new inserted patterns will prioritize locations at the center
 of the specification’s location. Else the insertion will happen at
 the beginning of the location.</p>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
+</div>
+<div class="section" id="enforceregionscompatibility">
+<h3>EnforceRegionsCompatibility<a class="headerlink" href="#enforceregionscompatibility" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.EnforceRegionsCompatibility">
-<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">EnforceRegionsCompatibility</code><span class="sig-paren">(</span><em>locations</em>, <em>compatibility_condition</em>, <em>condition_label=''</em>, <em>boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforceRegionsCompatibility.html#EnforceRegionsCompatibility"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforceRegionsCompatibility" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">EnforceRegionsCompatibility</code><span class="sig-paren">(</span><em class="sig-param">locations</em>, <em class="sig-param">compatibility_condition</em>, <em class="sig-param">condition_label=''</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforceRegionsCompatibility.html#EnforceRegionsCompatibility"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforceRegionsCompatibility" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensure that different subregions satisfy compatibility constraints.</p>
 </dd></dl>
 
+</div>
+<div class="section" id="enforcesequence">
+<h3>EnforceSequence<a class="headerlink" href="#enforcesequence" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.EnforceSequence">
-<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">EnforceSequence</code><span class="sig-paren">(</span><em>sequence=None</em>, <em>location=None</em>, <em>boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforceSequence.html#EnforceSequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforceSequence" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">EnforceSequence</code><span class="sig-paren">(</span><em class="sig-param">sequence=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforceSequence.html#EnforceSequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforceSequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enforces a (possibly degenerate) sequence at some location.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sequence</strong></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sequence</strong></p>
 <blockquote>
 <div><p>An ATGC string representing the wanted sequence, possibly degenerated,
 for instance ATTCGCGTYTTKWNAA</p>
 </div></blockquote>
 <p><strong>location</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>Location of the DNA segment on which to enforce the pattern e.g.
-<code class="docutils literal"><span class="pre">Location(10,</span> <span class="pre">45,</span> <span class="pre">1)</span></code> or simply <code class="docutils literal"><span class="pre">(10,</span> <span class="pre">45,</span> <span class="pre">1)</span></code></p>
+<code class="docutils literal notranslate"><span class="pre">Location(10,</span> <span class="pre">45,</span> <span class="pre">1)</span></code> or simply <code class="docutils literal notranslate"><span class="pre">(10,</span> <span class="pre">45,</span> <span class="pre">1)</span></code></p>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
+</div>
+<div class="section" id="enforcetranslation">
+<h3>EnforceTranslation<a class="headerlink" href="#enforcetranslation" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.EnforceTranslation">
-<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">EnforceTranslation</code><span class="sig-paren">(</span><em>location=None</em>, <em>translation=None</em>, <em>boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforceTranslation.html#EnforceTranslation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforceTranslation" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">EnforceTranslation</code><span class="sig-paren">(</span><em class="sig-param">location=None</em>, <em class="sig-param">translation=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforceTranslation.html#EnforceTranslation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforceTranslation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enforce a specific amino-acid sequence translation.</p>
 <p>This class enforces the standard translation, but it is also possible to
 change the class’ <cite>codons_sequences</cite> and <cite>codons_translations</cite>
 dictionnaries for more exotic kind of translations</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>location</strong></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>location</strong></p>
 <blockquote>
 <div><p>Either a DnaChisel Location or a tuple of the form (start, end, strand)
 or just (start, end), with strand defaulting to +1, indicating the
@@ -680,113 +705,61 @@ that is a multiple of 3. The location strand is either 1 if the gene is
 encoded on the (+) strand, or -1 for antisense.</p>
 </div></blockquote>
 <p><strong>translation</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>String representing the protein sequence that the DNA segment should
 translate to, eg. “MKY…LL*” (“*” stands for stop codon).
 Can be omitted if the sequence initially encodes the right sequence.</p>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
+</div>
+<div class="section" id="sequencelengthbounds">
+<h3>SequenceLengthBounds<a class="headerlink" href="#sequencelengthbounds" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.SequenceLengthBounds">
-<em class="property">class </em><code class="descclassname">dnachisel.builtin_specifications.</code><code class="descname">SequenceLengthBounds</code><span class="sig-paren">(</span><em>min_length=0</em>, <em>max_length=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/SequenceLengthBounds.html#SequenceLengthBounds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.SequenceLengthBounds" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">SequenceLengthBounds</code><span class="sig-paren">(</span><em class="sig-param">min_length=0</em>, <em class="sig-param">max_length=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/SequenceLengthBounds.html#SequenceLengthBounds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.SequenceLengthBounds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks that the sequence length is between bounds.</p>
 <p>Quite an uncommon specification as it can’t really be solved or optimized.
 But practical as part of a list of constraints to verify.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>min_length</strong></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>min_length</strong></p>
 <blockquote>
 <div><p>Minimal allowed sequence length in nucleotides</p>
 </div></blockquote>
 <p><strong>max_length</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>Maximal allowed sequence length in nucleotides. None means no bound.</p>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
 </div>
+</div>
 
 
-           </div>
-           <div class="articleComments">
-            
-           </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-      
-        <a href="biotools.html" class="btn btn-neutral" title="Biotools" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2017, Edinburgh Genome Foundry.
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
-        </div>
-      </div>
-
-    </section>
-
-  </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'0.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
-  </script>
-   
-
-</body>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="biotools.html"
+       title="previous chapter">← Biotools</a>
+  </li>
+  <li class="next">
+    <a href="../examples.html"
+       title="next chapter">Examples →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
 </html>

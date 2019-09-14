@@ -1,213 +1,218 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>dnachisel.SpecEvaluation &mdash; DnaChisel 0.1.0 documentation</title>
-  
-
-  
-  
-  
-  
-
-  
-
-  
-  
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnachisel.SpecEvaluation</title>
     
+      <link rel="stylesheet" href="../../_static/pygments.css">
+      <link rel="stylesheet" href="../../_static/theme.css">
+      <link rel="stylesheet" href="../../_static/css/custom.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
 
-  
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
 
-  
-  
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../../_static/css/main.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../genindex.html"/>
-        <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="DnaChisel 0.1.0 documentation" href="../../index.html"/>
-        <link rel="up" title="Module code" href="../index.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
-</head>
-
-<body class="wy-body-for-nav" role="document">
-
-   
-  <div class="wy-grid-for-nav">
-
+      
+      <script src="../../_static/theme-vendors.js"></script>
+      <script src="../../_static/theme.js" defer></script>
     
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
 
-          
-            <a href="../../index.html" class="icon icon-home"> DnaChisel
-          
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../index.html" class="home-link">
+    
+      <img class="logo" src="../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
 
-          
-            
-            <img src="../../_static/html_logo.png" class="logo" />
-          
-          </a>
+  <div class="links">
+    <navlinks class="can-hide">
 
-          
-            
-            
-              <div class="version">
-                0.1.0
-              </div>
-            
-          
+  
+    <div class="nav-item">
+      <a href="../../index.html#more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../ref/ref.html#dna-chisel-api-reference"
+         class="nav-link ">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
 
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
 
-          
-        </div>
 
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">DNA Chisel</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../ref/ref.html">DnaChisel Reference manual</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Examples</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
-</ul>
+    </navlinks>
+  </div>
+</navbar>
 
-            
-          
-        </div>
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
       </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">DnaChisel</a>
-        
-      </nav>
-
-
-      
-      <div class="wy-nav-content">
-        <div class="rst-content">
+        <sidebar @toggle-sidebar="toggleSidebar">
           
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
-        
-          <li><a href="../index.html">Module code</a> &raquo;</li>
-        
-      <li>dnachisel.SpecEvaluation</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
+          <navlinks>
             
-        
-      </li>
-    
-  </ul>
 
   
-  <hr/>
+    <div class="nav-item">
+      <a href="../../index.html#more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../ref/ref.html#dna-chisel-api-reference"
+         class="nav-link ">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../index.html#more-biology-software">DNA Chisel documentation</a></span>
+      </p>
+      <ul class="">
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../ref/ref.html#dna-chisel-api-reference">DNA Chisel API reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../ref/core_classes.html" class="reference internal ">Core Classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../ref/reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnachisel.SpecEvaluation</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
             
   <h1>Source code for dnachisel.SpecEvaluation</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;Classes for Objective Evaluations.&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;Implements the SpecEvaluation class</span>
 
+<span class="sd">SpecEvaluation is a class describing the result of an the evaluation of a</span>
+<span class="sd">*DnaOptimizationProblem* by a *Specification*. It contains a score, a message,</span>
+<span class="sd">a list of *Locations* of sub-optimal regions.</span>
+
+<span class="sd">Several evaluations can be grouped using classes</span>
+<span class="sd">*ProblemConstraintsEvaluations* and *ProblemObjectivesEvaluations*, which</span>
+<span class="sd">implement methods for printing or exporting as Genbank a set of evaluations.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">textwrap</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
-    <span class="n">MATPLOTLIB_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="k">except</span><span class="p">:</span>
-    <span class="n">MATPLOTLIB_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="k">import</span> <span class="n">SeqFeature</span>
-
+<span class="kn">from</span> <span class="nn">.biotools</span> <span class="k">import</span> <span class="n">score_to_formatted_string</span>
+<span class="kn">from</span> <span class="nn">.reports</span> <span class="k">import</span> <span class="n">colors_cycle</span>
 <span class="kn">from</span> <span class="nn">.Location</span> <span class="k">import</span> <span class="n">Location</span>
 
-<span class="k">def</span> <span class="nf">colors_cycle</span><span class="p">(</span><span class="n">lightness_factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">color_shift</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">MATPLOTLIB_AVAILABLE</span><span class="p">:</span>
-        <span class="n">cycle</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">cycle</span><span class="p">([</span>
-            <span class="n">cm</span><span class="o">.</span><span class="n">Paired</span><span class="p">(</span><span class="n">color_shift</span> <span class="o">+</span> <span class="mf">0.21</span> <span class="o">*</span> <span class="n">i</span> <span class="o">%</span> <span class="mf">1.0</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-        <span class="p">])</span>
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="s1">&#39;#</span><span class="si">%02x%02x%02x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="mi">255</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">lightness_factor</span><span class="p">)</span>
-                                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">rgb_tuple</span><span class="p">[:</span><span class="mi">3</span><span class="p">]])</span>
-            <span class="k">for</span> <span class="n">rgb_tuple</span> <span class="ow">in</span> <span class="n">cycle</span>
-        <span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">itertools</span><span class="o">.</span><span class="n">cycle</span><span class="p">([</span>
-            <span class="s2">&quot;#f1cccc&quot;</span><span class="p">,</span> <span class="s2">&quot;#f1e5cc&quot;</span><span class="p">,</span> <span class="s2">&quot;#e3f1cc&quot;</span><span class="p">,</span> <span class="s2">&quot;#ccf1e3&quot;</span><span class="p">,</span> <span class="s2">&quot;#ccd7f1&quot;</span><span class="p">,</span> <span class="s2">&quot;#e0ccf1&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;f1cce7&quot;</span>
-        <span class="p">])</span>
-    
-
-<span class="k">def</span> <span class="nf">score_as_text</span><span class="p">(</span><span class="n">score</span><span class="p">):</span>
-    <span class="n">raw</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="o">==</span> <span class="n">score</span><span class="p">)</span> <span class="k">else</span> <span class="n">score</span><span class="p">)</span>
-    <span class="n">as_float</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%.02f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">score</span>
-    <span class="n">as_eng</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%.02E</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="n">score</span>
-    <span class="k">return</span> <span class="nb">min</span><span class="p">([</span><span class="n">raw</span><span class="p">,</span> <span class="n">as_float</span><span class="p">,</span> <span class="n">as_eng</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SpecEvaluation"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluation">[docs]</a><span class="k">class</span> <span class="nc">SpecEvaluation</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Store relevant infos about the evaluation of an objective on a problem.</span>
@@ -245,31 +250,44 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">specification</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="n">locations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">specification</span><span class="p">,</span>
+        <span class="n">problem</span><span class="p">,</span>
+        <span class="n">score</span><span class="p">,</span>
+        <span class="n">locations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">specification</span> <span class="o">=</span> <span class="n">specification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">problem</span> <span class="o">=</span> <span class="n">problem</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="n">score</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">passes</span> <span class="o">=</span> <span class="n">score</span> <span class="o">&gt;=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_optimal</span> <span class="o">=</span> <span class="p">(</span><span class="n">score</span> <span class="o">==</span> <span class="n">specification</span><span class="o">.</span><span class="n">best_possible_score</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_optimal</span> <span class="o">=</span> <span class="n">score</span> <span class="o">==</span> <span class="n">specification</span><span class="o">.</span><span class="n">best_possible_score</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">locations</span> <span class="o">=</span> <span class="n">locations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_message</span> <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">message</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">data</span>
 
-
-
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">default_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the default message for console/reports.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;Score: </span><span class="si">%s</span><span class="s2">. Locations: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">score_as_text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">),</span>
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">locations</span><span class="p">)</span>
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">score_as_text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">score_as_text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;Score: </span><span class="si">%s</span><span class="s2">. Locations: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="n">score_to_formatted_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">locations</span><span class="p">,</span>
+        <span class="p">)</span>
 
-<div class="viewcode-block" id="SpecEvaluation.to_text"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluation.to_text">[docs]</a>    <span class="k">def</span> <span class="nf">to_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="s1">&#39;constraint&#39;</span><span class="p">,</span> <span class="n">wrapped</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">score_to_formatted_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">score_to_formatted_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SpecEvaluation.to_text"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluation.to_text">[docs]</a>    <span class="k">def</span> <span class="nf">to_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="s2">&quot;constraint&quot;</span><span class="p">,</span> <span class="n">wrapped</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a string representation of the evaluation.</span>
+
+<span class="sd">        Example output for a constraint:</span>
+
+<span class="sd">        &gt;&gt;&gt; FAIL ┍ AvoidNonUniqueSegments[10-1000](min_length:9)</span>
+<span class="sd">        &gt;&gt;&gt;      │ Score:        -2. Locations: [232-241, 233-242]</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -288,28 +306,40 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span>
         <span class="k">if</span> <span class="n">wrapped</span><span class="p">:</span>
-            <span class="n">indents</span> <span class="o">=</span> <span class="mi">6</span> <span class="k">if</span> <span class="p">(</span><span class="n">role</span> <span class="o">==</span> <span class="s1">&#39;constraint&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="mi">11</span>
-            <span class="n">indent</span> <span class="o">=</span> <span class="n">indents</span><span class="o">*</span><span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s2">&quot;│ &quot;</span>
+            <span class="n">indents</span> <span class="o">=</span> <span class="mi">6</span> <span class="k">if</span> <span class="p">(</span><span class="n">role</span> <span class="o">==</span> <span class="s2">&quot;constraint&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="mi">11</span>
+            <span class="n">indent</span> <span class="o">=</span> <span class="n">indents</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot;│ &quot;</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="n">textwrap</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">initial_indent</span><span class="o">=</span><span class="n">indent</span><span class="p">,</span>
-                              <span class="n">subsequent_indent</span><span class="o">=</span><span class="n">indent</span><span class="p">)</span>
+                <span class="n">textwrap</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span>
+                    <span class="n">message</span><span class="p">,</span>
+                    <span class="n">width</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+                    <span class="n">initial_indent</span><span class="o">=</span><span class="n">indent</span><span class="p">,</span>
+                    <span class="n">subsequent_indent</span><span class="o">=</span><span class="n">indent</span><span class="p">,</span>
+                <span class="p">)</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">role</span> <span class="o">==</span> <span class="s2">&quot;objective&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{optimal}{score}</span><span class="s2"> ┍ </span><span class="si">{spec}</span><span class="s2"> </span><span class="se">\n</span><span class="si">{message}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">optimal</span><span class="o">=</span><span class="s2">&quot;✔&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_optimal</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">optimal</span><span class="o">=</span><span class="s2">&quot;✔&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_optimal</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span><span class="p">,</span>
                 <span class="n">spec</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">specification</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">with_location</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-                <span class="n">score</span><span class="o">=</span><span class="n">score_as_text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">),</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span>
+                <span class="n">score</span><span class="o">=</span><span class="n">score_to_formatted_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">),</span>
+                <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{passes}</span><span class="s2"> ┍ </span><span class="si">{spec}</span><span class="se">\n</span><span class="si">{message}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">passes</span><span class="o">=</span><span class="s2">&quot;✔PASS&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">passes</span> <span class="k">else</span> <span class="s2">&quot; FAIL&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">passes</span><span class="o">=</span><span class="s2">&quot;✔PASS&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">passes</span> <span class="k">else</span> <span class="s2">&quot; FAIL&quot;</span><span class="p">,</span>
                 <span class="n">spec</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">specification</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">with_location</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-                <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span></div>
+                <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
+            <span class="p">)</span></div>
 
-<div class="viewcode-block" id="SpecEvaluation.locations_to_biopython_features"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluation.locations_to_biopython_features">[docs]</a>    <span class="k">def</span> <span class="nf">locations_to_biopython_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span>
-                                        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">label_prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-                                        <span class="n">merge_overlapping</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="SpecEvaluation.locations_to_biopython_features"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluation.locations_to_biopython_features">[docs]</a>    <span class="k">def</span> <span class="nf">locations_to_biopython_features</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span>
+        <span class="n">label_prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">merge_overlapping</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a list of locations (of breach/suboptimality) as annotations.</span>
 
 <span class="sd">        Parameters</span>
@@ -323,22 +353,29 @@
 <span class="sd">        label_prefix</span>
 <span class="sd">          The locations will be labelled of the form</span>
 <span class="sd">          &quot;prefix NameOfSpecification()&quot;</span>
+<span class="sd">        </span>
+<span class="sd">        merge_overlapping</span>
+<span class="sd">          If true, then overlapping locations (0-5, 2-9) will be merged into a</span>
+<span class="sd">          single one (0-9).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">locations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">locations</span>
         <span class="k">if</span> <span class="n">merge_overlapping</span><span class="p">:</span>
             <span class="n">locations</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">merge_overlapping_locations</span><span class="p">(</span><span class="n">locations</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span>
-            <span class="n">SeqFeature</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">to_biopython_location</span><span class="p">(),</span> <span class="nb">type</span><span class="o">=</span><span class="n">feature_type</span><span class="p">,</span>
-                       <span class="n">qualifiers</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-                           <span class="n">label</span><span class="o">=</span><span class="n">label_prefix</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">specification</span><span class="p">),</span>
-                           <span class="n">color</span><span class="o">=</span><span class="n">color</span>
-            <span class="p">))</span>
+            <span class="n">SeqFeature</span><span class="p">(</span>
+                <span class="n">location</span><span class="o">.</span><span class="n">to_biopython_location</span><span class="p">(),</span>
+                <span class="nb">type</span><span class="o">=</span><span class="n">feature_type</span><span class="p">,</span>
+                <span class="n">qualifiers</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">label</span><span class="o">=</span><span class="n">label_prefix</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">specification</span><span class="p">),</span>
+                    <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
             <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">locations</span>
         <span class="p">]</span></div></div>
 
 
 <div class="viewcode-block" id="SpecEvaluations"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluations">[docs]</a><span class="k">class</span> <span class="nc">SpecEvaluations</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Base class for the collective handling of lists of SpecEvaluations.</span>
+    <span class="sd">&quot;&quot;&quot;Base class for handling lists of SpecEvaluations.</span>
 
 <span class="sd">    See ProblemObjectivesEvaluations and ProblemConstraintsEvaluations for</span>
 <span class="sd">    the useful subclasses.</span>
@@ -352,6 +389,7 @@
 <span class="sd">      (optional) problem on which the evaluations were carried.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">color_lightness</span> <span class="o">=</span> <span class="mf">1.0</span>
     <span class="n">color_shift</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -377,14 +415,12 @@
 
 <span class="sd">        Scores are multiplied by their respective boost factor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span>
-            <span class="n">ev</span><span class="o">.</span><span class="n">specification</span><span class="o">.</span><span class="n">boost</span> <span class="o">*</span> <span class="n">ev</span><span class="o">.</span><span class="n">score</span>
-            <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluations</span>
-        <span class="p">])</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">ev</span><span class="o">.</span><span class="n">specification</span><span class="o">.</span><span class="n">boost</span> <span class="o">*</span> <span class="n">ev</span><span class="o">.</span><span class="n">score</span> <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluations</span><span class="p">]</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">as_text</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">score_as_text</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">score_to_formatted_string</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span></div>
-
 
 <div class="viewcode-block" id="SpecEvaluations.filter"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluations.filter">[docs]</a>    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eval_filter</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a new instance with a subset of the evaluations.</span>
@@ -398,25 +434,29 @@
                 <span class="s2">&quot;passing&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">passes</span><span class="p">,</span>
                 <span class="s2">&quot;failing&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="ow">not</span> <span class="n">e</span><span class="o">.</span><span class="n">passes</span><span class="p">,</span>
                 <span class="s2">&quot;optimal&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">is_optimal</span><span class="p">,</span>
-                <span class="s2">&quot;suboptimal&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="ow">not</span> <span class="n">e</span><span class="o">.</span><span class="n">is_optimal</span>
+                <span class="s2">&quot;suboptimal&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="ow">not</span> <span class="n">e</span><span class="o">.</span><span class="n">is_optimal</span><span class="p">,</span>
             <span class="p">}[</span><span class="n">eval_filter</span><span class="p">]</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">evaluations</span><span class="o">=</span><span class="p">[</span>
-            <span class="n">ev</span> <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluations</span> <span class="k">if</span> <span class="n">eval_filter</span><span class="p">(</span><span class="n">ev</span><span class="p">)</span>
-        <span class="p">],</span> <span class="n">problem</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">problem</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span>
+            <span class="n">evaluations</span><span class="o">=</span><span class="p">[</span><span class="n">ev</span> <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluations</span> <span class="k">if</span> <span class="n">eval_filter</span><span class="p">(</span><span class="n">ev</span><span class="p">)],</span>
+            <span class="n">problem</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">problem</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="SpecEvaluations.to_text"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluations.to_text">[docs]</a>    <span class="k">def</span> <span class="nf">to_text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a long representation of the evaluations.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;===&gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_summary_message</span><span class="p">()]</span> <span class="o">+</span> <span class="p">[</span>
-            <span class="n">e</span><span class="o">.</span><span class="n">to_text</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">specifications_role</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluations</span>
-        <span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span></div>
+        <span class="sd">&quot;&quot;&quot;Return a long representation of the evaluations list.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span><span class="s2">&quot;===&gt; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_summary_message</span><span class="p">()]</span>
+                <span class="o">+</span> <span class="p">[</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">to_text</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">specifications_role</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluations</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="SpecEvaluations.evaluations_with_locations"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluations.evaluations_with_locations">[docs]</a>    <span class="k">def</span> <span class="nf">evaluations_with_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the list of all evaluations whose location is not None.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span>
-            <span class="n">ev</span> <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluations</span>
-            <span class="k">if</span> <span class="n">ev</span><span class="o">.</span><span class="n">locations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="p">]</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="n">ev</span> <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluations</span> <span class="k">if</span> <span class="n">ev</span><span class="o">.</span><span class="n">locations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="SpecEvaluations.success_and_failures_as_features"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluations.success_and_failures_as_features">[docs]</a>    <span class="k">def</span> <span class="nf">success_and_failures_as_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return all evaluations as Biopython features.</span>
@@ -430,16 +470,21 @@
             <span class="n">ev</span><span class="o">.</span><span class="n">specification</span><span class="o">.</span><span class="n">to_biopython_feature</span><span class="p">(</span>
                 <span class="n">feature_type</span><span class="o">=</span><span class="n">feature_type</span><span class="p">,</span>
                 <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">success_failure_color</span><span class="p">(</span><span class="n">ev</span><span class="p">),</span>
-                <span class="n">passes</span><span class="o">=</span><span class="s1">&#39;true&#39;</span> <span class="k">if</span> <span class="n">ev</span><span class="o">.</span><span class="n">passes</span> <span class="k">else</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span>
-                <span class="n">is_optimal</span><span class="o">=</span><span class="s1">&#39;true&#39;</span> <span class="k">if</span> <span class="n">ev</span><span class="o">.</span><span class="n">is_optimal</span> <span class="k">else</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span>
+                <span class="n">passes</span><span class="o">=</span><span class="s2">&quot;true&quot;</span> <span class="k">if</span> <span class="n">ev</span><span class="o">.</span><span class="n">passes</span> <span class="k">else</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+                <span class="n">is_optimal</span><span class="o">=</span><span class="s2">&quot;true&quot;</span> <span class="k">if</span> <span class="n">ev</span><span class="o">.</span><span class="n">is_optimal</span> <span class="k">else</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluations</span>
-            <span class="k">if</span> <span class="n">ev</span><span class="o">.</span><span class="n">specification</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ev</span><span class="o">.</span><span class="n">specification</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="p">]</span></div>
 
-<div class="viewcode-block" id="SpecEvaluations.locations_as_features"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluations.locations_as_features">[docs]</a>    <span class="k">def</span> <span class="nf">locations_as_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">features_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span>
-                              <span class="n">with_specifications</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label_prefix</span><span class="o">=</span><span class="s2">&quot;From&quot;</span><span class="p">,</span>
-                              <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;cycle&quot;</span><span class="p">,</span> <span class="n">merge_overlapping</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="SpecEvaluations.locations_as_features"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluations.locations_as_features">[docs]</a>    <span class="k">def</span> <span class="nf">locations_as_features</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">features_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span>
+        <span class="n">with_specifications</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">label_prefix</span><span class="o">=</span><span class="s2">&quot;From&quot;</span><span class="p">,</span>
+        <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;cycle&quot;</span><span class="p">,</span>
+        <span class="n">merge_overlapping</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return all locations from all evaluations as biopython features.</span>
 
 <span class="sd">        Parameters</span>
@@ -457,25 +502,28 @@
 <span class="sd">          &quot;From AvoidPattern(100-200)&quot;, to indicate where the breach belongs.</span>
 
 <span class="sd">        colors</span>
-<span class="sd">          Either a list of colors (one for each specification) or &quot;cycle&quot;</span>
-<span class="sd">          for cycling through predefined colors. The colors are applied to all</span>
-<span class="sd">          breaches.</span>
+<span class="sd">          Either a list of colors (one for each specification), e.g.</span>
+<span class="sd">          [&#39;red&#39;, &#39;#7aab71&#39;, ...] or &quot;cycle&quot; for cycling through predefined</span>
+<span class="sd">          colors. The colors are applied to all breaches.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">colors</span> <span class="o">==</span> <span class="s2">&quot;cycle&quot;</span><span class="p">:</span>
-            <span class="n">cycle</span> <span class="o">=</span> <span class="n">colors_cycle</span><span class="p">(</span><span class="n">lightness_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color_lightness</span><span class="p">,</span>
-                                 <span class="n">color_shift</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color_shift</span><span class="p">)</span>
+            <span class="n">cycle</span> <span class="o">=</span> <span class="n">colors_cycle</span><span class="p">(</span>
+                <span class="n">lightness_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color_lightness</span><span class="p">,</span>
+                <span class="n">color_shift</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color_shift</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="nb">next</span><span class="p">(</span><span class="n">cycle</span><span class="p">)</span> <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluations</span><span class="p">]</span>
         <span class="n">features</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">location</span><span class="o">.</span><span class="n">to_biopython_feature</span><span class="p">(</span>
                 <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span>
                 <span class="n">specification</span><span class="o">=</span><span class="n">label_prefix</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ev</span><span class="o">.</span><span class="n">specification</span><span class="p">),</span>
-                <span class="n">color</span><span class="o">=</span><span class="n">color</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="p">(</span><span class="n">ev</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">evaluations_with_locations</span><span class="p">(),</span> <span class="n">colors</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="p">(</span>
                 <span class="n">Location</span><span class="o">.</span><span class="n">merge_overlapping_locations</span><span class="p">(</span><span class="n">ev</span><span class="o">.</span><span class="n">locations</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">merge_overlapping</span> <span class="k">else</span> <span class="n">ev</span><span class="o">.</span><span class="n">locations</span>
+                <span class="k">if</span> <span class="n">merge_overlapping</span>
+                <span class="k">else</span> <span class="n">ev</span><span class="o">.</span><span class="n">locations</span>
             <span class="p">)</span>
         <span class="p">]</span>
         <span class="k">if</span> <span class="n">with_specifications</span><span class="p">:</span>
@@ -484,10 +532,10 @@
                     <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span>
                     <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">ev</span><span class="o">.</span><span class="n">specification</span><span class="p">),</span>
                     <span class="n">role</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">specifications_role</span><span class="p">,</span>
-                    <span class="n">color</span><span class="o">=</span><span class="n">color</span>
+                    <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="k">for</span> <span class="n">ev</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">evaluations</span><span class="p">,</span> <span class="n">colors</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">ev</span><span class="o">.</span><span class="n">specification</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">ev</span><span class="o">.</span><span class="n">specification</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
             <span class="p">]</span>
         <span class="k">return</span> <span class="n">features</span></div></div>
 
@@ -508,10 +556,13 @@
 <span class="sd">        The ``problem`` is a DnaChisel DnaOptimizationProblem.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ProblemConstraintsEvaluations</span><span class="p">([</span>
-            <span class="n">specification</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">specification</span> <span class="ow">in</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints</span>
-        <span class="p">],</span> <span class="n">problem</span><span class="o">=</span><span class="n">problem</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">ProblemConstraintsEvaluations</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">specification</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">specification</span> <span class="ow">in</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints</span>
+            <span class="p">],</span>
+            <span class="n">problem</span><span class="o">=</span><span class="n">problem</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProblemConstraintsEvaluations.success_failure_color"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SpecEvaluation.ProblemConstraintsEvaluations.success_failure_color">[docs]</a>    <span class="k">def</span> <span class="nf">success_failure_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">evaluation</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return color #60f979 if evaluation.passes else #f96c60.&quot;&quot;&quot;</span>
@@ -525,12 +576,14 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;FAILURE: </span><span class="si">%d</span><span class="s2"> constraints evaluations failed&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">failed</span><span class="p">)</span></div></div>
 
+
 <div class="viewcode-block" id="ProblemObjectivesEvaluations"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SpecEvaluation.ProblemObjectivesEvaluations">[docs]</a><span class="k">class</span> <span class="nc">ProblemObjectivesEvaluations</span><span class="p">(</span><span class="n">SpecEvaluations</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Special multi-evaluation class for all objectives of a same problem.</span>
 
 <span class="sd">    See submethod ``.from_problem``</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">color_lightness</span> <span class="o">=</span> <span class="mf">0.8</span>
     <span class="n">color_shift</span> <span class="o">=</span> <span class="mf">0.14</span>
 
@@ -543,10 +596,13 @@
 <span class="sd">        The ``problem`` is a DnaChisel DnaOptimizationProblem.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ProblemObjectivesEvaluations</span><span class="p">([</span>
-            <span class="n">specification</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">specification</span> <span class="ow">in</span> <span class="n">problem</span><span class="o">.</span><span class="n">objectives</span>
-        <span class="p">],</span> <span class="n">problem</span><span class="o">=</span><span class="n">problem</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">ProblemObjectivesEvaluations</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">specification</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">specification</span> <span class="ow">in</span> <span class="n">problem</span><span class="o">.</span><span class="n">objectives</span>
+            <span class="p">],</span>
+            <span class="n">problem</span><span class="o">=</span><span class="n">problem</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProblemObjectivesEvaluations.success_failure_color"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.SpecEvaluation.ProblemObjectivesEvaluations.success_failure_color">[docs]</a>    <span class="k">def</span> <span class="nf">success_failure_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">evaluation</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return color #cbf960 if evaluation is optimal else #f9a260.&quot;&quot;&quot;</span>
@@ -559,67 +615,16 @@
         <span class="k">return</span> <span class="s2">&quot;TOTAL OBJECTIVES SCORE: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">scores_sum</span><span class="p">(</span><span class="n">as_text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
 </pre></div>
 
-           </div>
-           <div class="articleComments">
-            
-           </div>
           </div>
-          <footer>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2017, Edinburgh Genome Foundry.
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
-        </div>
-      </div>
-
-    </section>
-
-  </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'0.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
-  </script>
-   
-
-</body>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
 </html>

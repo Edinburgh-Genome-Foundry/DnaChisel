@@ -1,0 +1,498 @@
+
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Examples</title>
+    
+      <link rel="stylesheet" href="_static/pygments.css">
+      <link rel="stylesheet" href="_static/theme.css">
+      <link rel="stylesheet" href="_static/css/custom.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+
+      
+      <script src="_static/theme-vendors.js"></script>
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="prev" title="Built-in Specifications" href="ref/builtin_specifications.html" /> 
+  </head>
+
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <img class="logo" src="_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="index.html#more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="ref/ref.html#dna-chisel-api-reference"
+         class="nav-link ">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="index.html#more-biology-software"
+         class="nav-link  router-link-active">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="index.html#more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="ref/ref.html#dna-chisel-api-reference"
+         class="nav-link ">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="index.html#more-biology-software"
+         class="nav-link  router-link-active">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#more-biology-software">DNA Chisel documentation</a></span>
+      </p>
+      <ul class="">
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="ref/ref.html#dna-chisel-api-reference">DNA Chisel API reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="ref/core_classes.html" class="reference internal ">Core Classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">Examples</a>
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#examples" class="reference internal">Examples</a></li>
+                
+                  <li class="toctree-l2"><a href="#basic-examples" class="reference internal">Basic examples</a></li>
+                
+                  <li class="toctree-l2"><a href="#advanced-examples" class="reference internal">Advanced examples</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+    <li>Examples</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="ref/builtin_specifications.html"
+       title="previous chapter">← Built-in Specifications</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <div class="section" id="examples">
+<h1><a class="toc-backref" href="#id1">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<p>Note: all examples here are available in the <code class="docutils literal notranslate"><span class="pre">examples/</span></code> folder of the code repository</p>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#examples" id="id1">Examples</a></p></li>
+<li><p><a class="reference internal" href="#basic-examples" id="id2">Basic examples</a></p>
+<ul>
+<li><p><a class="reference internal" href="#optimization-with-report" id="id3">Optimization with report</a></p></li>
+<li><p><a class="reference internal" href="#optimization-of-a-circular-sequence" id="id4">Optimization of a circular sequence</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#advanced-examples" id="id5">Advanced examples</a></p>
+<ul>
+<li><p><a class="reference internal" href="#sequence-standardization-domestication" id="id6">Sequence standardization/domestication</a></p></li>
+<li><p><a class="reference internal" href="#programmatic-optimization-of-a-full-genome" id="id7">Programmatic optimization of a full genome</a></p></li>
+<li><p><a class="reference internal" href="#writing-a-custom-specification-9-mer-score" id="id8">Writing a custom Specification: 9-mer score</a></p></li>
+<li><p><a class="reference internal" href="#creating-a-sequence-without-e-coli-tf-binding-sites" id="id9">Creating a sequence without E. coli TF binding sites</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="basic-examples">
+<h1><a class="toc-backref" href="#id2">Basic examples</a><a class="headerlink" href="#basic-examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="optimization-with-report">
+<h2><a class="toc-backref" href="#id3">Optimization with report</a><a class="headerlink" href="#optimization-with-report" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Example of optimization from a Genbank record, with report</span>
+
+<span class="sd">In this example, the Genbank record data/example_sequence.gbk</span>
+<span class="sd">gets optimized and a report is created at reports/optimization_with_report/</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">dnachisel</span> <span class="k">import</span> <span class="n">DnaOptimizationProblem</span>
+
+<span class="n">genbank_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;example_sequence.gbk&quot;</span><span class="p">)</span>
+<span class="n">report_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;reports&quot;</span><span class="p">,</span> <span class="s2">&quot;optimization_with_report&quot;</span><span class="p">)</span>
+
+<span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="o">.</span><span class="n">from_record</span><span class="p">(</span><span class="n">genbank_path</span><span class="p">)</span>
+<span class="n">success</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">optimize_with_report</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">report_dir</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">message</span> <span class="o">+</span> <span class="s2">&quot; A report was generated in &quot;</span> <span class="o">+</span> <span class="n">report_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="optimization-of-a-circular-sequence">
+<h2><a class="toc-backref" href="#id4">Optimization of a circular sequence</a><a class="headerlink" href="#optimization-of-a-circular-sequence" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Example of optimization of a circular sequence.</span>
+
+<span class="sd">We demonstrates the use of DNA Chisel to solve a circular DNA optimization</span>
+<span class="sd">problem:</span>
+
+<span class="sd">- The sequence is designed to have a cross-origin BsmBI site that will need</span>
+<span class="sd">  to be removed, because the location-less specification ``AvoidPattern``</span>
+<span class="sd">  is interpreted as applying to the full circle.</span>
+
+<span class="sd">- The specification ``EnforceGCContent`` is cross-origin since its location is</span>
+<span class="sd">  1500-2500, and the sequence is ~2000bp long.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">dnachisel</span> <span class="k">as</span> <span class="nn">dc</span>
+
+<span class="n">dna_sequence</span> <span class="o">=</span> <span class="s2">&quot;CTC</span><span class="si">%s</span><span class="s2">CGTCTC</span><span class="si">%s</span><span class="s2">CGT&quot;</span> <span class="o">%</span> <span class="p">(</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">random_dna_sequence</span><span class="p">(</span><span class="mi">1000</span><span class="p">),</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">random_dna_sequence</span><span class="p">(</span><span class="mi">1000</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;BsmBI_site&quot;</span><span class="p">),</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">EnforceGCContent</span><span class="p">(</span><span class="n">mini</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">1500</span><span class="p">,</span> <span class="mi">2500</span><span class="p">),</span> <span class="n">window</span><span class="o">=</span><span class="mi">50</span><span class="p">),</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">AvoidNonUniqueSegments</span><span class="p">(</span>
+        <span class="n">min_length</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="n">extended_location</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">problem</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">CircularDnaOptimizationProblem</span><span class="p">(</span>
+    <span class="n">sequence</span><span class="o">=</span><span class="n">dna_sequence</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="n">constraints</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;BEFORE OPTIMIZATION:</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">())</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">resolve_constraints</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;AFTER OPTIMIZATION:</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">())</span>
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="advanced-examples">
+<h1><a class="toc-backref" href="#id5">Advanced examples</a><a class="headerlink" href="#advanced-examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="sequence-standardization-domestication">
+<h2><a class="toc-backref" href="#id6">Sequence standardization/domestication</a><a class="headerlink" href="#sequence-standardization-domestication" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Example of use of the AvoidPAttern specification&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">dnachisel</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">DnaOptimizationProblem</span><span class="p">,</span>
+    <span class="n">random_protein_sequence</span><span class="p">,</span>
+    <span class="n">reverse_translate</span><span class="p">,</span>
+    <span class="n">CodonOptimize</span><span class="p">,</span>
+    <span class="n">EnforceTranslation</span><span class="p">,</span>
+    <span class="n">AvoidPattern</span><span class="p">,</span>
+    <span class="n">EnforceGCContent</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">protein</span> <span class="o">=</span> <span class="n">random_protein_sequence</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">sequence</span> <span class="o">=</span> <span class="n">reverse_translate</span><span class="p">(</span><span class="n">protein</span><span class="p">)</span>
+<span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span>
+    <span class="n">sequence</span><span class="o">=</span><span class="n">sequence</span><span class="p">,</span>
+    <span class="n">constraints</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">EnforceTranslation</span><span class="p">(),</span>
+        <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;BsmBI_site&quot;</span><span class="p">),</span>
+        <span class="n">EnforceGCContent</span><span class="p">(</span><span class="n">mini</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
+    <span class="p">],</span>
+    <span class="n">objectives</span><span class="o">=</span><span class="p">[</span><span class="n">CodonOptimize</span><span class="p">(</span><span class="n">species</span><span class="o">=</span><span class="s2">&quot;s_cerevisiae&quot;</span><span class="p">)],</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Before optimization:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">objectives_text_summary</span><span class="p">())</span>
+
+<span class="n">problem</span><span class="o">.</span><span class="n">resolve_constraints</span><span class="p">(</span><span class="n">final_check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">After optimization:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">objectives_text_summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="programmatic-optimization-of-a-full-genome">
+<h2><a class="toc-backref" href="#id7">Programmatic optimization of a full genome</a><a class="headerlink" href="#programmatic-optimization-of-a-full-genome" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
+<span class="kn">from</span> <span class="nn">dnachisel</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">DnaOptimizationProblem</span><span class="p">,</span>
+    <span class="n">load_record</span><span class="p">,</span>
+    <span class="n">Location</span><span class="p">,</span>
+    <span class="n">EnforceTranslation</span><span class="p">,</span>
+    <span class="n">EnforceGCContent</span><span class="p">,</span>
+    <span class="n">AvoidPattern</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DOWNLOADING AND PARSING THE GENBANK DATA...&quot;</span><span class="p">)</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?&quot;</span>
+    <span class="o">+</span> <span class="s2">&quot;db=nucleotide&amp;id=48994873&amp;rettype=gb&amp;retmode=txt&quot;</span>
+<span class="p">)</span>
+<span class="n">genbank_data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="n">genbank_record</span> <span class="o">=</span> <span class="n">load_record</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">genbank_data</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;genbank&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;INITIALIZING THE PROBLEM WITH CONSTRAINTS FOR EACH GENE...&quot;</span><span class="p">)</span>
+
+<span class="n">constraints</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">genbank_record</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">feature</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;gene&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_biopython_location</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">gene_constraints</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">EnforceTranslation</span><span class="p">(</span><span class="n">location</span><span class="p">),</span>
+                <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;BsmBI_site&quot;</span><span class="p">,</span> <span class="n">location</span><span class="p">),</span>
+                <span class="n">EnforceGCContent</span><span class="p">(</span>
+                    <span class="n">mini</span><span class="o">=</span><span class="mf">0.40</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="mf">0.60</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">location</span>
+                <span class="p">),</span>
+            <span class="p">]</span>
+            <span class="n">constraints</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">gene_constraints</span><span class="p">)</span>
+<span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span><span class="n">genbank_record</span><span class="p">,</span> <span class="n">constraints</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;RESOLVING THE CONSTRAINTS...&quot;</span><span class="p">)</span>
+
+<span class="n">problem</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">ignore_bars_under</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">resolve_constraints</span><span class="p">()</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">to_record</span><span class="p">(</span><span class="s2">&quot;ecoli_genes_optimization.gb&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="writing-a-custom-specification-9-mer-score">
+<h2><a class="toc-backref" href="#id8">Writing a custom Specification: 9-mer score</a><a class="headerlink" href="#writing-a-custom-specification-9-mer-score" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Example of DNA Chisel user-defined specification: Gen9&#39;s 9mer score.</span>
+
+<span class="sd">Once upon the time there was a DNA synthesis company called Gen9, who accepted</span>
+<span class="sd">or refused orders based on sequence features.</span>
+
+<span class="sd">One of them was the &quot;9mer score&quot;, defined as 9 * N / len(sequence) where N is</span>
+<span class="sd">the number of non-unique kmers in the sequence.</span>
+
+<span class="sd">The score can be interpreted as the density of nucleotides which are part of</span>
+<span class="sd">a 9mer also present somewhere else in the sequence. These should be avoided</span>
+<span class="sd">as they impede the synthesis (certainly at the oligo assembly stage). Too much</span>
+<span class="sd">9mers are a... nightmare (ah ah ah pun).</span>
+
+<span class="sd">In this script we show how to create a new objective ``MinimizeNinemersScore``</span>
+<span class="sd">to minimize this score, and we use it to optimize a coding sequence.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">dnachisel</span> <span class="k">import</span> <span class="p">(</span><span class="n">EnforceTranslation</span><span class="p">,</span> <span class="n">Specification</span><span class="p">,</span> <span class="n">SpecEvaluation</span><span class="p">,</span>
+                       <span class="n">reverse_translate</span><span class="p">,</span> <span class="n">random_protein_sequence</span><span class="p">,</span> <span class="n">Location</span><span class="p">,</span>
+                       <span class="n">DnaOptimizationProblem</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">MinimizeNinemersScore</span><span class="p">(</span><span class="n">Specification</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Minimize Gen9&#39;s &quot;no-9mers&quot; score.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return Gen9&#39;s ninemer score for the problem&#39; sequence&quot;&quot;&quot;</span>
+        <span class="n">sequence</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">sequence</span>
+        <span class="n">all_9mers</span> <span class="o">=</span> <span class="p">[</span><span class="n">sequence</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="mi">9</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span> <span class="o">-</span> <span class="mi">9</span><span class="p">)]</span>
+        <span class="n">number_of_non_unique_9mers</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span>
+            <span class="n">count</span>
+            <span class="k">for</span> <span class="n">ninemer</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">Counter</span><span class="p">(</span><span class="n">all_9mers</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span>
+        <span class="p">])</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="mf">9.0</span> <span class="o">*</span> <span class="n">number_of_non_unique_9mers</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span>
+            <span class="n">score</span><span class="o">=</span><span class="n">score</span><span class="p">,</span>
+            <span class="n">locations</span><span class="o">=</span><span class="p">[</span><span class="n">Location</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">))],</span>
+            <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Score: </span><span class="si">%.02f</span><span class="s2"> (</span><span class="si">%d</span><span class="s2"> non-unique ninemers)&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">score</span><span class="p">,</span> <span class="n">number_of_non_unique_9mers</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;String representation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;MinimizeNinemersScore&quot;</span>
+
+
+<span class="n">sequence</span> <span class="o">=</span> <span class="n">reverse_translate</span><span class="p">(</span><span class="n">random_protein_sequence</span><span class="p">(</span><span class="mi">300</span><span class="p">))</span>
+<span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span>
+    <span class="n">sequence</span><span class="o">=</span><span class="n">sequence</span><span class="p">,</span>
+    <span class="n">constraints</span><span class="o">=</span><span class="p">[</span><span class="n">EnforceTranslation</span><span class="p">()],</span>
+    <span class="n">objectives</span><span class="o">=</span><span class="p">[</span><span class="n">MinimizeNinemersScore</span><span class="p">()]</span>
+<span class="p">)</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Status before optimization ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">objectives_text_summary</span><span class="p">())</span>
+
+<span class="n">problem</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Status after optimization ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">objectives_text_summary</span><span class="p">())</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">(</span><span class="n">failed_only</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-a-sequence-without-e-coli-tf-binding-sites">
+<h2><a class="toc-backref" href="#id9">Creating a sequence without E. coli TF binding sites</a><a class="headerlink" href="#creating-a-sequence-without-e-coli-tf-binding-sites" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dnachisel</span> <span class="k">import</span> <span class="n">DnaOptimizationProblem</span><span class="p">,</span> <span class="n">AvoidPattern</span><span class="p">,</span> <span class="n">random_dna_sequence</span>
+<span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">request</span>
+
+<span class="c1"># DOWNLOAD THE LIST OF TF BINDING SITES</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://regulondb.ccg.unam.mx/menu/download/datasets/files/PSSMSet.txt&quot;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+<span class="c1"># PARSE THE DATA LINE BY LINE TO OBTAIN A LIST OF TF BINDING SEQUENCES</span>
+<span class="n">tf_binding_sequences</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="k">if</span> <span class="nb">set</span><span class="p">()</span> <span class="o">&lt;</span> <span class="nb">set</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">set</span><span class="p">(</span><span class="s2">&quot;ATGC&quot;</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="c1"># DEFINE AND SOLVE THE OPTIMIZATION PROBLEM</span>
+<span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span>
+    <span class="n">sequence</span><span class="o">=</span><span class="n">random_dna_sequence</span><span class="p">(</span><span class="mi">50000</span><span class="p">),</span>
+    <span class="n">constraints</span><span class="o">=</span><span class="p">[</span><span class="n">AvoidPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">tf_binding_sequences</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">resolve_constraints</span><span class="p">()</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">to_record</span><span class="p">(</span><span class="s2">&quot;sequence_without_tf_binding_sites.gb&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="ref/builtin_specifications.html"
+       title="previous chapter">← Built-in Specifications</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
+</html>

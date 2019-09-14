@@ -1,206 +1,245 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Reports &mdash; DnaChisel 0.1.0 documentation</title>
-  
-
-  
-  
-  
-  
-
-  
-
-  
-  
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Reports</title>
     
+      <link rel="stylesheet" href="../_static/pygments.css">
+      <link rel="stylesheet" href="../_static/theme.css">
+      <link rel="stylesheet" href="../_static/css/custom.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
-  
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
 
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../_static/css/main.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="DnaChisel 0.1.0 documentation" href="../index.html"/>
-        <link rel="up" title="DnaChisel Reference manual" href="ref.html"/>
-        <link rel="next" title="Biotools" href="biotools.html"/>
-        <link rel="prev" title="Core Classes" href="core_classes.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
-</head>
-
-<body class="wy-body-for-nav" role="document">
-
-   
-  <div class="wy-grid-for-nav">
-
+      
+      <script src="../_static/theme-vendors.js"></script>
+      <script src="../_static/theme.js" defer></script>
     
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="next" title="Biotools" href="biotools.html" />
+  <link rel="prev" title="Core Classes" href="core_classes.html" /> 
+  </head>
 
-          
-            <a href="../index.html" class="icon icon-home"> DnaChisel
-          
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
 
-          
-            
-            <img src="../_static/html_logo.png" class="logo" />
-          
-          </a>
+  <div class="links">
+    <navlinks class="can-hide">
 
-          
-            
-            
-              <div class="version">
-                0.1.0
-              </div>
-            
-          
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="ref.html#dna-chisel-api-reference"
+         class="nav-link  router-link-active">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
 
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
 
-          
-        </div>
 
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
           
+          <navlinks>
             
+
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="ref.html#dna-chisel-api-reference"
+         class="nav-link  router-link-active">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
             
-              
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">DNA Chisel documentation</a></span>
+      </p>
+      <ul class="">
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="ref.html#dna-chisel-api-reference">DNA Chisel API reference</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 "><a href="core_classes.html" class="reference internal ">Core Classes</a>
+
             
+          </li>
+
+        
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">Reports</a>
+
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">DNA Chisel</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="ref.html">DnaChisel Reference manual</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="core_classes.html">Core Classes</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Reports</a></li>
-<li class="toctree-l2"><a class="reference internal" href="biotools.html">Biotools</a></li>
-<li class="toctree-l2"><a class="reference internal" href="builtin_specifications.html">Built-in Specifications</a></li>
-</ul>
-</li>
-</ul>
-<p class="caption"><span class="caption-text">Examples</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../examples/plasmid_optimization.html">Plasmid optimization with DnaChisel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/pattern_instertion.html">Pattern insertion in a DNA sequence</a></li>
-</ul>
+                
+                  <li class="toctree-l2"><a href="#reports" class="reference internal">Reports</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="biotools.html" class="reference internal ">Biotools</a>
 
             
-          
-        </div>
-      </div>
-    </nav>
+          </li>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">DnaChisel</a>
-        
-      </nav>
+          <li class="toctree-l1 "><a href="builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
 
-
-      
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="../index.html">Docs</a> &raquo;</li>
-        
-          <li><a href="ref.html">DnaChisel Reference manual</a> &raquo;</li>
-        
-      <li>Reports</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
             
-            <a href="../_sources/ref/reports.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-    
-  </ul>
+          </li>
 
+        
+      </ul>
+    </div>
   
-  <hr/>
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="ref.html">DNA Chisel API reference</a> &raquo;</li>
+    
+    <li>Reports</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="core_classes.html"
+       title="previous chapter">← Core Classes</a>
+  </li>
+  <li class="next">
+    <a href="biotools.html"
+       title="next chapter">Biotools →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
             
   <div class="section" id="reports">
 <h1>Reports<a class="headerlink" href="#reports" title="Permalink to this headline">¶</a></h1>
-
-            <style>
-            /* mermaid issue 527 workaround */
-            .section {
-                opacity: 1.0 !important;
-            }
-            </style>
-            <script>mermaid.initialize({startOnLoad:true});</script><div align="center" class="mermaid align-center">
-            graph TD;
-   D[DnaOptimizationProblem] --&gt; o[optimize_with_report]
-   o --&gt;|constraints clash| N[write_no_solution_error]
-   o --&gt;|no constraints clash| W[write_optimization_report]
-        </div>
-        <span class="target" id="module-dnachisel.reports.optimization_reports"></span><p>Methods to generate optimization reports.</p>
+<span class="target" id="module-dnachisel.reports.optimization_reports"></span><p>Methods to generate optimization reports.</p>
 <dl class="class">
 <dt id="dnachisel.reports.optimization_reports.SpecAnnotationsTranslator">
-<em class="property">class </em><code class="descclassname">dnachisel.reports.optimization_reports.</code><code class="descname">SpecAnnotationsTranslator</code><span class="sig-paren">(</span><em>features_filters=()</em>, <em>features_properties=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#SpecAnnotationsTranslator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.reports.optimization_reports.</code><code class="sig-name descname">SpecAnnotationsTranslator</code><span class="sig-paren">(</span><em class="sig-param">features_filters=()</em>, <em class="sig-param">features_properties=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#SpecAnnotationsTranslator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Translator of DnaChisel feature-constraints for DNA Features Viewer</p>
 <dl class="method">
+<dt id="dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_feature_color">
+<code class="sig-name descname">compute_feature_color</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#SpecAnnotationsTranslator.compute_feature_color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_feature_color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute a color for this feature.</p>
+<p>If the feature has a <code class="docutils literal notranslate"><span class="pre">color</span></code> qualifier it will be used. Otherwise,
+the classe’s <code class="docutils literal notranslate"><span class="pre">default_feature_color</span></code> is used.</p>
+<p>To change the behaviour, create a subclass of <code class="docutils literal notranslate"><span class="pre">BiopythonTranslator</span></code>
+and overwrite this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_feature_label">
+<code class="sig-name descname">compute_feature_label</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#SpecAnnotationsTranslator.compute_feature_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_feature_label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the ‘label’ of the feature.</p>
+<p>This method looks for the first non-empty qualifier of the feature
+in this order <code class="docutils literal notranslate"><span class="pre">label</span></code>, <code class="docutils literal notranslate"><span class="pre">source</span></code>, <code class="docutils literal notranslate"><span class="pre">locus_tag</span></code>, <code class="docutils literal notranslate"><span class="pre">note</span></code>, which
+means that you can provide a label with, for instance
+<code class="docutils literal notranslate"><span class="pre">feature.qualifiers['note']</span> <span class="pre">=</span> <span class="pre">'some</span> <span class="pre">note'</span></code>.</p>
+<p>To change the behaviour, create a subclass of <code class="docutils literal notranslate"><span class="pre">BiopythonTranslator</span></code>
+and overwrite this method.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_filtered_features">
-<code class="descname">compute_filtered_features</code><span class="sig-paren">(</span><em>features</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#SpecAnnotationsTranslator.compute_filtered_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_filtered_features" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute_filtered_features</code><span class="sig-paren">(</span><em class="sig-param">features</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#SpecAnnotationsTranslator.compute_filtered_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_filtered_features" title="Permalink to this definition">¶</a></dt>
 <dd><p>Do not display edits.</p>
 </dd></dl>
 
@@ -208,15 +247,13 @@
 
 <dl class="function">
 <dt id="dnachisel.reports.optimization_reports.write_no_solution_report">
-<code class="descclassname">dnachisel.reports.optimization_reports.</code><code class="descname">write_no_solution_report</code><span class="sig-paren">(</span><em>target</em>, <em>problem</em>, <em>error</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#write_no_solution_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.write_no_solution_report" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.reports.optimization_reports.</code><code class="sig-name descname">write_no_solution_report</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">problem</em>, <em class="sig-param">error</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#write_no_solution_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.write_no_solution_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a report on incompatibility found in the problem’s constraints.</p>
 <p>The report comprises a PDF of plots of the sequence (global constraints,
 local constraints around the problem) and an annotated genbank.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>target</strong></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>target</strong></p>
 <blockquote>
 <div><p>Either a path to a folder, or a path to a zip archive, or “&#64;memory” to
 return raw data of a zip archive containing the report.</p>
@@ -226,24 +263,20 @@ return raw data of a zip archive containing the report.</p>
 <div><p>A DnaOptimizationProblem</p>
 </div></blockquote>
 <p><strong>error</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>A NoSolutionError (carries a message and a location)</p>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="dnachisel.reports.optimization_reports.write_optimization_report">
-<code class="descclassname">dnachisel.reports.optimization_reports.</code><code class="descname">write_optimization_report</code><span class="sig-paren">(</span><em>target</em>, <em>problem</em>, <em>project_name='unnammed'</em>, <em>constraints_evaluations=None</em>, <em>objectives_evaluations=None</em>, <em>figure_width=20</em>, <em>max_features_in_plots=300</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#write_optimization_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.write_optimization_report" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.reports.optimization_reports.</code><code class="sig-name descname">write_optimization_report</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">problem</em>, <em class="sig-param">project_name='unnammed'</em>, <em class="sig-param">constraints_evaluations=None</em>, <em class="sig-param">objectives_evaluations=None</em>, <em class="sig-param">figure_width=20</em>, <em class="sig-param">max_features_in_plots=300</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#write_optimization_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.write_optimization_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write an optimization report with a PDF summary, plots, and genbanks.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>target</strong></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>target</strong></p>
 <blockquote>
 <div><p>Path to a directory or zip file, or “&#64;memory” for returning raw data of
 a zip file created in-memory.</p>
@@ -273,89 +306,35 @@ be in the figure, the wider it should be. The default should work for
 most cases.</p>
 </div></blockquote>
 <p><strong>max_features_in_plots</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>Limit to the number of features to plot (plots with thousands of features
 may take ages to plot)</p>
 </div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
 
 
-           </div>
-           <div class="articleComments">
-            
-           </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="biotools.html" class="btn btn-neutral float-right" title="Biotools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="core_classes.html" class="btn btn-neutral" title="Core Classes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2017, Edinburgh Genome Foundry.
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
-        </div>
-      </div>
-
-    </section>
-
-  </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'0.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
-  </script>
-   
-
-</body>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="core_classes.html"
+       title="previous chapter">← Core Classes</a>
+  </li>
+  <li class="next">
+    <a href="biotools.html"
+       title="next chapter">Biotools →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
 </html>

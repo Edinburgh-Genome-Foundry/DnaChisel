@@ -1,0 +1,247 @@
+
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnachisel.biotools.formatting_operations</title>
+    
+      <link rel="stylesheet" href="../../../_static/pygments.css">
+      <link rel="stylesheet" href="../../../_static/theme.css">
+      <link rel="stylesheet" href="../../../_static/css/custom.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+      
+      <script src="../../../_static/theme-vendors.js"></script>
+      <script src="../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" /> 
+  </head>
+
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../index.html" class="home-link">
+    
+      <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../ref/ref.html#dna-chisel-api-reference"
+         class="nav-link ">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         DNA Chisel documentation
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../ref/ref.html#dna-chisel-api-reference"
+         class="nav-link ">
+         DNA Chisel API reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">DNA Chisel documentation</a></span>
+      </p>
+      <ul class="">
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../ref/ref.html#dna-chisel-api-reference">DNA Chisel API reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../ref/core_classes.html" class="reference internal ">Core Classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnachisel.biotools.formatting_operations</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for dnachisel.biotools.formatting_operations</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Text and number formatting operations&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="round_all_numbers_in_dict"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.round_all_numbers_in_dict">[docs]</a><span class="k">def</span> <span class="nf">round_all_numbers_in_dict</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">rounding_digits</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">outplace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Return a new version of dict d with all floats rounded to N digits.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">outplace</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">rounding_digits</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">round_all_numbers_in_dict</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">rounding_digits</span><span class="p">,</span> <span class="n">outplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">d</span></div>
+
+
+<div class="viewcode-block" id="dict_to_pretty_string"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.dict_to_pretty_string">[docs]</a><span class="k">def</span> <span class="nf">dict_to_pretty_string</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">rounding_digits</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a nicely JSON-like formatted string to print a dict.&quot;&quot;&quot;</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">round_all_numbers_in_dict</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">rounding_digits</span><span class="p">)</span>
+    <span class="n">formatted_text</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&quot;,&#39;</span><span class="p">:</span>
+        <span class="n">formatted_text</span> <span class="o">=</span> <span class="n">formatted_text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">formatted_text</span></div>
+
+<div class="viewcode-block" id="score_to_formatted_string"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.score_to_formatted_string">[docs]</a><span class="k">def</span> <span class="nf">score_to_formatted_string</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="n">characters</span><span class="o">=</span><span class="mi">9</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Transform a number (score) into a best-format string.</span>
+<span class="sd">    </span>
+<span class="sd">    The format will be either int (2234), float (10.234) or engineering</span>
+<span class="sd">    (1.20E5), whichever is shorter. The score is then padded with left</span>
+<span class="sd">    whitespaces to obtained the desired number of ``characters``.&quot;&quot;&quot;</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="o">==</span> <span class="n">score</span><span class="p">)</span> <span class="k">else</span> <span class="n">score</span><span class="p">)</span>
+    <span class="n">as_float</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%.02f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">score</span>
+    <span class="n">as_eng</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%.02E</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="n">score</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">([</span><span class="n">raw</span><span class="p">,</span> <span class="n">as_float</span><span class="p">,</span> <span class="n">as_eng</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="n">characters</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
+</html>
