@@ -58,15 +58,15 @@ class DnaOptimizationProblem:
     --------
 
     >>> from dnachisel import *
-    >>> canvas = DnaOptimizationProblem(
+    >>> problem = DnaOptimizationProblem(
     >>>     sequence = "ATGCGTGTGTGC...",
     >>>     constraints = [constraint1, constraint2, ...],
     >>>     objectives = [objective1, objective2, ...]
     >>> )
-    >>> canvas.resolve_constraints_one_by_one()
-    >>> canvas.maximize_all_objectives_one_by_one()
+    >>> problem.resolve_constraints()
+    >>> problem.optimize()
     >>> print(canvas.constraints_text_summary())
-    >>> print(canvas.objectives_summary())
+    >>> print(canvas.objectives_text_summary())
 
 
     Parameters
@@ -87,6 +87,15 @@ class DnaOptimizationProblem:
     logger
       Either None for no logger, 'bar' for a tqdm progress bar logger, or
       any ProgLog progress bar logger.
+    
+
+
+    mutations_space
+      A MutationSpace indicating the possible mutations. In most case the
+      mutation space will be left to None and computed at problem
+      initialization (which can be slightly compute-intensive), however some
+      core DNA Chisel methods will create optimization problems with a provided
+      mutation_space to save computing time.  
 
     Attributes
     ----------
@@ -99,10 +108,6 @@ class DnaOptimizationProblem:
 
     objectives
       The list of objectives
-
-    possible_mutations
-      A dictionnary indicating the possible mutations. Note that this is only
-      computed the first time that canvas.possible_mutations is invoked.
 
     Notes
     -----
@@ -729,23 +734,25 @@ class DnaOptimizationProblem:
 
         Parameters
         ----------
+
         target
-        Either a path to a folder that will containt the report, or a path to
-        a zip archive, or "@memory" to return raw data of a zip archive
-        containing the report.
+          Either a path to a folder that will containt the report, or a path to
+          a zip archive, or "@memory" to return raw data of a zip archive
+          containing the report.
 
         project_name
-        Project name to write on PDF reports
+          Project name to write on PDF reports
 
         **solver_parameters
-        Extra keyword arguments passed to ``problem.resolve_constraints()``
+          Extra keyword arguments passed to ``problem.resolve_constraints()``
 
         Returns
         -------
+
         (success, message, zip_data)
-        Triplet where success is True/False, message is a one-line string
-        summary indication whether some clash was found, or some solution, or
-        maybe no solution was found because the random searches were too short
+          Triplet where success is True/False, message is a one-line string
+          summary indication whether some clash was found, or some solution, or
+          maybe no solution was found because the random searches were too short
         """
         self.logger(message="Solving constraints")
         try:

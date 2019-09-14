@@ -25,9 +25,16 @@ much improved.
 The final sequence (with the original annotations) is exported to Genbank.
 """
 
-from dnachisel import (DnaOptimizationProblem, AvoidPattern, AvoidChanges,
-                       EnforceTranslation, HomopolymerPattern,
-                       EnforceGCContent, CodonOptimize, load_record)
+from dnachisel import (
+    DnaOptimizationProblem,
+    AvoidPattern,
+    AvoidChanges,
+    EnforceTranslation,
+    HomopolymerPattern,
+    EnforceGCContent,
+    CodonOptimize,
+    load_record,
+)
 from io import StringIO
 import urllib
 
@@ -35,8 +42,8 @@ import urllib
 # DOWNLOAD THE PLASMID FROM THE WEB (it is a 7kb plasmid with 3 genes)
 url = "http://www.stevekellylab.com/constructs/pDex/pDex577-G.gb"
 response = urllib.request.urlopen(url)
-record_file = StringIO(response.read().decode('utf-8'))
-record = load_record(record_file, fmt='genbank')
+record_file = StringIO(response.read().decode("utf-8"))
+record = load_record(record_file, fmt="genbank")
 
 
 CDS_list = [
@@ -51,12 +58,12 @@ CDS_list = [
 dna_provider_constraints = [
     AvoidPattern("BsaI_site"),
     AvoidPattern("AarI_site"),
-    AvoidPattern(HomopolymerPattern("A", 9)),
-    AvoidPattern(HomopolymerPattern("T", 9)),
-    AvoidPattern(HomopolymerPattern("G", 6)),
-    AvoidPattern(HomopolymerPattern("C", 9)),
+    AvoidPattern("9xA"),
+    AvoidPattern("9xT"),
+    AvoidPattern(HomopolymerPattern("6xG")),
+    AvoidPattern(HomopolymerPattern("6xC")),
     EnforceGCContent(0.4, 0.65),
-    EnforceGCContent(0.25, 0.80, window=50)
+    EnforceGCContent(0.25, 0.80, window=50),
 ]
 
 CDS_constraints = []
@@ -67,7 +74,7 @@ for (start, end, strand) in CDS_list:
         promoter_region = (end + 1, end + 30)
     CDS_constraints += [
         AvoidChanges(promoter_region),
-        EnforceTranslation((start, end, strand))
+        EnforceTranslation((start, end, strand)),
     ]
 
 
@@ -84,22 +91,22 @@ objectives = [EnforceGCContent(0.51, boost=10000)] + [
 problem = DnaOptimizationProblem(
     sequence=record,
     constraints=dna_provider_constraints + CDS_constraints,
-    objectives=objectives
+    objectives=objectives,
 )
 
-print ("\n\n=== Initial Status ===")
-print (problem.constraints_text_summary(failed_only=True))
-print (problem.objectives_text_summary())
+print("\n\n=== Initial Status ===")
+print(problem.constraints_text_summary(failed_only=True))
+print(problem.objectives_text_summary())
 
-print ("Now solving constraints...")
+print("Now solving constraints...")
 problem.resolve_constraints()
-print (problem.constraints_text_summary(failed_only=True))
+print(problem.constraints_text_summary(failed_only=True))
 
-print ("Now optimizing objectives...")
+print("Now optimizing objectives...")
 
 problem.optimize()
 
-print ("\n\n=== Status after optimization ===\n\n")
-print (problem.objectives_text_summary())
-print ("Let us check again on the constraints:")
-print (problem.constraints_text_summary(failed_only=True))
+print("\n\n=== Status after optimization ===\n\n")
+print(problem.objectives_text_summary())
+print("Let us check again on the constraints:")
+print(problem.constraints_text_summary(failed_only=True))

@@ -52,7 +52,7 @@ class MutationChoice:
         """Merge this mutation choice with others to form a single choice
 
         Examples:
-        --------
+        ---------
 
         >>> ((2, 5), {'ATT', 'ATA'})
 
