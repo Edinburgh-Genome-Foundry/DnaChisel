@@ -54,6 +54,14 @@ class AvoidHeterodimerization(Specification):
                 "Using avoid_heterodimerization requires primer3"
                 " installed (pip install primer3-py)"
             )
+        if len(self.other_primers_sequences) == 0:
+            return SpecEvaluation(
+                specification=self,
+                problem=problem,
+                score=0,
+                locations=[self.location],
+                message="No existing primer"
+            )
         sequence = self.location.extract_sequence(problem.sequence)
         melting_temps = [
             primer3.calcHeterodimer(sequence, other_seq).tm

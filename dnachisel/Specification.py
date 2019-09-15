@@ -182,7 +182,7 @@ class Specification:
         else:
             params = "(%s)" % ", ".join(
                 [
-                    assignment.join(p) if isinstance(p, tuple) else p
+                    assignment.join(map(str, p)) if isinstance(p, tuple) else p
                     for p in params
                 ]
             )
