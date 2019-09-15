@@ -51,3 +51,4 @@ examples/reports
 examples/builtin_specifications_examples/downloaded_data
 
 .cache
+.vscode
