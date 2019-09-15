@@ -39,13 +39,6 @@
 
   
     <div class="nav-item">
-      <a href="../../index.html#more-biology-software"
-         class="nav-link ">
-         DNA Chisel documentation
-      </a>
-    </div>
-  
-    <div class="nav-item">
       <a href="../../ref/ref.html#dna-chisel-api-reference"
          class="nav-link ">
          DNA Chisel API reference
@@ -61,6 +54,12 @@
   
 
 
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
 
     </navlinks>
   </div>
@@ -76,13 +75,6 @@
 
   
     <div class="nav-item">
-      <a href="../../index.html#more-biology-software"
-         class="nav-link ">
-         DNA Chisel documentation
-      </a>
-    </div>
-  
-    <div class="nav-item">
       <a href="../../ref/ref.html#dna-chisel-api-reference"
          class="nav-link ">
          DNA Chisel API reference
@@ -98,6 +90,12 @@
   
 
 
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -112,15 +110,6 @@
     </div>
   </div>
 </div><div class="sidebar-links" role="navigation" aria-label="main navigation">
-  
-    <div class="sidebar-group">
-      <p class="caption">
-        <span class="caption-text"><a href="../../index.html#more-biology-software">DNA Chisel documentation</a></span>
-      </p>
-      <ul class="">
-        
-      </ul>
-    </div>
   
     <div class="sidebar-group">
       <p class="caption">
@@ -147,6 +136,12 @@
 
         
           <li class="toctree-l1 "><a href="../../ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../ref/cli.html" class="reference internal ">Command Line Interface</a>
 
             
           </li>
@@ -271,7 +266,7 @@
 
 <span class="sd">        Some specification classes may have a special method to do side effects</span>
 <span class="sd">        when shifting the location.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Location shifting is used in particular when solving circular DNA</span>
 <span class="sd">        optimization problems.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -305,7 +300,7 @@
             <span class="n">label</span> <span class="o">+=</span> <span class="s2">&quot;()&quot;</span>
         <span class="c1"># The regular expression below detects spec definitions:</span>
         <span class="c1"># ~Avoidpattern(ARGS) =&gt; ~, AvoidPattern, ARGS</span>
-        <span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;([@~])(\S+)(\(.*\))&quot;</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;([@~])(\S+)(\(.*\))&quot;</span>
         <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
         <span class="n">role</span><span class="p">,</span> <span class="n">specification</span><span class="p">,</span> <span class="n">parameters</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">specification</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">specifications_dict</span><span class="p">:</span>
@@ -377,7 +372,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">params</span> <span class="o">=</span> <span class="s2">&quot;(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="p">[</span>
-                    <span class="n">assignment</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="n">p</span>
+                    <span class="n">assignment</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="n">p</span>
                     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span>
                 <span class="p">]</span>
             <span class="p">)</span>
@@ -480,7 +475,7 @@
 
 <span class="k">class</span> <span class="nc">SpecificationsSet</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Generic class for writing Specs which are actually made of more specs.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Behaves as a Specification when it comes to instanciation, reading it</span>
 <span class="sd">    from annotated records, etc. but the initialization actually creates a</span>
 <span class="sd">    dictionnary of standard Specifications in the DNAOptimizationProblem</span>
@@ -491,7 +486,6 @@
             <span class="n">spec</span><span class="o">.</span><span class="n">parent_specification</span> <span class="o">=</span> <span class="bp">self</span>
             <span class="n">spec</span><span class="o">.</span><span class="n">name_in_parent</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">specifications</span> <span class="o">=</span> <span class="n">specifications</span>
-
 </pre></div>
 
           </div>

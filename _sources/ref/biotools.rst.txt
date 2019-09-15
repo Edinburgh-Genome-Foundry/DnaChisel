@@ -1,8 +1,5 @@
 Biotools
 --------
 
-.. contents::
-
-
 .. automodule:: dnachisel.biotools
   :members:

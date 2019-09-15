@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-      <title>DNA Chisel API reference</title>
+      <title>Command Line Interface</title>
     
       <link rel="stylesheet" href="../_static/pygments.css">
       <link rel="stylesheet" href="../_static/theme.css">
@@ -25,8 +25,8 @@
     
   <link rel="index" title="Index" href="../genindex.html" />
   <link rel="search" title="Search" href="../search.html" />
-  <link rel="next" title="Core Classes" href="core_classes.html" />
-  <link rel="prev" title="DNA Chisel - a versatile sequence optimizer" href="../index.html" /> 
+  <link rel="next" title="Examples" href="../examples.html" />
+  <link rel="prev" title="Built-in Specifications" href="builtin_specifications.html" /> 
   </head>
 
   <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
@@ -41,8 +41,8 @@
 
   
     <div class="nav-item">
-      <a href="##dna-chisel-api-reference"
-         class="nav-link ">
+      <a href="ref.html#dna-chisel-api-reference"
+         class="nav-link  router-link-active">
          DNA Chisel API reference
       </a>
     </div>
@@ -77,8 +77,8 @@
 
   
     <div class="nav-item">
-      <a href="##dna-chisel-api-reference"
-         class="nav-link ">
+      <a href="ref.html#dna-chisel-api-reference"
+         class="nav-link  router-link-active">
          DNA Chisel API reference
       </a>
     </div>
@@ -115,9 +115,9 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="##dna-chisel-api-reference">DNA Chisel API reference</a></span>
+        <span class="caption-text"><a href="ref.html#dna-chisel-api-reference">DNA Chisel API reference</a></span>
       </p>
-      <ul class="">
+      <ul class="current">
         
           <li class="toctree-l1 "><a href="core_classes.html" class="reference internal ">Core Classes</a>
 
@@ -143,8 +143,14 @@
           </li>
 
         
-          <li class="toctree-l1 "><a href="cli.html" class="reference internal ">Command Line Interface</a>
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">Command Line Interface</a>
 
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#command-line-interface" class="reference internal">Command Line Interface</a></li>
+                
+              </ul>
             
           </li>
 
@@ -176,18 +182,20 @@
   <ul class="breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
     
-    <li>DNA Chisel API reference</li>
+      <li><a href="ref.html">DNA Chisel API reference</a> &raquo;</li>
+    
+    <li>Command Line Interface</li>
   </ul>
   
 
   <ul class="page-nav">
   <li class="prev">
-    <a href="../index.html"
-       title="previous chapter">← DNA Chisel - a versatile sequence optimizer</a>
+    <a href="builtin_specifications.html"
+       title="previous chapter">← Built-in Specifications</a>
   </li>
   <li class="next">
-    <a href="core_classes.html"
-       title="next chapter">Core Classes →</a>
+    <a href="../examples.html"
+       title="next chapter">Examples →</a>
   </li>
 </ul>
   
@@ -195,16 +203,40 @@
 <hr>
           <div class="content" role="main">
             
-  <div class="section" id="dna-chisel-api-reference">
-<span id="reference"></span><h1>DNA Chisel API reference<a class="headerlink" href="#dna-chisel-api-reference" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="core_classes.html">Core Classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reports.html">Reports</a></li>
-<li class="toctree-l1"><a class="reference internal" href="biotools.html">Biotools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="builtin_specifications.html">Built-in Specifications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">Command Line Interface</a></li>
-</ul>
+  <div class="section" id="command-line-interface">
+<h1>Command Line Interface<a class="headerlink" href="#command-line-interface" title="Permalink to this headline">¶</a></h1>
+<p>Installing the DNA Chisel python library automatically installs the
+<code class="docutils literal notranslate"><span class="pre">dnachisel</span></code> command line interace (CLI) accessible from the machine’s terminal.</p>
+<p>This interface enables to get a problem as an annotated genbank and output
+the optimized sequence either as a single genbank or with a multi-file
+optimization report.</p>
+<p>Type <code class="docutils literal notranslate"><span class="pre">dnachisel</span> <span class="pre">-h</span></code> to display the documentation below, and see the
+<code class="docutils literal notranslate"><span class="pre">examples/cli</span></code> directory for files to test the command line interface on.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DnaChisel Command Line Interface
+
+Usage:
+  dnachisel &lt;source&gt; &lt;target&gt; [--circular] [--verbose]
+
+Where ``source`` is a fasta or Genbank file, and target can be one of:
+- A folder name or a zip name (extension .zip). In this case a complete report
+  along with the sequence will be generated.
+
+Note: this CLI will be developed on a per-request basis, so don&#39;t hesitate to
+ask for more handles and options on Github
+(https://github.com/Edinburgh-Genome-Foundry/DnaChisel/issues)
+
+Example to output the result to a genbank:
+
+&gt;&gt;&gt; dnachisel annotated_record.gb optimized_record.gb
+
+Example to output the result to a folder:
+
+&gt;&gt;&gt; dnachisel annotated_record.gb optimization_report/
+
+Example to output the result to a zip archive:
+
+&gt;&gt;&gt; dnachisel annotated_record.gb optimization_report.zip
+</pre></div>
 </div>
 </div>
 
@@ -213,12 +245,12 @@
           <div class="page-nav">
             <div class="inner"><ul class="page-nav">
   <li class="prev">
-    <a href="../index.html"
-       title="previous chapter">← DNA Chisel - a versatile sequence optimizer</a>
+    <a href="builtin_specifications.html"
+       title="previous chapter">← Built-in Specifications</a>
   </li>
   <li class="next">
-    <a href="core_classes.html"
-       title="next chapter">Core Classes →</a>
+    <a href="../examples.html"
+       title="next chapter">Examples →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.

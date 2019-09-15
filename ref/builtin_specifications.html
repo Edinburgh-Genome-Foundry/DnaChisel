@@ -25,7 +25,7 @@
     
   <link rel="index" title="Index" href="../genindex.html" />
   <link rel="search" title="Search" href="../search.html" />
-  <link rel="next" title="Examples" href="../examples.html" />
+  <link rel="next" title="Command Line Interface" href="cli.html" />
   <link rel="prev" title="Biotools" href="biotools.html" /> 
   </head>
 
@@ -41,13 +41,6 @@
 
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
-         class="nav-link ">
-         DNA Chisel documentation
-      </a>
-    </div>
-  
-    <div class="nav-item">
       <a href="ref.html#dna-chisel-api-reference"
          class="nav-link  router-link-active">
          DNA Chisel API reference
@@ -63,6 +56,12 @@
   
 
 
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
 
     </navlinks>
   </div>
@@ -78,13 +77,6 @@
 
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
-         class="nav-link ">
-         DNA Chisel documentation
-      </a>
-    </div>
-  
-    <div class="nav-item">
       <a href="ref.html#dna-chisel-api-reference"
          class="nav-link  router-link-active">
          DNA Chisel API reference
@@ -100,6 +92,12 @@
   
 
 
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -114,15 +112,6 @@
     </div>
   </div>
 </div><div class="sidebar-links" role="navigation" aria-label="main navigation">
-  
-    <div class="sidebar-group">
-      <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">DNA Chisel documentation</a></span>
-      </p>
-      <ul class="">
-        
-      </ul>
-    </div>
   
     <div class="sidebar-group">
       <p class="caption">
@@ -158,6 +147,12 @@
                   <li class="toctree-l2"><a href="#api-details" class="reference internal">API Details</a></li>
                 
               </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="cli.html" class="reference internal ">Command Line Interface</a>
+
             
           </li>
 
@@ -201,8 +196,8 @@
        title="previous chapter">← Biotools</a>
   </li>
   <li class="next">
-    <a href="../examples.html"
-       title="next chapter">Examples →</a>
+    <a href="cli.html"
+       title="next chapter">Command Line Interface →</a>
   </li>
 </ul>
   
@@ -233,7 +228,7 @@
 <td><p>Avoid Hairpin patterns as defined by the IDT guidelines.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidHeterodimerization</span></code></p></td>
-<td><p></p></td>
+<td><p>Avoid that the (sub)sequence anneals with other primers.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidNonUniqueSegments" title="dnachisel.builtin_specifications.AvoidNonUniqueSegments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidNonUniqueSegments</span></code></a></p></td>
 <td><p>Avoid sub-sequence which have repeats elsewhere in the sequence.</p></td>
@@ -251,7 +246,7 @@
 <td><p>Specification on the local or global proportion of G/C nucleotides.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceMeltingTemperature</span></code></p></td>
-<td><p></p></td>
+<td><p>Ensure that the subsequence’s Tm is in a certain segment/target.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforcePatternOccurence" title="dnachisel.builtin_specifications.EnforcePatternOccurence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforcePatternOccurence</span></code></a></p></td>
 <td><p>Enforce a number of occurences of the given pattern in the sequence.</p></td>
@@ -750,8 +745,8 @@ But practical as part of a list of constraints to verify.</p>
        title="previous chapter">← Biotools</a>
   </li>
   <li class="next">
-    <a href="../examples.html"
-       title="next chapter">Examples →</a>
+    <a href="cli.html"
+       title="next chapter">Command Line Interface →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.

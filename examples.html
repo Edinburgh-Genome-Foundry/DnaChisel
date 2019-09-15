@@ -25,7 +25,7 @@
     
   <link rel="index" title="Index" href="genindex.html" />
   <link rel="search" title="Search" href="search.html" />
-  <link rel="prev" title="Built-in Specifications" href="ref/builtin_specifications.html" /> 
+  <link rel="prev" title="Command Line Interface" href="ref/cli.html" /> 
   </head>
 
   <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
@@ -38,13 +38,6 @@
   <div class="links">
     <navlinks class="can-hide">
 
-  
-    <div class="nav-item">
-      <a href="index.html#more-biology-software"
-         class="nav-link ">
-         DNA Chisel documentation
-      </a>
-    </div>
   
     <div class="nav-item">
       <a href="ref/ref.html#dna-chisel-api-reference"
@@ -62,6 +55,12 @@
   
 
 
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
 
     </navlinks>
   </div>
@@ -77,13 +76,6 @@
 
   
     <div class="nav-item">
-      <a href="index.html#more-biology-software"
-         class="nav-link ">
-         DNA Chisel documentation
-      </a>
-    </div>
-  
-    <div class="nav-item">
       <a href="ref/ref.html#dna-chisel-api-reference"
          class="nav-link ">
          DNA Chisel API reference
@@ -99,6 +91,12 @@
   
 
 
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -113,15 +111,6 @@
     </div>
   </div>
 </div><div class="sidebar-links" role="navigation" aria-label="main navigation">
-  
-    <div class="sidebar-group">
-      <p class="caption">
-        <span class="caption-text"><a href="index.html#more-biology-software">DNA Chisel documentation</a></span>
-      </p>
-      <ul class="">
-        
-      </ul>
-    </div>
   
     <div class="sidebar-group">
       <p class="caption">
@@ -148,6 +137,12 @@
 
         
           <li class="toctree-l1 "><a href="ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/cli.html" class="reference internal ">Command Line Interface</a>
 
             
           </li>
@@ -196,8 +191,8 @@
 
   <ul class="page-nav">
   <li class="prev">
-    <a href="ref/builtin_specifications.html"
-       title="previous chapter">← Built-in Specifications</a>
+    <a href="ref/cli.html"
+       title="previous chapter">← Command Line Interface</a>
   </li>
 </ul>
   
@@ -207,7 +202,8 @@
             
   <div class="section" id="examples">
 <h1><a class="toc-backref" href="#id1">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
-<p>Note: all examples here are available in the <code class="docutils literal notranslate"><span class="pre">examples/</span></code> folder of the code repository</p>
+<p>Note: all examples here are available in the <code class="docutils literal notranslate"><span class="pre">examples/</span></code> folder of the
+code repository</p>
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
@@ -222,8 +218,9 @@
 <ul>
 <li><p><a class="reference internal" href="#sequence-standardization-domestication" id="id6">Sequence standardization/domestication</a></p></li>
 <li><p><a class="reference internal" href="#programmatic-optimization-of-a-full-genome" id="id7">Programmatic optimization of a full genome</a></p></li>
-<li><p><a class="reference internal" href="#writing-a-custom-specification-9-mer-score" id="id8">Writing a custom Specification: 9-mer score</a></p></li>
-<li><p><a class="reference internal" href="#creating-a-sequence-without-e-coli-tf-binding-sites" id="id9">Creating a sequence without E. coli TF binding sites</a></p></li>
+<li><p><a class="reference internal" href="#creating-a-collection-of-compatible-primers" id="id8">Creating a collection of compatible primers</a></p></li>
+<li><p><a class="reference internal" href="#writing-a-custom-specification-9-mer-score" id="id9">Writing a custom Specification: 9-mer score</a></p></li>
+<li><p><a class="reference internal" href="#creating-a-sequence-without-e-coli-tf-binding-sites" id="id10">Creating a sequence without E. coli TF binding sites</a></p></li>
 </ul>
 </li>
 </ul>
@@ -382,8 +379,75 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="creating-a-collection-of-compatible-primers">
+<h2><a class="toc-backref" href="#id8">Creating a collection of compatible primers</a><a class="headerlink" href="#creating-a-collection-of-compatible-primers" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;We will build a collection of 20 non-interannealing primers.</span>
+
+<span class="sd">DNA Chisel is not originally meant for creating collections of sequences</span>
+<span class="sd">(frameworks such as D-tailor were written with this purpose in mind), but</span>
+<span class="sd">it is still possible to create collections of inter-compatible sequences.</span>
+
+<span class="sd">Here we create 20 short sequences one after the other, while making sure</span>
+<span class="sd">that each new primer is &quot;compatible&quot; with the other ones made so far.</span>
+<span class="sd">Compatibility in this example means low heterodimerization (=the primers</span>
+<span class="sd">could be used together without undesired annealing between them).</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">dnachisel</span> <span class="k">import</span> <span class="n">DnaOptimizationProblem</span><span class="p">,</span> <span class="n">random_dna_sequence</span>
+<span class="kn">from</span> <span class="nn">dnachisel.builtin_specifications</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">AvoidHeterodimerization</span><span class="p">,</span>
+    <span class="n">EnforceGCContent</span><span class="p">,</span>
+    <span class="n">AvoidPattern</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">create_new_primer</span><span class="p">(</span><span class="n">existing_primers</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a new primer based on the primers created so far&quot;&quot;&quot;</span>
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span>
+        <span class="n">sequence</span><span class="o">=</span><span class="n">random_dna_sequence</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">20</span><span class="p">),</span>
+        <span class="n">constraints</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">AvoidHeterodimerization</span><span class="p">(</span><span class="n">existing_primers</span><span class="p">,</span> <span class="n">tmax</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+            <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;3x3mer&quot;</span><span class="p">),</span>
+            <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;4xG&quot;</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">objectives</span><span class="o">=</span><span class="p">[</span><span class="n">EnforceGCContent</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)],</span>
+        <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">problem</span><span class="o">.</span><span class="n">resolve_constraints</span><span class="p">()</span>
+    <span class="n">problem</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">problem</span><span class="o">.</span><span class="n">sequence</span>
+
+
+<span class="c1"># MAIN LOOP, WHERE PRIMERS ARE CREATED ONE BY ONE</span>
+
+<span class="n">existing_primers</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+    <span class="n">new_primer</span> <span class="o">=</span> <span class="n">create_new_primer</span><span class="p">(</span><span class="n">existing_primers</span><span class="p">)</span>
+    <span class="n">existing_primers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_primer</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PRIMERS GENERATED: </span><span class="se">\n\n</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">existing_primers</span><span class="p">))</span>
+
+<span class="c1"># (OPTIONAL VERIFICATION OF THE COLLECTION)</span>
+
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">primer3</span>
+<span class="kn">from</span> <span class="nn">dnachisel.biotools</span> <span class="k">import</span> <span class="n">gc_content</span>
+
+<span class="n">max_tm</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+    <span class="n">primer3</span><span class="o">.</span><span class="n">calcHeterodimer</span><span class="p">(</span><span class="n">seq1</span><span class="p">,</span> <span class="n">seq2</span><span class="p">)</span><span class="o">.</span><span class="n">tm</span>
+    <span class="k">for</span> <span class="n">seq1</span><span class="p">,</span> <span class="n">seq2</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">existing_primers</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Max Tm heterodimerization between any 2 primers: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">max_tm</span><span class="p">)</span>
+
+<span class="n">gc_contents</span> <span class="o">=</span> <span class="p">[</span><span class="n">gc_content</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">existing_primers</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GC content range </span><span class="si">%.2f</span><span class="s2">-</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">gc_contents</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">gc_contents</span><span class="p">)))</span>
+
+</pre></div>
+</div>
+</div>
 <div class="section" id="writing-a-custom-specification-9-mer-score">
-<h2><a class="toc-backref" href="#id8">Writing a custom Specification: 9-mer score</a><a class="headerlink" href="#writing-a-custom-specification-9-mer-score" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id9">Writing a custom Specification: 9-mer score</a><a class="headerlink" href="#writing-a-custom-specification-9-mer-score" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Example of DNA Chisel user-defined specification: Gen9&#39;s 9mer score.</span>
 
 <span class="sd">Once upon the time there was a DNA synthesis company called Gen9, who accepted</span>
@@ -453,7 +517,7 @@
 </div>
 </div>
 <div class="section" id="creating-a-sequence-without-e-coli-tf-binding-sites">
-<h2><a class="toc-backref" href="#id9">Creating a sequence without E. coli TF binding sites</a><a class="headerlink" href="#creating-a-sequence-without-e-coli-tf-binding-sites" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id10">Creating a sequence without E. coli TF binding sites</a><a class="headerlink" href="#creating-a-sequence-without-e-coli-tf-binding-sites" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dnachisel</span> <span class="k">import</span> <span class="n">DnaOptimizationProblem</span><span class="p">,</span> <span class="n">AvoidPattern</span><span class="p">,</span> <span class="n">random_dna_sequence</span>
 <span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">request</span>
 
@@ -483,8 +547,8 @@
           <div class="page-nav">
             <div class="inner"><ul class="page-nav">
   <li class="prev">
-    <a href="ref/builtin_specifications.html"
-       title="previous chapter">← Built-in Specifications</a>
+    <a href="ref/cli.html"
+       title="previous chapter">← Command Line Interface</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.

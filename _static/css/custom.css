@@ -1,5 +1,6 @@
 
 @import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
 
 /* FIXES A SPHINX-MERMAID OPACITY PROBLEM */
 .content .section {
@@ -18,10 +19,6 @@
 .sig-name.descname {
     font-size: 1.1em;
     font-weight: bold;
-}
-
-code, pre {
-    font-family: 'Roboto Mono', 'Inconsolata', monospace;
 }
 
 dt {
@@ -67,4 +64,16 @@ dl.method, dl.function {
 
 .contents.topic {
     margin-bottom: 3em;
+}
+
+
+/* Code is Roboto or condensed if screen is small */
+code, pre {
+    font-family: 'Roboto Mono', 'Inconsolata', monospace;
+}
+
+@media (max-width: 1200px) {
+    code, pre {
+        font-family: 'Inconsolata', 'Roboto Mono', monospace;
+    }
 }
