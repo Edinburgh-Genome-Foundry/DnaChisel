@@ -1,0 +1,21 @@
+<navbar @toggle-sidebar="toggleSidebar">
+    <router-link to="{{pathto(master_doc)}}" class="home-link">
+        {% if logo %}
+        <img class="logo" src="{{ pathto('_static/' + logo, 1) }}" alt="doit logo" />
+        {% else %}
+        <span class="site-name">{{ project|e }}</span>
+        {% endif %}
+    </router-link>
+
+    <div class="links">
+        <navlinks class="can-hide">
+            {%- include "util/navlinks.html" %}
+            <div class="nav-item">
+                <a href="https://github.com/schettino72/sphinx_press_theme" class="nav-link external">
+                    Github
+                    <outboundlink />
+                </a>
+            </div>
+        </navlinks>
+    </div>
+</navbar>

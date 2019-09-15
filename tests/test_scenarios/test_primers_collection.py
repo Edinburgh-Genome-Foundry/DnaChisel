@@ -61,4 +61,3 @@ def test_primers_collection_example():
     gc_contents = [gc_content(p) for p in existing_primers]
     assert min(gc_contents) > 0.55
     assert max(gc_contents) < 0.65
-

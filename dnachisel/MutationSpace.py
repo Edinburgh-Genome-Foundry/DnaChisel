@@ -6,6 +6,7 @@ from .biotools import windows_overlap
 
 # TODO: better in-code docs
 
+
 class MutationChoice:
     """Represent a segment of a sequence with several possible variants.
 
@@ -107,7 +108,7 @@ class MutationChoice:
         >>>     'ATGAATG',
         >>> ])
         >>> choice.extract_varying_region()
-        
+
         Result :
 
         >>> [

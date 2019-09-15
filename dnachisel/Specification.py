@@ -76,7 +76,7 @@ class Specification:
 
         Some specification classes may have a special method to do side effects
         when shifting the location.
-        
+
         Location shifting is used in particular when solving circular DNA
         optimization problems.
         """
@@ -110,7 +110,7 @@ class Specification:
             label += "()"
         # The regular expression below detects spec definitions:
         # ~Avoidpattern(ARGS) => ~, AvoidPattern, ARGS
-        pattern = "([@~])(\S+)(\(.*\))"
+        pattern = r"([@~])(\S+)(\(.*\))"
         match = re.match(pattern, label)
         role, specification, parameters = match.groups()
         if specification not in specifications_dict:
@@ -285,7 +285,7 @@ class Specification:
 
 class SpecificationsSet:
     """Generic class for writing Specs which are actually made of more specs.
-    
+
     Behaves as a Specification when it comes to instanciation, reading it
     from annotated records, etc. but the initialization actually creates a
     dictionnary of standard Specifications in the DNAOptimizationProblem
@@ -296,4 +296,3 @@ class SpecificationsSet:
             spec.parent_specification = self
             spec.name_in_parent = name
         self.specifications = specifications
-

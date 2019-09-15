@@ -52,6 +52,10 @@ master_doc = "index"
 project = u"DNA Chisel"
 copyright = u"2019, Edinburgh Genome Foundry"
 
+html_context = {
+    "github_link": "https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+}
+
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.

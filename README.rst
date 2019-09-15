@@ -5,6 +5,9 @@
     <br /><br />
     </p>
 
+DNA Chisel - a versatile sequence optimizer
+============================================
+
 .. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel.svg?branch=master
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel
    :alt: Travis CI build status
@@ -13,9 +16,11 @@
    :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/DnaChisel?branch=master
 
 
-DNA Chisel (complete documentation `here <https://edinburgh-genome-foundry.github.io/DnaChisel/>`_) is a Python library to optimize the nucleotides of DNA sequences with respect to a set of constraints and optimization objectives. It can be used for codon-optimizing the genes of a sequence for a particular organism, modifying a sequence to meet the constraints of a DNA provider while preserving genes, and much more.
+DNA Chisel (complete documentation `here <https://edinburgh-genome-foundry.github.io/DnaChisel/>`_) is a Python library for optimizing DNA sequences with respect to a set of constraints and optimization objectives. It can be used for , and much more.
 
-DNA Chisel comes with more than 15 types of optimizations and constraints and allows users to define new specifications in Python, making the library suitable for a large range of automated sequence design applications, or complex custom design projects.
+DNA Chisel comes with over 15 classes of sequence specifications which can be composed to codon-optimize genes, meet the constraints of a commercial DNA provider, avoid homologies between sequences, or all of this at once!
+
+DNA Chisel also allows users to define their own specifications in Python, making the library suitable for a large range of automated sequence design applications, and complex custom design projects.
 
 Example of use
 ---------------
@@ -40,9 +45,9 @@ Here is the code to achieve that:
     problem = DnaOptimizationProblem(
         sequence=random_dna_sequence(10000),
         constraints=[
-            EnforceTranslation((500, 1400)),
             AvoidPattern("BsaI_site"),
-            EnforceGCContent(mini=0.3, maxi=0.7, window=50)
+            EnforceGCContent(mini=0.3, maxi=0.7, window=50),
+            EnforceTranslation((500, 1400))
         ],
         objectives=[CodonOptimize(species='e_coli', location=(500, 1400))]
     )
