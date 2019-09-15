@@ -4,7 +4,7 @@
 DnaChisel Command Line Interface
 
 Usage:
-  dnachisel <source> <target> [--circular]
+  dnachisel <source> <target> [--circular] [--verbose]
 
 Where ``source`` is a fasta or Genbank file, and target can be one of:
 - A folder name or a zip name (extension .zip). In this case a complete report
@@ -13,6 +13,18 @@ Where ``source`` is a fasta or Genbank file, and target can be one of:
 Note: this CLI will be developed on a per-request basis, so don't hesitate to
 ask for more handles and options on Github
 (https://github.com/Edinburgh-Genome-Foundry/DnaChisel/issues)
+
+Example to output the result to a genbank:
+
+>>> dnachisel annotated_record.gb optimized_record.gb
+
+Example to output the result to a folder:
+
+>>> dnachisel annotated_record.gb optimization_report/
+
+Example to output the result to a zip archive:
+
+>>> dnachisel annotated_record.gb optimization_report.zip
 """
 
 from docopt import docopt
@@ -21,29 +33,40 @@ from dnachisel import DnaOptimizationProblem, CircularDnaOptimizationProblem
 if __name__ == "__main__":
     params = docopt(__doc__)
     source, target = params["<source>"], params["<target>"]
-    if params['--circular']:
+
+    # VERBOSE PRINT
+    def verbose_print(*args):
+        if  params["--verbose"]:
+            print(*args)
+    
+    # PARSE THE CIRCULARITY
+
+    if params["--circular"]:
         problem_class = DnaOptimizationProblem
     else:
         problem_class = CircularDnaOptimizationProblem
+    
     problem = problem_class.from_record(source)
     problem.max_random_iters = 10000
-    print(
-        '\n\nBefore optimization:\n\n',
+    verbose_print(
+        "\n\nBefore optimization:\n\n",
         problem.constraints_text_summary(),
-        problem.objectives_text_summary()
+        problem.objectives_text_summary(),
     )
 
-    if target.lower().endswith('.gb'):
+    if target.lower().endswith(".gb"):
+        verbose_print("Resolving Constraints...")
         problem.resolve_constraints()
+        verbose_print("Optimizing...")
         problem.optimize()
-    
+
     else:
         problem.optimize_with_report(target)
 
-    print(
-        '\n\nAfter optimization:\n\n',
+    verbose_print(
+        "\n\nAfter optimization:\n\n",
         problem.constraints_text_summary(),
         problem.objectives_text_summary(),
-        '\n\n',
-        'Result written to %s' % target
+        "\n\n",
+        "Result written to %s" % target,
     )

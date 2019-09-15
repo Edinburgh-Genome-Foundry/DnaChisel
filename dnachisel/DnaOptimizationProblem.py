@@ -636,8 +636,8 @@ class DnaOptimizationProblem:
         ):
             self.optimize_objective(objective=objective)
 
-    @staticmethod
-    def from_record(record, specifications_dict="default"):
+    @classmethod
+    def from_record(cls, record, specifications_dict="default"):
         """TODO: docs"""
         if isinstance(record, str):
             if record.lower().endswith((".fa", ".fasta")):
@@ -662,7 +662,7 @@ class DnaOptimizationProblem:
             )
             parameters[role + "s"].append(spec)
 
-        return DnaOptimizationProblem(**parameters)
+        return cls(**parameters)
 
     def to_record(
         self,

@@ -13,3 +13,4 @@ DNA Chisel API reference
    reports
    biotools
    builtin_specifications
+   cli
