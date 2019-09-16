@@ -17,9 +17,8 @@ class EnforceChoice(Specification):
     Parameters
     ----------
 
-    sequence
-      An ATGC string representing the wanted sequence, possibly degenerated,
-      for instance ATTCGCGTYTTKWNAA
+    choices
+      List of same-length, ATGC sequences, e.g. [ATT, ATC, ATA].
 
     location
       Location of the DNA segment on which to enforce the pattern e.g.

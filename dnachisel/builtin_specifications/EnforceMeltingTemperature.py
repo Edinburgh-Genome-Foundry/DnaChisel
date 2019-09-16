@@ -38,6 +38,13 @@ class EnforceMeltingTemperature(Specification):
         self, mini=None, maxi=None, target=None, location=None, boost=1.0
     ):
         """Initialize."""
+        if isinstance(mini, str) and mini.endswith('C'):
+            # PROCESS CASES "45-55%" and "45%"
+            split = mini[:-1].split('-')
+            if len(split) == 2:
+                mini, maxi = float(split[0]), float(split[1])
+            else:
+                target = float(split[0])
         if target is not None:
             mini = maxi = target
         else:

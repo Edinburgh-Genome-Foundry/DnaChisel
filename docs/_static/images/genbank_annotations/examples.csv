@@ -1,0 +1,24 @@
+filename,spec,location,sequence,highlights
+avoid_pattern_cg,@no(CG),2-24,ATGCACACGCATCGTCTCATCACTCAT,"8-9, 13-14"
+avoid_pattern_cg_obj,~no(CG),2-24,ATGCACACGCATCGTCTCCGACTCATA,"8-9, 13-14, 19-20"
+avoid_pattern_noisoleucine,@no(ATH),2-24,ATGCACATCAACACAATTACACTACCT,"7-9, 16-18"
+avoid_pattern_regex,@no(ATG.*TAA),2-24,CAATGCACACGCATAATCTCATCACTT,3-15
+avoid_pattern_kmer,@no(4x2mer),2-24,ATGCACACACATCGTCTCATCACTCAT,4-11
+avoid_pattern_enzyme,@no(BsmBI_site),2-24,ATGCACACGCATCGTCTCATCACTCAT,13-18
+keep,@keep,"1-8, 16-22",ATGCACACGCATCGTCTCATCACTCAT,none
+keep_obj,~keep,2-24,ATGCACACGCATCGTCTCATCACTCAT,none
+insert,@insert(BsmBI_site),2-24,ATGCACACGCATCGATTCATCACTCAT,none
+insert_several,"@insert(CG, occurences=3)",2-24,ATGCACACACATCGATTCATCACTCAT,none
+gc_range,@gc(45-55%),2-24,ATGCACACACATCGATTCATCACTCAT,none
+gc_target,~gc(60%),2-24,CAATGCACACATCGATTCATCACTCAT,none
+cds,@cds,2-23,CAATGCACACATCGATTCATCACTCAT,none
+cds_enforce,@EnforceTranslation,2-23,CAATGCACACATCGATTCATCACTCAT,none
+codon_optimize,~CodonOptimize(e_coli),2-23,CAATGCACACATCGATTCATCACTCAT,none
+allow_primer,"@AllowPrimer(tmin=50, tmax=70)",2-24,CAATGCACACATCGATTCATCACTCAT,none
+avoid_non_unique_segments,@AvoidNonUniqueSegments(6),2-24,CAATGCACACATCGATTCATGCACATT,"3-8, 19-24"
+choice,@choice(ATG|TTA|CGT),2-24,CAATGCACACATCGATTCATGCACATT,none
+enforce_melting,@tm(50-70C),2-24,CAATGCACACATCGATTCATGCACATT,none
+enforce_melting_obj,~tm(55C),2-24,CAATGCACACATCGATTCATGCACATT,none
+avoid_blast,"@AvoidBlastMatches(e_coli, min_align_length=20)",2-24,CAATGCACACATCGATTCATGCACATT,none
+enforce_sequence,@sequence(KGTCTCNATGC),2-13,CATCGATTCATGCACATT,none
+myspec,"@MySpecification(ATG, param2=65)",2-24,CAATGCACACATCGATTCATGCACATT,none

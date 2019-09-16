@@ -14,6 +14,7 @@ from .builtin_specifications import (
     CodonOptimize,
     EnforceChoice,
     EnforceGCContent,
+    EnforceMeltingTemperature,
     EnforcePatternOccurence,
     EnforceRegionsCompatibility,
     EnforceSequence,
@@ -80,7 +81,10 @@ DEFAULT_SPECIFICATIONS_DICT.update({
     'gc': EnforceGCContent,
     'insert': EnforcePatternOccurence,
     'keep': AvoidChanges,
-    'no': AvoidPattern
+    'no': AvoidPattern,
+    'tm': EnforceMeltingTemperature,
+    'primer': AllowPrimer,
+    'sequence': EnforceSequence
 })
 
 
@@ -99,6 +103,7 @@ __all__ = [
     CodonOptimize,
     EnforceChoice,
     EnforceGCContent,
+    EnforceMeltingTemperature,
     EnforcePatternOccurence,
     EnforceRegionsCompatibility,
     EnforceSequence,

@@ -9,7 +9,20 @@
    :caption: Reference
    :maxdepth: 3
 
-   ref/ref
+   ref/core_classes
+   ref/reports
+   ref/biotools
+   ref/builtin_specifications
+   ref/cli
+   notes
+
+.. toctree::
+   :hidden:
+   :caption: Using Genbanks
+   :maxdepth: 3
+   
+   genbank/genbank_api
+   genbank/genbank_notes
 
 .. toctree::
    :hidden:

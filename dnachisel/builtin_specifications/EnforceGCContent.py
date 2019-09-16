@@ -52,6 +52,13 @@ class EnforceGCContent(Specification):
     def __init__(self, mini=0, maxi=1.0, target=None,
                  window=None, location=None, boost=1.0):
         """Initialize."""
+        if isinstance(mini, str) and mini.endswith('%'):
+            # PROCESS CASES "45-55%" and "45%"
+            split = mini[:-1].split('-')
+            if len(split) == 2:
+                mini, maxi = float(split[0]) / 100, float(split[1]) / 100
+            else:
+                target = float(split[0]) / 100
         if target is not None:
             mini = maxi = target
         self.target = target
@@ -139,8 +146,8 @@ class EnforceGCContent(Specification):
         return self.copy_with_changes(location=new_location)
 
     def label_parameters(self):
-        show_mini = self.mini is not None
-        show_maxi = self.maxi is not None
+        show_mini = self.mini is not None and (self.target is None)
+        show_maxi = self.maxi is not None and (self.target is None)
         show_target = not (show_mini or show_maxi)
         show_window = self.window is not None
 
