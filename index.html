@@ -25,7 +25,7 @@
     
   <link rel="index" title="Index" href="genindex.html" />
   <link rel="search" title="Search" href="search.html" />
-  <link rel="next" title="DNA Chisel API reference" href="ref/ref.html" /> 
+  <link rel="next" title="Core Classes" href="ref/core_classes.html" /> 
   </head>
 
   <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
@@ -40,9 +40,16 @@
 
   
     <div class="nav-item">
-      <a href="ref/ref.html#dna-chisel-api-reference"
+      <a href="##more-biology-software"
          class="nav-link ">
-         DNA Chisel API reference
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="##more-biology-software"
+         class="nav-link ">
+         Using Genbanks
       </a>
     </div>
   
@@ -76,9 +83,16 @@
 
   
     <div class="nav-item">
-      <a href="ref/ref.html#dna-chisel-api-reference"
+      <a href="##more-biology-software"
          class="nav-link ">
-         DNA Chisel API reference
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="##more-biology-software"
+         class="nav-link ">
+         Using Genbanks
       </a>
     </div>
   
@@ -114,7 +128,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="ref/ref.html#dna-chisel-api-reference">DNA Chisel API reference</a></span>
+        <span class="caption-text"><a href="##more-biology-software">Reference</a></span>
       </p>
       <ul class="">
         
@@ -143,6 +157,33 @@
 
         
           <li class="toctree-l1 "><a href="ref/cli.html" class="reference internal ">Command Line Interface</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="notes.html" class="reference internal ">Notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="##more-biology-software">Using Genbanks</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="genbank/genbank_api.html" class="reference internal ">Genbank API</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="genbank/genbank_notes.html" class="reference internal ">Genbank usage notes</a>
 
             
           </li>
@@ -181,8 +222,8 @@
 
   <ul class="page-nav">
   <li class="next">
-    <a href="ref/ref.html"
-       title="next chapter">DNA Chisel API reference →</a>
+    <a href="ref/core_classes.html"
+       title="next chapter">Core Classes →</a>
   </li>
 </ul>
   
@@ -197,9 +238,8 @@
 <h1>DNA Chisel - a versatile sequence optimizer<a class="headerlink" href="#dna-chisel-a-versatile-sequence-optimizer" title="Permalink to this headline">¶</a></h1>
 <a class="reference external image-reference" href="https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel"><img alt="Travis CI build status" src="https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel.svg?branch=master" /></a>
 <a class="reference external image-reference" href="https://coveralls.io/github/Edinburgh-Genome-Foundry/DnaChisel?branch=master"><img alt="https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/DnaChisel/badge.svg?branch=master" src="https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/DnaChisel/badge.svg?branch=master" /></a>
-<p>DNA Chisel (complete documentation <a class="reference external" href="https://edinburgh-genome-foundry.github.io/DnaChisel/">here</a>) is a Python library for optimizing DNA sequences with respect to a set of constraints and optimization objectives. It can be used for , and much more.</p>
-<p>DNA Chisel comes with over 15 classes of sequence specifications which can be composed to codon-optimize genes, meet the constraints of a commercial DNA provider, avoid homologies between sequences, or all of this at once!</p>
-<p>DNA Chisel also allows users to define their own specifications in Python, making the library suitable for a large range of automated sequence design applications, and complex custom design projects.</p>
+<p>DNA Chisel (complete documentation <a class="reference external" href="https://edinburgh-genome-foundry.github.io/DnaChisel/">here</a>) is a Python library for optimizing DNA sequences with respect to a set of constraints and optimization objectives. It comes with over 15 classes of sequence specifications which can be composed to codon-optimize genes, meet the constraints of a commercial DNA provider, avoid homologies between sequences, or all of this at once!</p>
+<p>DNA Chisel also allows users to define their own specifications in Python, making the library suitable for a large range of automated sequence design applications, and complex custom design projects. It can be used as a Python library, a command-line interface, or a <a class="reference external" href="https://cuba.genomefoundry.org/sculpt_a_sequence">web application</a>.</p>
 <div class="section" id="example-of-use">
 <h2>Example of use<a class="headerlink" href="#example-of-use" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="defining-a-problem-via-scripts">
@@ -244,40 +284,35 @@ our own constraints and objectives as subclasses of <code class="docutils litera
 </div>
 <div class="section" id="defining-a-problem-via-genbank-features">
 <h3>Defining a problem via Genbank features<a class="headerlink" href="#defining-a-problem-via-genbank-features" title="Permalink to this headline">¶</a></h3>
-<p>You can also define a problem by annotating directly a genbank as follows:</p>
+<p>You can also define a problem by annotating directly a Genbank as follows:</p>
 <p align="center">
 <img alt="report" title="report" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/example_sequence_map.png" width="650">
 <br /><br />
-</p><p>In such genbank records:</p>
+</p><p>I this record:</p>
 <ul class="simple">
-<li><p>Constraints are features of type <code class="docutils literal notranslate"><span class="pre">misc_feature</span></code> with a prefix <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> followed
+<li><p>Constraints (colored in blue in the illustration) are features of type
+<code class="docutils literal notranslate"><span class="pre">misc_feature</span></code> with a prefix <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> followed
 by the name of the constraints and its parameters, which are the same as in
-python scripts, expect that the “=” can be replaced by “:” and strings don’t
-take quote, so you’d write for instance <code class="docutils literal notranslate"><span class="pre">species=e_coli</span></code>. The constraints
-are colored in blue in the example above.</p></li>
-<li><p>Optimization objectives are features of type <code class="docutils literal notranslate"><span class="pre">misc_feature</span></code> with a prefix
-<code class="docutils literal notranslate"><span class="pre">~</span></code> followed by the name of the constraints and its parameters (colored
-in yellow in the example above)</p></li>
+python scripts.</p></li>
+<li><p>Optimization objectives (colored in yellow in the illustration) are features
+of type <code class="docutils literal notranslate"><span class="pre">misc_feature</span></code> with a prefix <code class="docutils literal notranslate"><span class="pre">~</span></code> followed by the name of the
+constraints and its parameters.</p></li>
 </ul>
-<p>Here is how you read the file and solve the problem:</p>
+<p>The file can be directly fed to the <a class="reference external" href="https://cuba.genomefoundry.org/sculpt_a_sequence">web app</a>
+or processed via the command line interface:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Output the result to &quot;optimized_record.gb&quot;</span>
+dnachisel annotated_record.gb optimized_record.gb
+</pre></div>
+</div>
+<p>Or via a Python script:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dnachisel</span> <span class="kn">import</span> <span class="n">DnaOptimizationProblem</span>
-
-<span class="c1"># DEFINE THE OPTIMIZATION PROBLEM</span>
-
 <span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="o">.</span><span class="n">from_record</span><span class="p">(</span><span class="s2">&quot;my_record.gb&quot;</span><span class="p">)</span>
-<span class="n">problem</span><span class="o">.</span><span class="n">resolve_constraints</span><span class="p">()</span>
-<span class="n">problem</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 <span class="n">problem</span><span class="o">.</span><span class="n">optimize_with_report</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;report.zip&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>By default, only the built-in specifications of DnaChisel can be used in the
-annotations <code class="docutils literal notranslate"><span class="pre">from_record</span></code> accepts a <code class="docutils literal notranslate"><span class="pre">specifications_dict</span></code> argument which allows
-to define new specifications like <code class="docutils literal notranslate"><span class="pre">MyConstraint</span></code> and have them supported by
-the Genbank importer so that you can add annotations with labels like
-<code class="docutils literal notranslate"><span class="pre">&#64;MyConstraint(par1=...)</span></code> in your genbank. This allows you to build
-completely custom optimization applications on top of DnaChisel.</p>
-<p>Speaking about apps, you can try DnaChisel online <a class="reference external" href="https://cuba.genomefoundry.org/sculpt_a_sequence">here</a>.
-Just drop an annotated genbank and you will get a full optimization with report.</p>
+annotations, however it is easy to add your own specifications to the Genbank
+parser, and build applications supporting custom specifications on top of DnaChisel.</p>
 </div>
 <div class="section" id="reports">
 <h3>Reports<a class="headerlink" href="#reports" title="Permalink to this headline">¶</a></h3>
@@ -328,6 +363,8 @@ and <a class="reference external" href="https://github.com/Edinburgh-Genome-Foun
 </div>
 <div class="toctree-wrapper compound">
 </div>
+<div class="toctree-wrapper compound">
+</div>
 <div style='text-align: left; margin-bottom: 4em'>
     <a href="https://twitter.com/share" class="twitter-share-button"
     data-text="DNA Chisel - A Python library for DNA sequence design and optimization" data-size="large"
@@ -347,8 +384,8 @@ and <a class="reference external" href="https://github.com/Edinburgh-Genome-Foun
           <div class="page-nav">
             <div class="inner"><ul class="page-nav">
   <li class="next">
-    <a href="ref/ref.html"
-       title="next chapter">DNA Chisel API reference →</a>
+    <a href="ref/core_classes.html"
+       title="next chapter">Core Classes →</a>
   </li>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.

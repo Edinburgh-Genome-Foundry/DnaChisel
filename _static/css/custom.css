@@ -17,7 +17,7 @@
 }
 
 .sig-name.descname {
-    font-size: 1.1em;
+    font-size: 1.2em;
     font-weight: bold;
 }
 
@@ -49,16 +49,14 @@ dl.method, dl.function {
     margin-bottom: 3em;
 }
 
-.sig-param:after {
-    content: ' ';
-    width: 1.5em;
-}
-
+/* color fixes for table of contents */
 .toc-backref {
+    /* TOCS cause all your section titles to go green. Pouah! */
     color: inherit;
 }
 
 .contents.topic p.topic-title {
+    /* Hide all TOC titles */
     display: none;
 }
 
@@ -76,4 +74,15 @@ code, pre {
     code, pre {
         font-family: 'Inconsolata', 'Roboto Mono', monospace;
     }
+}
+
+/* Annotation pictures*/
+img.annotation-example {
+    display: block;
+    width: 650px;
+    margin: 1em auto 1em auto;
+}
+
+blockquote {
+    font-size: inherit;
 }

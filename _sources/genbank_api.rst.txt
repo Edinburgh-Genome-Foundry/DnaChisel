@@ -1,0 +1,27 @@
+Genbank API
+===========
+
+This section documents the Genbank API for all builtin specifications of
+DNA chisel. New specifications can be supported by the DNA Chisel parser by
+extending the default specifications dict:
+
+.. code:: python
+
+    from dnachisel import DEFAULT_SPECIFICATIONS_DICT
+    ...
+
+    class MySpecification(Specification):
+        def __init__(self, param1, param2=55):
+            ...
+
+    DEFAULT_SPECIFICATIONS_DICT['MySpecification'] = MySpecification
+    problem = DnaOptimizationProblem.from_record('my_record.gb')
+
+Any specification in the dictionnary can be used in Genbank annotations with
+the same parameters as in a Python script (note that strings do not require
+quotes):
+
+.. raw:: html
+
+    <img class='annotation-example' src='_static/images/genbank_annotations/myspec.png'>
+    </img>

@@ -1,0 +1,329 @@
+
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Genbank API</title>
+    
+      <link rel="stylesheet" href="../_static/pygments.css">
+      <link rel="stylesheet" href="../_static/theme.css">
+      <link rel="stylesheet" href="../_static/css/custom.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+
+      
+      <script src="../_static/theme-vendors.js"></script>
+      <script src="../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="next" title="Genbank usage notes" href="genbank_notes.html" />
+  <link rel="prev" title="Notes" href="../notes.html" /> 
+  </head>
+
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link  router-link-active">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link  router-link-active">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../ref/core_classes.html" class="reference internal ">Core Classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../ref/reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../ref/cli.html" class="reference internal ">Command Line Interface</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../notes.html" class="reference internal ">Notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Using Genbanks</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">Genbank API</a>
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#pattern-removal" class="reference internal">Pattern removal</a></li>
+                
+                  <li class="toctree-l2"><a href="#sequence-protection" class="reference internal">Sequence protection</a></li>
+                
+                  <li class="toctree-l2"><a href="#pattern-insertion" class="reference internal">Pattern insertion</a></li>
+                
+                  <li class="toctree-l2"><a href="#cds-and-codon-optimization" class="reference internal">CDS and Codon optimization</a></li>
+                
+                  <li class="toctree-l2"><a href="#gc-content" class="reference internal">GC content</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="genbank_notes.html" class="reference internal ">Genbank usage notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+    <li>Genbank API</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="../notes.html"
+       title="previous chapter">← Notes</a>
+  </li>
+  <li class="next">
+    <a href="genbank_notes.html"
+       title="next chapter">Genbank usage notes →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <div class="section" id="genbank-api">
+<h1><a class="toc-backref" href="#id1">Genbank API</a><a class="headerlink" href="#genbank-api" title="Permalink to this headline">¶</a></h1>
+<p>This section documents the Genbank API for all builtin specifications of
+DNA chisel.</p>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#genbank-api" id="id1">Genbank API</a></p>
+<ul>
+<li><p><a class="reference internal" href="#pattern-removal" id="id2">Pattern removal</a></p></li>
+<li><p><a class="reference internal" href="#sequence-protection" id="id3">Sequence protection</a></p></li>
+<li><p><a class="reference internal" href="#pattern-insertion" id="id4">Pattern insertion</a></p></li>
+<li><p><a class="reference internal" href="#cds-and-codon-optimization" id="id5">CDS and Codon optimization</a></p></li>
+<li><p><a class="reference internal" href="#gc-content" id="id6">GC content</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="pattern-removal">
+<h2><a class="toc-backref" href="#id2">Pattern removal</a><a class="headerlink" href="#pattern-removal" title="Permalink to this headline">¶</a></h2>
+<p>To remove a pattern in a given region, use the <code class="docutils literal notranslate"><span class="pre">&#64;no()</span></code> label
+(alias for <code class="docutils literal notranslate"><span class="pre">&#64;AvoidPattern()</span></code>). For instance to remove any GC pattern:</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/avoid_pattern_cg.png'></img><p>This method also supports IUPAC nucleotide mutation for degenerate sequences
+(NKY etc.) For instance to remove any ATC and ATT (which could be written
+together as ATH):</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/avoid_pattern_noisoleucine.png'></img><p>It is also possible to provide an enzyme restriction site by suffixing the enzyme
+name with <code class="docutils literal notranslate"><span class="pre">_site</span></code>:</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/avoid_pattern_enzyme.png'></img><p>Other pattern shorthands can be used for instance to find sequence repeats (here
+we look for dimers repeated four times in a row):</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/avoid_pattern_kmer.png'></img><p>When no pattern shorthand cuts it, use a regular expression! The annotation
+below forbids any TAA sequence following an ATG sequence.</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/avoid_pattern_regex.png'></img><p>Finally, note that you can also use <code class="docutils literal notranslate"><span class="pre">no()</span></code> as an objective by prefixing it
+with a tilde <code class="docutils literal notranslate"><span class="pre">~no()</span></code>, at which case the pattern may not be completely
+eliminated, but its number of occurences will be minimized by the algorithm:</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/avoid_pattern_cg_obj.png'></img></div>
+<div class="section" id="sequence-protection">
+<h2><a class="toc-backref" href="#id3">Sequence protection</a><a class="headerlink" href="#sequence-protection" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="pattern-insertion">
+<h2><a class="toc-backref" href="#id4">Pattern insertion</a><a class="headerlink" href="#pattern-insertion" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="cds-and-codon-optimization">
+<h2><a class="toc-backref" href="#id5">CDS and Codon optimization</a><a class="headerlink" href="#cds-and-codon-optimization" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="gc-content">
+<h2><a class="toc-backref" href="#id6">GC content</a><a class="headerlink" href="#gc-content" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="../notes.html"
+       title="previous chapter">← Notes</a>
+  </li>
+  <li class="next">
+    <a href="genbank_notes.html"
+       title="next chapter">Genbank usage notes →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
+</html>
