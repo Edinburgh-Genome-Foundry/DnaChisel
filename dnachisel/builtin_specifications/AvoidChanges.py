@@ -68,13 +68,8 @@ class AvoidChanges(Specification):
         else:  # self.location is not None:
             return self.location.extract_sequence(sequence)
 
-    def initialized_on_problem(self, problem, role):
+    def initialized_on_problem(self, problem, role=None):
         """Find out what sequence it is that we are supposed to conserve."""
-        # if self.location is None:
-        #     location = Location(0, len(problem.sequence), 1)
-        #     result = self.copy_with_changes(location=location)
-        # else:
-        #     result = self
         result = self._copy_with_full_span_if_no_location(problem)
 
         if self.target_sequence is None:
