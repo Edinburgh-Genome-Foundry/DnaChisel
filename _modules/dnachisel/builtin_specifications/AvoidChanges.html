@@ -143,6 +143,12 @@
           </li>
 
         
+          <li class="toctree-l1 "><a href="../../../ref/constraints_reports.html" class="reference internal ">Constraints reports</a>
+
+            
+          </li>
+
+        
           <li class="toctree-l1 "><a href="../../../ref/biotools.html" class="reference internal ">Biotools</a>
 
             
@@ -299,13 +305,8 @@
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># self.location is not None:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">extract_sequence</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">initialized_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">initialized_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Find out what sequence it is that we are supposed to conserve.&quot;&quot;&quot;</span>
-        <span class="c1"># if self.location is None:</span>
-        <span class="c1">#     location = Location(0, len(problem.sequence), 1)</span>
-        <span class="c1">#     result = self.copy_with_changes(location=location)</span>
-        <span class="c1"># else:</span>
-        <span class="c1">#     result = self</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_with_full_span_if_no_location</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_sequence</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

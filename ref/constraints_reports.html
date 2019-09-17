@@ -1,0 +1,396 @@
+
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Constraints reports</title>
+    
+      <link rel="stylesheet" href="../_static/pygments.css">
+      <link rel="stylesheet" href="../_static/theme.css">
+      <link rel="stylesheet" href="../_static/css/custom.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+
+      
+      <script src="../_static/theme-vendors.js"></script>
+      <script src="../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="next" title="Biotools" href="biotools.html" />
+  <link rel="prev" title="Reports" href="reports.html" /> 
+  </head>
+
+  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link  router-link-active">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link  router-link-active">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+<div class="nav-item">
+  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+     class="nav-link external">
+       Github <outboundlink/>
+  </a>
+</div>
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 "><a href="core_classes.html" class="reference internal ">Core Classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">Constraints reports</a>
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#module-dnachisel.reports.constraints_reports" class="reference internal">Constraints reports</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="cli.html" class="reference internal ">Command Line Interface</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../notes.html" class="reference internal ">Notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Using Genbanks</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../genbank/genbank_api.html" class="reference internal ">Genbank API</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../genbank/genbank_notes.html" class="reference internal ">Genbank usage notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+    <li>Constraints reports</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="reports.html"
+       title="previous chapter">← Reports</a>
+  </li>
+  <li class="next">
+    <a href="biotools.html"
+       title="next chapter">Biotools →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <div class="section" id="module-dnachisel.reports.constraints_reports">
+<span id="constraints-reports"></span><h1>Constraints reports<a class="headerlink" href="#module-dnachisel.reports.constraints_reports" title="Permalink to this headline">¶</a></h1>
+<p>Misc. plotting and reporting methods, some of which are really arbitrary.</p>
+<p>Here is a typical example of use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dnachisel.reports.constraint_reports</span> <span class="k">as</span> <span class="nn">cr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">cr</span><span class="o">.</span><span class="n">constraints_breaches_dataframe</span><span class="p">(</span><span class="n">constraints</span><span class="p">,</span> <span class="n">sequences</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataframe</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s2">&quot;output_breaches.xlsx&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="n">cr</span><span class="o">.</span><span class="n">records_from_breaches_dataframe</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">sequences</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cr</span><span class="o">.</span><span class="n">breaches_records_to_pdf</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="s1">&#39;output_breaches_plots.pdf&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="dnachisel.reports.constraints_reports.records_from_breaches_dataframe">
+<code class="sig-prename descclassname">dnachisel.reports.constraints_reports.</code><code class="sig-name descname">records_from_breaches_dataframe</code><span class="sig-paren">(</span><em class="sig-param">dataframe</em>, <em class="sig-param">sequences</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports.html#records_from_breaches_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.records_from_breaches_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate records with annotations indicating constraints breaches.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dataframe</strong></p>
+<blockquote>
+<div><p>A breaches dataframe returned by <code class="docutils literal notranslate"><span class="pre">constraints_breaches_dataframe</span></code></p>
+</div></blockquote>
+<p><strong>sequences</strong></p>
+<blockquote>
+<div><p>Either a list [(“name”, “sequence”)…] or a dict {“name”: “sequence”}
+or a list of biopython records whole id is the sequence name.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.reports.constraints_reports.breaches_records_to_pdf">
+<code class="sig-prename descclassname">dnachisel.reports.constraints_reports.</code><code class="sig-name descname">breaches_records_to_pdf</code><span class="sig-paren">(</span><em class="sig-param">breaches_records</em>, <em class="sig-param">pdf_path=None</em>, <em class="sig-param">logger='bar'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports.html#breaches_records_to_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.breaches_records_to_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots figures of the breaches annotated in the records into a PDF file.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>breaches_records</strong></p>
+<blockquote>
+<div><p>A least of records annotated with breaches, as returned by the</p>
+</div></blockquote>
+<p><strong>pdf_path</strong></p>
+<blockquote>
+<div><p>Either the path to a PDF, or a file handle (open in wb mode) or None
+for this method to return binary PDF data.</p>
+</div></blockquote>
+<p><strong>logger</strong></p>
+<blockquote>
+<div><p>Either “bar” for a progress bar, None for no logging, or any Proglog
+logger.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.reports.constraints_reports.constraints_breaches_dataframe">
+<code class="sig-prename descclassname">dnachisel.reports.constraints_reports.</code><code class="sig-name descname">constraints_breaches_dataframe</code><span class="sig-paren">(</span><em class="sig-param">constraints</em>, <em class="sig-param">sequences</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports.html#constraints_breaches_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.constraints_breaches_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dataframe summarizing constraints breaches in the sequences.</p>
+<p>Output dataframe schema (cst = constraint):</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 23%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>/</p></th>
+<th class="head"><p>Cst1</p></th>
+<th class="head"><p>Cst2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Seq1</p></td>
+<td><p>10-50(+)</p></td>
+<td><p>100-200(+), 300-350(+)</p></td>
+</tr>
+<tr class="row-odd"><td><p>seq2</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Seq3</p></td>
+<td><p>2-10(+)</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Seq4</p></td>
+<td></td>
+<td><p>500-1000(-)</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>constraints</strong></p>
+<blockquote>
+<div><p>A list of DNA Chisel Specifications.</p>
+</div></blockquote>
+<p><strong>sequences</strong></p>
+<blockquote>
+<div><p>Either a list [(“name”, “sequence”)…] or a dict {“name”: “sequence”}
+or a list of biopython records whole id is the sequence name.</p>
+</div></blockquote>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dnachisel</span> <span class="k">as</span> <span class="nn">dc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dnachisel.utils</span> <span class="k">import</span> <span class="n">constraints_breaches_dataframe</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sequences</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">(</span><span class="s2">&quot;SEQ 1&quot;</span><span class="p">,</span> <span class="s2">&quot;ATTGTGCATGTGACAC&quot;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">(</span><span class="s2">&quot;SEQ 2&quot;</span><span class="p">,</span> <span class="s2">&quot;ACATGTGTTGTGACAC&quot;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">(</span><span class="s2">&quot;SEQ 3&quot;</span><span class="p">,</span> <span class="s2">&quot;TTGTGCACACATGTGA&quot;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">dc</span><span class="o">.</span><span class="n">AvoidPattern</span><span class="p">(</span><span class="s1">&#39;ATTG&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">dc</span><span class="o">.</span><span class="n">EnforceGCContent</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">dc</span><span class="o">.</span><span class="n">AvoidNonUniqueSegments</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">constraints_breaches_dataframe</span><span class="p">(</span><span class="n">constraints</span><span class="p">,</span> <span class="n">sequences</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataframe</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s1">&#39;summary_spreadsheet.xlsx&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="reports.html"
+       title="previous chapter">← Reports</a>
+  </li>
+  <li class="next">
+    <a href="biotools.html"
+       title="next chapter">Biotools →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+  </div></body>
+</html>

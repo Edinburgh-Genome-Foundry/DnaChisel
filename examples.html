@@ -144,6 +144,12 @@
           </li>
 
         
+          <li class="toctree-l1 "><a href="ref/constraints_reports.html" class="reference internal ">Constraints reports</a>
+
+            
+          </li>
+
+        
           <li class="toctree-l1 "><a href="ref/biotools.html" class="reference internal ">Biotools</a>
 
             
@@ -262,6 +268,7 @@ code repository</p>
 <li><p><a class="reference internal" href="#creating-a-collection-of-compatible-primers" id="id8">Creating a collection of compatible primers</a></p></li>
 <li><p><a class="reference internal" href="#writing-a-custom-specification-9-mer-score" id="id9">Writing a custom Specification: 9-mer score</a></p></li>
 <li><p><a class="reference internal" href="#creating-a-sequence-without-e-coli-tf-binding-sites" id="id10">Creating a sequence without E. coli TF binding sites</a></p></li>
+<li><p><a class="reference internal" href="#constraints-reports-example" id="id11">Constraints reports example</a></p></li>
 </ul>
 </li>
 </ul>
@@ -578,6 +585,43 @@ code repository</p>
 <span class="p">)</span>
 <span class="n">problem</span><span class="o">.</span><span class="n">resolve_constraints</span><span class="p">()</span>
 <span class="n">problem</span><span class="o">.</span><span class="n">to_record</span><span class="p">(</span><span class="s2">&quot;sequence_without_tf_binding_sites.gb&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="constraints-reports-example">
+<h2><a class="toc-backref" href="#id11">Constraints reports example</a><a class="headerlink" href="#constraints-reports-example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dnachisel</span> <span class="k">as</span> <span class="nn">dc</span>
+<span class="kn">import</span> <span class="nn">dnachisel.reports.constraints_reports</span> <span class="k">as</span> <span class="nn">cr</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># IMPORT THE 10 RECORDS FROM THE genbanks/ FOLDER</span>
+
+<span class="n">records</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">load_record</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;genbanks&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&quot;genbanks&quot;</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="c1"># DEFINE THE CONSTRAINTS TO BE CHECKED ON EACH RECORD</span>
+
+<span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;BsaI_site&quot;</span><span class="p">),</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;BsmBI_site&quot;</span><span class="p">),</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;BbsI_site&quot;</span><span class="p">),</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;8x1mer&quot;</span><span class="p">),</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;5x3mer&quot;</span><span class="p">),</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;9x2mer&quot;</span><span class="p">),</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">AvoidHairpins</span><span class="p">(</span><span class="n">stem_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">hairpin_window</span><span class="o">=</span><span class="mi">200</span><span class="p">),</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">EnforceGCContent</span><span class="p">(</span><span class="n">mini</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="c1"># CREATE A SPREADSHEET AND PLOTS OF THE BREACHES</span>
+
+<span class="n">dataframe</span> <span class="o">=</span> <span class="n">cr</span><span class="o">.</span><span class="n">constraints_breaches_dataframe</span><span class="p">(</span><span class="n">constraints</span><span class="p">,</span> <span class="n">records</span><span class="p">)</span>
+<span class="n">dataframe</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s2">&quot;breaches.xlsx&quot;</span><span class="p">)</span>
+<span class="n">records</span> <span class="o">=</span> <span class="n">cr</span><span class="o">.</span><span class="n">records_from_breaches_dataframe</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">records</span><span class="p">)</span>
+<span class="n">cr</span><span class="o">.</span><span class="n">breaches_records_to_pdf</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="s2">&quot;breaches_plots.pdf&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done! Check breaches.xlsx and breaches_plots.pdf for results.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

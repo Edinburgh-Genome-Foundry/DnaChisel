@@ -143,6 +143,12 @@
           </li>
 
         
+          <li class="toctree-l1 "><a href="../../../ref/constraints_reports.html" class="reference internal ">Constraints reports</a>
+
+            
+          </li>
+
+        
           <li class="toctree-l1 "><a href="../../../ref/biotools.html" class="reference internal ">Biotools</a>
 
             
@@ -271,7 +277,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">boost</span> <span class="o">=</span> <span class="n">boost</span>
 
-    <span class="k">def</span> <span class="nf">initialized_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">initialized_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_with_full_span_if_no_location</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
         <span class="c1"># if self.location is None:</span>
         <span class="c1">#     location = Location(0, len(problem.sequence), 1)</span>

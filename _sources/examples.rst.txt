@@ -52,3 +52,8 @@ Creating a sequence without E. coli TF binding sites
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. literalinclude:: ../examples/scenarios/sequence_without_tf_binding_sites.py
+
+Constraints reports example
++++++++++++++++++++++++++++
+
+.. literalinclude:: ../examples/reports/constraints_breaches_report/constraints_breaches_report.py
