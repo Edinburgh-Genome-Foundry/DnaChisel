@@ -1,8 +1,8 @@
 """Misc. plotting and reporting methods, some of which are really arbitrary.
 
 
-Examples
---------
+Here is a typical example of use:
+
 >>> import dnachisel.reports.constraint_reports as cr
 >>> dataframe = cr.constraints_breaches_dataframe(constraints, sequences)
 >>> dataframe.to_excel("output_breaches.xlsx")
@@ -34,10 +34,7 @@ except ImportError:
     PANDAS_AVAILABLE = False
 
 from ..DnaOptimizationProblem import DnaOptimizationProblem
-from ..biotools import (
-    sequence_to_biopython_record,
-    annotate_record,
-)
+from ..biotools import sequence_to_biopython_record, annotate_record
 from ..builtin_specifications import (
     EnforceGCContent,
     AvoidPattern,
@@ -45,6 +42,7 @@ from ..builtin_specifications import (
 )
 from ..Location import Location
 from .colors_cycle import colors_cycle
+
 
 __all__ = [
     "records_from_breaches_dataframe",
@@ -103,7 +101,30 @@ def _breaches(constraint, sequence):
 
 
 def constraints_breaches_dataframe(constraints, sequences):
-    """
+    """Return a dataframe summarizing constraints breaches in the sequences.
+
+    Output dataframe schema (cst = constraint):
+
+    =====  ========  ======================
+      /    Cst1       Cst2
+    =====  ========  ======================
+    Seq1   10-50(+)  100-200(+), 300-350(+)
+    seq2   
+    Seq3   2-10(+)
+    Seq4             500-1000(-)
+    =====  ========  ======================
+
+
+    Parameters
+    ----------
+
+    constraints
+      A list of DNA Chisel Specifications.
+
+    sequences
+      Either a list [("name", "sequence")...] or a dict {"name": "sequence"}
+      or a list of biopython records whole id is the sequence name.
+
     Examples
     --------
 
@@ -120,6 +141,7 @@ def constraints_breaches_dataframe(constraints, sequences):
     >>>     dc.AvoidNonUniqueSegments(5)
     >>> ]
     >>> dataframe = constraints_breaches_dataframe(constraints, sequences)
+    >>> dataframe.to_excel('summary_spreadsheet.xlsx')
     """
     if not PANDAS_AVAILABLE:
         raise ImportError(_install_extras_message("Pandas"))
@@ -143,6 +165,19 @@ def constraints_breaches_dataframe(constraints, sequences):
 
 
 def records_from_breaches_dataframe(dataframe, sequences):
+    """Generate records with annotations indicating constraints breaches.
+    
+    Parameters
+    ----------
+
+    dataframe
+      A breaches dataframe returned by ``constraints_breaches_dataframe``
+    
+    sequences
+      Either a list [("name", "sequence")...] or a dict {"name": "sequence"}
+      or a list of biopython records whole id is the sequence name.
+
+    """
     records = _sequences_to_new_records(sequences)
     for record in records:
         record.features = [
@@ -197,12 +232,28 @@ def plot_breaches_record(record, ax=None):
     return ax
 
 
-def breaches_records_to_pdf(records, pdf_path=None, logger='bar'):
+def breaches_records_to_pdf(breaches_records, pdf_path=None, logger="bar"):
+    """Plots figures of the breaches annotated in the records into a PDF file.
+    
+    Parameters
+    ----------
+
+    breaches_records
+      A least of records annotated with breaches, as returned by the
+    
+    pdf_path
+      Either the path to a PDF, or a file handle (open in wb mode) or None
+      for this method to return binary PDF data.
+    
+    logger
+      Either "bar" for a progress bar, None for no logging, or any Proglog
+      logger.
+    """
     pdf_io = BytesIO() if pdf_path is None else pdf_path
     logger = proglog.default_bar_logger(logger, min_time_interval=0.2)
 
     with PdfPages(pdf_io) as pdf:
-        for record in logger.iter_bar(sequence=records):
+        for record in logger.iter_bar(sequence=breaches_records):
             ax = plot_breaches_record(record)
             pdf.savefig(ax.figure, bbox_inches="tight")
             plt.close(ax.figure)

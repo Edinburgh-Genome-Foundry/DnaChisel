@@ -11,6 +11,7 @@
 
    ref/core_classes
    ref/reports
+   ref/constraints_reports
    ref/biotools
    ref/builtin_specifications
    ref/cli
