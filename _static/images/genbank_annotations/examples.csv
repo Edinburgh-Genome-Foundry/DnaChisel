@@ -16,9 +16,9 @@ cds_enforce,@EnforceTranslation,2-23,CAATGCACACATCGATTCATCACTCAT,none
 codon_optimize,~CodonOptimize(e_coli),2-23,CAATGCACACATCGATTCATCACTCAT,none
 allow_primer,"@AllowPrimer(tmin=50, tmax=70)",2-24,CAATGCACACATCGATTCATCACTCAT,none
 avoid_non_unique_segments,@AvoidNonUniqueSegments(6),2-24,CAATGCACACATCGATTCATGCACATT,"3-8, 19-24"
-choice,@choice(ATG|TTA|CGT),2-24,CAATGCACACATCGATTCATGCACATT,none
+choice,@choice(ATG|TTA|CGT),1-4,CCATT,none
 enforce_melting,@tm(50-70C),2-24,CAATGCACACATCGATTCATGCACATT,none
 enforce_melting_obj,~tm(55C),2-24,CAATGCACACATCGATTCATGCACATT,none
-avoid_blast,"@AvoidBlastMatches(e_coli, min_align_length=20)",2-24,CAATGCACACATCGATTCATGCACATT,none
+avoid_blast,"@AvoidBlastMatches(e_coli, min_align_length=20)",1-26,CAATGCACACATCGATTCATGCACATT,none
 enforce_sequence,@sequence(KGTCTCNATGC),2-13,CATCGATTCATGCACATT,none
 myspec,"@MySpecification(ATG, param2=65)",2-24,CAATGCACACATCGATTCATGCACATT,none

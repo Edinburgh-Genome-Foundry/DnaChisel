@@ -243,7 +243,7 @@
     <span class="n">CODONS_TRANSLATIONS</span><span class="p">,</span>
     <span class="n">CODONS_SEQUENCES</span><span class="p">,</span>
     <span class="n">group_nearby_indices</span><span class="p">,</span>
-    <span class="n">dict_to_pretty_string</span>
+    <span class="n">dict_to_pretty_string</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..Location</span> <span class="k">import</span> <span class="n">Location</span>
 
@@ -311,11 +311,11 @@
 <span class="sd">      provided instead</span>
 
 <span class="sd">    mode</span>
-<span class="sd">      Either &#39;best_codon&#39; or &#39;harmonized&#39;. For &#39;best_codon&#39;, the optimization</span>
-<span class="sd">      will always replace a codon with the most-frequent triplet possible.</span>
-<span class="sd">      For &#39;harmonized&#39;, the optimization will bring the relative frequencies of</span>
-<span class="sd">      the different triplets as close as possible to the frequencies in the</span>
-<span class="sd">      reference species.</span>
+<span class="sd">      Either &#39;best_codon&#39; or &#39;harmonized_frequencies&#39;. For &#39;best_codon&#39;, the</span>
+<span class="sd">      optimization will always replace a codon with the most-frequent triplet</span>
+<span class="sd">      possible. For &#39;harmonized_frequencies&#39;, the optimization will bring the</span>
+<span class="sd">      relative frequencies of the different triplets as close as possible to</span>
+<span class="sd">      the frequencies in the reference species.</span>
 
 <span class="sd">    location</span>
 <span class="sd">      Either a DnaChisel Location or a tuple of the form (start, end, strand)</span>
@@ -396,7 +396,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;best_codon&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_best_codon</span><span class="p">,</span>
-            <span class="s2">&quot;harmonized&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_harmonized</span><span class="p">,</span>
+            <span class="s2">&quot;harmonized_frequencies&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_harmonized_frequencies</span><span class="p">,</span>
         <span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">](</span><span class="n">problem</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">codon_harmonization_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">):</span>
@@ -500,8 +500,8 @@
             <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">score</span><span class="p">),</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">evaluate_harmonized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the evaluation for mode == harmonized.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">evaluate_harmonized_frequencies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the evaluation for mode == harmonized_frequencies.&quot;&quot;&quot;</span>
         <span class="n">subsequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">extract_sequence</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
         <span class="n">score</span><span class="p">,</span> <span class="n">nonoptimal_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codon_harmonization_stats</span><span class="p">(</span><span class="n">subsequence</span><span class="p">)</span>
         <span class="n">locations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codons_indices_to_locations</span><span class="p">(</span><span class="n">nonoptimal_indices</span><span class="p">)</span>
@@ -517,7 +517,7 @@
 
     <span class="k">def</span> <span class="nf">localized_on_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_location</span><span class="p">,</span> <span class="n">start_codon</span><span class="p">,</span> <span class="n">end_codon</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Relocate without changing much.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;harmonized&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;harmonized_frequencies&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span>

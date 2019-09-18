@@ -199,6 +199,12 @@
                 
                   <li class="toctree-l2"><a href="#gc-content" class="reference internal">GC content</a></li>
                 
+                  <li class="toctree-l2"><a href="#removing-homologies" class="reference internal">Removing homologies</a></li>
+                
+                  <li class="toctree-l2"><a href="#primer-friendly-segments" class="reference internal">Primer-friendly segments</a></li>
+                
+                  <li class="toctree-l2"><a href="#specifications-not-yet-supported-as-genbank-annotations" class="reference internal">Specifications not yet supported as Genbank annotations</a></li>
+                
               </ul>
             
           </li>
@@ -270,6 +276,9 @@ DNA chisel.</p>
 <li><p><a class="reference internal" href="#pattern-insertion" id="id4">Pattern insertion</a></p></li>
 <li><p><a class="reference internal" href="#cds-and-codon-optimization" id="id5">CDS and Codon optimization</a></p></li>
 <li><p><a class="reference internal" href="#gc-content" id="id6">GC content</a></p></li>
+<li><p><a class="reference internal" href="#removing-homologies" id="id7">Removing homologies</a></p></li>
+<li><p><a class="reference internal" href="#primer-friendly-segments" id="id8">Primer-friendly segments</a></p></li>
+<li><p><a class="reference internal" href="#specifications-not-yet-supported-as-genbank-annotations" id="id9">Specifications not yet supported as Genbank annotations</a></p></li>
 </ul>
 </li>
 </ul>
@@ -299,15 +308,89 @@ eliminated, but its number of occurences will be minimized by the algorithm:</p>
 src='../_static/images/genbank_annotations/avoid_pattern_cg_obj.png'></img></div>
 <div class="section" id="sequence-protection">
 <h2><a class="toc-backref" href="#id3">Sequence protection</a><a class="headerlink" href="#sequence-protection" title="Permalink to this headline">¶</a></h2>
-</div>
+<p>To prevent sections of the sequence to be modified, use <code class="docutils literal notranslate"><span class="pre">&#64;keep</span></code> (alias for
+<code class="docutils literal notranslate"><span class="pre">&#64;AvoidChanges</span></code>):</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/keep.png'></img><p>You can also use <code class="docutils literal notranslate"><span class="pre">keep</span></code> as an optimization objective, at which case sequence
+modifications will not be strictly forbidden, but they will be minimized:</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/keep_obj.png'></img></div>
 <div class="section" id="pattern-insertion">
 <h2><a class="toc-backref" href="#id4">Pattern insertion</a><a class="headerlink" href="#pattern-insertion" title="Permalink to this headline">¶</a></h2>
-</div>
+<p>You can control how many times a pattern should appear in a sequence region
+with the <code class="docutils literal notranslate"><span class="pre">&#64;insert()</span></code> specification (short form of <code class="docutils literal notranslate"><span class="pre">&#64;EnforcePatternOccurence</span></code>):</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/insert.png'></img><p>By default <code class="docutils literal notranslate"><span class="pre">&#64;insert()</span></code> ensures that exactly one occurence of the pattern is
+present in the given region, but it can also be used to create more occurences:</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/insert_several.png'></img><p>This specification can be used both to create new patterns in a region that
+contains too few, or to decrease the pattern occurences i a region that contains
+too many. Note that with the current algorithm, new occurences of the pattern
+will be be preferentially placed towards the center of the selected region.</p>
+<p>You can also enforce a sequence (or degenerate sequence) at an exact location
+with <code class="docutils literal notranslate"><span class="pre">&#64;sequence</span></code> (short for <code class="docutils literal notranslate"><span class="pre">&#64;EnforceSequence</span></code>):</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/enforce_sequence.png'></img><p>To enforce several same-length but quite different sequences, use
+<code class="docutils literal notranslate"><span class="pre">&#64;choice</span></code> (short for <code class="docutils literal notranslate"><span class="pre">&#64;EnforceChoice</span></code>):</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/choice.png'></img></div>
 <div class="section" id="cds-and-codon-optimization">
 <h2><a class="toc-backref" href="#id5">CDS and Codon optimization</a><a class="headerlink" href="#cds-and-codon-optimization" title="Permalink to this headline">¶</a></h2>
+<p>To indicate that a region is a CDS and the protein sequence should be conserved
+(i.e. only synonymous codon mutations are allowed), use &#64;cds (short for
+&#64;EnforceTranslation) on a region whose span is a multiple of 3:</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/cds.png'></img><p>To codon-optimize a gene use <code class="docutils literal notranslate"><span class="pre">~CodonOptimize()</span></code>:</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/codon_optimize.png'></img><p>See <a class="reference external" href="https://github.com/Edinburgh-Genome-Foundry/codon-usage-tables/tree/master/codon_usage_data/tables">the Codon Tables package webpage</a>
+for species that can be referred to by name. This includes <code class="docutils literal notranslate"><span class="pre">b_subtilis</span></code>,
+<code class="docutils literal notranslate"><span class="pre">c_elegans</span></code>, <code class="docutils literal notranslate"><span class="pre">d_melanogaster</span></code>, <code class="docutils literal notranslate"><span class="pre">e_coli</span></code>, <code class="docutils literal notranslate"><span class="pre">g_gallus</span></code>, <code class="docutils literal notranslate"><span class="pre">h_sapiens</span></code>,
+<code class="docutils literal notranslate"><span class="pre">m_musculus</span></code>, <code class="docutils literal notranslate"><span class="pre">s_cerevisiae</span></code>. You can also use a TaxID to refer to a species,
+e.g. <code class="docutils literal notranslate"><span class="pre">species=1423</span></code> at which case the codon frequencies will be downloaded from
+the <a class="reference external" href="https://www.kazusa.or.jp/codon/">Kazusa codon usage database</a>, assuming it not down.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Always use with &#64;cds</p>
+<p>If the CodonOptimize specification is used without a &#64;cds constraint covering
+the same region, then the protein sequence is not guaranteed!</p>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Codon optimization method</p>
+<p>By default, the optimization will replace every codon by the most-frequent codon.
+Use <code class="docutils literal notranslate"><span class="pre">method=harmonized_frequencies</span></code> for an optimization method where the
+codons frequency of each amino-acid will reflect the frequencies in the target organism</p>
+</div>
 </div>
 <div class="section" id="gc-content">
 <h2><a class="toc-backref" href="#id6">GC content</a><a class="headerlink" href="#gc-content" title="Permalink to this headline">¶</a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">&#64;gc</span></code> to ensure that a given region’s GC content is between a
+certain range</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/gc_range.png'></img><p>For large regions, you can use a windowed evaluation, e.g. with the parameter
+<code class="docutils literal notranslate"><span class="pre">window=100</span></code> to ensure that the GC content will remain in the desired range
+over every 100bp subsegments of the sequence.</p>
+<p>The specification can also be used as an optimization objective, at which case
+it is preferable to provide a target rather than a range:</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/gc_target.png'></img></div>
+<div class="section" id="removing-homologies">
+<h2><a class="toc-backref" href="#id7">Removing homologies</a><a class="headerlink" href="#removing-homologies" title="Permalink to this headline">¶</a></h2>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/avoid_non_unique_segments.png'></img><img class='annotation-example'
+src='../_static/images/genbank_annotations/avoid_blast.png'></img></div>
+<div class="section" id="primer-friendly-segments">
+<h2><a class="toc-backref" href="#id8">Primer-friendly segments</a><a class="headerlink" href="#primer-friendly-segments" title="Permalink to this headline">¶</a></h2>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/enforce_melting.png'></img><img class='annotation-example'
+src='../_static/images/genbank_annotations/enforce_melting_obj.png'></img><img class='annotation-example'
+src='../_static/images/genbank_annotations/allow_primer.png'></img></div>
+<div class="section" id="specifications-not-yet-supported-as-genbank-annotations">
+<h2><a class="toc-backref" href="#id9">Specifications not yet supported as Genbank annotations</a><a class="headerlink" href="#specifications-not-yet-supported-as-genbank-annotations" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>AvoidHeterodimerization</p></li>
+<li><p>EnforceRegionsCompatibility</p></li>
+</ul>
 </div>
 </div>
 
