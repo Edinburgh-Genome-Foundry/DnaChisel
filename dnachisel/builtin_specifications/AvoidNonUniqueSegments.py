@@ -68,7 +68,7 @@ class AvoidNonUniqueSegments(Specification):
     specification may not work as a problem constraint, but will work as a
     problem optimization objective.
 
-    You can define a location L and an extended location L* (by default they
+    You can define a location L and an reference L* (by default they
     are both the full sequence)
 
     >>>          [=== L ===]
@@ -119,8 +119,8 @@ class AvoidNonUniqueSegments(Specification):
     def __init__(
         self,
         min_length,
+        reference=None,
         location=None,
-        extended_location=None,
         include_reverse_complement=True,
         boost=1.0,
         localization_data=None,
@@ -130,9 +130,11 @@ class AvoidNonUniqueSegments(Specification):
         if isinstance(location, tuple):
             location = Location.from_tuple(location)
         self.location = location
-        if isinstance(extended_location, tuple):
-            extended_location = Location.from_tuple(extended_location)
-        self.extended_location = extended_location
+        if reference in ['here', 'same']:
+            reference = location
+        if isinstance(reference, tuple):
+            reference = Location.from_tuple(reference)
+        self.reference = reference
         self.include_reverse_complement = include_reverse_complement
         self.boost = 1.0
         self.localization_data = localization_data
@@ -145,9 +147,9 @@ class AvoidNonUniqueSegments(Specification):
             return default if location is None else location
 
         location = location_or_default(self.location)
-        extended_location = location_or_default(self.extended_location)
+        reference = location_or_default(self.reference)
         return self.copy_with_changes(
-            location=location, extended_location=extended_location
+            location=location, reference=reference
         )
 
     def evaluate(self, problem):
@@ -225,7 +227,7 @@ class AvoidNonUniqueSegments(Specification):
     def global_evaluation(self, problem):
         extract_kmer = self.get_kmer_extractor(problem.sequence)
         kmers_locations = defaultdict(lambda: [])
-        start, end = self.extended_location.start, self.extended_location.end
+        start, end = self.reference.start, self.reference.end
         for i in range(start, end - self.min_length):
             location = (i, i + self.min_length)
             kmer_sequence = extract_kmer(i)
@@ -262,21 +264,21 @@ class AvoidNonUniqueSegments(Specification):
     def localized(self, location, problem=None, with_righthand=True):
         """Localize the evaluation."""
 
-        if location.overlap_region(self.extended_location) is None:
+        if location.overlap_region(self.reference) is None:
             return None
         if problem is None:
             return self
         extract_kmer = self.get_kmer_extractor(problem.sequence)
         k = self.min_length
-        extended_location = location.extended(k - 1, right=with_righthand)
-        changing_kmers_zone = extended_location.overlap_region(
-            self.extended_location
+        reference = location.extended(k - 1, right=with_righthand)
+        changing_kmers_zone = reference.overlap_region(
+            self.reference
         )
         changing_kmer_indices = set(changing_kmers_zone.indices[: -k + 1])
         localization_data = {}
         for loc, label in [
             (self.location, "location"),
-            (self.extended_location, "extended"),
+            (self.reference, "extended"),
         ]:
             kmer_indices = set(loc.indices[: -self.min_length])
             fixed_kmer_indices = kmer_indices.difference(changing_kmer_indices)
@@ -295,17 +297,17 @@ class AvoidNonUniqueSegments(Specification):
 
     def shifted(self, shift):
         """Shift the location of the specification.
-        This will also shift the extended location.
+        This will also shift the reference.
         """
         new_location = None if self.location is None else self.location + shift
-        extended_location = (
+        reference = (
             None
-            if self.extended_location is None
-            else self.extended_location + shift
+            if self.reference is None
+            else self.reference + shift
         )
         return self.copy_with_changes(
             location=new_location,
-            extended_location=extended_location,
+            reference=reference,
             derived_from=self,
         )
 

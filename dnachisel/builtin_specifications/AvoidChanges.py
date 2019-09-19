@@ -72,7 +72,9 @@ class AvoidChanges(Specification):
         """Find out what sequence it is that we are supposed to conserve."""
         result = self._copy_with_full_span_if_no_location(problem)
 
-        if self.target_sequence is None:
+        if self.target_sequence is None or (
+            len(self.target_sequence) < len(problem.sequence)
+        ):
             result = result.copy_with_changes()
             result.target_sequence = self.extract_subsequence(problem.sequence)
         return result

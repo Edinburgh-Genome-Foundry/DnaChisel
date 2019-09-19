@@ -128,7 +128,7 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
 
     def optimize(self):
         problem = self._circularized_view(
-            self, with_constraints=True, with_objectives=True
+            with_constraints=True, with_objectives=True
         )
         problem.optimize()
         L = len(self.sequence)

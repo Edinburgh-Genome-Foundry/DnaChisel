@@ -6,7 +6,7 @@ from ..biotools import (
     CODONS_TRANSLATIONS,
     CODONS_SEQUENCES,
     group_nearby_indices,
-    dict_to_pretty_string
+    dict_to_pretty_string,
 )
 from ..Location import Location
 
@@ -74,11 +74,11 @@ class CodonOptimize(CodonSpecification):
       provided instead
 
     mode
-      Either 'best_codon' or 'harmonized'. For 'best_codon', the optimization
-      will always replace a codon with the most-frequent triplet possible.
-      For 'harmonized', the optimization will bring the relative frequencies of
-      the different triplets as close as possible to the frequencies in the
-      reference species.
+      Either 'best_codon' or 'harmonized_frequencies'. For 'best_codon', the
+      optimization will always replace a codon with the most-frequent triplet
+      possible. For 'harmonized_frequencies', the optimization will bring the
+      relative frequencies of the different triplets as close as possible to
+      the frequencies in the reference species.
 
     location
       Either a DnaChisel Location or a tuple of the form (start, end, strand)
@@ -159,7 +159,7 @@ class CodonOptimize(CodonSpecification):
         """
         return {
             "best_codon": self.evaluate_best_codon,
-            "harmonized": self.evaluate_harmonized,
+            "harmonized_frequencies": self.evaluate_harmonized_frequencies,
         }[self.mode](problem)
 
     def codon_harmonization_stats(self, sequence):
@@ -263,8 +263,8 @@ class CodonOptimize(CodonSpecification):
             % (self.location, score),
         )
 
-    def evaluate_harmonized(self, problem):
-        """Return the evaluation for mode == harmonized."""
+    def evaluate_harmonized_frequencies(self, problem):
+        """Return the evaluation for mode == harmonized_frequencies."""
         subsequence = self.location.extract_sequence(problem.sequence)
         score, nonoptimal_indices = self.codon_harmonization_stats(subsequence)
         locations = self.codons_indices_to_locations(nonoptimal_indices)
@@ -280,7 +280,7 @@ class CodonOptimize(CodonSpecification):
 
     def localized_on_window(self, new_location, start_codon, end_codon):
         """Relocate without changing much."""
-        if self.mode == "harmonized":
+        if self.mode == "harmonized_frequencies":
             return self
         else:
             return self.__class__(
