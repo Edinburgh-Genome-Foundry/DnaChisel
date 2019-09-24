@@ -72,6 +72,10 @@ class AvoidChanges(Specification):
         """Find out what sequence it is that we are supposed to conserve."""
         result = self._copy_with_full_span_if_no_location(problem)
 
+        # Initialize the "target_sequence" in two cases:
+        # - Always at the very beginning
+        # - When the new sequence is bigger than the previous one
+        #   (used in CircularDnaOptimizationProblem)
         if self.target_sequence is None or (
             len(self.target_sequence) < len(problem.sequence)
         ):

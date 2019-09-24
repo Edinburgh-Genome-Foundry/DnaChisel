@@ -123,7 +123,7 @@ class DnaOptimizationProblem:
 
     randomization_threshold = 10000
     max_random_iters = 1000
-    n_mutations = 2
+    mutations_per_iteration = 2
     local_extensions = (0, 5)
 
     def __init__(
@@ -189,6 +189,7 @@ class DnaOptimizationProblem:
 
     @property
     def constraints_before(self):
+        """"""
         if self._constraints_before is None:
             sequence = self.sequence
             self.sequence = self.sequence_before
@@ -258,7 +259,7 @@ class DnaOptimizationProblem:
         """Solve all constraints by successive sets of random mutations.
 
         This method modifies the canvas sequence by applying a number
-        ``n_mutations`` of random mutations. The constraints are then evaluated
+        ``mutations_per_iteration`` of random mutations. The constraints are then evaluated
         on the new sequence. If all constraints pass, the new sequence becomes
         the canvas's new sequence.
         If not all constraints pass, the sum of all scores from failing
@@ -281,7 +282,8 @@ class DnaOptimizationProblem:
                 return
             previous_sequence = self.sequence
             self.sequence = self.mutation_space.apply_random_mutations(
-                n_mutations=self.n_mutations, sequence=self.sequence
+                n_mutations=self.mutations_per_iteration,
+                sequence=self.sequence,
             )
 
             evaluations = self.constraints_evaluations()
@@ -391,7 +393,9 @@ class DnaOptimizationProblem:
                     self.randomization_threshold
                 )
                 local_problem.max_random_iters = self.max_random_iters
-                local_problem.n_mutations = self.n_mutations
+                local_problem.mutations_per_iteration = (
+                    self.mutations_per_iteration
+                )
                 try:
                     if hasattr(constraint, "resolution_heuristic"):
                         constraint.resolution_heuristic(local_problem)
@@ -549,7 +553,8 @@ class DnaOptimizationProblem:
 
             previous_sequence = self.sequence
             self.sequence = self.mutation_space.apply_random_mutations(
-                n_mutations=self.n_mutations, sequence=self.sequence
+                n_mutations=self.mutations_per_iteration,
+                sequence=self.sequence,
             )
             if self.all_constraints_pass():
                 new_score = self.objective_scores_sum()
@@ -611,7 +616,9 @@ class DnaOptimizationProblem:
                 self.randomization_threshold
             )
             local_problem.max_random_iters = self.max_random_iters
-            local_problem.n_mutations = self.n_mutations
+            local_problem.mutations_per_iteration = (
+                self.mutations_per_iteration
+            )
             if hasattr(objective, "optimization_heuristic"):
                 objective.optimization_heuristic(local_problem)
             else:
