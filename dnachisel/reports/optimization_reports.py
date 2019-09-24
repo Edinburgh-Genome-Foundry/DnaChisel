@@ -214,27 +214,27 @@ def write_optimization_report(target, problem, project_name="unnammed",
     target
       Path to a directory or zip file, or "@memory" for returning raw data of
       a zip file created in-memory.
-    
+
     problem
       A DnaOptimizationProblem to be solved and optimized
-    
+
     project_name
       Name of the project that will appear on the PDF report
-    
+
     constraints_evaluations
       Precomputed constraints evaluations. If None provided, they will be
       computed again from the problem.
-    
+
     objectives_evaluations
       Precomputed objectives evaluations. If None provided, they will be
       computed again from the problem.
-      
     
+
     figure_width
       Width of the report's figure, in inches. The more annotations there will
       be in the figure, the wider it should be. The default should work for
       most cases.
-    
+
     max_features_in_plots
       Limit to the number of features to plot (plots with thousands of features
       may take ages to plot)

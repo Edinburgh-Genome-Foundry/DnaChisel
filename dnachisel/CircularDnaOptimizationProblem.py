@@ -2,7 +2,11 @@
 sequences. Needs more docs. See example in the examples folder.
 """
 
-from .DnaOptimizationProblem import DnaOptimizationProblem
+from .DnaOptimizationProblem import DnaOptimizationProblem, NoSolutionError
+from .reports.optimization_reports import (
+    write_optimization_report,
+    write_no_solution_report,
+)
 from .Location import Location
 
 
@@ -10,6 +14,7 @@ class CircularViewProblem(DnaOptimizationProblem):
     """Class representing an optimization problem as the concatenation of 3
     times the same sequence and specifications, in order to model the
     circularity of the DNA sequence"""
+
     def change_sequence(self, new_sequence):
         L = len(new_sequence) // 3
 
@@ -40,6 +45,7 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
     The high-level interface is the same as for DnaOptimizationProblem:
     initialization, resolve_constraints(), and optimize() work the same way.
     """
+
     def _circularized_specs(self, specs, central_specs_only=False):
         L = len(self.sequence)
         new_specs = []
@@ -109,7 +115,7 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
 
     def objectives_evaluations(self):
         circularized = self._circularized_view(
-            self, with_objectives=True, central_specs_only=False
+            with_objectives=True, central_specs_only=False
         )
         evals = circularized.objectives_evaluations()
         return self._recentered_evaluations(evals)
@@ -121,7 +127,7 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
         for c in problem.constraints:
             if c.location.overlap_region(central_loc) is not None:
                 problem.resolve_constraint(c)
-        
+
         self.sequence = problem.sequence[L : 2 * L]
         if final_check:
             self.perform_final_check()
@@ -135,8 +141,60 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
         self.sequence = problem.sequence[L : 2 * L]
 
     def optimize_with_report(self, target, project_name="My project"):
-        problem = self._circularized_view(
-            with_constraints=True, with_objectives=True
+        """Resolve constraints, optimize objectives, write a multi-file report.
+
+        WARNING: in case of optimization failure, the report generated will
+        show a "pseudo-circular" sequence formed by concatenating the sequence
+        with itself three times.
+        
+        TODO: fix the warning above, at some point?
+
+        The report's content may vary depending on the optimization's success.
+
+        Parameters
+        ----------
+
+        target
+          Either a path to a folder that will containt the report, or a path to
+          a zip archive, or "@memory" to return raw data of a zip archive
+          containing the report.
+
+        project_name
+          Project name to write on PDF reports
+
+        **solver_parameters
+          Extra keyword arguments passed to ``problem.resolve_constraints()``
+
+        Returns
+        -------
+
+        (success, message, zip_data)
+          Triplet where success is True/False, message is a one-line string
+          summary indication whether some clash was found, or some solution, or
+          maybe no solution was found because the random searches were too
+          short
+        """
+        self.logger(message="Solving constraints")
+        try:
+            self.resolve_constraints()
+        except NoSolutionError as error:
+            problem = self._circularized_view(
+                with_constraints=True, with_objectives=True
+            )
+            self.logger(message="No solution found: making report")
+            data = write_no_solution_report(target, problem, error)
+            start, end, s = error.location.to_tuple()
+            message = "No solution found in zone [%d, %d]: %s." % (
+                start,
+                end,
+                str(error),
+            )
+            return False, message, data
+        self.logger(message="Now optimizing the sequence")
+        self.optimize()
+        self.logger(message="Success! Generating report.")
+        data = write_optimization_report(
+            target, self, project_name=project_name
         )
-        return problem.optimize_with_report(target, project_name=project_name)
+        return True, "Optimization successful.", data
 
