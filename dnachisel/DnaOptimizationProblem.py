@@ -121,9 +121,22 @@ class DnaOptimizationProblem:
     e.g. for the mutation of a whole codon ``(3,6): ["ATT", "ACT", "AGT"]``.
     """
 
+    # If a local problem admits more than N variants, use a random search:
     randomization_threshold = 10000
+
+    # When using a random search, stop after N iterations
     max_random_iters = 1000
+
+    # When using a random search, produce N sequence mutations each iteration
     mutations_per_iteration = 2
+
+    # When using a random search for optimization, stop if the score hasn't
+    # improved in the last N iterations
+    optimization_stagnation_tolerance = 100
+    
+    #Try local resolution several times if it fails, increasing the mutable zone
+    # by [N1, N2...] nucleotides on each side, until it works
+    # (by default, an extension of 0bp is tried, then 5bp.
     local_extensions = (0, 5)
 
     def __init__(
@@ -523,7 +536,6 @@ class DnaOptimizationProblem:
     def optimize_by_random_mutations(self):
         """
         """
-
         if not self.all_constraints_pass():
             summary = self.constraints_text_summary()
             raise ValueError(
@@ -544,11 +556,16 @@ class DnaOptimizationProblem:
         else:
             best_possible_score = None
         iters = self.max_random_iters
+        stagnating_iterations = 0
         for iteration in self.logger.iter_bar(mutation=range(iters)):
             if (best_possible_score is not None) and (
                 score >= best_possible_score
             ):
                 self.logger(mutation__index=iters)
+                break
+            if (self.optimization_stagnation_tolerance is not None) and (
+                stagnating_iterations > self.optimization_stagnation_tolerance
+            ):
                 break
 
             previous_sequence = self.sequence
@@ -560,11 +577,12 @@ class DnaOptimizationProblem:
                 new_score = self.objective_scores_sum()
                 if new_score > score:
                     score = new_score
+                    stagnating_iterations = 0
                 else:
                     self.sequence = previous_sequence
             else:
                 self.sequence = previous_sequence
-        #  assert self.all_constraints_pass()
+            stagnating_iterations += 1
 
     def optimize_objective(self, objective):
 
@@ -616,6 +634,8 @@ class DnaOptimizationProblem:
                 self.randomization_threshold
             )
             local_problem.max_random_iters = self.max_random_iters
+            local_problem.optimization_stagnation_tolerance = \
+                    self.optimization_stagnation_tolerance
             local_problem.mutations_per_iteration = (
                 self.mutations_per_iteration
             )

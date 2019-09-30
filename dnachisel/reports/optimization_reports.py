@@ -7,20 +7,26 @@ from Bio import SeqIO
 
 import flametree
 
-from ..biotools import (sequence_to_biopython_record,
-                        find_specification_in_feature)
+from ..biotools import (
+    sequence_to_biopython_record,
+    find_specification_in_feature,
+)
 from ..version import __version__
+
 
 def install_extras_message(libname):
     return (
         "Could not load %s (is it installed ?). You can install it separately "
         " with:  pip install %s\n\n"
         "Install all dependencies for generating DNA Chisel reports with:"
-        "\n\npip install dnachisel[reports]" % (
-            libname, libname.lower().replace(" ", "_")))
+        "\n\npip install dnachisel[reports]"
+        % (libname, libname.lower().replace(" ", "_"))
+    )
+
 
 try:
     from sequenticon import sequenticon
+
     SEQUENTICON_AVAILABLE = True
 except:
     SEQUENTICON_AVAILABLE = False
@@ -30,17 +36,23 @@ try:
     import matplotlib.cm as cm
     import matplotlib.pyplot as plt
     from matplotlib.backends.backend_pdf import PdfPages
+
     MATPLOTLIB_AVAILABLE = True
     from dna_features_viewer import BiopythonTranslator
+
     DFV_AVAILABLE = True
 except ImportError:
+
     class BiopythonTranslator:
         "Class unavailable. Install DNA Features Viewer."
+
         def __init__(self):
             raise ImportError(install_extras_message("DNA Features Viewer"))
 
+
 try:
     from geneblocks import DiffBlocks
+
     GENEBLOCKS_AVAILABLE = True
 except:
     GENEBLOCKS_AVAILABLE = False
@@ -48,10 +60,13 @@ except:
 try:
     from pdf_reports import ReportWriter
     import pdf_reports.tools as pdf_tools
+
     PDF_REPORTS_AVAILABLE = True
 except:
+
     def ReportWriter(*a, **kw):
         return None
+
     PDF_REPORTS_AVAILABLE = False
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -59,15 +74,17 @@ ASSETS_DIR = os.path.join(THIS_DIR, "assets")
 TITLE_FONTDICT = fontdict = dict(size=14, weight="bold")
 
 report_writer = ReportWriter(
-    dnachisel_logo_url=os.path.join(ASSETS_DIR, 'logo.png'),
+    dnachisel_logo_url=os.path.join(ASSETS_DIR, "logo.png"),
     version=__version__,
-    default_stylesheets=(os.path.join(ASSETS_DIR, "style.css"),)
+    default_stylesheets=(os.path.join(ASSETS_DIR, "style.css"),),
 )
 
-install_reports_extra_message =(
+install_reports_extra_message = (
     "Could not load %s (is it installed ?). You can install all "
     "dependencies for generating reports in DNA Chisel with this command:\n\n "
-    "pip install dnachisel[reports]")
+    "pip install dnachisel[reports]"
+)
+
 
 class SpecAnnotationsTranslator(BiopythonTranslator):
     """Translator of DnaChisel feature-constraints for DNA Features Viewer"""
@@ -82,13 +99,13 @@ class SpecAnnotationsTranslator(BiopythonTranslator):
     def compute_filtered_features(self, features):
         """Do not display edits."""
         return [
-            feature for feature in features
-            if "".join(feature.qualifiers.get("is_edit", "false")) != 'true'
+            feature
+            for feature in features
+            if "".join(feature.qualifiers.get("is_edit", "false")) != "true"
         ]
 
-
     def compute_feature_color(self, f):
-        color = f.qualifiers.get('color', None)
+        color = f.qualifiers.get("color", None)
         if color is not None:
             if isinstance(color, list):
                 color = color[0]
@@ -99,8 +116,9 @@ class SpecAnnotationsTranslator(BiopythonTranslator):
             if specification is None:
                 return "#f4df42"
             else:
-                return self.feature_prefixes_colors.get(specification[0],
-                                                        "#f4df42")
+                return self.feature_prefixes_colors.get(
+                    specification[0], "#f4df42"
+                )
         else:
             return "#eeeafa"
 
@@ -113,6 +131,7 @@ class SpecAnnotationsTranslator(BiopythonTranslator):
         if label == "misc_feature":
             label = None
         return label
+
 
 def write_no_solution_report(target, problem, error):
     """Write a report on incompatibility found in the problem's constraints.
@@ -146,17 +165,21 @@ def write_no_solution_report(target, problem, error):
         record = problem.to_record()
         translator = SpecAnnotationsTranslator()
         graphical_record = translator.translate_record(record)
-        ax, _ = graphical_record.plot(figure_width=min(20, 0.3*len(record)))
+        ax, _ = graphical_record.plot(figure_width=min(20, 0.3 * len(record)))
         if len(record) < 60:
             graphical_record.plot_sequence(ax)
         if error.location is None:
             raise error
         start, end, strand = error.location.to_tuple()
-        ax.fill_between([start, end], -10, 10, zorder=-1000,
-                        facecolor='#ffeeee')
-        title = "\n".join(textwrap.wrap(
-            "No solution found in zone [%d, %d]: %s" %
-            (start, end, str(error)), width=120)
+        ax.fill_between(
+            [start, end], -10, 10, zorder=-1000, facecolor="#ffeeee"
+        )
+        title = "\n".join(
+            textwrap.wrap(
+                "No solution found in zone [%d, %d]: %s"
+                % (start, end, str(error)),
+                width=120,
+            )
         )
         ax.set_title(title, fontdict=TITLE_FONTDICT)
         pdf_io.savefig(ax.figure, bbox_inches="tight", alpha=0.5)
@@ -167,46 +190,64 @@ def write_no_solution_report(target, problem, error):
         evals = error.problem.constraints_evaluations()
         record = error.problem.to_record(
             with_original_spec_features=False,
-            with_constraints=False, with_objectives=False)
-        record.features += evals.filter('passing') \
-                                .success_and_failures_as_features()
-        record.features += evals.filter('failing') \
-                                .locations_as_features(label_prefix="BREACH")
+            with_constraints=False,
+            with_objectives=False,
+        )
+        record.features += evals.filter(
+            "passing"
+        ).success_and_failures_as_features()
+        record.features += evals.filter("failing").locations_as_features(
+            label_prefix="BREACH"
+        )
         start = max(0, error.location.start - 5)
         end = min(len(record), error.location.end + 4)
         graphical_record = translator.translate_record(record)
         graphical_record = graphical_record.crop((start, end))
-        ax, _ = graphical_record.plot(figure_width=min(20, 0.3*(end - start)))
+        ax, _ = graphical_record.plot(
+            figure_width=min(20, 0.3 * (end - start))
+        )
         graphical_record.plot_sequence(ax)
-        ax.set_title("Local constraints breaches in [%d, %d]" % (start, end) +
-                     "     (green = passing constraints)",
-                     fontdict=TITLE_FONTDICT)
+        ax.set_title(
+            "Local constraints breaches in [%d, %d]" % (start, end)
+            + "     (green = passing constraints)",
+            fontdict=TITLE_FONTDICT,
+        )
         pdf_io.savefig(ax.figure, bbox_inches="tight", alpha=0.5)
         plt.close(ax.figure)
 
         # WRITE GENBANK
 
-        record = problem.to_record(with_original_spec_features=False,
-                                   with_constraints=True,
-                                   with_objectives=True)
+        record = problem.to_record(
+            with_original_spec_features=False,
+            with_constraints=True,
+            with_objectives=True,
+        )
         evals = problem.constraints_evaluations()
-        record.features += evals.filter('passing') \
-                                .success_and_failures_as_features()
-        record.features += evals.filter('failing') \
-                                .locations_as_features(label_prefix="BREACH")
-        SeqIO.write(record, root._file("constraints breaches.gb").open("w"),
-                    "genbank")
-    root._file('logs.txt').write(problem.logger.dump_logs())
+        record.features += evals.filter(
+            "passing"
+        ).success_and_failures_as_features()
+        record.features += evals.filter("failing").locations_as_features(
+            label_prefix="BREACH"
+        )
+        SeqIO.write(
+            record, root._file("constraints breaches.gb").open("w"), "genbank"
+        )
+    root._file("logs.txt").write(problem.logger.dump_logs())
 
     # returns zip data if target == '@memory'
     if isinstance(target, str):
         return root._close()
 
 
-def write_optimization_report(target, problem, project_name="unnammed",
-                              constraints_evaluations=None,
-                              objectives_evaluations=None,
-                              figure_width=20, max_features_in_plots=300):
+def write_optimization_report(
+    target,
+    problem,
+    project_name="unnammed",
+    constraints_evaluations=None,
+    objectives_evaluations=None,
+    figure_width=20,
+    max_features_in_plots=300,
+):
     """Write an optimization report with a PDF summary, plots, and genbanks.
 
     Parameters
@@ -258,12 +299,13 @@ def write_optimization_report(target, problem, project_name="unnammed",
     sequence_before = sequence_to_biopython_record(problem.sequence_before)
     if GENEBLOCKS_AVAILABLE:
         sequence_after = problem.to_record()
-        contract_under = max(3, int(len(sequence_after) / 10))
-        diffs = DiffBlocks.from_sequences(sequence_before, sequence_after,
-                                          use_junk_over=50,
-                                          contract_under=contract_under)
-        _, diffs_ax = diffs.plot()
-        diffs_figure_data = pdf_tools.figure_data(diffs_ax.figure, fmt='svg')
+        diffs = DiffBlocks.from_sequences(sequence_before, sequence_after)
+        diffs = diffs.merged(blocks_per_span=(3, len(sequence_after) / 10))
+        _, diffs_ax = diffs.plot(
+            translator_class=SpecAnnotationsTranslator, annotate_inline=True
+        )
+
+        diffs_figure_data = pdf_tools.figure_data(diffs_ax.figure, fmt="svg")
         plt.close(diffs_ax.figure)
 
     with PdfPages(root._file("before_after.pdf").open("wb")) as pdf_io:
@@ -274,15 +316,15 @@ def write_optimization_report(target, problem, project_name="unnammed",
                 sequence_before,
                 problem.constraints_before,
                 problem.objectives_before,
-                []
+                [],
             ),
             (
                 "After",
                 sequence_to_biopython_record(problem.sequence),
                 constraints_evaluations,
                 objectives_evaluations,
-                problem.sequence_edits_as_features()
-            )
+                problem.sequence_edits_as_features(),
+            ),
         ]
 
         plot_height = None
@@ -290,11 +332,14 @@ def write_optimization_report(target, problem, project_name="unnammed",
 
             full_title = (
                 "{title}:        {nfailing} constraints failing (in red)"
-                "        Total Score: {score:.01E} {bars}").format(
-                title=title, score=objectives.scores_sum(),
+                "        Total Score: {score:.01E} {bars}"
+            ).format(
+                title=title,
+                score=objectives.scores_sum(),
                 nfailing=len(constraints.filter("failing").evaluations),
-                bars="" if (title == "Before") else
-                "       (bars indicate edits)"
+                bars=""
+                if (title == "Before")
+                else "       (bars indicate edits)",
             )
             ax = None
             if title == "After":
@@ -308,37 +353,47 @@ def write_optimization_report(target, problem, project_name="unnammed",
             record.features += objectives.success_and_failures_as_features()
 
             graphical_record = translator.translate_record(record)
-            ax, _ = graphical_record.plot(ax=ax, figure_width=figure_width)
+            ax, _ = graphical_record.plot(
+                ax=ax, figure_width=figure_width, annotate_inline=True
+            )
             ax.set_title(full_title, loc="left", fontdict=TITLE_FONTDICT)
             plot_height = ax.figure.get_size_inches()[1]
             pdf_io.savefig(ax.figure, bbox_inches="tight")
             plt.close(ax.figure)
 
             record.features += edits
-            breaches_locations = \
-                constraints.filter("failing") \
-                           .locations_as_features(label_prefix="Breach from",
-                                                  merge_overlapping=True)
+            breaches_locations = constraints.filter(
+                "failing"
+            ).locations_as_features(
+                label_prefix="Breach from", merge_overlapping=True
+            )
             record.features += breaches_locations
 
-            SeqIO.write(record, root._file(title.lower() + ".gb").open("w"),
-                        "genbank")
+            SeqIO.write(
+                record, root._file(title.lower() + ".gb").open("w"), "genbank"
+            )
 
             if breaches_locations != []:
                 record.features = breaches_locations
                 graphical_record = translator.translate_record(record)
                 if len(graphical_record.features) > max_features_in_plots:
-                    features = sorted(graphical_record.features,
-                                      key=lambda f: f.start - f.end)
+                    features = sorted(
+                        graphical_record.features,
+                        key=lambda f: f.start - f.end,
+                    )
                     new_ft = features[:max_features_in_plots]
                     graphical_record.features = new_ft
-                    message = "(only %d features shown)" % \
-                              max_features_in_plots
+                    message = (
+                        "(only %d features shown)" % max_features_in_plots
+                    )
                 else:
                     message = ""
                 ax, _ = graphical_record.plot(figure_width=figure_width)
-                ax.set_title(title + ": Constraints breaches locations"
-                             + message, loc="left", fontdict=TITLE_FONTDICT)
+                ax.set_title(
+                    title + ": Constraints breaches locations" + message,
+                    loc="left",
+                    fontdict=TITLE_FONTDICT,
+                )
                 pdf_io.savefig(ax.figure, bbox_inches="tight")
                 plt.close(ax.figure)
 
@@ -353,13 +408,17 @@ def write_optimization_report(target, problem, project_name="unnammed",
         diffs_figure_data=diffs_figure_data,
         sequenticons={
             label: sequenticon(seq, output_format="html_image", size=24)
-            for label, seq in [("before", problem.sequence_before),
-                               ("after", problem.sequence)]
-        }
+            for label, seq in [
+                ("before", problem.sequence_before),
+                ("after", problem.sequence),
+            ]
+        },
     )
-    problem.to_record(root._file("final_sequence.gb").open("w"),
-                      with_constraints=False,
-                      with_objectives=False)
+    problem.to_record(
+        root._file("final_sequence.gb").open("w"),
+        with_constraints=False,
+        with_objectives=False,
+    )
 
     report_writer.write_report(html, root._file("Report.pdf"))
     if isinstance(target, str):
