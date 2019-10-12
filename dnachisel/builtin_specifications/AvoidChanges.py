@@ -15,10 +15,7 @@ from dnachisel.Location import Location
 
 class AvoidChanges(Specification):
     """Specify that some locations of the sequence should not be changed.
-
-    ``AvoidChanges`` Specifications are used to constrain the mutations space
-    of DNA OptimizationProblem.
-
+    
     Parameters
     ----------
     location
@@ -79,6 +76,7 @@ class AvoidChanges(Specification):
         if self.target_sequence is None or (
             len(self.target_sequence) < len(problem.sequence)
         ):
+            print ("I was there")
             result = result.copy_with_changes()
             result.target_sequence = self.extract_subsequence(problem.sequence)
         return result
@@ -153,3 +151,5 @@ class AvoidChanges(Specification):
             start, end = self.location.start, self.location.end
         return [((start, end), set([sequence[start:end]]))]
         # return [(i, set(sequence[i])) for i in range(start, end)]
+    def short_label(self):
+        return 'keep'

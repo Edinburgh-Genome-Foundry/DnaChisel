@@ -321,8 +321,17 @@ class SpecEvaluations:
         features = [
             location.to_biopython_feature(
                 feature_type="misc_feature",
-                specification=label_prefix + " " + str(ev.specification),
+                label=" ".join(
+                    [
+                        label_prefix,
+                        ev.specification.label(
+                            use_short_form=True, with_location=False
+                        ),
+                    ]
+                ),
                 color=color,
+                ApEinfo_fwdcolor=color,
+                ApEinfo_revcolor=color,
             )
             for (ev, color) in zip(self.evaluations_with_locations(), colors)
             for location in (
@@ -335,9 +344,13 @@ class SpecEvaluations:
             features += [
                 ev.specification.to_biopython_feature(
                     feature_type="misc_feature",
-                    label=str(ev.specification),
+                    label=ev.specification.label(
+                        use_short_form=True, with_location=False
+                    ),
                     role=self.specifications_role,
                     color=color,
+                    ApEinfo_fwdcolor=color,
+                    ApEinfo_revcolor=color,
                 )
                 for ev, color in zip(self.evaluations, colors)
                 if ev.specification.__dict__.get("location", False)
@@ -355,17 +368,30 @@ class ProblemConstraintsEvaluations(SpecEvaluations):
     specifications_role = "constraint"
 
     @staticmethod
-    def from_problem(problem):
+    def from_problem(problem, autopass_constraints=True):
         """Create an instance by evaluating all constraints in the problem.
 
         The ``problem`` is a DnaChisel DnaOptimizationProblem.
 
         """
+
+        def evaluate(constraint):
+            if (
+                autopass_constraints
+                and constraint.enforced_by_nucleotide_restrictions
+            ):
+                return SpecEvaluation(
+                    constraint,
+                    problem,
+                    score=1,
+                    locations=[],
+                    message="Enforced by nucleotides restrictions",
+                )
+            else:
+                return constraint.evaluate(problem)
+
         return ProblemConstraintsEvaluations(
-            [
-                specification.evaluate(problem)
-                for specification in problem.constraints
-            ],
+            [evaluate(constraint) for constraint in problem.constraints],
             problem=problem,
         )
 

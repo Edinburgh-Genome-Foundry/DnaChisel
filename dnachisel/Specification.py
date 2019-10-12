@@ -170,8 +170,19 @@ class Specification:
 
         return role, specification_instance
 
-    def label(self, role=None, with_location=True, assignment=":"):
+    def label(
+        self,
+        role=None,
+        with_location=True,
+        assignment=":",
+        use_short_form=False,
+    ):
         prefix = {"constraint": "@", "objective": "~", None: ""}[role]
+        if use_short_form:
+            label = self.short_label()
+            if with_location:
+                label += ", %s" % self.location
+            return label
         if with_location and hasattr(self, "location") and self.location:
             location = "[%s]" % self.location
         else:
@@ -188,6 +199,14 @@ class Specification:
             )
         return "".join([prefix, self.__class__.__name__, location, params])
 
+    def short_label(self):
+        """Shorter, less precise label to be used in tables, reports, etc.
+
+        This is meant for specifications such as EnforceGCContent(0.4, 0.6)
+        to be represented as '40-60% GC' in reports tables etc..
+        """
+        return self.__class__.__name__
+
     def label_parameters(self):
         """In subclasses, returns a list of the creation parameters.
 
@@ -203,19 +222,12 @@ class Specification:
         """By default, represent the Specification using its label()"""
         return self.label()
 
-    def short_label(self):
-        """Shorter, less precise label to be used in tables, reports, etc.
-
-        This is meant for specifications such as EnforceGCContent(0.4, 0.6)
-        to be represented as '40-60% GC' in reports tables etc..
-        """
-        return self.label()
-
     def to_biopython_feature(
         self,
         feature_type="misc_feature",
         role="constraint",
         colors_dict=None,
+        use_short_label=True,
         **qualifiers
     ):
         """Return a Biopython feature representing the specification.
@@ -233,10 +245,20 @@ class Specification:
         qualifiers["role"] = role
         if "label" not in qualifiers:
             qualifiers["label"] = self.label(
-                role=role, with_location=False, assignment=":"
+                role=role,
+                with_location=False,
+                assignment=":",
+                use_short_form=use_short_label,
             )
+
         if "color" not in qualifiers:
-            qualifiers["color"] = colors_dict[role]
+            qualifiers['color'] = colors_dict[role]
+        qualifiers.update(
+            dict(
+                ApEinfo_fwdcolor=qualifiers['color'],
+                ApEinfo_revcolor=qualifiers['color'],
+            )
+        )
         return SeqFeature(
             self.location.to_biopython_location(),
             type=feature_type,

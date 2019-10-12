@@ -2,27 +2,20 @@
 
 import os
 import textwrap
+from collections import OrderedDict
 
 from Bio import SeqIO
-
+import pandas
 import flametree
+import numpy as np
 
 from ..biotools import (
     sequence_to_biopython_record,
     find_specification_in_feature,
 )
 from ..version import __version__
-
-
-def install_extras_message(libname):
-    return (
-        "Could not load %s (is it installed ?). You can install it separately "
-        " with:  pip install %s\n\n"
-        "Install all dependencies for generating DNA Chisel reports with:"
-        "\n\npip install dnachisel[reports]"
-        % (libname, libname.lower().replace(" ", "_"))
-    )
-
+from .SpecAnnotationsTranslator import SpecAnnotationsTranslator
+from .tools import install_extras_message
 
 try:
     from sequenticon import sequenticon
@@ -31,23 +24,15 @@ try:
 except:
     SEQUENTICON_AVAILABLE = False
 
-MATPLOTLIB_AVAILABLE = DFV_AVAILABLE = False
+MATPLOTLIB_AVAILABLE = False
 try:
     import matplotlib.cm as cm
     import matplotlib.pyplot as plt
     from matplotlib.backends.backend_pdf import PdfPages
 
     MATPLOTLIB_AVAILABLE = True
-    from dna_features_viewer import BiopythonTranslator
-
-    DFV_AVAILABLE = True
 except ImportError:
-
-    class BiopythonTranslator:
-        "Class unavailable. Install DNA Features Viewer."
-
-        def __init__(self):
-            raise ImportError(install_extras_message("DNA Features Viewer"))
+    pass
 
 
 try:
@@ -84,53 +69,6 @@ install_reports_extra_message = (
     "dependencies for generating reports in DNA Chisel with this command:\n\n "
     "pip install dnachisel[reports]"
 )
-
-
-class SpecAnnotationsTranslator(BiopythonTranslator):
-    """Translator of DnaChisel feature-constraints for DNA Features Viewer"""
-
-    feature_prefixes_colors = {
-        "@": "#ce5454",
-        "~": "#e5be54",
-        "#": "#8edfff",
-        "!": "#fcff75",
-    }
-
-    def compute_filtered_features(self, features):
-        """Do not display edits."""
-        return [
-            feature
-            for feature in features
-            if "".join(feature.qualifiers.get("is_edit", "false")) != "true"
-        ]
-
-    def compute_feature_color(self, f):
-        color = f.qualifiers.get("color", None)
-        if color is not None:
-            if isinstance(color, list):
-                color = color[0]
-            return color
-
-        if f.type == "misc_feature":
-            specification = find_specification_in_feature(f)
-            if specification is None:
-                return "#f4df42"
-            else:
-                return self.feature_prefixes_colors.get(
-                    specification[0], "#f4df42"
-                )
-        else:
-            return "#eeeafa"
-
-    def compute_feature_label(self, f):
-        is_edit = f.qualifiers.get("is_edit", "false")
-        if "true" in [is_edit, is_edit[0]]:
-            return None
-        default = BiopythonTranslator.compute_feature_label(self, f)
-        label = None if (f.type != "misc_feature") else default
-        if label == "misc_feature":
-            label = None
-        return label
 
 
 def write_no_solution_report(target, problem, error):
@@ -239,14 +177,90 @@ def write_no_solution_report(target, problem, error):
         return root._close()
 
 
+def constraints_before_after_dataframe(problem, constraints_evaluations=None):
+    if constraints_evaluations is None:
+        constraints_evaluations = problem.constraints_evaluations()
+    edits = problem.sequence_edits_as_array()
+
+    def constraint_record(evaluation_before, evaluation_after):
+        constraint = evaluation_before.specification
+        start, end, _ = constraint.location.to_tuple()
+        edits_sum = edits[start:end].sum()
+        edits_percent = 100 * edits_sum / (end - start)
+        label = constraint.label(use_short_form=True, with_location=False)
+        return OrderedDict(
+            [
+                ("constraint", label),
+                ("start", start),
+                ("end", end),
+                ("before", "PASS" if evaluation_before.passes else "FAIL"),
+                ("after", "PASS" if evaluation_after.passes else "FAIL"),
+                ("edits", edits_sum),
+                ("edits (%)", np.round(edits_percent, 2)),
+            ]
+        )
+
+    dataframe = pandas.DataFrame.from_records(
+        [
+            constraint_record(before, after)
+            for (before, after) in zip(
+                problem.constraints_before, constraints_evaluations
+            )
+        ]
+    )
+    if len(dataframe):
+        dataframe = dataframe.sort_values(by="start")
+    return dataframe
+
+
+def objectives_before_after_dataframe(problem, objectives_evaluations=None):
+    if objectives_evaluations is None:
+        objectives_evaluations = problem.objectives_evaluations()
+    edits = problem.sequence_edits_as_array()
+
+    def objective_record(evaluation_before, evaluation_after):
+        objective = evaluation_before.specification
+        start, end, _ = objective.location.to_tuple()
+        edits_sum = edits[start:end].sum()
+        edits_percent = 100 * edits_sum / (end - start)
+        label = objective.label(use_short_form=True, with_location=False)
+        return OrderedDict(
+            [
+                ("objective", label),
+                ("boost", objective.boost),
+                ("start", start),
+                ("end", end),
+                ("before", evaluation_before.score_to_formatted_string),
+                ("after", evaluation_after.score_to_formatted_string),
+                ("edits", edits_sum),
+                ("edits (%)", np.round(edits_percent, 2)),
+            ]
+        )
+
+    dataframe = pandas.DataFrame.from_records(
+        [
+            objective_record(before, after)
+            for (before, after) in zip(
+                problem.objectives_before, objectives_evaluations
+            )
+        ]
+    )
+    if len(dataframe):
+        dataframe = dataframe.sort_values(by="start")
+    return dataframe
+
+
 def write_optimization_report(
     target,
     problem,
     project_name="unnammed",
+    plot_figure=True,
     constraints_evaluations=None,
     objectives_evaluations=None,
     figure_width=20,
     max_features_in_plots=300,
+    file_path=None,
+    file_content=None,
 ):
     """Write an optimization report with a PDF summary, plots, and genbanks.
 
@@ -279,6 +293,11 @@ def write_optimization_report(
     max_features_in_plots
       Limit to the number of features to plot (plots with thousands of features
       may take ages to plot)
+    
+    file_path
+      Path to the file from which the problem was created
+    
+    
 
     """
     if not PDF_REPORTS_AVAILABLE:
@@ -293,109 +312,46 @@ def write_optimization_report(
         root = flametree.file_tree(target, replace=True)
     else:
         root = target
-    translator = SpecAnnotationsTranslator()
     # CREATE FIGURES AND GENBANKS
     diffs_figure_data = None
     sequence_before = sequence_to_biopython_record(problem.sequence_before)
-    if GENEBLOCKS_AVAILABLE:
+    if GENEBLOCKS_AVAILABLE and plot_figure:
         sequence_after = problem.to_record()
         diffs = DiffBlocks.from_sequences(sequence_before, sequence_after)
-        diffs = diffs.merged(blocks_per_span=(3, len(sequence_after) / 10))
+        span = max(2, len(sequence_after) / 20)
+        diffs = diffs.merged(
+            blocks_per_span=(3, span),
+            replace_gap=span / 2,
+            change_gap=span / 2,
+        )
         _, diffs_ax = diffs.plot(
-            translator_class=SpecAnnotationsTranslator, annotate_inline=True
+            translator_class=SpecAnnotationsTranslator,
+            annotate_inline=True,
+            figure_width=15,
         )
 
         diffs_figure_data = pdf_tools.figure_data(diffs_ax.figure, fmt="svg")
         plt.close(diffs_ax.figure)
 
-    with PdfPages(root._file("before_after.pdf").open("wb")) as pdf_io:
+    # GENERATE AND SAVE THE CONSTRAINTS SUMMARY
 
-        figures_data = [
-            (
-                "Before",
-                sequence_before,
-                problem.constraints_before,
-                problem.objectives_before,
-                [],
-            ),
-            (
-                "After",
-                sequence_to_biopython_record(problem.sequence),
-                constraints_evaluations,
-                objectives_evaluations,
-                problem.sequence_edits_as_features(),
-            ),
-        ]
+    constraints_before_after = constraints_before_after_dataframe(
+        problem=problem, constraints_evaluations=constraints_evaluations
+    )
+    filename = "constraints_before_and_after.csv"
+    constraints_before_after.to_csv(
+        root._file(filename).open("w"), index=False
+    )
 
-        plot_height = None
-        for (title, record, constraints, objectives, edits) in figures_data:
+    # GENERATE AND SAVE THE OBJECTIVES SUMMARY
 
-            full_title = (
-                "{title}:        {nfailing} constraints failing (in red)"
-                "        Total Score: {score:.01E} {bars}"
-            ).format(
-                title=title,
-                score=objectives.scores_sum(),
-                nfailing=len(constraints.filter("failing").evaluations),
-                bars=""
-                if (title == "Before")
-                else "       (bars indicate edits)",
-            )
-            ax = None
-            if title == "After":
-                record.features += edits
-                graphical_record = translator.translate_record(record)
-                fig, ax = plt.subplots(1, figsize=(figure_width, plot_height))
-                graphical_record.plot(ax=ax, level_offset=-0.3)
-                record.features = []
-
-            record.features += constraints.success_and_failures_as_features()
-            record.features += objectives.success_and_failures_as_features()
-
-            graphical_record = translator.translate_record(record)
-            ax, _ = graphical_record.plot(
-                ax=ax, figure_width=figure_width, annotate_inline=True
-            )
-            ax.set_title(full_title, loc="left", fontdict=TITLE_FONTDICT)
-            plot_height = ax.figure.get_size_inches()[1]
-            pdf_io.savefig(ax.figure, bbox_inches="tight")
-            plt.close(ax.figure)
-
-            record.features += edits
-            breaches_locations = constraints.filter(
-                "failing"
-            ).locations_as_features(
-                label_prefix="Breach from", merge_overlapping=True
-            )
-            record.features += breaches_locations
-
-            SeqIO.write(
-                record, root._file(title.lower() + ".gb").open("w"), "genbank"
-            )
-
-            if breaches_locations != []:
-                record.features = breaches_locations
-                graphical_record = translator.translate_record(record)
-                if len(graphical_record.features) > max_features_in_plots:
-                    features = sorted(
-                        graphical_record.features,
-                        key=lambda f: f.start - f.end,
-                    )
-                    new_ft = features[:max_features_in_plots]
-                    graphical_record.features = new_ft
-                    message = (
-                        "(only %d features shown)" % max_features_in_plots
-                    )
-                else:
-                    message = ""
-                ax, _ = graphical_record.plot(figure_width=figure_width)
-                ax.set_title(
-                    title + ": Constraints breaches locations" + message,
-                    loc="left",
-                    fontdict=TITLE_FONTDICT,
-                )
-                pdf_io.savefig(ax.figure, bbox_inches="tight")
-                plt.close(ax.figure)
+    objectives_before_after = objectives_before_after_dataframe(
+        problem=problem, objectives_evaluations=objectives_evaluations
+    )
+    filename = "constraints_before_and_after.csv"
+    constraints_before_after.to_csv(
+        root._file(filename).open("w"), index=False
+    )
 
     # CREATE PDF REPORT
     html = report_writer.pug_to_html(
@@ -404,7 +360,9 @@ def write_optimization_report(
         problem=problem,
         constraints_evaluations=constraints_evaluations,
         objectives_evaluations=objectives_evaluations,
-        edits=sum(len(f) for f in edits),
+        constraints_before_after=constraints_before_after,
+        objectives_before_after=objectives_before_after,
+        edits=problem.sequence_edits_as_array().sum(),
         diffs_figure_data=diffs_figure_data,
         sequenticons={
             label: sequenticon(seq, output_format="html_image", size=24)
@@ -414,12 +372,28 @@ def write_optimization_report(
             ]
         },
     )
+    report_writer.write_report(html, root._file("Report.pdf"))
+
+    # CREATE THE "SEQUENCE EDITS" REPORT
+
+    record = problem.to_record(with_sequence_edits=True)
+    breaches = problem.constraints_before.filter("failing")
+    breaches_locations = breaches.locations_as_features(
+        label_prefix="Breach from", merge_overlapping=True
+    )
+    record.features += breaches_locations
+    SeqIO.write(
+        record, root._file("final_sequence_with_edits.gb").open("w"), "genbank"
+    )
+
+    # CREATE THE "FINAL SEQUENCE" REPORT
+
     problem.to_record(
         root._file("final_sequence.gb").open("w"),
         with_constraints=False,
         with_objectives=False,
     )
 
-    report_writer.write_report(html, root._file("Report.pdf"))
     if isinstance(target, str):
         return root._close()
+

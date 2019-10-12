@@ -9,6 +9,7 @@ from .AvoidNonUniqueSegments import AvoidNonUniqueSegments
 from .AvoidPattern import AvoidPattern
 from .AvoidStopCodons import AvoidStopCodons
 from .CodonOptimize import CodonOptimize
+from .EnforceChange import EnforceChange
 from .EnforceChoice import EnforceChoice
 from .EnforceSequence import EnforceSequence
 from .EnforceGCContent import EnforceGCContent
@@ -20,23 +21,24 @@ from .EnforceTerminalGCContent import EnforceTerminalGCContent
 from .SequenceLengthBounds import SequenceLengthBounds
 
 __all__ = [
-    'AllowPrimer',
-    'AvoidBlastMatches',
-    'AvoidChanges',
-    'AvoidHairpins',
-    'AvoidHeterodimerization',
-    'AvoidNonUniqueSegments',
-    'AvoidPattern',
-    'AvoidStopCodons',
-    'CodonOptimize',
-    'EnforceChoice',
-    'EnforceSequence',
-    'EnforceGCContent',
-    'EnforceMeltingTemperature',
-    'EnforcePatternOccurence',
-    'EnforceTranslation',
-    'EnforceRegionsCompatibility',
-    'EnforceTerminalGCContent',
-    'EnforceSequence',
-    'SequenceLengthBounds',
+    "AllowPrimer",
+    "AvoidBlastMatches",
+    "AvoidChanges",
+    "AvoidHairpins",
+    "AvoidHeterodimerization",
+    "AvoidNonUniqueSegments",
+    "AvoidPattern",
+    "AvoidStopCodons",
+    "CodonOptimize",
+    "EnforceChange",
+    "EnforceChoice",
+    "EnforceSequence",
+    "EnforceGCContent",
+    "EnforceMeltingTemperature",
+    "EnforcePatternOccurence",
+    "EnforceTranslation",
+    "EnforceRegionsCompatibility",
+    "EnforceTerminalGCContent",
+    "EnforceSequence",
+    "SequenceLengthBounds",
 ]

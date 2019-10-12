@@ -102,6 +102,7 @@ class EnforceTranslation(CodonSpecification):
 
     def evaluate(self, problem):
         """Score is the number of wrong-translation codons."""
+        # print ("here")
         location = (
             self.location
             if self.location is not None
@@ -181,3 +182,6 @@ class EnforceTranslation(CodonSpecification):
 
     def __str__(self):
         return "EnforceTranslation(%s)" % str(self.location)
+    
+    def short_label(self):
+        return "cds"

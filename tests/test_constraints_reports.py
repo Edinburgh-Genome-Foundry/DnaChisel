@@ -31,4 +31,5 @@ def test_constraints_reports():
     records = cr.records_from_breaches_dataframe(dataframe, records)
     assert sum([len(r.features) for r in records]) == 157
     pdf_data = cr.breaches_records_to_pdf(records)
-    assert 40000 < len(pdf_data) < 42000
+    
+    assert 70000 < len(pdf_data) < 72000

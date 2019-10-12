@@ -12,6 +12,7 @@ from .biotools import (
     find_specification_in_feature,
     sequences_differences_array,
     sequences_differences_segments,
+    load_record
 )
 from .Specification import Specification, SpecificationsSet
 from .SpecEvaluation import (
@@ -95,19 +96,31 @@ class DnaOptimizationProblem:
       mutation space will be left to None and computed at problem
       initialization (which can be slightly compute-intensive), however some
       core DNA Chisel methods will create optimization problems with a provided
-      mutation_space to save computing time.  
+      mutation_space to save computing time.
 
     Attributes
     ----------
 
-    sequence
-      The sequence
+    randomization_threshold
+      The algorithm will use an exhaustive search when the size of the mutation
+      space (=the number of possible variants) is above this threshold, and
+      a (guided) random search when it is above.
 
-    constraints
-      The list of constraints
+    max_random_iters
+      When using a random search, stop after this many iterations
 
-    objectives
-      The list of objectives
+    mutations_per_iteration = 2
+      When using a random search, produce this many sequence mutations each
+      iteration.
+
+    optimization_stagnation_tolerance
+      When using a random search, stop if the score hasn't improved in
+      the last "this many" iterations
+
+    local_extensions
+      Try local resolution several times if it fails, increasing the mutable
+      zone by [N1, N2...] nucleotides on each side, until resolution works.
+      (by default, an extension of 0bp is tried, then 5bp.
 
     Notes
     -----
@@ -133,8 +146,8 @@ class DnaOptimizationProblem:
     # When using a random search for optimization, stop if the score hasn't
     # improved in the last N iterations
     optimization_stagnation_tolerance = 100
-    
-    #Try local resolution several times if it fails, increasing the mutable zone
+
+    # Try local resolution several times if it fails, increasing the mutable zone
     # by [N1, N2...] nucleotides on each side, until it works
     # (by default, an extension of 0bp is tried, then 5bp.
     local_extensions = (0, 5)
@@ -219,15 +232,18 @@ class DnaOptimizationProblem:
             self.sequence = sequence
         return self._objectives_before
 
-    def constraints_evaluations(self):
+    def constraints_evaluations(self, autopass_constraints=True):
         """Return a list of the evaluations of each constraint of the canvas.
         """
-        return ProblemConstraintsEvaluations.from_problem(self)
+        return ProblemConstraintsEvaluations.from_problem(
+            self, autopass_constraints=autopass_constraints
+        )
 
     def all_constraints_pass(self):
         """Return True iff the current problem sequence passes all constraints.
         """
-        return self.constraints_evaluations().all_evaluations_pass()
+        evals = self.constraints_evaluations(autopass_constraints=True)
+        return evals.all_evaluations_pass()
 
     def constraints_text_summary(self, failed_only=False):
         evals = self.constraints_evaluations()
@@ -517,7 +533,9 @@ class DnaOptimizationProblem:
         all_variants = self.mutation_space.all_variants(self.sequence)
         space_size = int(self.mutation_space.space_size)
         self.logger(mutation__total=space_size)
+        # print ("------")
         for variant in self.logger.iter_bar(mutation=all_variants):
+            # print ("hey")
             self.sequence = variant
             if self.all_constraints_pass():
                 score = self.objective_scores_sum()
@@ -634,8 +652,9 @@ class DnaOptimizationProblem:
                 self.randomization_threshold
             )
             local_problem.max_random_iters = self.max_random_iters
-            local_problem.optimization_stagnation_tolerance = \
-                    self.optimization_stagnation_tolerance
+            local_problem.optimization_stagnation_tolerance = (
+                self.optimization_stagnation_tolerance
+            )
             local_problem.mutations_per_iteration = (
                 self.mutations_per_iteration
             )
@@ -664,21 +683,15 @@ class DnaOptimizationProblem:
             self.optimize_objective(objective=objective)
 
     @classmethod
-    def from_record(cls, record, specifications_dict="default"):
+    def from_record(cls, record, specifications_dict="default", logger="bar"):
         """TODO: docs"""
         if isinstance(record, str):
-            if record.lower().endswith((".fa", ".fasta")):
-                record = SeqIO.read(record, "fasta")
-            elif record.lower().endswith((".gb", ".gbk")):
-                record = SeqIO.read(record, "genbank")
-            else:
-                raise ValueError(
-                    "Record is either a Biopython record or a "
-                    "file path ending in .gb, .gbk, .fa, .fasta."
-                )
+            record = load_record(record)
         if specifications_dict == "default":
             specifications_dict = DEFAULT_SPECIFICATIONS_DICT
-        parameters = dict(sequence=record, constraints=[], objectives=[])
+        parameters = dict(
+            sequence=record, constraints=[], objectives=[], logger=logger
+        )
         for feature in record.features:
             if feature.type != "misc_feature":
                 continue
@@ -701,6 +714,7 @@ class DnaOptimizationProblem:
         with_objectives=True,
         with_sequence_edits=False,
         colors_dict=None,
+        use_short_labels=True,
     ):
         record = sequence_to_biopython_record(self.sequence)
 
@@ -711,6 +725,7 @@ class DnaOptimizationProblem:
                     role="constraint",
                     feature_type=features_type,
                     colors_dict=colors_dict,
+                    use_short_label=use_short_labels,
                 )
                 for cst in self.constraints
                 if cst.__dict__.get("location", False)
@@ -721,6 +736,7 @@ class DnaOptimizationProblem:
                     role="objective",
                     feature_type=features_type,
                     colors_dict=colors_dict,
+                    use_short_label=use_short_labels,
                 )
                 for obj in self.objectives
             ]
@@ -749,7 +765,11 @@ class DnaOptimizationProblem:
         )
         return [
             Location(start, end).to_biopython_feature(
-                label="was " + self.sequence_before[start:end], is_edit="true"
+                label="%s=>%s"
+                % (self.sequence_before[start:end], self.sequence[start:end]),
+                is_edit="true",
+                ApEinfo_fwdcolor="#ff0000",
+                color="#ff0000",
             )
             for start, end in segments
         ]

@@ -9,17 +9,31 @@ from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import DNAAlphabet
 from Bio import SeqIO
 
+try:
+    from snapgene_reader import snapgene_file_to_seqrecord
+except ImportError:
+    def snapgene_file_to_seqrecord(*a, **k):
+        """Please install the snapgene_reader library to use this function."""
+        raise ImportError(
+            "Please install snapgene_reader to import Snapgene .dna files"
+        )
 
-def load_record(filename, linear=True, name="unnamed", fmt="auto"):
-    """Load a FASTA/Genbank/... record"""
+def load_record(filepath, linear=True, name="unnamed", fmt="auto"):
+    """Load a FASTA/Genbank/Snapgene record.
+    
+    Note that reading Snapgene records requires the library snapgene_reader
+    installed.
+    """
     if fmt != "auto":
-        record = SeqIO.read(filename, fmt)
-    elif filename.lower().endswith(("gb", "gbk")):
-        record = SeqIO.read(filename, "genbank")
-    elif filename.lower().endswith(("fa", "fasta")):
-        record = SeqIO.read(filename, "fasta")
+        record = SeqIO.read(filepath, fmt)
+    elif filepath.lower().endswith(("gb", "gbk")):
+        record = SeqIO.read(filepath, "genbank")
+    elif filepath.lower().endswith(("fa", "fasta")):
+        record = SeqIO.read(filepath, "fasta")
+    elif filepath.lower().endswith('.dna'):
+        record = snapgene_file_to_seqrecord(filepath)
     else:
-        raise ValueError("Unknown format for file: %s" % filename)
+        raise ValueError("Unknown format for file: %s" % filepath)
     record.linear = linear
     if name != "unnamed":
         record.id = name

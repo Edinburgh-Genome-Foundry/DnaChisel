@@ -106,11 +106,19 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
                 e.message = e.default_message
         return evals
 
-    def constraints_evaluations(self):
+    def constraints_evaluations(self, autopass_constraints=True):
+        """Return the evaluation of constraints.
+        
+        The "autopass_constraints" enables to just assume that constraints
+        enforced by the mutation space are verified.
+
+        """
         circularized = self._circularized_view(
             with_constraints=True, central_specs_only=False
         )
-        evals = circularized.constraints_evaluations()
+        evals = circularized.constraints_evaluations(
+            autopass_constraints=autopass_constraints
+        )
         return self._recentered_evaluations(evals)
 
     def objectives_evaluations(self):

@@ -27,6 +27,7 @@ Example to output the result to a zip archive:
 >>> dnachisel annotated_record.gb optimization_report.zip
 """
 
+import os
 from docopt import docopt
 from dnachisel import DnaOptimizationProblem, CircularDnaOptimizationProblem
 
@@ -36,17 +37,18 @@ if __name__ == "__main__":
 
     # VERBOSE PRINT
     def verbose_print(*args):
-        if  params["--verbose"]:
+        if params["--verbose"]:
             print(*args)
-    
+
     # PARSE THE CIRCULARITY
 
     if params["--circular"]:
-        problem_class = DnaOptimizationProblem
-    else:
         problem_class = CircularDnaOptimizationProblem
-    
-    problem = problem_class.from_record(source)
+    else:
+        problem_class = DnaOptimizationProblem
+    problem = problem_class.from_record(
+        source, logger="bar" if params["--verbose"] else None
+    )
     problem.max_random_iters = 10000
     verbose_print(
         "\n\nBefore optimization:\n\n",
@@ -61,7 +63,8 @@ if __name__ == "__main__":
         problem.optimize()
 
     else:
-        problem.optimize_with_report(target)
+        project_name = os.path.basename(source)
+        problem.optimize_with_report(target, project_name=project_name)
 
     verbose_print(
         "\n\nAfter optimization:\n\n",

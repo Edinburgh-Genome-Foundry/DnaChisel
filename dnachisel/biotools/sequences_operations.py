@@ -53,7 +53,7 @@ def reverse_translate(protein_sequence, randomize_codons=False):
 
 def translate(dna_sequence, translation_table="Bacterial"):
     """Translate the DNA sequence into an amino-acids sequence "MLKYQT...".
-    If ``translation_table`` is the name or number of  NCBI genetic table,
+    If ``translation_table`` is the name or number of a NCBI genetic table,
     Biopython will be used. See here for options:
 
     http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc25

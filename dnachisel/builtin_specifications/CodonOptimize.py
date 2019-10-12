@@ -227,6 +227,7 @@ class CodonOptimize(CodonSpecification):
 
     def evaluate_best_codon(self, problem):
         """Return the evaluation for mode==best_codon."""
+        CT = CODONS_TRANSLATIONS
         subsequence = self.location.extract_sequence(problem.sequence)
         length = len(subsequence)
         if length % 3:
@@ -234,10 +235,27 @@ class CodonOptimize(CodonSpecification):
                 "CodonOptimizationSpecification on a window/sequence"
                 "with size %d not multiple of 3)" % length
             )
+        if length == 3:
+            # We are evaluating a single codon. Easy!
+            codon = subsequence
+            freq = self.codon_usage_table["codons_frequencies"][codon]
+            optimal = self.codon_usage_table["best_frequencies"][CT[codon]]
+            score = freq - optimal
+            return SpecEvaluation(
+                self,
+                problem,
+                score=freq - optimal,
+                locations=[] if (freq == optimal) else [self.location],
+                message="Codon opt. on window %s scored %.02E"
+                % (self.location, score)
+            )
+
+        
         codons = [
             subsequence[3 * i : 3 * (i + 1)] for i in range(int(length / 3))
         ]
-        CT = CODONS_TRANSLATIONS
+        # print (len(codons))
+        
         current_usage, optimal_usage = [
             np.array(e)
             for e in zip(

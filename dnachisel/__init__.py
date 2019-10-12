@@ -15,6 +15,7 @@ from .builtin_specifications import (
     AvoidPattern,
     AvoidStopCodons,
     CodonOptimize,
+    EnforceChange,
     EnforceChoice,
     EnforceGCContent,
     EnforceMeltingTemperature,
@@ -74,6 +75,7 @@ DEFAULT_SPECIFICATIONS_DICT.update(
         "EnforceRegionsCompatibility": EnforceRegionsCompatibility,
         "EnforceSequence": EnforceSequence,
         "EnforceChoice": EnforceChoice,
+        "EnforceChange": EnforceChange,
         # SHORTHAND NOTATIONS
         "cds": EnforceTranslation,
         "choice": EnforceChoice,
@@ -84,6 +86,7 @@ DEFAULT_SPECIFICATIONS_DICT.update(
         "tm": EnforceMeltingTemperature,
         "primer": AllowPrimer,
         "sequence": EnforceSequence,
+        "change": EnforceChange
     }
 )
 

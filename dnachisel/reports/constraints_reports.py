@@ -100,7 +100,9 @@ def _breaches(constraint, sequence):
     return ", ".join(map(str, locations))
 
 
-def constraints_breaches_dataframe(constraints, sequences):
+def constraints_breaches_dataframe(
+    constraints, sequences, display_constraints_locations=False
+):
     """Return a dataframe summarizing constraints breaches in the sequences.
 
     Output dataframe schema (cst = constraint):
@@ -154,7 +156,13 @@ def constraints_breaches_dataframe(constraints, sequences):
         dict(
             [("sequence", name)]
             + [
-                (constraint.short_label(), _breaches(constraint, sequence))
+                (
+                    constraint.label(
+                        use_short_form=True,
+                        with_location=display_constraints_locations,
+                    ),
+                    _breaches(constraint, sequence),
+                )
                 for constraint in constraints
             ]
         )
@@ -211,11 +219,22 @@ class Translator(BiopythonTranslator):
         This translator produces label-free plots.
         """
 
+    @staticmethod
+    def compute_feature_box_linewidth(f):
+        return 1 if f.qualifiers.get("is_a_breach", False) else 0
+
+    @staticmethod
+    def compute_feature_fontdict(f):
+        return {
+            "fontsize": 12 if f.qualifiers.get("is_a_breach", False) else 9
+        }
+
     def compute_feature_label(self, f):
-        if f.qualifiers.get("is_a_breach", False):
-            return f.qualifiers["label"]
-        else:
-            return None
+        label = BiopythonTranslator.compute_feature_label(self, f)
+        if not f.qualifiers.get("is_a_breach", False):
+            if len(label) > 20:
+                label = label[:19] + "…"
+        return label
 
     def compute_feature_color(self, f):
         if f.qualifiers.get("is_a_breach", False):
@@ -224,15 +243,18 @@ class Translator(BiopythonTranslator):
             return "#ffffff"
 
 
-def plot_breaches_record(record, ax=None):
+def plot_breaches_record(record, ax=None, figure_width=10):
     translator = Translator()
     graphic_record = translator.translate_record(record)
-    ax, _ = graphic_record.plot(ax=ax)
-    ax.set_title(record.id, loc="left")
+    ax, _ = graphic_record.plot(ax=ax, figure_width=figure_width)
+    ax.set_title(record.id, loc="left", fontweight="bold")
+    ax.set_ylim(top=ax.get_ylim()[1] + 1)
     return ax
 
 
-def breaches_records_to_pdf(breaches_records, pdf_path=None, logger="bar"):
+def breaches_records_to_pdf(
+    breaches_records, pdf_path=None, figure_width=10, logger="bar"
+):
     """Plots figures of the breaches annotated in the records into a PDF file.
     
     Parameters
@@ -254,7 +276,7 @@ def breaches_records_to_pdf(breaches_records, pdf_path=None, logger="bar"):
 
     with PdfPages(pdf_io) as pdf:
         for record in logger.iter_bar(sequence=breaches_records):
-            ax = plot_breaches_record(record)
+            ax = plot_breaches_record(record, figure_width=figure_width)
             pdf.savefig(ax.figure, bbox_inches="tight")
             plt.close(ax.figure)
     if pdf_path is None:
