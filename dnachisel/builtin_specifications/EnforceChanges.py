@@ -50,6 +50,8 @@ class EnforceChanges(Specification):
     def __init__(self, location=None, indices=None, reference=None, boost=1.0):
         """Initialize."""
         # raise NotImplementedError("This class is not yet implemented")
+        # if location is None and (indices is not None):
+        #     location = (min(indices), max(indices) + 1)
         if isinstance(location, tuple):
             location = Location.from_tuple(location)
         self.location = location
@@ -69,7 +71,7 @@ class EnforceChanges(Specification):
         if (self.location is None) and (self.indices is None):
             return sequence
         elif self.indices is not None:
-            return "".join(np.array(sequence)[self.indices])
+            return "".join(np.array(list(sequence))[self.indices])
         else:  # self.location is not None:
             return self.location.extract_sequence(sequence)
 
@@ -81,8 +83,12 @@ class EnforceChanges(Specification):
         # - Always at the very beginning
         # - When the new sequence is bigger than the previous one
         #   (used in CircularDnaOptimizationProblem)
-        if self.reference is None or (
-            len(self.reference) < len(self.location)
+        if (self.reference is None) and (self.indices is not None):
+            result = result.copy_with_changes()
+            result.reference = self.extract_subsequence(problem.sequence)
+        elif self.reference is None or (
+            (self.indices is None)
+            and (len(self.reference) < len(self.location))
         ):
             result = result.copy_with_changes()
             result.reference = self.extract_subsequence(problem.sequence)
@@ -111,8 +117,7 @@ class EnforceChanges(Specification):
         intervals = [
             (r[0], r[-1] + 1)
             for r in group_nearby_indices(
-                equalities,
-                max_group_spread=self.localization_interval_length,
+                equalities, max_group_spread=self.localization_interval_length
             )
         ]
         locations = [Location(start, end, 1) for start, end in intervals]
@@ -125,29 +130,24 @@ class EnforceChanges(Specification):
         """Localize the spec to the overlap of its location and the new.
         """
         start, end = location.start, location.end
-        if self.location is not None:
+        if self.indices is not None:
+            pos = ((start <= self.indices) & (self.indices < end)).nonzero()[0]
+            new_indices = self.indices[pos]
+            new_reference = "".join(np.array(list(self.reference))[pos])
+            return self.copy_with_changes(
+                indices=new_indices, reference=new_reference
+            )
+        else:
             new_location = self.location.overlap_region(location)
             if new_location is None:
                 return None
-            # VoidSpecification(parent_specification=self)
             else:
-                # return self
-                # TODO: refine using the code hereunder, which sometimes
-                # creates exceptions like "different sequences"
-
                 new_constraint = self.copy_with_changes(location=new_location)
                 relative_location = new_location + (-self.location.start)
                 new_constraint.reference = relative_location.extract_sequence(
                     self.reference
                 )
                 return new_constraint
-
-        elif self.indices is not None:
-            inds = self.indices
-            new_indices = inds[(start <= inds) & (inds <= end)]
-            return self.copy_with_changes(indices=new_indices)
-        else:
-            return self
 
     def restrict_nucleotides(self, sequence, location=None):
         """When localizing, forbid any nucleotide but the one already there."""
@@ -156,10 +156,18 @@ class EnforceChanges(Specification):
             end = min(location.end, self.location.end)
         else:
             start, end = self.location.start, self.location.end
-        return [
-            ((i, i + 1), other_bases_sets[sequence[i : i + 1]])
-            for i in range(start, end)
-        ]
+
+        if self.indices is not None:
+            return [
+                ((i, i + 1), other_bases_sets[sequence[i : i + 1]])
+                for i in self.indices
+                if start <= i < end
+            ]
+        else:
+            return [
+                ((i, i + 1), other_bases_sets[sequence[i : i + 1]])
+                for i in range(start, end)
+            ]
         # return [(i, set(sequence[i])) for i in range(start, end)]
 
     def short_label(self):

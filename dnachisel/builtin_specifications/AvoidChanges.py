@@ -42,6 +42,8 @@ class AvoidChanges(Specification):
     ):
 
         """Initialize."""
+        if location is None and (indices is not None):
+            location = (min(indices), max(indices) + 1)
         if isinstance(location, tuple):
             location = Location.from_tuple(location)
         self.location = location
@@ -61,7 +63,7 @@ class AvoidChanges(Specification):
         if (self.location is None) and (self.indices is None):
             return sequence
         elif self.indices is not None:
-            return "".join(np.array(sequence)[self.indices])
+            return "".join(np.array(list(sequence))[self.indices])
         else:  # self.location is not None:
             return self.location.extract_sequence(sequence)
 
@@ -117,29 +119,24 @@ class AvoidChanges(Specification):
         """Localize the spec to the overlap of its location and the new.
         """
         start, end = location.start, location.end
-        if self.location is not None:
+        if self.indices is not None:
+            pos = ((start <= self.indices) & (self.indices < end)).nonzero()[0]
+            new_indices = self.indices[pos]
+            new_target = "".join(np.array(list(self.target_sequence))[pos])
+            return self.copy_with_changes(
+                indices=new_indices, target_sequence=new_target
+            )
+        else:
             new_location = self.location.overlap_region(location)
             if new_location is None:
                 return None
-            # VoidSpecification(parent_specification=self)
             else:
-                # return self
-                # TODO: refine using the code hereunder, which sometimes
-                # creates exceptions like "different sequences"
-
                 new_constraint = self.copy_with_changes(location=new_location)
                 relative_location = new_location + (-self.location.start)
                 new_constraint.target_sequence = relative_location.extract_sequence(
                     self.target_sequence
                 )
                 return new_constraint
-
-        elif self.indices is not None:
-            inds = self.indices
-            new_indices = inds[(start <= inds) & (inds <= end)]
-            return self.copy_with_changes(indices=new_indices)
-        else:
-            return self
 
     def restrict_nucleotides(self, sequence, location=None):
         """When localizing, forbid any nucleotide but the one already there."""
@@ -148,8 +145,15 @@ class AvoidChanges(Specification):
             end = min(location.end, self.location.end)
         else:
             start, end = self.location.start, self.location.end
-        return [((start, end), set([sequence[start:end]]))]
-        # return [(i, set(sequence[i])) for i in range(start, end)]
+
+        if self.indices is not None:
+            return [
+                ((i, i + 1), set([sequence[i : i + 1]]))
+                for i in self.indices
+                if start <= i < end
+            ]
+        else:
+            return [((start, end), set([sequence[start:end]]))]
 
     def short_label(self):
         return "keep"

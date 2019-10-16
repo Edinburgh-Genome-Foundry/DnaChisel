@@ -1,9 +1,22 @@
+import os
 from dnachisel.biotools import (dna_pattern_to_regexpr,
                                 change_biopython_record_sequence,
                                 subdivide_window,
                                 sequence_to_biopython_record,
                                 annotate_record,
+                                load_record,
+                                write_record,
                                 list_common_enzymes)
+
+data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
+
+def test_load_and_write_record(tmpdir):
+    record = load_record(os.path.join(data_dir, 'example_sequence.gbk'))
+    assert (len(record.seq) == 4720)
+    target = os.path.join(str(tmpdir), 'example.gb')
+    write_record(record, target)
+    record2 = load_record(target)
+    assert (len(record2.seq) == 4720)
 
 def test_dna_pattern_to_regexpr():
     assert dna_pattern_to_regexpr("ATW") == "AT[ATW]"

@@ -169,10 +169,3 @@ class Location:
             type=feature_type,
             qualifiers=qualifiers,
         )
-
-
-class MultiLocation:
-    "TODO: Implement when necessary"
-
-    def __init__(self, locations):
-        self.locations = locations

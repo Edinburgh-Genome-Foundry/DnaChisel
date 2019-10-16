@@ -535,9 +535,7 @@ class DnaOptimizationProblem:
         all_variants = self.mutation_space.all_variants(self.sequence)
         space_size = int(self.mutation_space.space_size)
         self.logger(mutation__total=space_size)
-        # print ("------")
         for variant in self.logger.iter_bar(mutation=all_variants):
-            # print ("hey")
             self.sequence = variant
             if self.all_constraints_pass():
                 score = self.objective_scores_sum()

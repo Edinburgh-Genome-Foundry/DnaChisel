@@ -8,6 +8,7 @@ from dnachisel import (
     AvoidChanges,
     sequences_differences,
     EnforceGCContent,
+    EnforceChanges,
 )
 import numpy
 
@@ -62,3 +63,39 @@ def test_avoid_change_circular():
     assert results[0] > 40
     assert results[0] > results[1] > results[2] > results[3]
     assert results[-1] == 0
+
+
+def test_avoid_changes_with_indices_as_constraint():
+    numpy.random.seed(123)
+
+    indices = [10, 20] + list(range(30, 40)) + [44, 45, 46]
+    sequence = random_dna_sequence(50)
+
+    problem = DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[AvoidChanges(indices=indices)],
+        objectives=[EnforceChanges()],
+    )
+    problem.optimize()
+    assert problem.number_of_edits() == 50 - 15
+
+
+def test_avoid_changes_with_indices_as_objectives():
+    numpy.random.seed(123)
+
+    indices = [10, 20] + list(range(30, 40)) + [44, 45, 46]
+    sequence = random_dna_sequence(50)
+
+    problem = DnaOptimizationProblem(
+        sequence=sequence,
+        objectives=[EnforceChanges(boost=0.5), AvoidChanges(indices=indices)],
+    )
+    problem.optimize()
+    assert problem.number_of_edits() == 50 - 15  # 15 == len(indices)
+
+    problem = DnaOptimizationProblem(
+        sequence=sequence,
+        objectives=[EnforceChanges(boost=1.5), AvoidChanges(indices=indices)],
+    )
+    problem.optimize()
+    assert problem.number_of_edits() == 50
