@@ -31,7 +31,7 @@ def test_circular_sequence_basic():
         assert problem.all_constraints_pass()
 
 
-def test_circular_sequence_optimize_wtith_report(tmpdir):
+def test_circular_sequence_optimize_with_report(tmpdir):
     """Test that the custom function of CircularDnaOptimizationProblems works.
     """
     np.random.seed(123)
