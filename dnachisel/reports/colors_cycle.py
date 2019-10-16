@@ -12,7 +12,7 @@ def colors_cycle(lightness_factor=1.0, color_shift=0):
     """Returns an iterator over a range of colors"""
     if MATPLOTLIB_AVAILABLE:
         cycle = itertools.cycle(
-            [cm.Paired(color_shift + 0.21 * i % 1.0) for i in range(30)]
+            [cm.Paired(color_shift + 0.21 + 0.21 * i % 1.0) for i in range(30)]
         )
         return (
             "#%02x%02x%02x"

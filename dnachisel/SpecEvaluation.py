@@ -86,7 +86,7 @@ class SpecEvaluation:
     def score_to_formatted_string(self):
         return score_to_formatted_string(self.score)
 
-    def to_text(self, role="constraint", wrapped=True):
+    def to_text(self, role="constraint", wrapped=True, max_message_length=500):
         """Return a string representation of the evaluation.
 
         Example output for a constraint:
@@ -110,6 +110,9 @@ class SpecEvaluation:
 
         """
         message = self.message
+        if len(message) > max_message_length:
+            half = int(max_message_length / 2)
+            message = message[:half] + " ... " + message[-half:]
         if wrapped:
             indents = 6 if (role == "constraint") else 11
             indent = indents * " " + "│ "
@@ -289,6 +292,7 @@ class SpecEvaluations:
         label_prefix="From",
         colors="cycle",
         merge_overlapping=False,
+        locations_filter=None
     ):
         """Return all locations from all evaluations as biopython features.
 
@@ -310,6 +314,9 @@ class SpecEvaluations:
           Either a list of colors (one for each specification), e.g.
           ['red', '#7aab71', ...] or "cycle" for cycling through predefined
           colors. The colors are applied to all breaches.
+        
+        locations_filter
+          A function (location => True/False) deciding whether
 
         """
         if colors == "cycle":
@@ -339,6 +346,7 @@ class SpecEvaluations:
                 if merge_overlapping
                 else ev.locations
             )
+            if (locations_filter is None) or locations_filter(location)
         ]
         if with_specifications:
             features += [

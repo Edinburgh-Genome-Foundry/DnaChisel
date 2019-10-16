@@ -148,7 +148,13 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
         L = len(self.sequence)
         self.sequence = problem.sequence[L : 2 * L]
 
-    def optimize_with_report(self, target, project_name="My project"):
+    def optimize_with_report(
+        self,
+        target,
+        project_name="My project",
+        file_path=None,
+        file_content=None,
+    ):
         """Resolve constraints, optimize objectives, write a multi-file report.
 
         WARNING: in case of optimization failure, the report generated will
@@ -170,9 +176,6 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
         project_name
           Project name to write on PDF reports
 
-        **solver_parameters
-          Extra keyword arguments passed to ``problem.resolve_constraints()``
-
         Returns
         -------
 
@@ -190,7 +193,13 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
                 with_constraints=True, with_objectives=True
             )
             self.logger(message="No solution found: making report")
-            data = write_no_solution_report(target, problem, error)
+            data = write_no_solution_report(
+                target,
+                problem,
+                error,
+                file_path=file_path,
+                file_content=file_content,
+            )
             start, end, s = error.location.to_tuple()
             message = "No solution found in zone [%d, %d]: %s." % (
                 start,
@@ -202,7 +211,11 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
         self.optimize()
         self.logger(message="Success! Generating report.")
         data = write_optimization_report(
-            target, self, project_name=project_name
+            target,
+            self,
+            project_name=project_name,
+            file_path=file_path,
+            file_content=file_content,
         )
         return True, "Optimization successful.", data
 

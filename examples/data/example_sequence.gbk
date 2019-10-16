@@ -1,4 +1,4 @@
-LOCUS       Exported                4720 bp ds-DNA     circular UNK 30-JUN-2017
+LOCUS       Exported                4720 bp ds-DNA     circular UNK 15-OCT-2019
 DEFINITION  .
 ACCESSION   Example
 VERSION     .
@@ -8,19 +8,20 @@ SOURCE      natural DNA sequence
 REFERENCE   1  (bases 1 to 4720)
   AUTHORS   .
   TITLE     Direct Submission
-  JOURNAL   Exported Friday, Jun 30, 2017 from SnapGene Viewer 3.3.4
-            http://www.snapgene.com
+  JOURNAL   Exported Tuesday, Oct 15, 2019 from SnapGene Viewer 4.3.11
+            https://www.snapgene.com
 FEATURES             Location/Qualifiers
      source          1..4720
                      /organism="unspecified"
                      /mol_type="genomic DNA"
                      /note="color: #ffffff"
      misc_feature    10..1319
+                     /label=@gc(30-55%, window=50)
                      /label=@EnforceGCContent(maxi=0.55, window=50)
                      /note="color: #000080"
      misc_feature    complement(333..1193)
+                     /label=@cds
                      /label=Gene aaCI
-                     /note="@EnforceTranslation"
                      /note="color: #000080; direction: LEFT"
      CDS             complement(333..1193)
                      /label=Gene aaCI
@@ -41,6 +42,7 @@ FEATURES             Location/Qualifiers
                      /note="kanR promoter"
                      /note="color: #ffffff"
      misc_feature    1835..2551
+                     /label=@cds
                      /label=@EnforceTranslation
                      /note="color: #000080; direction: RIGHT"
      misc_feature    1835..2551
@@ -48,16 +50,19 @@ FEATURES             Location/Qualifiers
                      /note="color: #ffcc00; direction: RIGHT"
      CDS             1835..2551
                      /label=Gene kanR
-                     /note="Gene kanR
-                     Kanamycin resistance marker"
+                     /note="Gene kanR Kanamycin resistance marker"
                      /note="color: #c0c0c0; direction: RIGHT"
      misc_feature    2149..4201
+                     /label=@no(BsrBI_site)
                      /label=@AvoidPattern(BsrBI_site)
                      /note="color: #000080"
      terminator      2552..2602
                      /label=kanR terminator
                      /note="kanR terminator"
                      /note="color: #ffffff"
+     misc_feature    complement(3213..4163)
+                     /label=@cds
+                     /note="color: #000080; direction: LEFT"
      misc_feature    complement(3213..4163)
                      /label=~CodonOptimize(e_coli)
                      /note="color: #ffcc00; direction: LEFT"

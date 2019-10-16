@@ -4,7 +4,7 @@
 DnaChisel Command Line Interface
 
 Usage:
-  dnachisel <source> <target> [--circular] [--verbose]
+  dnachisel <source> <target> [--circular] [--mute]
 
 Where ``source`` is a fasta or Genbank file, and target can be one of:
 - A folder name or a zip name (extension .zip). In this case a complete report
@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     # VERBOSE PRINT
     def verbose_print(*args):
-        if params["--verbose"]:
+        if not params["--mute"]:
             print(*args)
 
     # PARSE THE CIRCULARITY
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     else:
         problem_class = DnaOptimizationProblem
     problem = problem_class.from_record(
-        source, logger="bar" if params["--verbose"] else None
+        source, logger=None if params["--mute"] else "bar"
     )
     problem.max_random_iters = 10000
     verbose_print(
@@ -64,7 +64,9 @@ if __name__ == "__main__":
 
     else:
         project_name = os.path.basename(source)
-        problem.optimize_with_report(target, project_name=project_name)
+        problem.optimize_with_report(
+            target, project_name=project_name, file_path=source
+        )
 
     verbose_print(
         "\n\nAfter optimization:\n\n",

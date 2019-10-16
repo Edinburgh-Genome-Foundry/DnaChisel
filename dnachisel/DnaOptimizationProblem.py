@@ -12,7 +12,7 @@ from .biotools import (
     find_specification_in_feature,
     sequences_differences_array,
     sequences_differences_segments,
-    load_record
+    load_record,
 )
 from .Specification import Specification, SpecificationsSet
 from .SpecEvaluation import (
@@ -180,7 +180,6 @@ class DnaOptimizationProblem:
 
     def initialize(self):
         """Variables initialization before solving."""
-
         # Uncompress SpecificationSets into
         for specs in (self.constraints, self.objectives):
             specsets = [
@@ -234,6 +233,9 @@ class DnaOptimizationProblem:
 
     def constraints_evaluations(self, autopass_constraints=True):
         """Return a list of the evaluations of each constraint of the canvas.
+
+        The "autopass_constraints" enables to just assume that constraints
+        enforced by the mutation space are verified.
         """
         return ProblemConstraintsEvaluations.from_problem(
             self, autopass_constraints=autopass_constraints
@@ -685,7 +687,9 @@ class DnaOptimizationProblem:
     @classmethod
     def from_record(cls, record, specifications_dict="default", logger="bar"):
         """TODO: docs"""
+        file_path = None
         if isinstance(record, str):
+            file_path = record
             record = load_record(record)
         if specifications_dict == "default":
             specifications_dict = DEFAULT_SPECIFICATIONS_DICT
@@ -701,7 +705,6 @@ class DnaOptimizationProblem:
                 feature, specifications_dict
             )
             parameters[role + "s"].append(spec)
-
         return cls(**parameters)
 
     def to_record(
@@ -758,6 +761,9 @@ class DnaOptimizationProblem:
     def sequence_edits_as_array(self):
         return sequences_differences_array(self.sequence, self.sequence_before)
 
+    def number_of_edits(self):
+        return self.sequence_edits_as_array().sum()
+
     def sequence_edits_as_features(self, feature_type="misc_feature"):
 
         segments = sequences_differences_segments(
@@ -774,7 +780,13 @@ class DnaOptimizationProblem:
             for start, end in segments
         ]
 
-    def optimize_with_report(self, target, project_name="My project"):
+    def optimize_with_report(
+        self,
+        target,
+        project_name="My project",
+        file_path=None,
+        file_content=None,
+    ):
         """Resolve constraints, optimize objectives, write a multi-file report.
 
         The report's content may vary depending on the optimization's success.
@@ -790,9 +802,6 @@ class DnaOptimizationProblem:
         project_name
           Project name to write on PDF reports
 
-        **solver_parameters
-          Extra keyword arguments passed to ``problem.resolve_constraints()``
-
         Returns
         -------
 
@@ -806,7 +815,13 @@ class DnaOptimizationProblem:
             self.resolve_constraints()
         except NoSolutionError as error:
             self.logger(message="No solution found: making report")
-            data = write_no_solution_report(target, self, error)
+            data = write_no_solution_report(
+                target,
+                self,
+                error,
+                file_path=file_path,
+                file_content=file_content,
+            )
             start, end, s = error.location.to_tuple()
             message = "No solution found in zone [%d, %d]: %s." % (
                 start,
@@ -818,6 +833,10 @@ class DnaOptimizationProblem:
         self.optimize()
         self.logger(message="Success! Generating report.")
         data = write_optimization_report(
-            target, self, project_name=project_name
+            target,
+            self,
+            project_name=project_name,
+            file_path=file_path,
+            file_content=file_content,
         )
         return True, "Optimization successful.", data

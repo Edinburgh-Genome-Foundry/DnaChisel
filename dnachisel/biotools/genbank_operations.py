@@ -12,25 +12,27 @@ from Bio import SeqIO
 try:
     from snapgene_reader import snapgene_file_to_seqrecord
 except ImportError:
+
     def snapgene_file_to_seqrecord(*a, **k):
         """Please install the snapgene_reader library to use this function."""
         raise ImportError(
             "Please install snapgene_reader to import Snapgene .dna files"
         )
 
-def load_record(filepath, linear=True, name="unnamed", fmt="auto"):
+
+def load_record(filepath, linear=True, name="unnamed", file_format="auto"):
     """Load a FASTA/Genbank/Snapgene record.
     
     Note that reading Snapgene records requires the library snapgene_reader
     installed.
     """
-    if fmt != "auto":
-        record = SeqIO.read(filepath, fmt)
+    if file_format != "auto":
+        record = SeqIO.read(filepath, file_format)
     elif filepath.lower().endswith(("gb", "gbk")):
         record = SeqIO.read(filepath, "genbank")
     elif filepath.lower().endswith(("fa", "fasta")):
         record = SeqIO.read(filepath, "fasta")
-    elif filepath.lower().endswith('.dna'):
+    elif filepath.lower().endswith(".dna"):
         record = snapgene_file_to_seqrecord(filepath)
     else:
         raise ValueError("Unknown format for file: %s" % filepath)
@@ -191,3 +193,45 @@ def find_specification_in_feature(feature):
         if (potential_label != "") and (potential_label[0] in "@~"):
             return potential_label
     return None
+
+
+def write_record(
+    record,
+    target,
+    file_format="genbank",
+    remove_locationless_features=True,
+    max_name_length=20,
+):
+    """Write a record as genbank, fasta, etc. via Biopython, with fixes.
+    
+    Parameters
+    ----------
+    record
+      A biopython record
+    
+    target
+      Path to a file or filelike object.
+    
+    file_format
+      Format, either Genbank or fasta
+    
+    remove_locationless_features
+      If True, will remove all features whose location is None, to avoid a
+      Biopython bug
+
+    max_name_length
+      The record's name will be truncated if longer than this (also here to
+      avoid a biopython bug) 
+    
+    """
+    record = deepcopy(record)
+    if remove_locationless_features:
+        record.features = [
+            f for f in record.features if f.location is not None
+        ]
+    record.name = record.name[:max_name_length]
+    if str(record.seq.alphabet.__class__.__name__) != "DNAAlphabet":
+        record.seq.alphabet = DNAAlphabet()
+    if hasattr(target, "open"):
+        target = target.open("w")
+    SeqIO.write(record, target, file_format)

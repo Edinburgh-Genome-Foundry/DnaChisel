@@ -15,7 +15,7 @@ from .builtin_specifications import (
     AvoidPattern,
     AvoidStopCodons,
     CodonOptimize,
-    EnforceChange,
+    EnforceChanges,
     EnforceChoice,
     EnforceGCContent,
     EnforceMeltingTemperature,
@@ -31,6 +31,7 @@ from .Specification import Specification, SpecificationsSet
 from .SpecEvaluation import SpecEvaluation
 
 from .SequencePattern import (
+    SequencePattern,
     DnaNotationPattern,
     HomopolymerPattern,
     RepeatedKmerPattern,
@@ -42,6 +43,7 @@ from .biotools import (
     complement,
     list_common_enzymes,
     load_record,
+    write_record,
     random_dna_sequence,
     random_protein_sequence,
     reverse_complement,
@@ -75,7 +77,7 @@ DEFAULT_SPECIFICATIONS_DICT.update(
         "EnforceRegionsCompatibility": EnforceRegionsCompatibility,
         "EnforceSequence": EnforceSequence,
         "EnforceChoice": EnforceChoice,
-        "EnforceChange": EnforceChange,
+        "EnforceChanges": EnforceChanges,
         # SHORTHAND NOTATIONS
         "cds": EnforceTranslation,
         "choice": EnforceChoice,
@@ -86,7 +88,7 @@ DEFAULT_SPECIFICATIONS_DICT.update(
         "tm": EnforceMeltingTemperature,
         "primer": AllowPrimer,
         "sequence": EnforceSequence,
-        "change": EnforceChange
+        "change": EnforceChanges
     }
 )
 
@@ -116,6 +118,7 @@ __all__ = [
     "Specification",
     "SpecificationsSet",
     "SpecEvaluation",
+    "SequencePattern",
     "DnaNotationPattern",
     "HomopolymerPattern",
     "RepeatedKmerPattern",
@@ -124,6 +127,7 @@ __all__ = [
     "complement",
     "list_common_enzymes",
     "load_record",
+    "write_record",
     "random_dna_sequence",
     "random_protein_sequence",
     "reverse_complement",

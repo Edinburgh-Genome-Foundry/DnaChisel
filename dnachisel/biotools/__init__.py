@@ -9,6 +9,7 @@ from .genbank_operations import (
     annotate_record,
     annotate_differences,
     annotate_pattern_occurrences,
+    write_record
 )
 
 from .sequences_operations import (
@@ -49,6 +50,7 @@ from .biotables import (
     CODONS_TRANSLATIONS,
     IUPAC_NOTATION,
     NUCLEOTIDE_TO_REGEXPR,
+    OTHER_BASES
 )
 
 
@@ -57,6 +59,7 @@ __all__ = [
     'change_biopython_record_sequence',
     'find_specification_in_feature',
     'load_record',
+    'write_record',
     'sequence_to_biopython_record',
     'annotate_record',
     'annotate_differences',
@@ -83,5 +86,6 @@ __all__ = [
     'CODONS_SEQUENCES',
     'CODONS_TRANSLATIONS',
     'IUPAC_NOTATION',
-    'NUCLEOTIDE_TO_REGEXPR'
+    'NUCLEOTIDE_TO_REGEXPR',
+    'OTHER_BASES'
 ]

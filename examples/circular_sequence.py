@@ -22,9 +22,7 @@ dna_sequence = "CTC%sCGTCTC%sCGT" % (
 constraints = [
     dc.AvoidPattern("BsmBI_site"),
     dc.EnforceGCContent(mini=0.4, maxi=0.6, location=(1500, 2500), window=50),
-    dc.AvoidNonUniqueSegments(
-        min_length=9, location=(10, 1000), extended_location=(20, 500)
-    ),
+    dc.AvoidNonUniqueSegments(min_length=9, location=(10, 1000)),
 ]
 
 problem = dc.CircularDnaOptimizationProblem(
@@ -34,4 +32,3 @@ problem = dc.CircularDnaOptimizationProblem(
 print("BEFORE OPTIMIZATION:\n\n", problem.constraints_text_summary())
 problem.resolve_constraints()
 print("AFTER OPTIMIZATION:\n\n", problem.constraints_text_summary())
-

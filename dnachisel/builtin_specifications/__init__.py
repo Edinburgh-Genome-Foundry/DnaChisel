@@ -9,7 +9,7 @@ from .AvoidNonUniqueSegments import AvoidNonUniqueSegments
 from .AvoidPattern import AvoidPattern
 from .AvoidStopCodons import AvoidStopCodons
 from .CodonOptimize import CodonOptimize
-from .EnforceChange import EnforceChange
+from .EnforceChanges import EnforceChanges
 from .EnforceChoice import EnforceChoice
 from .EnforceSequence import EnforceSequence
 from .EnforceGCContent import EnforceGCContent
@@ -30,7 +30,7 @@ __all__ = [
     "AvoidPattern",
     "AvoidStopCodons",
     "CodonOptimize",
-    "EnforceChange",
+    "EnforceChanges",
     "EnforceChoice",
     "EnforceSequence",
     "EnforceGCContent",

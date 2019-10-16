@@ -1,4 +1,4 @@
-"""Implementation of AvoidBlastMatches."""
+"""Implementation of EnforceChanges."""
 
 import numpy as np
 
@@ -9,46 +9,54 @@ from ..SpecEvaluation import SpecEvaluation
 from dnachisel.biotools import (
     sequences_differences_array,
     group_nearby_indices,
+    OTHER_BASES,
 )
+
+other_bases_sets = {
+    base: other_bases for (base, other_bases) in OTHER_BASES.items()
+}
+
+
 from dnachisel.Location import Location
 
 
-class AvoidChanges(Specification):
-    """Specify that some locations of the sequence should not be changed.
-    
+class EnforceChanges(Specification):
+    """Specify that some locations of the sequence should be changed/different.
+
+    Note: for now this class is simply a derivative of AvoidChanges where
+    the scoring function penalizes equalities instead of differences.
+
     Parameters
     ----------
     location
       Location object indicating the position of the segment that must be
-      left unchanged. Alternatively,
+      different from the original sequence. Alternatively,
       indices can be provided. If neither is provided, the assumed location
       is the whole sequence.
 
     indices
-      List of indices that must be left unchanged.
+      List of indices that must be different from the original sequence.
 
-    target_sequence
+    reference
       At the moment, this is rather an internal variable. Do not use unless
       you're not afraid of side effects.
 
     """
 
-    localization_interval_length = 6  # used when optimizing the minimize_diffs
+    localization_interval_length = 7  # used when optimizing
     best_possible_score = 0
     enforced_by_nucleotide_restrictions = True
 
-    def __init__(
-        self, location=None, indices=None, target_sequence=None, boost=1.0
-    ):
-
+    def __init__(self, location=None, indices=None, reference=None, boost=1.0):
         """Initialize."""
+        # raise NotImplementedError("This class is not yet implemented")
         if isinstance(location, tuple):
             location = Location.from_tuple(location)
         self.location = location
         if (self.location is not None) and self.location.strand == -1:
             self.location.strand = 1
         self.indices = np.array(indices) if (indices is not None) else None
-        self.target_sequence = target_sequence
+        self.reference = reference
         # self.passive_objective = passive_objective
         self.boost = boost
 
@@ -69,48 +77,48 @@ class AvoidChanges(Specification):
         """Find out what sequence it is that we are supposed to conserve."""
         result = self._copy_with_full_span_if_no_location(problem)
 
-        # Initialize the "target_sequence" in two cases:
+        # Initialize the "reference" in two cases:
         # - Always at the very beginning
         # - When the new sequence is bigger than the previous one
         #   (used in CircularDnaOptimizationProblem)
-        if self.target_sequence is None or (
-            len(self.target_sequence) < len(self.location)
+        if self.reference is None or (
+            len(self.reference) < len(self.location)
         ):
             result = result.copy_with_changes()
-            result.target_sequence = self.extract_subsequence(problem.sequence)
+            result.reference = self.extract_subsequence(problem.sequence)
         return result
 
     def evaluate(self, problem):
-        """Return a score equal to -number_of modifications.
+        """Return a score equal to -number_of_equalities.
 
-        Locations are "binned" modifications regions. Each bin has a length
+        Locations are "binned" equality regions. Each bin has a length
         in nucleotides equal to ``localization_interval_length`.`
         """
-        target = self.target_sequence
+        target = self.reference
         sequence = self.extract_subsequence(problem.sequence)
-        discrepancies = np.nonzero(
-            sequences_differences_array(sequence, target)
+        equalities = np.nonzero(
+            1 - sequences_differences_array(sequence, target)
         )[0]
 
         if self.indices is not None:
-            discrepancies = self.indices[discrepancies]
+            equalities = self.indices[equalities]
         elif self.location is not None:
             if self.location.strand == -1:
-                discrepancies = self.location.end - discrepancies
+                equalities = self.location.end - equalities
             else:
-                discrepancies = discrepancies + self.location.start
+                equalities = equalities + self.location.start
 
         intervals = [
             (r[0], r[-1] + 1)
             for r in group_nearby_indices(
-                discrepancies,
+                equalities,
                 max_group_spread=self.localization_interval_length,
             )
         ]
         locations = [Location(start, end, 1) for start, end in intervals]
 
         return SpecEvaluation(
-            self, problem, score=-len(discrepancies), locations=locations
+            self, problem, score=-len(equalities), locations=locations
         )
 
     def localized(self, location, problem=None):
@@ -129,8 +137,8 @@ class AvoidChanges(Specification):
 
                 new_constraint = self.copy_with_changes(location=new_location)
                 relative_location = new_location + (-self.location.start)
-                new_constraint.target_sequence = relative_location.extract_sequence(
-                    self.target_sequence
+                new_constraint.reference = relative_location.extract_sequence(
+                    self.reference
                 )
                 return new_constraint
 
@@ -148,9 +156,12 @@ class AvoidChanges(Specification):
             end = min(location.end, self.location.end)
         else:
             start, end = self.location.start, self.location.end
-        return [((start, end), set([sequence[start:end]]))]
+        return [
+            ((i, i + 1), other_bases_sets[sequence[i : i + 1]])
+            for i in range(start, end)
+        ]
         # return [(i, set(sequence[i])) for i in range(start, end)]
 
     def short_label(self):
-        return "keep"
+        return "change"
 

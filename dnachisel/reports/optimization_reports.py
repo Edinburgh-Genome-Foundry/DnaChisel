@@ -3,6 +3,7 @@
 import os
 import textwrap
 from collections import OrderedDict
+import hashlib
 
 from Bio import SeqIO
 import pandas
@@ -16,6 +17,7 @@ from ..biotools import (
 from ..version import __version__
 from .SpecAnnotationsTranslator import SpecAnnotationsTranslator
 from .tools import install_extras_message
+from ..Location import Location
 
 try:
     from sequenticon import sequenticon
@@ -71,7 +73,9 @@ install_reports_extra_message = (
 )
 
 
-def write_no_solution_report(target, problem, error):
+def write_no_solution_report(
+    target, problem, error, file_content=None, file_path=None
+):
     """Write a report on incompatibility found in the problem's constraints.
 
     The report comprises a PDF of plots of the sequence (global constraints,
@@ -95,6 +99,17 @@ def write_no_solution_report(target, problem, error):
         root = flametree.file_tree(target, replace=True)
     else:
         root = target
+
+    # TRANSFER THE ORIGINAL FILE
+    file_hash = None
+    if file_path is not None:
+        if file_content is None:
+            with open(file_path, "rb") as f:
+                file_content = f.read()
+        basename = os.path.basename(file_path)
+        file_hash = hashlib.md5(file_content).hexdigest()[:8]
+        root._file("_".join([file_hash, basename])).write(file_content)
+
     translator = SpecAnnotationsTranslator()
     with PdfPages(root._file("plots.pdf").open("wb")) as pdf_io:
 
@@ -110,11 +125,11 @@ def write_no_solution_report(target, problem, error):
             raise error
         start, end, strand = error.location.to_tuple()
         ax.fill_between(
-            [start, end], -10, 10, zorder=-1000, facecolor="#ffeeee"
+            [start, end], -10, 10, zorder=-1000, facecolor="#ffcccc"
         )
         title = "\n".join(
             textwrap.wrap(
-                "No solution found in zone [%d, %d]: %s"
+                "No solution found in zone [%d, %d]:%s"
                 % (start, end, str(error)),
                 width=120,
             )
@@ -123,53 +138,50 @@ def write_no_solution_report(target, problem, error):
         pdf_io.savefig(ax.figure, bbox_inches="tight", alpha=0.5)
         plt.close(ax.figure)
 
-        # PLOT LOCAL CONSTRAINTS BREACHES
+        # CREATE AND SAVE THE LOCAL CONSTRAINTS BREACHES RECORD
 
-        evals = error.problem.constraints_evaluations()
         record = error.problem.to_record(
             with_original_spec_features=False,
             with_constraints=False,
             with_objectives=False,
         )
-        record.features += evals.filter(
-            "passing"
-        ).success_and_failures_as_features()
-        record.features += evals.filter("failing").locations_as_features(
-            label_prefix="BREACH"
-        )
+
         start = max(0, error.location.start - 5)
         end = min(len(record), error.location.end + 4)
+        focus_location = Location(start, end)
+
+        def is_in_focus(location):
+            return location.overlap_region(focus_location) is not None
+
+        evals = error.problem.constraints_evaluations()
+        passing = evals.filter("passing")
+        record.features += passing.success_and_failures_as_features()
+        failing = evals.filter("failing")
+        record.features += failing.locations_as_features(
+            label_prefix="BREACH", locations_filter=is_in_focus
+        )
+        SeqIO.write(
+            record,
+            root._file("local_constraints_breaches.gb").open("w"),
+            "genbank",
+        )
+
+        # CREATE A FIGURE OF THE LOCAL CONSTRAINTS BREACHES AS A NEW PDF PAGE
+
         graphical_record = translator.translate_record(record)
         graphical_record = graphical_record.crop((start, end))
-        ax, _ = graphical_record.plot(
-            figure_width=min(20, 0.3 * (end - start))
-        )
+        figure_width = min(20, 0.3 * (end - start))
+        ax, _ = graphical_record.plot(figure_width=figure_width)
         graphical_record.plot_sequence(ax)
         ax.set_title(
             "Local constraints breaches in [%d, %d]" % (start, end)
             + "     (green = passing constraints)",
             fontdict=TITLE_FONTDICT,
         )
+        ax.set_ylim(top=ax.get_ylim()[1] + 1)
         pdf_io.savefig(ax.figure, bbox_inches="tight", alpha=0.5)
         plt.close(ax.figure)
 
-        # WRITE GENBANK
-
-        record = problem.to_record(
-            with_original_spec_features=False,
-            with_constraints=True,
-            with_objectives=True,
-        )
-        evals = problem.constraints_evaluations()
-        record.features += evals.filter(
-            "passing"
-        ).success_and_failures_as_features()
-        record.features += evals.filter("failing").locations_as_features(
-            label_prefix="BREACH"
-        )
-        SeqIO.write(
-            record, root._file("constraints breaches.gb").open("w"), "genbank"
-        )
     root._file("logs.txt").write(problem.logger.dump_logs())
 
     # returns zip data if target == '@memory'
@@ -250,6 +262,24 @@ def objectives_before_after_dataframe(problem, objectives_evaluations=None):
     return dataframe
 
 
+def plot_optimization_changes(problem):
+    if not GENEBLOCKS_AVAILABLE:
+        raise ImportError("Install Geneblocks to use plot_differences()")
+    sequence_before = sequence_to_biopython_record(problem.sequence_before)
+    sequence_after = problem.to_record()
+    diffs = DiffBlocks.from_sequences(sequence_before, sequence_after)
+    span = max(2, len(sequence_after) / 20)
+    diffs = diffs.merged(
+        blocks_per_span=(3, span), replace_gap=span / 2, change_gap=span / 2
+    )
+    _, diffs_ax = diffs.plot(
+        translator_class=SpecAnnotationsTranslator,
+        annotate_inline=True,
+        figure_width=15,
+    )
+    return diffs_ax
+
+
 def write_optimization_report(
     target,
     problem,
@@ -312,24 +342,21 @@ def write_optimization_report(
         root = flametree.file_tree(target, replace=True)
     else:
         root = target
+
+    # TRANSFER THE ORIGINAL FILE
+    file_hash = None
+    if file_path is not None:
+        if file_content is None:
+            with open(file_path, "rb") as f:
+                file_content = f.read()
+        basename = os.path.basename(file_path)
+        file_hash = hashlib.md5(file_content).hexdigest()[:8]
+        root._file("_".join([file_hash, basename])).write(file_content)
+
     # CREATE FIGURES AND GENBANKS
     diffs_figure_data = None
-    sequence_before = sequence_to_biopython_record(problem.sequence_before)
     if GENEBLOCKS_AVAILABLE and plot_figure:
-        sequence_after = problem.to_record()
-        diffs = DiffBlocks.from_sequences(sequence_before, sequence_after)
-        span = max(2, len(sequence_after) / 20)
-        diffs = diffs.merged(
-            blocks_per_span=(3, span),
-            replace_gap=span / 2,
-            change_gap=span / 2,
-        )
-        _, diffs_ax = diffs.plot(
-            translator_class=SpecAnnotationsTranslator,
-            annotate_inline=True,
-            figure_width=15,
-        )
-
+        diffs_ax = plot_optimization_changes(problem)
         diffs_figure_data = pdf_tools.figure_data(diffs_ax.figure, fmt="svg")
         plt.close(diffs_ax.figure)
 
@@ -348,10 +375,8 @@ def write_optimization_report(
     objectives_before_after = objectives_before_after_dataframe(
         problem=problem, objectives_evaluations=objectives_evaluations
     )
-    filename = "constraints_before_and_after.csv"
-    constraints_before_after.to_csv(
-        root._file(filename).open("w"), index=False
-    )
+    filename = "objectives_before_and_after.csv"
+    objectives_before_after.to_csv(root._file(filename).open("w"), index=False)
 
     # CREATE PDF REPORT
     html = report_writer.pug_to_html(
@@ -364,6 +389,7 @@ def write_optimization_report(
         objectives_before_after=objectives_before_after,
         edits=problem.sequence_edits_as_array().sum(),
         diffs_figure_data=diffs_figure_data,
+        file_hash=file_hash,
         sequenticons={
             label: sequenticon(seq, output_format="html_image", size=24)
             for label, seq in [

@@ -6,23 +6,21 @@ from ..Specification import Specification
 from ..SpecEvaluation import SpecEvaluation
 from ..SequencePattern import SequencePattern
 from dnachisel.Location import Location
-from dnachisel.biotools import (
-    reverse_complement,
-)
+from dnachisel.biotools import reverse_complement
 
 
 class EnforceChoice(Specification):
-    """Constr
+    """The sequence at the given location must be one of several alternatives.
 
     Parameters
     ----------
-
     choices
-      List of same-length, ATGC sequences, e.g. [ATT, ATC, ATA].
+      List of same-length ATGC sequences, e.g. ["ATT", "ATC", "ATA"].
 
     location
       Location of the DNA segment on which to enforce the pattern e.g.
-      ``Location(10, 45, 1)`` or simply ``(10, 45, 1)``
+      ``Location(10, 45, 1)`` or simply ``(10, 45, 1)``. the location length
+      must match that of the sequence in the list of ``choices``
 
     """
 
@@ -36,15 +34,7 @@ class EnforceChoice(Specification):
             SequencePattern.from_string(c) if isinstance(c, str) else c
             for c in choices
         ]
-        # if enzymes is not None:
-        #     choices = [enzyme_pattern(e) for e in enzymes]
-        # if choices is None:
-        #     raise ValueError('`choices` or `enzymes` should not be None.')
-        # choices = [
-        #      choice if isinstance(choice, DnaNotationPattern)
-        #      else DnaNotationPattern(choice)
-        #      for choice in choices
-        # ]
+        # PRECOMPUTE ALL VARIANTS
         choices = [
             variant for choice in choices for variant in choice.all_variants()
         ]
@@ -56,11 +46,6 @@ class EnforceChoice(Specification):
 
     def initialized_on_problem(self, problem, role="constraint"):
         """Find out what sequence it is that we are supposed to conserve."""
-        # if self.location is None:
-        #     location = Location(0, len(problem.sequence), 1)
-        #     result = self.copy_with_changes(location=location)
-        # else:
-        #     result = self
         result = self._copy_with_full_span_if_no_location(problem)
         if not all([len(c) == len(result.location) for c in result.choices]):
             raise ValueError(
@@ -100,3 +85,4 @@ class EnforceChoice(Specification):
     def __str__(self):
         """Represent."""
         return "EnforceChoice(%s)" % str(self.location)
+

@@ -124,7 +124,7 @@ Here is an example of summary report:
 .. raw:: html
 
     <p align="center">
-    <img alt="report" title="report" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/report_screenshot.jpg" width="600">
+    <img alt="report" title="report" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/report_screenshot.png" width="600">
     <br /><br />
     </p>
 

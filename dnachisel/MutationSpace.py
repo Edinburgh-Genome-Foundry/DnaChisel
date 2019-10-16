@@ -231,7 +231,7 @@ class MutationSpace:
         """
         new_sequence = bytearray(sequence.encode())
         for choice in self.choices_list:
-            variants = choice.variants
+            variants = list(choice.variants)
             if len(choice.variants) == 0:
                 raise ValueError(
                     "Cannot constrain a sequence when some "
@@ -239,10 +239,10 @@ class MutationSpace:
                     "(%d-%d)" % (choice.start, choice.end)
                 )
             elif len(variants) == 1:
-                variant = list(variants)[0]
+                variant = variants[0]
                 new_sequence[choice.start : choice.end] = variant.encode()
             elif sequence[choice.start : choice.end] not in variants:
-                variant = list(variants)[0]
+                variant = variants[np.random.randint(0, len(variants))]
                 new_sequence[choice.start : choice.end] = variant.encode()
         return new_sequence.decode()
 
