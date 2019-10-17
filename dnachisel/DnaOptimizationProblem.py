@@ -683,8 +683,40 @@ class DnaOptimizationProblem:
             self.optimize_objective(objective=objective)
 
     @classmethod
-    def from_record(cls, record, specifications_dict="default", logger="bar"):
-        """TODO: docs"""
+    def from_record(
+        cls,
+        record,
+        specifications_dict="default",
+        logger="bar",
+        extra_constraints=(),
+        extra_objectives=(),
+    ):
+        """Create a DnaOptimizationProblem by parsing a record's annotations.
+        
+        Examples
+        --------
+
+        >>> problem = DnaOptimizationProblem.from_record("my_record.gb")
+        >>> problem = DnaOptimizationProblem.from_record(some_biopython_record)
+
+        Parameters
+        ----------
+
+        record
+          Either a biopython record or path to a genbank/snapgene file.
+
+        specifications_dict
+          Provide a custom dict with user-defined specifications instead of the
+          default dict, which contains the built-in specifications.
+
+        logger
+          Logger of the DnaOptimizationProblem
+
+        extra_constraints, extra_objectives
+          List of Specifications to be added to the problem, in addition to
+          the specifications parsed from the genbank.
+        
+        """
         file_path = None
         if isinstance(record, str):
             file_path = record
@@ -692,7 +724,10 @@ class DnaOptimizationProblem:
         if specifications_dict == "default":
             specifications_dict = DEFAULT_SPECIFICATIONS_DICT
         parameters = dict(
-            sequence=record, constraints=[], objectives=[], logger=logger
+            sequence=record,
+            constraints=[] + list(extra_constraints),  # shallow copy
+            objectives=[] + list(extra_objectives),  # shallow copy
+            logger=logger,
         )
         for feature in record.features:
             if feature.type != "misc_feature":

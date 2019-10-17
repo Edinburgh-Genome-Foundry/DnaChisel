@@ -208,6 +208,8 @@ def records_from_breaches_dataframe(dataframe, sequences):
                     location=_parse_location(location),
                     label=column,
                     color=columns_colors[column],
+                    ApEinfo_fwdcolor=columns_colors[column],
+                    ApEinfo_revcolor=columns_colors[column],
                     is_a_breach=True,
                 )
     return records
