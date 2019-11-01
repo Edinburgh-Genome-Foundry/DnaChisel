@@ -101,7 +101,7 @@ def _breaches(constraint, sequence):
 
 
 def constraints_breaches_dataframe(
-    constraints, sequences, display_constraints_locations=False
+    constraints, sequences, display_constraints_locations=False,
 ):
     """Return a dataframe summarizing constraints breaches in the sequences.
 
@@ -271,7 +271,7 @@ def breaches_records_to_pdf(
     
     logger
       Either "bar" for a progress bar, None for no logging, or any Proglog
-      logger.
+      logger. The bar name is "sequence".
     """
     pdf_io = BytesIO() if pdf_path is None else pdf_path
     logger = proglog.default_bar_logger(logger, min_time_interval=0.2)
@@ -289,6 +289,7 @@ EXAMPLE_MANUFACTURING_CONSTRAINTS = [
     AvoidPattern("BsaI_site"),
     AvoidPattern("BsmBI_site"),
     AvoidPattern("BbsI_site"),
+    AvoidPattern("SapI_site"),
     AvoidPattern("9xA"),
     AvoidPattern("9xT"),
     AvoidPattern("6xG"),

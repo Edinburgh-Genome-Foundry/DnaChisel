@@ -28,7 +28,7 @@ def test_codon_optimize_bestcodon():
     assert problem.objective_scores_sum() == 0
 
 
-def test_codon_optimize_harmonized_frequencies():
+def test_codon_optimize_match_usage():
     numpy.random.seed(123)
     protein = random_protein_sequence(500, seed=123)
     sequence = reverse_translate(protein)
@@ -36,7 +36,7 @@ def test_codon_optimize_harmonized_frequencies():
         sequence=sequence,
         constraints=[EnforceTranslation()],
         objectives=[
-            CodonOptimize(species="e_coli", mode="harmonized_frequencies")
+            CodonOptimize(species="e_coli", mode="match_usage")
         ],
     )
     assert -700 < problem.objective_scores_sum() < -600
@@ -44,11 +44,12 @@ def test_codon_optimize_harmonized_frequencies():
     assert -350 < problem.objective_scores_sum()
 
 
-def test_codon_optimize_harmonized_frequencies_short_sequence():
+def test_codon_optimize_match_usage_short_sequence():
+    numpy.random.seed(123)
     protein = "DDDKKKKKK"
     sequence = reverse_translate(protein)
     harmonization = CodonOptimize(
-        species="b_subtilis", mode="harmonized_frequencies"
+        species="b_subtilis", mode="match_usage"
     )
     problem = DnaOptimizationProblem(
         sequence=sequence,
@@ -58,7 +59,22 @@ def test_codon_optimize_harmonized_frequencies_short_sequence():
     assert problem.objective_scores_sum() < -7
     problem.optimize()
     assert -1 < problem.objective_scores_sum()
+    assert problem.sequence == "GATGACGATAAGAAAAAGAAAAAAAAA"
 
+def test_codon_optimize_harmonize_rca_short_sequence():
+    protein = random_protein_sequence(500, seed=123)
+    sequence = reverse_translate(protein)
+    harmonization = CodonOptimize(
+        species="h_sapiens", original_species='e_coli', mode="harmonize_rca"
+    )
+    problem = DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[EnforceTranslation()],
+        objectives=[harmonization],
+    )
+    assert problem.objective_scores_sum() < -129
+    problem.optimize()
+    assert -74 < problem.objective_scores_sum()
 
 def test_codon_optimize_as_hard_constraint():
     numpy.random.seed(123)

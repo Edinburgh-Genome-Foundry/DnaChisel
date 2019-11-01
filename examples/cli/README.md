@@ -8,5 +8,5 @@ dnachisel annotated_record.gbk optimized_record.gb
 
 To output a full optimization report:
 ```
-dnachisel num1_record.gb optimization_report.zip --verbose
+dnachisel num1_record.gbk optimization_report.zip --verbose
 ```

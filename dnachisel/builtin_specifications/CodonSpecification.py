@@ -19,8 +19,7 @@ class CodonSpecification(Specification):
         if self.location is not None:
             overlap = self.location.overlap_region(location)
             if overlap is None:
-                return None 
- # VoidSpecification(parent_specification=self)
+                return None
             else:
                 # return self
                 o_start, o_end = overlap.start, overlap.end

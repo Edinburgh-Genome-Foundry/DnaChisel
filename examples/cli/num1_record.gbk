@@ -1,4 +1,4 @@
-LOCUS       Exported               10247 bp ds-DNA     linear   UNK 12-OCT-2019
+LOCUS       Exported               10247 bp ds-DNA     linear   UNK 17-OCT-2019
 DEFINITION  Saccharomyces cerevisiae S288C chromosome IV, complete sequence.
 ACCESSION   NC_001136
 VERSION     .
@@ -8,32 +8,42 @@ SOURCE      natural DNA sequence
 REFERENCE   1  (bases 1 to 10247)
   AUTHORS   .
   TITLE     Direct Submission
-  JOURNAL   Exported Tuesday, Oct 15, 2019 from SnapGene Viewer 4.3.11
+  JOURNAL   Exported Thursday, Oct 17, 2019 from SnapGene Viewer 4.3.11
             https://www.snapgene.com
 FEATURES             Location/Qualifiers
      source          1..10247
                      /organism="unspecified"
                      /mol_type="genomic DNA"
+                     /note="color: #ffffff"
      misc_feature    1..10247
                      /label=@no(BsaI_site)
+                     /note="color: #3366ff"
      misc_feature    1..10247
+                     /label=~gc(30-45%, window=100)
                      /label=~gc(35-45%, window=100)
+                     /note="color: #ffff00"
      misc_feature    120..1000
                      /label=@keep
+                     /note="color: #3366ff"
      gene            1001..9247
                      /gene="NUM1"
                      /gene_synonym="PAC12"
                      /locus_tag="YDR150W"
                      /label=NUM1
+                     /note="color: #ff9900; direction: RIGHT"
                      /db_xref="GeneID:851727"
      misc_feature    1001..9247
                      /label=@cds
+                     /note="color: #3366ff"
      misc_feature    1001..9247
                      /label=~CodonOptimize(s_cerevisiae)
-     misc_feature    2001..6000
+                     /note="color: #ffff00"
+     misc_feature    3000..5000
                      /label=@AvoidNonUniqueSegments(20, here)
+                     /note="color: #3366ff"
      misc_feature    9248..10247
                      /label=@keep
+                     /note="color: #3366ff"
 ORIGIN
         1 cctgagctaa ctcctcacca acagtgacag tgtcctctgg tttgaaattt agcttcgtaa
        61 cagtacctga tactggcgaa ttgacctcaa tatcaatttt atcggtctca atagtggcca

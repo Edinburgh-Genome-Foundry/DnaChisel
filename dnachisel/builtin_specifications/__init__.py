@@ -8,7 +8,7 @@ from .AvoidHeterodimerization import AvoidHeterodimerization
 from .AvoidNonUniqueSegments import AvoidNonUniqueSegments
 from .AvoidPattern import AvoidPattern
 from .AvoidStopCodons import AvoidStopCodons
-from .CodonOptimize import CodonOptimize
+from .codon_optimization import CodonOptimize
 from .EnforceChanges import EnforceChanges
 from .EnforceChoice import EnforceChoice
 from .EnforceSequence import EnforceSequence

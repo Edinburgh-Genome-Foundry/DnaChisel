@@ -1,0 +1,66 @@
+from ..CodonSpecification import CodonSpecification
+from python_codon_tables import get_codons_table
+import numpy as np
+from dnachisel.Location import Location
+from dnachisel.biotools import group_nearby_indices
+
+
+class BaseCodonOptimizationClass(CodonSpecification):
+    def __init__(
+        self, species=None, location=None, codon_usage_table=None, boost=1.0
+    ):
+        self.boost = boost
+        if isinstance(location, tuple):
+            location = Location.from_tuple(location, default_strand=+1)
+        self.location = location
+        self.species = species
+        self.codon_usage_table = self.get_codons_table(
+            species, codon_usage_table
+        )
+    
+    def get_codons(self, problem):
+        subsequence = self.location.extract_sequence(problem.sequence)
+        if len(subsequence) % 3:
+            raise ValueError(
+                "Spec. %s is on a window/sequence with size not multiple of 3)"
+                % (self.label())
+            )
+        return [
+            subsequence[3 * i : 3 * (i + 1)]
+            for i in range(int(len(subsequence) / 3))
+        ]
+
+    @staticmethod
+    def get_codons_table(species, codon_usage_table):
+        if codon_usage_table is None:
+            if species is None:
+                raise ValueError(
+                    "Provide either an species name or a codon usage table"
+                )
+            else:
+                codon_usage_table = get_codons_table(species)
+        return codon_usage_table
+
+    def initialized_on_problem(self, problem, role):
+        """Get location from sequence if no location provided."""
+        return self._copy_with_full_span_if_no_location(problem)
+
+    def codons_indices_to_locations(self, indices):
+        """Convert a list of codon positions to a list of Locations"""
+        indices = np.array(indices)
+        if self.location.strand == -1:
+            indices = sorted(self.location.end - indices)
+            return [
+                Location(group[0] - 3, group[-1], strand=-1)
+                for group in group_nearby_indices(
+                    indices, max_group_spread=self.localization_group_spread
+                )
+            ]
+        else:
+            indices += self.location.start
+            return [
+                Location(group[0], group[-1] + 3)
+                for group in group_nearby_indices(
+                    indices, max_group_spread=self.localization_group_spread
+                )
+            ]

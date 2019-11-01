@@ -19,10 +19,8 @@ class EnforcePatternOccurence(Specification):
     Parameters
     ----------
     pattern
-      A SequencePattern or DnaNotationPattern
-
-    enzyme
-      Enzyme name, can be provided instead of a pattern
+      A SequencePattern or DnaNotationPattern or a string such as "AATTG",
+      "BsmBI_site", etc.
 
     occurences
       Desired number of occurences of the pattern.
