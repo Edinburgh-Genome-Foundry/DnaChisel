@@ -36,10 +36,10 @@ def test_codon_optimize_match_usage():
         sequence=sequence,
         constraints=[EnforceTranslation()],
         objectives=[
-            CodonOptimize(species="e_coli", mode="match_usage")
+            CodonOptimize(species="e_coli", method="match_codon_usage")
         ],
     )
-    assert -700 < problem.objective_scores_sum() < -600
+    assert -600 < problem.objective_scores_sum() < -550
     problem.optimize()
     assert -350 < problem.objective_scores_sum()
 
@@ -49,30 +49,30 @@ def test_codon_optimize_match_usage_short_sequence():
     protein = "DDDKKKKKK"
     sequence = reverse_translate(protein)
     harmonization = CodonOptimize(
-        species="b_subtilis", mode="match_usage"
+        species="b_subtilis", method="match_codon_usage"
     )
     problem = DnaOptimizationProblem(
         sequence=sequence,
         constraints=[EnforceTranslation()],
         objectives=[harmonization],
     )
-    assert problem.objective_scores_sum() < -7
+    assert problem.objective_scores_sum() < -5.5
     problem.optimize()
-    assert -1 < problem.objective_scores_sum()
-    assert problem.sequence == "GATGACGATAAGAAAAAGAAAAAAAAA"
+    assert -0.6 < problem.objective_scores_sum()
+    assert problem.sequence == "GATGATGACAAGAAAAAGAAAAAAAAA"
 
 def test_codon_optimize_harmonize_rca_short_sequence():
     protein = random_protein_sequence(500, seed=123)
     sequence = reverse_translate(protein)
     harmonization = CodonOptimize(
-        species="h_sapiens", original_species='e_coli', mode="harmonize_rca"
+        species="h_sapiens", original_species='e_coli', method="harmonize_rca"
     )
     problem = DnaOptimizationProblem(
         sequence=sequence,
         constraints=[EnforceTranslation()],
         objectives=[harmonization],
     )
-    assert problem.objective_scores_sum() < -129
+    assert problem.objective_scores_sum() < -123
     problem.optimize()
     assert -74 < problem.objective_scores_sum()
 

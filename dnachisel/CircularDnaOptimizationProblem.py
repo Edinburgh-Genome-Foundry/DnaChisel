@@ -2,7 +2,8 @@
 sequences. Needs more docs. See example in the examples folder.
 """
 
-from .DnaOptimizationProblem import DnaOptimizationProblem, NoSolutionError
+from .DnaOptimizationProblem import DnaOptimizationProblem
+from .NoSolutionError import NoSolutionError
 from .reports.optimization_reports import (
     write_optimization_report,
     write_no_solution_report,
@@ -15,7 +16,7 @@ class CircularViewProblem(DnaOptimizationProblem):
     times the same sequence and specifications, in order to model the
     circularity of the DNA sequence"""
 
-    def change_sequence(self, new_sequence):
+    def _replace_sequence(self, new_sequence):
         L = len(new_sequence) // 3
 
         def return_the_loony(a, b, c):

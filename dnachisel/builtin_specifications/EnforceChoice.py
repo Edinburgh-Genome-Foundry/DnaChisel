@@ -12,6 +12,8 @@ from dnachisel.biotools import reverse_complement
 class EnforceChoice(Specification):
     """The sequence at the given location must be one of several alternatives.
 
+    Shorthand for annotations: "choice".
+
     Parameters
     ----------
     choices
@@ -27,6 +29,7 @@ class EnforceChoice(Specification):
     localization_interval_length = 6  # used when optimizing
     best_possible_score = 0
     enforced_by_nucleotide_restrictions = True
+    shorthand_name = "choice"
 
     def __init__(self, choices=None, location=None, boost=1.0):
         """Initialize."""
@@ -66,7 +69,7 @@ class EnforceChoice(Specification):
         locations = [] if (score == 0) else [self.location]
         return SpecEvaluation(self, problem, score=score, locations=locations)
 
-    def localized(self, location, problem=None):
+    def localized(self, location, problem=None, with_righthand=True):
         """Localize the spec to the overlap of its location and the new."""
         return self
 

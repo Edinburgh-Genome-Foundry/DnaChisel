@@ -1,4 +1,4 @@
-from dnachisel import DnaOptimizationProblem, AvoidStopCodons
+from dnachisel import DnaOptimizationProblem, AvoidStopCodons, translate
 import numpy
 
 # Note: we are not providing a location for AvoidChanges: it applies globally
@@ -6,9 +6,10 @@ import numpy
 def test_AvoidStopCodons():
     numpy.random.seed(123)
     problem = DnaOptimizationProblem(
-        sequence="ATTGCCATCTAA",
+        sequence="".join(["ATT", "TAG", "GCC", "TGA", "ATC", "TAA"]),
         constraints=[AvoidStopCodons()]
     )
     assert not problem.all_constraints_pass()
     problem.resolve_constraints()
     assert problem.all_constraints_pass()
+    assert "*" not in translate(problem.sequence)

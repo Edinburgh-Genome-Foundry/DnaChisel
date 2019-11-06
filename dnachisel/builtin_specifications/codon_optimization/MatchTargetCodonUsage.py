@@ -8,6 +8,7 @@ from dnachisel.biotools import (
 
 from .BaseCodonOptimizationClass import BaseCodonOptimizationClass
 
+
 class MatchTargetCodonUsage(BaseCodonOptimizationClass):
     """Codon-optimize a sequence so it has the same codon usage as a target.
 
@@ -27,13 +28,14 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
     ----------
 
     species
+      Species for which the sequence will be codon-optimized.
       Either a TaxID (this requires a web connection as the corresponding table
       will be downloaded from the internet) or the name of the species to
       codon-optimize for (the name must be supported by ``python_codon_tables``
       e.g. ``e_coli``, ``s_cerevisiae``, ``h_sapiens``, ``c_elegans``,
       ``b_subtilis``, ``d_melanogaster``).
-      Note that the species can be omited if a ``codon_usage_table`` is
-      provided instead
+      Note that a ``codon_usage_table`` can be provided instead, or even in
+      addition, for species whose codon usage table cannot be auto-imported.
 
     location
       Either a DnaChisel Location or a tuple of the form (start, end, strand)
@@ -68,13 +70,10 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
 
     best_possible_score = 0
     localization_group_spread = 3
+    shorthand_name = "match_codon_usage"
 
     def __init__(
-        self,
-        species=None,
-        location=None,
-        codon_usage_table=None,
-        boost=1.0,
+        self, species=None, location=None, codon_usage_table=None, boost=1.0
     ):
         BaseCodonOptimizationClass.__init__(
             self,
@@ -138,7 +137,7 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
     def localized_on_window(self, new_location, start_codon, end_codon):
         """Relocate without changing much."""
         return self
-        
+
     def label_parameters(self):
         return ["(custom table)" if self.species is None else self.species]
 

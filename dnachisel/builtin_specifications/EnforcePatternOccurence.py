@@ -2,19 +2,22 @@
 
 from ..Specification import Specification
 
-
-# from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
-from .EnforceSequence import EnforceSequence
 from ..MutationSpace import MutationSpace
 from ..SequencePattern import SequencePattern, DnaNotationPattern
 from ..Location import Location
 from ..biotools import reverse_complement
-from ..DnaOptimizationProblem import DnaOptimizationProblem, NoSolutionError
+from ..DnaOptimizationProblem import DnaOptimizationProblem
+from ..NoSolutionError import NoSolutionError
 
+from .EnforceSequence import EnforceSequence
 
 class EnforcePatternOccurence(Specification):
     """Enforce a number of occurences of the given pattern in the sequence.
+
+    Shorthand for annotations: "insert" (although this specification can be
+    used to both insert new occurences of a pattern, or destroy surnumerary
+    patterns)
 
     Parameters
     ----------
@@ -37,7 +40,7 @@ class EnforcePatternOccurence(Specification):
 
     best_possible_score = 0
     priority = -1
-    genbank_args = ("pattern", "occurences")
+    shorthand_name = "insert"
 
     def __init__(
         self, pattern=None, occurences=1, location=None, center=True, boost=1.0

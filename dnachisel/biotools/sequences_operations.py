@@ -1,6 +1,7 @@
 import itertools
 
 from Bio.Seq import Seq
+from Bio.Data import CodonTable
 import numpy as np
 
 from .biotables import (
@@ -8,6 +9,7 @@ from .biotables import (
     COMPLEMENTS,
     CODONS_SEQUENCES,
     IUPAC_NOTATION,
+    get_backtranslation_table,
 )
 
 
@@ -34,24 +36,31 @@ def reverse_complement(sequence):
     return complement(sequence)[::-1]
 
 
-def reverse_translate(protein_sequence, randomize_codons=False):
+def reverse_translate(
+    protein_sequence, randomize_codons=False, table="Standard"
+):
     """Return a DNA sequence which translates to the provided protein sequence
 
     Note: at the moment, the first valid codon found is used for each
     amino-acid (so it is deterministic but no codon-optimization is done).
     """
+    backtranslation_table = get_backtranslation_table(table_name=table)
     if randomize_codons:
-        random_indices = np.random.randint(0, 1000, len(protein_sequence))
+        random_numbers = np.random.randint(0, 1000, len(protein_sequence))
+        random_indices = [
+            random_number % len(backtranslation_table[aa])
+            for aa, random_number in zip(protein_sequence, random_numbers)
+        ]
         return "".join(
             [
-                CODONS_SEQUENCES[aa][random_indice % len(CODONS_SEQUENCES[aa])]
+                backtranslation_table[aa][random_indice]
                 for aa, random_indice in zip(protein_sequence, random_indices)
             ]
         )
-    return "".join([CODONS_SEQUENCES[aa][0] for aa in protein_sequence])
+    return "".join([backtranslation_table[aa][0] for aa in protein_sequence])
 
 
-def translate(dna_sequence, translation_table="Bacterial"):
+def translate(dna_sequence, table="Standard", assume_start_codon=False):
     """Translate the DNA sequence into an amino-acids sequence "MLKYQT...".
     If ``translation_table`` is the name or number of a NCBI genetic table,
     Biopython will be used. See here for options:
@@ -61,17 +70,22 @@ def translate(dna_sequence, translation_table="Bacterial"):
     ``translation_table`` can also be a dictionnary of the form
     ``{"ATT": "M", "CTC": "X", etc.}`` for more exotic translation tables
 
+    Is CDS will indicate to 
+
 
     """
-    if isinstance(translation_table, dict):
+    if isinstance(table, dict):
         return "".join(
             [
-                translation_table[dna_sequence[i : i + 3]]
+                table[dna_sequence[i : i + 3]]
                 for i in range(0, len(dna_sequence), 3)
             ]
         )
     else:
-        return str(Seq(dna_sequence).translate(table=translation_table))
+        table = CodonTable.unambiguous_dna_by_name[table]
+        if assume_start_codon and (dna_sequence[:3] in table.start_codons):
+            return "M" + str(Seq(dna_sequence[3:]).translate(table=table))
+        return str(Seq(dna_sequence).translate(table=table))
 
 
 def dna_pattern_to_regexpr(dna_pattern):

@@ -25,13 +25,14 @@ class MaximizeCAI(BaseCodonOptimizationClass):
     ----------
 
     species
+      Species for which the sequence will be codon-optimized.
       Either a TaxID (this requires a web connection as the corresponding table
       will be downloaded from the internet) or the name of the species to
       codon-optimize for (the name must be supported by ``python_codon_tables``
       e.g. ``e_coli``, ``s_cerevisiae``, ``h_sapiens``, ``c_elegans``,
       ``b_subtilis``, ``d_melanogaster``).
-      Note that the species can be omited if a ``codon_usage_table`` is
-      provided instead
+      Note that a ``codon_usage_table`` can be provided instead, or even in
+      addition, for species whose codon usage table cannot be auto-imported.
 
     location
       Either a DnaChisel Location or a tuple of the form (start, end, strand)
@@ -60,6 +61,7 @@ class MaximizeCAI(BaseCodonOptimizationClass):
 
     best_possible_score = 0
     localization_group_spread = 3
+    shorthand_name = "use_best_codon"
 
     def __init__(
         self, species=None, location=None, codon_usage_table=None, boost=1.0

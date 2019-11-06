@@ -1,7 +1,6 @@
 from .DnaOptimizationProblem import (
     DnaOptimizationProblem,
-    NoSolutionError,
-    DEFAULT_SPECIFICATIONS_DICT,
+    NoSolutionError
 )
 from .CircularDnaOptimizationProblem import CircularDnaOptimizationProblem
 from .Location import Location
@@ -25,6 +24,7 @@ from .builtin_specifications import (
     EnforceTerminalGCContent,
     EnforceTranslation,
     SequenceLengthBounds,
+    DEFAULT_SPECIFICATIONS_DICT
 )
 
 from .Specification import Specification, SpecificationsSet
@@ -62,36 +62,6 @@ from .utils import random_compatible_dna_sequence
 
 
 from .version import __version__
-
-DEFAULT_SPECIFICATIONS_DICT.update(
-    {
-        "AvoidBlastMatches": AvoidBlastMatches,
-        "AvoidChanges": AvoidChanges,
-        "AvoidHairpins": AvoidHairpins,
-        "AvoidNonUniqueSegments": AvoidNonUniqueSegments,
-        "AvoidPattern": AvoidPattern,
-        "CodonOptimize": CodonOptimize,
-        "EnforceGCContent": EnforceGCContent,
-        "EnforcePatternOccurence": EnforcePatternOccurence,
-        "EnforceTranslation": EnforceTranslation,
-        "EnforceRegionsCompatibility": EnforceRegionsCompatibility,
-        "EnforceSequence": EnforceSequence,
-        "EnforceChoice": EnforceChoice,
-        "EnforceChanges": EnforceChanges,
-        # SHORTHAND NOTATIONS
-        "cds": EnforceTranslation,
-        "choice": EnforceChoice,
-        "gc": EnforceGCContent,
-        "insert": EnforcePatternOccurence,
-        "keep": AvoidChanges,
-        "no": AvoidPattern,
-        "tm": EnforceMeltingTemperature,
-        "primer": AllowPrimer,
-        "sequence": EnforceSequence,
-        "change": EnforceChanges
-    }
-)
-
 
 __all__ = [
     "DnaOptimizationProblem",

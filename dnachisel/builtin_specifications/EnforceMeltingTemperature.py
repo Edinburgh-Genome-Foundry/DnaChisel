@@ -14,6 +14,9 @@ from Bio.SeqUtils import MeltingTemp as bio_mt
 
 class EnforceMeltingTemperature(Specification):
     """Ensure that the subsequence's Tm is in a certain segment/target.
+
+    Shorthand for annotations: "tm".
+
     Parameters
     ----------
     mini, maxi
@@ -33,6 +36,8 @@ class EnforceMeltingTemperature(Specification):
       Multiplicator for this specification's score when used in a
       multi-objective optimization.
     """
+
+    shorthand_name = "tm"
 
     def __init__(
         self, mini=None, maxi=None, target=None, location=None, boost=1.0

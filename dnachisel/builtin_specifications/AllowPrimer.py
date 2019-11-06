@@ -21,6 +21,8 @@ class AllowPrimer(SpecificationsSet):
     sanger sequencing with a primer annealing at a particular location of
     the sequence.
 
+    Shorthand for annotations: "primer".
+
     Parameters
     ----------
 
@@ -48,6 +50,8 @@ class AllowPrimer(SpecificationsSet):
       Properties of the repeated patterns avoided. List of pairs (K, N)
       meaning "avoid K-mers repeated N times in a row".
     """
+
+    shorthand_name = "primer"
 
     def __init__(
         self,

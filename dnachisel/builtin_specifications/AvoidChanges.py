@@ -15,6 +15,8 @@ from dnachisel.Location import Location
 
 class AvoidChanges(Specification):
     """Specify that some locations of the sequence should not be changed.
+
+    Shorthand for annotations: "change".
     
     Parameters
     ----------
@@ -36,6 +38,7 @@ class AvoidChanges(Specification):
     localization_interval_length = 6  # used when optimizing the minimize_diffs
     best_possible_score = 0
     enforced_by_nucleotide_restrictions = True
+    shorthand_name = "keep"
 
     def __init__(
         self, location=None, indices=None, target_sequence=None, boost=1.0

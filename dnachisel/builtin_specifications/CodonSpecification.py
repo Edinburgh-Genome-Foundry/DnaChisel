@@ -1,7 +1,9 @@
 """Implements core specification VoidSpecification."""
 from ..Specification import Specification
+
 # from .VoidSpecification import VoidSpecification
 from ..Location import Location
+
 
 class CodonSpecification(Specification):
     """Special class for dealing with codon.
@@ -10,7 +12,21 @@ class CodonSpecification(Specification):
 
     """
 
-    def localized(self, location, problem=None):
+    def codon_index_to_location(self, index):
+        if self.location.strand >= 0:
+            return Location(
+                start=self.location.start + 3 * index,
+                end=self.location.start + 3 * (index + 1),
+                strand=1
+            )
+        else:
+            return Location(
+                start=self.location.end - 3 * (index + 1),
+                end=self.location.end - 3 * index,
+                strand=-1,
+            )
+
+    def localized(self, location, problem=None, with_righthand=True):
         """Generic localization method for codon specifications.
 
         Calls the class'  ``.localized_on_window`` method at the end.
@@ -31,7 +47,7 @@ class CodonSpecification(Specification):
                     new_location = Location(
                         start=w_start + 3 * start_codon,
                         end=min(w_end, w_start + 3 * (end_codon)),
-                        strand=self.location.strand
+                        strand=self.location.strand,
                     )
                 else:
                     start_codon = int((w_end - o_end) / 3)
@@ -39,9 +55,10 @@ class CodonSpecification(Specification):
                     new_location = Location(
                         start=max(w_start, w_end - 3 * (end_codon)),
                         end=w_end - 3 * start_codon,
-                        strand=self.location.strand
+                        strand=self.location.strand,
                     )
-                return self.localized_on_window(new_location, start_codon,
-                                                end_codon)
+                return self.localized_on_window(
+                    new_location, start_codon, end_codon
+                )
         else:
             return self

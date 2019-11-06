@@ -34,17 +34,29 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
 
     Parameters
     ----------
-    species=None,
-        codon_usage_table=None,
-        original_species=None,
-        original_codon_usage_table=None,
-        location=None,
-        boost=1,
+    species
+      Name of the species for which to optimize the sequence. A custom
+      codon_usage_table can be provided instead (or in addition, for species
+      names whose codon usage table cannot be imported).
+    
+    codon_usage_table
+      A dict of the form ``{'*': {"TGA": 0.112, "TAA": 0.68}, 'K': ...}``
+      giving the RSCU table (relative usage of each codon). Only provide if
+      no ``species`` parameter was provided.
+      
+    
+    original_species
+    
+    original_codon_usage_table
+    
+    location
+    
+    boost
 
 
     References
     ----------
-    Nico J. Claassens et. al., Improving heterologous membrane protein
+    Claassens et. al., Improving heterologous membrane protein
     production in Escherichia coli by combining transcriptional tuning and
     codon usage algorithms. PLOS One, 2017
 
@@ -52,6 +64,7 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
 
     best_possible_score = 0
     localization_group_spread = 3
+    shorthand_name = "harmonize_rca"
 
     def __init__(
         self,

@@ -1,6 +1,7 @@
 """Implementation of AvoidHairpins."""
 
 from ..Specification import Specification
+
 # from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from dnachisel.biotools import reverse_complement, group_nearby_segments
@@ -29,8 +30,9 @@ class AvoidHairpins(Specification):
 
     best_possible_score = 0
 
-    def __init__(self, stem_size=20, hairpin_window=200, location=None,
-                 boost=1.0):
+    def __init__(
+        self, stem_size=20, hairpin_window=200, location=None, boost=1.0
+    ):
         """Initialize."""
         if isinstance(location, tuple):
             location = Location.from_tuple(location)
@@ -54,14 +56,18 @@ class AvoidHairpins(Specification):
         reverse = reverse_complement(sequence)
         locations = []
         for i in range(len(sequence) - self.hairpin_window):
-            word = sequence[i:i + self.stem_size]
-            rest = reverse[-(i + self.hairpin_window):-(i + self.stem_size)]
+            word = sequence[i : i + self.stem_size]
+            rest = reverse[-(i + self.hairpin_window) : -(i + self.stem_size)]
             if word in rest:
-                locations.append((i, i+rest.index(word) + len(word)))
+                locations.append((i, i + rest.index(word) + len(word)))
         score = -len(locations)
         locations = group_nearby_segments(locations, max_start_spread=10)
-        locations = sorted([Location(l[0][0], l[-1][1] + self.hairpin_window)
-                            for l in locations])
+        locations = sorted(
+            [
+                Location(l[0][0], l[-1][1] + self.hairpin_window)
+                for l in locations
+            ]
+        )
 
         return SpecEvaluation(self, problem, score, locations=locations)
 
@@ -69,23 +75,25 @@ class AvoidHairpins(Specification):
         """Localize the spec, make sure no neighbouring hairpin is created."""
         new_location = self.location.overlap_region(location)
         if new_location is None:
-            return None 
- # VoidSpecification(parent_specification=self)
+            return None
+        # VoidSpecification(parent_specification=self)
         else:
             new_location.start = max(
-                self.location.start,
-                new_location.start - self.hairpin_window
+                self.location.start, new_location.start - self.hairpin_window
             )
             if with_righthand:
                 new_location.end = min(
-                    self.location.end, new_location.end + self.hairpin_window)
+                    self.location.end, new_location.end + self.hairpin_window
+                )
             return self.copy_with_changes(location=new_location)
 
     def label_parameters(self):
-        return [('stem_size', str(self.stem_size)),
-                ('hairpin_window', str(self.hairpin_window))]
-    
+        return [
+            ("stem_size", str(self.stem_size)),
+            ("hairpin_window", str(self.hairpin_window)),
+        ]
+
     def short_label(self):
         stem = self.stem_size
-        inside = self.hairpin_window - 2  * self.stem_size
+        inside = self.hairpin_window - 2 * self.stem_size
         return "No %d-%d-%dbp hairpin" % (stem, inside, stem)

@@ -8,7 +8,6 @@ from .AvoidHeterodimerization import AvoidHeterodimerization
 from .AvoidNonUniqueSegments import AvoidNonUniqueSegments
 from .AvoidPattern import AvoidPattern
 from .AvoidStopCodons import AvoidStopCodons
-from .codon_optimization import CodonOptimize
 from .EnforceChanges import EnforceChanges
 from .EnforceChoice import EnforceChoice
 from .EnforceSequence import EnforceSequence
@@ -19,6 +18,39 @@ from .EnforceTranslation import EnforceTranslation
 from .EnforceRegionsCompatibility import EnforceRegionsCompatibility
 from .EnforceTerminalGCContent import EnforceTerminalGCContent
 from .SequenceLengthBounds import SequenceLengthBounds
+
+from .codon_optimization import (
+    CodonOptimize,
+    HarmonizeRCA,
+    MaximizeCAI,
+    MatchTargetCodonUsage,
+)
+
+
+DEFAULT_SPECIFICATIONS_DICT = {
+    "AllowPrimer": AllowPrimer,
+    "AvoidBlastMatches": AvoidBlastMatches,
+    "AvoidChanges": AvoidChanges,
+    "AvoidHairpins": AvoidHairpins,
+    "AvoidNonUniqueSegments": AvoidNonUniqueSegments,
+    "AvoidPattern": AvoidPattern,
+    "CodonOptimize": CodonOptimize,
+    "EnforceGCContent": EnforceGCContent,
+    "EnforcePatternOccurence": EnforcePatternOccurence,
+    "EnforceTranslation": EnforceTranslation,
+    "EnforceRegionsCompatibility": EnforceRegionsCompatibility,
+    "EnforceSequence": EnforceSequence,
+    "EnforceChoice": EnforceChoice,
+    "EnforceChanges": EnforceChanges,
+    "HarmonizeRCA": MatchTargetCodonUsage,
+    "MaximizeCAI": MatchTargetCodonUsage,
+    "MatchTargetCodonUsage": MatchTargetCodonUsage
+}
+
+# Add the shorthands to the specifications dict.
+for spec in list(DEFAULT_SPECIFICATIONS_DICT.values()):
+    if spec.__dict__.get("shorthand_name", None) is not None:
+        DEFAULT_SPECIFICATIONS_DICT[spec.shorthand_name] = spec
 
 __all__ = [
     "AllowPrimer",
@@ -41,4 +73,5 @@ __all__ = [
     "EnforceTerminalGCContent",
     "EnforceSequence",
     "SequenceLengthBounds",
+    "DEFAULT_SPECIFICATIONS_DICT",
 ]

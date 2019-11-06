@@ -27,16 +27,44 @@ class Specification:
     -----------
     evaluate
       function (sequence) => SpecEvaluation
+
     boost
       Relative importance of the Specification's score in a multi-specification
       problem.
+    
+    Attributes
+    ----------
+    best_possible_score
+      Best score that the specification can achieve. Used by the optimization
+      algorithm to understand when no more optimization is required.
+      
+
+    optimize_passively (boolean)
+      Indicates that there should not be a pass of the optimization algorithm
+      to optimize this objective. Instead, this objective is simply taken into
+      account when optimizing other objectives.
+
+    enforced_by_nucleotide_restrictions (boolean)
+      When the spec is used as a constraints, this indicates that the
+      constraint will initially restrict the mutation space in a way that
+      ensures that the constraint will always be valid. The constraint does
+      not need to be evaluated again, which speeds up the resolution algorithm.
+
+    priority
+      Value used to sort the specifications and solve/optimize them in order,
+      with highest priority first.
+
+    shorthand_name
+      Shorter name for the specification class that will be recognized when
+      parsing annotations from genbanks.
+
     """
 
     best_possible_score = None
     optimize_passively = False
     enforced_by_nucleotide_restrictions = False
     priority = 0
-    is_void = False
+    shorthand_name = None
 
     def __init__(self, evaluate=None, boost=1.0):
         """Initialize."""

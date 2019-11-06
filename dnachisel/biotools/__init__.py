@@ -50,7 +50,8 @@ from .biotables import (
     CODONS_TRANSLATIONS,
     IUPAC_NOTATION,
     NUCLEOTIDE_TO_REGEXPR,
-    OTHER_BASES
+    OTHER_BASES,
+    get_backtranslation_table
 )
 
 

@@ -16,6 +16,8 @@ from dnachisel.biotools import (group_nearby_indices,
 class EnforceSequence(Specification):
     """Enforces a (possibly degenerate) sequence at some location.
 
+    Shorthand for annotations: "sequence".
+
     Parameters
     ----------
     sequence
@@ -30,6 +32,7 @@ class EnforceSequence(Specification):
     localization_interval_length = 6  # used when optimizing
     best_possible_score = 0
     enforced_by_nucleotide_restrictions = True
+    shorthand_name = 'sequence'
 
     def __init__(self, sequence=None, location=None, boost=1.0):
         """Initialize."""

@@ -7,6 +7,7 @@ avoid_pattern_kmer,@no(4x2mer),2-24,ATGCACACACATCGTCTCATCACTCAT,4-11
 avoid_pattern_enzyme,@no(BsmBI_site),2-24,ATGCACACGCATCGTCTCATCACTCAT,13-18
 keep,@keep,"1-8, 16-22",ATGCACACGCATCGTCTCATCACTCAT,none
 keep_obj,~keep,2-24,ATGCACACGCATCGTCTCATCACTCAT,none
+change,~change,10-20,ATGCACACGCATCGTCTCATCACTCAT,10-20
 insert,@insert(BsmBI_site),2-24,ATGCACACGCATCGATTCATCACTCAT,none
 insert_several,"@insert(CG, occurences=3)",2-24,ATGCACACACATCGATTCATCACTCAT,none
 gc_range,@gc(45-55%),2-24,ATGCACACACATCGATTCATCACTCAT,none
@@ -14,6 +15,9 @@ gc_target,~gc(60%),2-24,CAATGCACACATCGATTCATCACTCAT,none
 cds,@cds,2-23,CAATGCACACATCGATTCATCACTCAT,none
 cds_enforce,@EnforceTranslation,2-23,CAATGCACACATCGATTCATCACTCAT,none
 codon_optimize,~CodonOptimize(e_coli),2-23,CAATGCACACATCGATTCATCACTCAT,none
+use_best_codon,~use_best_codon(e_coli),2-23,CAATGCACACATCGATTCATCACTCAT,none
+match_codon_usage,~match_codon_usage,2-23,CAATGCACACATCGATTCATCACTCAT,none
+harmonize_rca,~harmonize_rca(e_coli => h_sapiens),2-23,CAATGCACACATCGATTCATCACTCAT,none
 allow_primer,"@AllowPrimer(tmin=50, tmax=70)",2-24,CAATGCACACATCGATTCATCACTCAT,none
 avoid_non_unique_segments,@AvoidNonUniqueSegments(6),2-24,CAATGCACACATCGATTCATGCACATT,"3-8, 19-24"
 choice,@choice(ATG|TTA|CGT),1-4,CCATT,none

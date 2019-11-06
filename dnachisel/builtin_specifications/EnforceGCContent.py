@@ -13,6 +13,8 @@ from dnachisel.Location import Location
 class EnforceGCContent(Specification):
     """Specification on the local or global proportion of G/C nucleotides.
 
+    Shorthand for annotations: "gc".
+
     Examples
     --------
     >>> # Enforce global GC content between 40 and 70 percent.
@@ -48,6 +50,7 @@ class EnforceGCContent(Specification):
 
     best_possible_score = 0
     locations_span = 50  # The resolution will use locations size
+    shorthand_name = "gc"
 
     def __init__(self, mini=0, maxi=1.0, target=None,
                  window=None, location=None, boost=1.0):
@@ -74,11 +77,6 @@ class EnforceGCContent(Specification):
 
     def initialized_on_problem(self, problem, role=None):
         return self._copy_with_full_span_if_no_location(problem)
-        # if self.location is None:
-        #     location = Location(0, len(problem.sequence))
-        #     return self.copy_with_changes(location=location)
-        # else:
-        #     return self
 
     def evaluate(self, problem):
         """Return the sum of breaches extent for all windowed breaches."""
@@ -126,23 +124,21 @@ class EnforceGCContent(Specification):
         """
         # if self.location is not None:
         if self.window is None:
-            # NOTE: this makes sense, but could be refined by computing
-            # how much the local bounds should be in order not to outbound
+            # No specific location policy at the moment for non-windowed GC
+            # content. The same specification is returned.
+            # NOTE: this could be refined by computing
+            # how much the local bounds should be in order for the global
+            # sequence not get out of bound. This would be faster but much
+            # more complicated.
             return self
         new_location = self.location.overlap_region(location)
         if new_location is None:
-            return None 
- # VoidSpecification(parent_specification=self)
+            return None
         else:
             extension = 0 if self.window is None else self.window - 1
             extended_location = location.extended(
                 extension, right=with_righthand)
             new_location = self.location.overlap_region(extended_location)
-        # else:
-        #     if self.window is not None:
-        #         new_location = location.extended(self.window + 1)
-        #     else:
-        #         new_location = None
         return self.copy_with_changes(location=new_location)
 
     def label_parameters(self):

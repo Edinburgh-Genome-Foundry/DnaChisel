@@ -7,6 +7,8 @@ constraints, objectives.
 from Bio.SeqRecord import SeqRecord
 from Bio import SeqIO
 
+from proglog import default_bar_logger
+
 from .biotools import (
     sequence_to_biopython_record,
     find_specification_in_feature,
@@ -25,27 +27,7 @@ from .reports.optimization_reports import (
     write_optimization_report,
     write_no_solution_report,
 )
-from proglog import default_bar_logger
-
-DEFAULT_SPECIFICATIONS_DICT = {}  # completed at library initialization
-
-
-class NoSolutionError(Exception):
-    """Exception returned when a DnaOptimizationProblem aborts.
-    This means that the constraints are found to be unsatisfiable.
-    """
-
-    def __init__(self, message, problem, constraint=None, location=None):
-        """Initialize."""
-        Exception.__init__(self, message)
-        self.message = message
-        self.problem = problem
-        self.constraint = constraint
-        self.location = location
-
-    def __str__(self):
-        return self.message
-
+from .NoSolutionError import NoSolutionError
 
 class DnaOptimizationProblem:
     """Problem specifications: sequence, constraints, optimization objectives.
@@ -109,7 +91,7 @@ class DnaOptimizationProblem:
     max_random_iters
       When using a random search, stop after this many iterations
 
-    mutations_per_iteration = 2
+    mutations_per_iteration
       When using a random search, produce this many sequence mutations each
       iteration.
 
@@ -134,22 +116,10 @@ class DnaOptimizationProblem:
     e.g. for the mutation of a whole codon ``(3,6): ["ATT", "ACT", "AGT"]``.
     """
 
-    # If a local problem admits more than N variants, use a random search:
     randomization_threshold = 10000
-
-    # When using a random search, stop after N iterations
     max_random_iters = 1000
-
-    # When using a random search, produce N sequence mutations each iteration
     mutations_per_iteration = 2
-
-    # When using a random search for optimization, stop if the score hasn't
-    # improved in the last N iterations
     optimization_stagnation_tolerance = 100
-
-    # Try local resolution several times if it fails, increasing the mutable zone
-    # by [N1, N2...] nucleotides on each side, until it works
-    # (by default, an extension of 0bp is tried, then 5bp.
     local_extensions = (0, 5)
 
     def __init__(
@@ -179,8 +149,12 @@ class DnaOptimizationProblem:
         self.initialize()
 
     def initialize(self):
-        """Variables initialization before solving."""
-        # Uncompress SpecificationSets into
+        """Precompute specification sets, evaluations, and mutation space."""
+        
+        # Find the specifications (ibjectives, constraints) which are actually
+        #  SpecificationSets, and unpack these to complete the lists of
+        # objectives and constraints.
+
         for specs in (self.constraints, self.objectives):
             specsets = [
                 spec for spec in specs if isinstance(spec, SpecificationsSet)
@@ -208,6 +182,9 @@ class DnaOptimizationProblem:
         self._objectives_before = None
         if self.mutation_space is None:
             self.mutation_space = MutationSpace.from_optimization_problem(self)
+            # If the original sequence is outside of the allowed mutations
+            # space, replace the sequence by a sequence which complies with
+            # the mutation space.
             self.sequence = self.mutation_space.constrain_sequence(
                 self.sequence
             )
@@ -289,17 +266,17 @@ class DnaOptimizationProblem:
     def resolve_constraints_by_random_mutations(self):
         """Solve all constraints by successive sets of random mutations.
 
-        This method modifies the canvas sequence by applying a number
-        ``mutations_per_iteration`` of random mutations. The constraints are then evaluated
-        on the new sequence. If all constraints pass, the new sequence becomes
-        the canvas's new sequence.
+        This method modifies the problem sequence by applying a number
+        ``mutations_per_iteration`` of random mutations. The constraints are
+        then evaluated on the new sequence. If all constraints pass, the new
+        sequence becomes the canvas's new sequence.
         If not all constraints pass, the sum of all scores from failing
         constraints is considered. If this score is superior to the score of
-        the previous sequence, the new sequence becomes the canvas's new
+        the previous sequence, the new sequence becomes the problem's new
         sequence.
 
         This operation is repeated `max_iter` times at most, after which
-        a ``NoSolutionError`` is thrown.
+        a ``NoSolutionError`` is thrown if no solution was found.
         """
 
         evaluations = self.constraints_evaluations()
@@ -334,7 +311,7 @@ class DnaOptimizationProblem:
         )
 
     def resolve_constraints_locally(self):
-        """Orient the local search towards a stochastic or exhaustive search.
+        """Perform a local search, either stochastic or exhaustive.
         """
         if self.mutation_space.space_size < self.randomization_threshold:
             self.resolve_constraints_by_exhaustive_search()
@@ -343,6 +320,9 @@ class DnaOptimizationProblem:
 
     def resolve_constraint(self, constraint):
         """Resolve a constraint through successive localizations."""
+
+        # EVALUATE THE CONSTRAINT, FIND BREACHING LOCATIONS
+
         evaluation = constraint.evaluate(self)
         if evaluation.passes:
             return
@@ -351,12 +331,30 @@ class DnaOptimizationProblem:
         iterator = self.logger.iter_bar(
             location=locations, bar_message=lambda loc: str(loc)
         )
+        
+        # FOR EACH LOCATION, CREATE A LOCAL PROBLEM AND RESOLVE LOCALLY.
+
         for i, location in enumerate(iterator):
+
+            # SEVERAL "EXTENSIONS" OF THE LOCAL ZONE WILL BE TESTED IN TURN
+            # IN CASE THE LOCAL SEQUENCE IS FROZEN DUE TO NUCLEOTIDE INTER-
+            # DEPENDENCIES (CODONS, ETC.)
+
             for extension in self.local_extensions:
                 new_location = location.extended(extension)
                 mutation_space = self.mutation_space.localized(new_location)
+
                 if mutation_space.space_size == 0:
-                    if extension == self.local_extensions[-1]:
+
+                    # If the sequence is frozen at this location, either
+                    # "continue" (go straight to the next, larger extension)
+                    # or if we are already in the largest extension, return
+                    # an error with data that will be used by the report
+                    # generator.
+                    
+                    if extension != self.local_extensions[-1]:
+                        continue
+                    else:
                         error = NoSolutionError(
                             location=new_location,
                             problem=self,
@@ -375,12 +373,15 @@ class DnaOptimizationProblem:
                             location__message="Cold exit",
                         )
                         raise error
-                    else:
-                        continue
                 new_location = Location(*mutation_space.choices_span)
 
                 # This blocks solves the problem of overlapping breaches,
                 # which can make the local optimization impossible.
+                # If the next constraint breach overlaps with the current
+                # location, localize the constraint with a with_righthand=False
+                # flag, which will be used by the constraints ".localized"
+                # method to only consider the right-hand side.
+
                 if (i < (len(locations) - 1)) and (
                     locations[i + 1].overlap_region(new_location)
                 ):
@@ -391,9 +392,15 @@ class DnaOptimizationProblem:
                     this_local_constraint = constraint.localized(
                         new_location, problem=self
                     )
+                
+                # MAYBE THE LOCAL BREACH WAS ALREADY RESOLVED AS A SIDE EFFECT
+                # OF SOLVING PREVIOUS BREACHES. IN THAT CASE, PASS.
 
                 if this_local_constraint.evaluate(self).passes:
                     continue
+
+                # ELSE, CREATE A NEW LOCAL PROBLEM WITH LOCALIZED CONSTRAINTS
+
                 localized_constraints = [
                     _constraint.localized(new_location, problem=self)
                     for _constraint in self.constraints
@@ -415,11 +422,6 @@ class DnaOptimizationProblem:
                     ),
                     mutation_space=mutation_space,
                 )
-                self.logger.store(
-                    problem=self,
-                    local_problem=local_problem,
-                    location=location,
-                )
                 local_problem.randomization_threshold = (
                     self.randomization_threshold
                 )
@@ -427,12 +429,24 @@ class DnaOptimizationProblem:
                 local_problem.mutations_per_iteration = (
                     self.mutations_per_iteration
                 )
+
+                # STORE THE LOCAL PROBLEM IN THE LOGGER.
+                # This is useful for troubleshooting.
+
+                self.logger.store(
+                    problem=self,
+                    local_problem=local_problem,
+                    location=location,
+                )
+
+                # RESOLVE THE LOCAL PROBLEM. RETURN AN ERROR IF IT FAILS.
+
                 try:
                     if hasattr(constraint, "resolution_heuristic"):
                         constraint.resolution_heuristic(local_problem)
                     else:
                         local_problem.resolve_constraints_locally()
-                    self.change_sequence(local_problem.sequence)
+                    self._replace_sequence(local_problem.sequence)
                     break
                 except NoSolutionError as error:
                     if extension == self.local_extensions[-1]:
@@ -451,7 +465,13 @@ class DnaOptimizationProblem:
                     else:
                         continue
 
-    def change_sequence(self, new_sequence):
+    def _replace_sequence(self, new_sequence):
+        """Replace the current sequence of the problem.
+
+        This method is subclassed in CircularDnaOptimization problem where
+        is is more complex (changing the sequence in one location changes
+        it in more locations).
+        """
         self.sequence = new_sequence
 
     def resolve_constraints(self, final_check=True, cst_filter=None):
@@ -603,27 +623,39 @@ class DnaOptimizationProblem:
             stagnating_iterations += 1
 
     def optimize_objective(self, objective):
-
+        """Optimize the total objective score, focusing on a single objective.
+        
+        This method will attempt to increase the global objective score by
+        focusing on a single objective. First the locations of under-optimal
+        subsequences for this objective are identified, then these locations
+        are optimized one after the other, left to right.
+        
+        For each location, a local problem is created and the optimization uses
+        either a custom optimization algorithm, an exhaustive search, or a
+        random search, to optimize the local problem
+        """
+        # EVALUATE OBJECTIVE. RETURN IF THERE IS NOTHING TO BE DONE.
         evaluation = objective.evaluate(self)
         locations = evaluation.locations
         if (objective.best_possible_score is not None) and (
             evaluation.score == objective.best_possible_score
         ):
             return
-        if locations is None:
-            raise ValueError(
-                ("With %s:" % objective)
-                + "max_objective_by_localization requires either that"
-                " locations be provided or that the objective evaluation"
-                " returns locations."
-            )
 
+        # FOR EACH LOCATION, CREATE AND OPTIMIZE A LOCAL PROBLEM.
+        
         for location in self.logger.iter_bar(
             location=locations, bar_message=lambda l: str(l)
         ):
+            # Localize the mutation space by freezing any nucleotide outside of
+            # it
             mutation_space = self.mutation_space.localized(location)
             if mutation_space.space_size == 0:
                 continue
+
+            # Update the location so it matches the span of the mutation_space
+            # the resulting location will be equal or smaller to the original
+            # location.
             location = Location(*mutation_space.choices_span)
             localized_constraints = [
                 _constraint.localized(location, problem=self)
@@ -658,19 +690,28 @@ class DnaOptimizationProblem:
             local_problem.mutations_per_iteration = (
                 self.mutations_per_iteration
             )
+
+            # OPTIMIZE THE LOCAL PROBLEM
+
             if hasattr(objective, "optimization_heuristic"):
+                # Some specifications implement their own optimization method.
                 objective.optimization_heuristic(local_problem)
             else:
+                # Run an exhaustive or random search depending on the size
+                # of the mutation space.
                 space_size = local_problem.mutation_space.space_size
                 exhaustive_search = space_size < self.randomization_threshold
                 if exhaustive_search:
                     local_problem.optimize_by_exhaustive_search()
                 else:
                     local_problem.optimize_by_random_mutations()
+            
+            # UPDATE THE PROBLEM's SEQUENCE
+
             self.sequence = local_problem.sequence
 
     def optimize(self):
-        """Maximize the objective via local, targeted mutations."""
+        """Maximize the total score by optimizing each objective in turn."""
 
         objectives = [
             obj for obj in self.objectives if not obj.optimize_passively
@@ -717,9 +758,13 @@ class DnaOptimizationProblem:
           the specifications parsed from the genbank.
         
         """
+        # unfortunately the local import below is the most elegant found so
+        # far. builtin_specifications cannot be imported at the top of this
+        # file as some built-in specifications use DnaOptimizationProblem
+        # internally to resolve constructs (see EnforcePatternOccurences)
+        from .builtin_specifications import DEFAULT_SPECIFICATIONS_DICT
         file_path = None
         if isinstance(record, str):
-            file_path = record
             record = load_record(record)
         if specifications_dict == "default":
             specifications_dict = DEFAULT_SPECIFICATIONS_DICT
@@ -752,6 +797,70 @@ class DnaOptimizationProblem:
         colors_dict=None,
         use_short_labels=True,
     ):
+        """Return/write record representing the final sequence and problem.
+
+        the many options enable to also annotate specifications, sequence
+        edits, etc.
+
+        Parameters
+        ----------
+        filepath
+          Path to a target genbank file where the record will be written. If
+          none is provided, a Biopython record is returned instead
+
+        features_type
+          Genbank standard type to give to all extra genbank annotation created
+          by this method (to indicate constraints, objectives, edits, etc.)
+
+
+        with_original_features
+          If True, the features from the original record provided at problem
+          creation will be included in the record (if a simple sequence, and
+          not a record, was originally provided, then there is no such
+          features)
+
+
+        with_original_spec_features
+          If False, any feature from the original record provided at problem
+          creation that defines a DNAChisel Specification be stripped off the
+          record returned by this method (to make space for the annotations)
+          created by this method
+
+        with_constraints
+          If True, annotations representing the constraints will be added to
+          the record
+
+
+        with_objectives
+          If True, annotations representing the objectives will be added to the
+          record
+
+
+        with_sequence_edits
+          If True, annotations representing each nucleotide change will be
+          added to the record.
+
+
+        colors_dict
+          A dict indicating the feature color for constraints and objectives.
+          The default is {"constraint": "#355c87", "objective": "#f9cd60"}.
+
+
+
+        use_short_labels
+          If True, the annotations representing constraints and objectives will
+          use shorter labels to indicate the type of specification.
+
+
+        Notes
+        -----
+
+        If the original problem was created from a Genbank, it is a good idea
+        to set with_original_spec_features=True and with_constraints=False,
+        with_objectives=False.
+
+
+        """ 
         record = sequence_to_biopython_record(self.sequence)
 
         record.features = []
@@ -792,13 +901,19 @@ class DnaOptimizationProblem:
             return record
 
     def sequence_edits_as_array(self):
+        """Return an array [False, False, True...] where True indicates an edit
+        (i.e. a change at this position between the original problem sequence
+        and the current one).""" 
         return sequences_differences_array(self.sequence, self.sequence_before)
 
     def number_of_edits(self):
+        """Return the number of nucleotide differences between the original
+        and current sequence."""
         return self.sequence_edits_as_array().sum()
 
     def sequence_edits_as_features(self, feature_type="misc_feature"):
-
+        """Return a list of Biopython Record Features indicating each of the
+        edits."""
         segments = sequences_differences_segments(
             self.sequence, self.sequence_before
         )

@@ -259,9 +259,10 @@ class MutationSpace:
         """Return the number of possible mutations"""
         if len(self.multichoices) == 0:
             return 0
-        return np.prod(
-            [1.0] + [len(choice.variants) for choice in self.multichoices]
-        )
+        choices = [len(choice.variants) for choice in self.multichoices]
+        # np.prod(choices) can create overflows and warnings, so instead we use
+        # the mechanism below with log/exp and a min.
+        return np.exp(min(100, np.log(choices).sum()))
 
     def pick_random_mutations(self, n_mutations, sequence):
         """Draw N random mutations"""

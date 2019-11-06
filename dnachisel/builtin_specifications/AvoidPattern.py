@@ -9,6 +9,8 @@ from ..Location import Location
 class AvoidPattern(Specification):
     """Enforce that the given pattern is absent in the sequence.
 
+    Shorthand for annotations: "no".
+
     Parameters
     ----------
 
@@ -24,6 +26,7 @@ class AvoidPattern(Specification):
     best_possible_score = 0
     shrink_when_localized = True
     priority = 1
+    shorthand_name = "no"
 
     def __init__(self, pattern=None, location=None, boost=1.0):
         """Initialize."""

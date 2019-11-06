@@ -11,13 +11,13 @@ from dnachisel.biotools import (
     group_nearby_indices,
     OTHER_BASES,
 )
+from dnachisel.Location import Location
 
 other_bases_sets = {
     base: other_bases for (base, other_bases) in OTHER_BASES.items()
 }
 
 
-from dnachisel.Location import Location
 
 
 class EnforceChanges(Specification):
@@ -25,6 +25,8 @@ class EnforceChanges(Specification):
 
     Note: for now this class is simply a derivative of AvoidChanges where
     the scoring function penalizes equalities instead of differences.
+
+    Shorthand for annotations: "change".
 
     Parameters
     ----------
@@ -46,6 +48,7 @@ class EnforceChanges(Specification):
     localization_interval_length = 7  # used when optimizing
     best_possible_score = 0
     enforced_by_nucleotide_restrictions = True
+    shorthand_name = "change"
 
     def __init__(self, location=None, indices=None, reference=None, boost=1.0):
         """Initialize."""
