@@ -10,7 +10,7 @@ problem = DnaOptimizationProblem(
         AvoidPattern("BsaI_site"),
         EnforceGCContent(mini=0.3, maxi=0.7, window=50)
     ],
-    objectives=[EnforceGCContent(gc_objective=0.4)]
+    objectives=[EnforceGCContent(target=0.4)]
 )
 
 print ("\n\n=== Status before optimization ===")
@@ -18,9 +18,9 @@ print(problem.constraints_text_summary())
 print(problem.objectives_text_summary())
 
 print ("Now solving constraints...")
-problem.resolve_constraints(progress_bars=1)
+problem.resolve_constraints()
 print ("Done. Now optimizing objectives...")
-problem.optimize(max_random_iters=10000)
+problem.optimize()
 
 print ("\n\n=== Status after optimization ===\n")
 print (problem.constraints_text_summary())
