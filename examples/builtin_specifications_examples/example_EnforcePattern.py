@@ -8,8 +8,8 @@ from dnachisel import (EnforceTranslation, DnaOptimizationProblem,
 sequence = random_dna_sequence(5000, seed=123)
 
 constraints = [
-    EnforceTranslation(Location(1000, 2500)),
-    EnforceTranslation(Location(3000, 4500)),
+    EnforceTranslation(location=Location(1000, 2500)),
+    EnforceTranslation(location=Location(3000, 4500)),
     EnforcePatternOccurence("ANANANANTT", location=Location(1100, 2150)),
     EnforcePatternOccurence("ATGATGCCTK", location=Location(2700, 2800))
 ]
