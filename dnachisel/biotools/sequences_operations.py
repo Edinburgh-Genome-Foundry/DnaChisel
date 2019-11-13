@@ -7,7 +7,6 @@ import numpy as np
 from .biotables import (
     NUCLEOTIDE_TO_REGEXPR,
     COMPLEMENTS,
-    CODONS_SEQUENCES,
     IUPAC_NOTATION,
     get_backtranslation_table,
 )

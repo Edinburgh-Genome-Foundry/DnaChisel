@@ -47,8 +47,6 @@ from .random_sequences import random_dna_sequence, random_protein_sequence
 
 
 from .biotables import (
-    CODONS_SEQUENCES,
-    CODONS_TRANSLATIONS,
     IUPAC_NOTATION,
     NUCLEOTIDE_TO_REGEXPR,
     OTHER_BASES,
@@ -86,8 +84,6 @@ __all__ = [
     'score_to_formatted_string',
     'random_dna_sequence',
     'random_protein_sequence',
-    'CODONS_SEQUENCES',
-    'CODONS_TRANSLATIONS',
     'IUPAC_NOTATION',
     'NUCLEOTIDE_TO_REGEXPR',
     'OTHER_BASES'

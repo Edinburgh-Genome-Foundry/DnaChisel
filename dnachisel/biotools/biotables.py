@@ -40,15 +40,6 @@ OTHER_BASES = {
     "C": ["T", "G", "A"],
 }
 
-CODONS_TRANSLATIONS = dict_from_csv(
-    os.path.join(data_dir, "codons_translations.csv")
-)
-CODONS_SEQUENCES = reverse_table(CODONS_TRANSLATIONS)
-CODONS_SYNONYMS = {
-    codon: CODONS_SEQUENCES[CODONS_TRANSLATIONS[codon]]
-    for codon in CODONS_TRANSLATIONS
-}
-
 NUCLEOTIDE_TO_REGEXPR = dict_from_csv(
     os.path.join(data_dir, "nucleotide_to_regexpr.csv")
 )

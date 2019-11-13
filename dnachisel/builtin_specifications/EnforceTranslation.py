@@ -5,7 +5,6 @@ from .CodonSpecification import CodonSpecification
 # from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from dnachisel.biotools import (
-    CODONS_SEQUENCES,
     translate,
     reverse_complement,
     get_backtranslation_table,

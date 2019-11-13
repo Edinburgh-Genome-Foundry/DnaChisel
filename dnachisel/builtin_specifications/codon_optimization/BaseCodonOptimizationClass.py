@@ -64,3 +64,21 @@ class BaseCodonOptimizationClass(CodonSpecification):
                     indices, max_group_spread=self.localization_group_spread
                 )
             ]
+    
+    def get_codons_synonyms(self):
+        """Return a dict {"GTG": [GTG, GTC, ...]} of synonymous codons."""
+        return {
+            codon: [c for c in aa_codons]
+            for aa, aa_codons in self.codon_usage_table.items()
+            if len(aa) == 1
+            for codon in aa_codons
+        }
+    
+    def get_codons_translations(self):
+        """Return a dict {"ATG": "M", "TAG": "*", ...}."""
+        return {
+            codon: aa
+            for aa, aa_codons in self.codon_usage_table.items()
+            if len(aa) == 1
+            for codon in aa_codons.keys()
+        }

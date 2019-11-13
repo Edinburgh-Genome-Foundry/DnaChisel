@@ -1,8 +1,6 @@
 import numpy as np
 
 from dnachisel.SpecEvaluation import SpecEvaluation
-from dnachisel.biotools.biotables import CODONS_SYNONYMS
-
 from .BaseCodonOptimizationClass import BaseCodonOptimizationClass
 
 
@@ -82,6 +80,7 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
             location=location,
             boost=boost,
         )
+        self.codons_synonyms = self.get_codons_synonyms()
         self.original_species = original_species
         self.original_codon_usage_table = self.get_codons_table(
             original_species, original_codon_usage_table
@@ -101,7 +100,7 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
         rca = new_spec.codon_usage_table["RCA"]
         rca_o = new_spec.original_codon_usage_table["RCA"]
         new_spec.smallest_possible_discrepancies = [
-            min([abs(rca[c] - rca_o[c]) for c in CODONS_SYNONYMS[codon]])
+            min([abs(rca[c] - rca_o[c]) for c in self.codons_synonyms[codon]])
             for codon in new_spec.original_codons
         ]
         return new_spec

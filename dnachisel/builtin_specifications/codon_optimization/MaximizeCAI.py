@@ -2,7 +2,6 @@ import numpy as np
 
 from .BaseCodonOptimizationClass import BaseCodonOptimizationClass
 from dnachisel.SpecEvaluation import SpecEvaluation
-from dnachisel.biotools import CODONS_TRANSLATIONS
 
 
 class MaximizeCAI(BaseCodonOptimizationClass):
@@ -73,6 +72,7 @@ class MaximizeCAI(BaseCodonOptimizationClass):
             codon_usage_table=codon_usage_table,
             boost=boost,
         )
+        self.codons_translations = self.get_codons_translations()
         if "log_best_frequencies" not in self.codon_usage_table:
             self.codon_usage_table["log_best_frequencies"] = {
                 aa: np.log(max(aa_data.values()))
@@ -89,13 +89,13 @@ class MaximizeCAI(BaseCodonOptimizationClass):
 
     def evaluate(self, problem):
         """Evaluate!"""
-        CT = CODONS_TRANSLATIONS
         codons = self.get_codons(problem)
+        ct = self.codons_translations
         if len(codons) == 1:
             # We are evaluating a single codon. Easy!
             codon = codons[0]
             freq = self.codon_usage_table["log_codons_frequencies"][codon]
-            optimal = self.codon_usage_table["log_best_frequencies"][CT[codon]]
+            optimal = self.codon_usage_table["log_best_frequencies"][ct[codon]]
             score = freq - optimal
             return SpecEvaluation(
                 self,
@@ -110,7 +110,7 @@ class MaximizeCAI(BaseCodonOptimizationClass):
             for codon in codons
         ]
         optimal_usage = [
-            self.codon_usage_table["log_best_frequencies"][CT[codon]]
+            self.codon_usage_table["log_best_frequencies"][ct[codon]]
             for codon in codons
         ]
         non_optimality = np.array(optimal_usage) - np.array(current_usage)

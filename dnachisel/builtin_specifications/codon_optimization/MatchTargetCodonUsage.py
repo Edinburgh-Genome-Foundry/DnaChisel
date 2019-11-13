@@ -1,10 +1,6 @@
 import numpy as np
 from dnachisel.SpecEvaluation import SpecEvaluation
-from dnachisel.biotools import (
-    CODONS_TRANSLATIONS,
-    CODONS_SEQUENCES,
-    dict_to_pretty_string,
-)
+from dnachisel.biotools import dict_to_pretty_string
 
 from .BaseCodonOptimizationClass import BaseCodonOptimizationClass
 
@@ -82,6 +78,8 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
             codon_usage_table=codon_usage_table,
             boost=boost,
         )
+        self.codons_translations = self.get_codons_translations()
+        
 
     def codon_harmonization_stats(self, problem):
         """Return a codon harmonisation score and a suboptimal locations list.
@@ -167,14 +165,16 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
         >>> }
 
         """
-        codons_positions = {cod: [] for cod in CODONS_TRANSLATIONS}
+        codons_positions = {cod: [] for cod in self.codons_translations}
         for i, codon in enumerate(codons):
             codons_positions[codon].append(i)
         # aa: amino-acid
-        codons_frequencies = {aa: {"total": 0} for aa in CODONS_SEQUENCES}
+        codons_frequencies = {
+            aa: {"total": 0} for aa in self.codon_usage_table
+        }
         for codon, positions in codons_positions.items():
             count = len(positions)
-            aa = CODONS_TRANSLATIONS[codon]
+            aa = self.codons_translations[codon]
             codons_frequencies[aa][codon] = count
             codons_frequencies[aa]["total"] += count
         for aa, data in codons_frequencies.items():
