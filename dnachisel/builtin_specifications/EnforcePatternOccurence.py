@@ -7,10 +7,10 @@ from ..MutationSpace import MutationSpace
 from ..SequencePattern import SequencePattern, DnaNotationPattern
 from ..Location import Location
 from ..biotools import reverse_complement
-from ..DnaOptimizationProblem import DnaOptimizationProblem
-from ..NoSolutionError import NoSolutionError
+from ..DnaOptimizationProblem import DnaOptimizationProblem, NoSolutionError
 
 from .EnforceSequence import EnforceSequence
+
 
 class EnforcePatternOccurence(Specification):
     """Enforce a number of occurences of the given pattern in the sequence.
@@ -160,7 +160,7 @@ class EnforcePatternOccurence(Specification):
                     new_problem = DnaOptimizationProblem(
                         sequence=new_problem.sequence,
                         constraints=other_constraints + [new_occurence_cst],
-                        mutation_space=problem.mutation_space
+                        mutation_space=problem.mutation_space,
                     )
                     new_occurence_cst.insert_pattern_in_problem(new_problem)
                 problem.sequence = new_problem.sequence

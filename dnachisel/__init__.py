@@ -1,8 +1,9 @@
 from .DnaOptimizationProblem import (
     DnaOptimizationProblem,
-    NoSolutionError
+    CircularDnaOptimizationProblem,
+    NoSolutionError,
 )
-from .CircularDnaOptimizationProblem import CircularDnaOptimizationProblem
+
 from .Location import Location
 
 from .builtin_specifications import (
@@ -25,7 +26,7 @@ from .builtin_specifications import (
     EnforceTerminalGCContent,
     EnforceTranslation,
     SequenceLengthBounds,
-    DEFAULT_SPECIFICATIONS_DICT
+    DEFAULT_SPECIFICATIONS_DICT,
 )
 
 from .Specification import Specification, SpecificationsSet
@@ -79,6 +80,7 @@ __all__ = [
     "AvoidStopCodons",
     "CodonOptimize",
     "EnforceChoice",
+    "EnforceChanges",
     "EnforceGCContent",
     "EnforceMeltingTemperature",
     "EnforcePatternOccurence",

@@ -4,11 +4,11 @@ sequences. Needs more docs. See example in the examples folder.
 
 from .DnaOptimizationProblem import DnaOptimizationProblem
 from .NoSolutionError import NoSolutionError
-from .reports.optimization_reports import (
+from dnachisel.reports.optimization_reports import (
     write_optimization_report,
     write_no_solution_report,
 )
-from .Location import Location
+from ..Location import Location
 
 
 class CircularViewProblem(DnaOptimizationProblem):
@@ -137,7 +137,7 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
 
         self.sequence = problem.sequence[L : 2 * L]
         if final_check:
-            self.perform_final_check()
+            self.perform_final_constraints_check()
 
     def optimize(self):
         problem = self._circularized_view(

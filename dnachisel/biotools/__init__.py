@@ -72,6 +72,7 @@ __all__ = [
     'translate',
     'list_common_enzymes',
     'gc_content',
+    'get_backtranslation_table',
     'group_nearby_indices',
     'group_nearby_segments',
     'subdivide_window',

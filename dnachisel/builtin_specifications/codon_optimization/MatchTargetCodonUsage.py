@@ -79,7 +79,6 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
             boost=boost,
         )
         self.codons_translations = self.get_codons_translations()
-        
 
     def codon_harmonization_stats(self, problem):
         """Return a codon harmonisation score and a suboptimal locations list.

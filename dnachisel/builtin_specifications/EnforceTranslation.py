@@ -11,8 +11,6 @@ from dnachisel.biotools import (
 )
 from dnachisel.Location import Location
 
-from Bio.Data import CodonTable
-
 
 class EnforceTranslation(CodonSpecification):
     """Enforce a specific amino-acid sequence translation.
