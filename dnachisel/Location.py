@@ -94,15 +94,6 @@ class Location:
         result = list(range(self.start, self.end))
         return result if (self.strand != -1) else result[::-1]
 
-    @staticmethod
-    def from_tuple(some_tuple, default_strand=0):
-        if len(some_tuple) == 2:
-            start, end = some_tuple
-            strand = default_strand
-        else:
-            start, end, strand = some_tuple
-        return Location(start, end, strand)
-
     def __geq__(self, other):
         """Greater than."""
         return self.to_tuple() >= other.to_tuple()
@@ -152,6 +143,26 @@ class Location:
             for e in [location.start, location.end, location.strand]
         ]
         return Location(start, end, strand)
+
+    @staticmethod
+    def from_tuple(some_tuple, default_strand=0):
+        if len(some_tuple) == 2:
+            start, end = some_tuple
+            strand = default_strand
+        else:
+            start, end, strand = some_tuple
+        return Location(start, end, strand)
+
+    @staticmethod
+    def load(location_data):
+        if isinstance(location_data, (tuple, list)):
+            return Location.from_tuple(location_data)
+        if isinstance(location_data, FeatureLocation):
+            return Location.from_biopython_location(location_data)
+        elif isinstance(location_data, Location):
+            return Location(
+                location_data.start, location_data.end, location_data.strand
+            )
 
     def to_biopython_location(self):
         """Return a Biopython FeatureLocation equivalent to the location."""

@@ -2,14 +2,17 @@ from dnachisel.biotools import (
     load_record,
     write_record,
     sequence_to_biopython_record,
-    find_specification_in_feature,
-    sequences_differences_segments
+    find_specification_label_in_feature,
+    sequences_differences_segments,
 )
 from dnachisel.Specification import Specification
 from dnachisel.Location import Location
 
 
 class RecordRepresentationMixin:
+    """Mixin for DnaOptimizationProblem gathering methods for converting
+    DnaOptimizationProblems from/to Biopython records and Genbank records."""
+
     @classmethod
     def from_record(
         cls,
@@ -49,14 +52,8 @@ class RecordRepresentationMixin:
         # far. builtin_specifications cannot be imported at the top of this
         # file as some built-in specifications use DnaOptimizationProblem
         # internally to resolve constructs (see EnforcePatternOccurences)
-        from dnachisel.builtin_specifications import (
-            DEFAULT_SPECIFICATIONS_DICT,
-        )
-
         if isinstance(record, str):
             record = load_record(record)
-        if specifications_dict == "default":
-            specifications_dict = DEFAULT_SPECIFICATIONS_DICT
         parameters = dict(
             sequence=record,
             constraints=[] + list(extra_constraints),  # shallow copy
@@ -66,12 +63,14 @@ class RecordRepresentationMixin:
         for feature in record.features:
             if feature.type != "misc_feature":
                 continue
-            if find_specification_in_feature(feature) is None:
+            label = find_specification_label_in_feature(feature)
+            if label is None:
                 continue
-            role, spec = Specification.from_biopython_feature(
-                feature, specifications_dict
+            specs = Specification.list_from_biopython_feature(
+                feature, specifications_dict=specifications_dict
             )
-            parameters[role + "s"].append(spec)
+            for role, specification in specs:
+                parameters[role + "s"].append(specification)
         return cls(**parameters)
 
     def to_record(
@@ -179,7 +178,7 @@ class RecordRepresentationMixin:
                 f
                 for f in self.record.features
                 if with_original_spec_features
-                or not find_specification_in_feature(f)
+                or not find_specification_label_in_feature(f)
             ]
         if with_sequence_edits:
             record.features += self.sequence_edits_as_features()

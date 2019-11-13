@@ -22,7 +22,7 @@ except ImportError:
 
 def load_record(filepath, linear=True, name="unnamed", file_format="auto"):
     """Load a FASTA/Genbank/Snapgene record.
-    
+
     Note that reading Snapgene records requires the library snapgene_reader
     installed.
     """
@@ -178,7 +178,7 @@ def sequence_to_biopython_record(
     )
 
 
-def find_specification_in_feature(feature):
+def find_specification_label_in_feature(feature):
     """Analyse a Biopython feature to find a DnaChisel Specification in it.
 
     The specification should start with either "@" or "~", in the feature's
@@ -203,26 +203,26 @@ def write_record(
     max_name_length=20,
 ):
     """Write a record as genbank, fasta, etc. via Biopython, with fixes.
-    
+
     Parameters
     ----------
     record
       A biopython record
-    
+
     target
       Path to a file or filelike object.
-    
+
     file_format
       Format, either Genbank or fasta
-    
+
     remove_locationless_features
       If True, will remove all features whose location is None, to avoid a
       Biopython bug
 
     max_name_length
       The record's name will be truncated if longer than this (also here to
-      avoid a biopython bug) 
-    
+      avoid a biopython bug).
+
     """
     record = deepcopy(record)
     if remove_locationless_features:

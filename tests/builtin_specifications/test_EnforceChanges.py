@@ -155,22 +155,6 @@ def test_maximal_protein_sequence_change():
     assert problem.number_of_edits() == 238
     assert dc.translate(problem.sequence) == protein
 
-
-# def test_enforce_changes_as_constraint():
-#     # This test checks that using EnforceChanges as constraint will
-#     # automatically change the whole sequence at initialization time.
-#     np.random.seed(123)
-
-#     sequence = dc.random_dna_sequence(500)
-#     problem = dc.DnaOptimizationProblem(
-#         sequence=sequence, constraints=[dc.EnforceChanges()]
-#     )
-#     assert problem.all_constraints_pass()
-#     assert problem.number_of_edits() == 500
-#     # check the randomness / non-bias of the new selected sequences
-#     assert 0.45 < dc.biotools.gc_content(problem.sequence) < 0.55
-
-
 # TEST WITH INDICES
 
 def test_enforce_changes_with_indices_as_constraint():

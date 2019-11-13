@@ -43,8 +43,8 @@ DEFAULT_SPECIFICATIONS_DICT = {
     "EnforceSequence": EnforceSequence,
     "EnforceChoice": EnforceChoice,
     "EnforceChanges": EnforceChanges,
-    "HarmonizeRCA": MatchTargetCodonUsage,
-    "MaximizeCAI": MatchTargetCodonUsage,
+    "HarmonizeRCA": HarmonizeRCA,
+    "MaximizeCAI": MaximizeCAI,
     "MatchTargetCodonUsage": MatchTargetCodonUsage
 }
 

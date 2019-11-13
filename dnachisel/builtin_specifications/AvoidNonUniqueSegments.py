@@ -46,7 +46,7 @@ def get_kmer_extractor_cached(
         rev_comp_sequence = reverse_complement(sequence)
         L = len(sequence)
 
-        @lru_cache(maxsize=len(sequence))
+        @lru_cache(maxsize=L)
         def extract_kmer(i):
             subsequence = sequence[i : i + min_length]
             rev_comp = rev_comp_sequence[L - i - min_length : L - i]
@@ -54,7 +54,7 @@ def get_kmer_extractor_cached(
 
     else:
 
-        @lru_cache(maxsize=len(sequence))
+        @lru_cache(maxsize=L)
         def extract_kmer(i):
             return sequence[i : i + min_length]
 

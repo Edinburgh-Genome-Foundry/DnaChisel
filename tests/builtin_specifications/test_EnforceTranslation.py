@@ -8,7 +8,7 @@ from dnachisel import (
     translate,
     AvoidPattern,
     EnforceChanges,
-    Location
+    Location,
 )
 import pytest
 import numpy
@@ -45,7 +45,7 @@ def test_EnforceTranlationReversed():
     assert problem.all_constraints_pass()
 
 
-def test_EnforceTranlationError():
+def test_EnforceTranlation_error_location_not_3x():
     """Providing a location that is not multiple of 3 raises an error"""
     numpy.random.seed(1234)
     sequence = reverse_translate(random_protein_sequence(50, seed=123))
@@ -55,6 +55,22 @@ def test_EnforceTranlationError():
             constraints=[EnforceTranslation(location=(0, 16))],
         )
     assert "Location 0-16(+) has length 16" in str(err.value)
+
+
+def test_EnforceTranlation_error_location_smaller_than_translation():
+    """Providing a location that is not multiple of 3 raises an error"""
+    numpy.random.seed(1234)
+    sequence = reverse_translate(random_protein_sequence(15, seed=123))
+    with pytest.raises(ValueError) as err:
+        _ = DnaOptimizationProblem(
+            sequence=sequence,
+            constraints=[
+                EnforceTranslation(
+                    translation=random_protein_sequence(30, seed=111)
+                )
+            ],
+        )
+    assert str(err.value).startswith("Window size")
 
 
 def test_EnforceTranslation_bacterial_valine():
@@ -68,7 +84,7 @@ def test_EnforceTranslation_bacterial_valine():
     ]:
         sequence = first_codon_before + protein_sequence
         cds_constraint = EnforceTranslation(
-            genetic_table="Bacterial", start_codon='keep'
+            genetic_table="Bacterial", start_codon="keep"
         )
         problem = DnaOptimizationProblem(
             sequence=sequence,
@@ -95,8 +111,9 @@ def test_EnforceTranslation_bacterial_valine_antisense():
     ]:
         sequence = first_codon_before + protein_sequence
         cds_constraint = EnforceTranslation(
-            genetic_table="Bacterial", start_codon='keep',
-            location=Location(0, len(sequence), -1)
+            genetic_table="Bacterial",
+            start_codon="keep",
+            location=Location(0, len(sequence), -1),
         )
         problem = DnaOptimizationProblem(
             sequence=reverse_complement(sequence),

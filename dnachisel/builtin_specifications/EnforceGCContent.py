@@ -1,8 +1,10 @@
 """Implement EnforceGCContent."""
 
 import numpy as np
+import re
 
 from ..Specification import Specification
+
 # from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
 from ..biotools import group_nearby_segments
@@ -52,16 +54,18 @@ class EnforceGCContent(Specification):
     locations_span = 50  # The resolution will use locations size
     shorthand_name = "gc"
 
-    def __init__(self, mini=0, maxi=1.0, target=None,
-                 window=None, location=None, boost=1.0):
+    def __init__(
+        self,
+        mini=0,
+        maxi=1.0,
+        target=None,
+        window=None,
+        location=None,
+        boost=1.0,
+    ):
         """Initialize."""
-        if isinstance(mini, str) and mini.endswith('%'):
-            # PROCESS CASES "45-55%" and "45%"
-            split = mini[:-1].split('-')
-            if len(split) == 2:
-                mini, maxi = float(split[0]) / 100, float(split[1]) / 100
-            else:
-                target = float(split[0]) / 100
+        if isinstance(mini, str):
+            mini, maxi, target, window = self.string_to_parameters(mini)
         if target is not None:
             mini = maxi = target
         self.target = target
@@ -75,6 +79,21 @@ class EnforceGCContent(Specification):
         self.location = location
         self.boost = boost
 
+    @staticmethod
+    def string_to_parameters(pattern):
+        target = None
+        gc_pattern = r"(\d+)(|-(\d+))%($|/(\d+)bp)"
+        match = re.match(gc_pattern, pattern)
+        mini, _, maxi, _, window = match.groups()
+        if maxi is None:
+            target = mini
+            mini = None
+        mini, maxi, target = [
+            None if e is None else int(e) / 100.0 for e in (mini, maxi, target)
+        ]
+        window = None if window is None else int(window)
+        return mini, maxi, target, window
+
     def initialized_on_problem(self, problem, role=None):
         return self._copy_with_full_span_if_no_location(problem)
 
@@ -83,9 +102,10 @@ class EnforceGCContent(Specification):
         wstart, wend = self.location.start, self.location.end
         sequence = self.location.extract_sequence(problem.sequence)
         gc = gc_content(sequence, window_size=self.window)
-        breaches = (np.maximum(0, self.mini - gc) +
-                    np.maximum(0, gc - self.maxi))
-        score = - breaches.sum()
+        breaches = np.maximum(0, self.mini - gc) + np.maximum(
+            0, gc - self.maxi
+        )
+        score = -breaches.sum()
         breaches_starts = wstart + (breaches > 0).nonzero()[0]
 
         if len(breaches_starts) == 0:
@@ -99,22 +119,22 @@ class EnforceGCContent(Specification):
         else:
             segments = [(bs, bs + self.window) for bs in breaches_starts]
             groups = group_nearby_segments(
-                segments,
-                max_start_spread=max(1,  self.locations_span))
+                segments, max_start_spread=max(1, self.locations_span)
+            )
             breaches_locations = [
-                (group[0][0], group[-1][-1])
-                for group in groups
+                (group[0][0], group[-1][-1]) for group in groups
             ]
 
         if breaches_locations == []:
             message = "Passed !"
         else:
             breaches_locations = [Location(*loc) for loc in breaches_locations]
-            message = ("Out of bound on segments " +
-                       ", ".join([str(l) for l in breaches_locations]))
-        return SpecEvaluation(self, problem, score,
-                              locations=breaches_locations,
-                              message=message)
+            message = "Out of bound on segments " + ", ".join(
+                [str(l) for l in breaches_locations]
+            )
+        return SpecEvaluation(
+            self, problem, score, locations=breaches_locations, message=message
+        )
 
     def localized(self, location, problem=None, with_righthand=True):
         """Localize the GC content evaluation.
@@ -137,7 +157,8 @@ class EnforceGCContent(Specification):
         else:
             extension = 0 if self.window is None else self.window - 1
             extended_location = location.extended(
-                extension, right=with_righthand)
+                extension, right=with_righthand
+            )
             new_location = self.location.overlap_region(extended_location)
         return self.copy_with_changes(location=new_location)
 
@@ -148,21 +169,22 @@ class EnforceGCContent(Specification):
         show_window = self.window is not None
 
         return (
-            show_mini * [('mini', "%.2f" % self.mini)] +
-            show_maxi * [('maxi', "%.2f" % self.maxi)] +
-            show_target * [('target',
-                           ("%.2f" % self.target) if self.target else '')] +
-            show_window * [('window',
-                            ("%d" % self.window) if self.window else '')]
+            show_mini * [("mini", "%.2f" % self.mini)]
+            + show_maxi * [("maxi", "%.2f" % self.maxi)]
+            + show_target
+            * [("target", ("%.2f" % self.target) if self.target else "")]
+            + show_window
+            * [("window", ("%d" % self.window) if self.window else "")]
         )
-    
+
     def short_label(self):
         if self.target is not None:
             result = "%d%% GC" % (np.round(100 * self.target))
         else:
-            result = "%d-%d%% GC" % (np.round(100 * self.mini),
-                                     np.round(100 * self.maxi))
+            result = "%d-%d%% GC" % (
+                np.round(100 * self.mini),
+                np.round(100 * self.maxi),
+            )
         if self.window is not None:
             result += "/%dbp" % self.window
         return result
-            

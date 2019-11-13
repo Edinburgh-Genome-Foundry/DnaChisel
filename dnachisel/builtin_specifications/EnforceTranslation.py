@@ -108,19 +108,6 @@ class EnforceTranslation(CodonSpecification):
                 )
         self.location = location
 
-    def set_translation(self, translation):
-        """Check that the translation length is valid before setting it."""
-        if (translation is not None) and (self.location is not None):
-            if len(self.location) != 3 * len(self.translation):
-                raise ValueError(
-                    (
-                        "Window size (%d bp) incompatible with translation "
-                        "(%d aa)"
-                    )
-                    % (len(self.location), len(self.translation))
-                )
-        self.translation = translation
-
     def initialized_on_problem(self, problem, role):
         """Get translation from the sequence if it is not already set."""
         result = self._copy_with_full_span_if_no_location(problem)
@@ -132,6 +119,14 @@ class EnforceTranslation(CodonSpecification):
                 assume_start_codon=result.start_codon is not None,
             )
             result = result.copy_with_changes(translation=translation)
+        if len(result.location) != 3 * len(result.translation):
+            raise ValueError(
+                (
+                    "Window size (%d bp) incompatible with translation "
+                    "(%d aa)"
+                )
+                % (len(result.location), len(result.translation))
+            )
         if (result.start_codon is not None) and result.translation[0] != "M":
             raise ValueError(
                 (

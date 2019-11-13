@@ -5,6 +5,7 @@ from dnachisel import (
     DnaOptimizationProblem,
     random_dna_sequence,
     sequence_to_biopython_record,
+    Specification,
     annotate_record,
 )
 
@@ -53,3 +54,23 @@ def test_all_shorthands():
     assert not problem.all_constraints_pass()
     problem.resolve_constraints()
     assert problem.all_constraints_pass()
+
+def test_record_with_multispec_feature():
+    sequence = random_dna_sequence(100)
+    record = sequence_to_biopython_record(sequence)
+    label = "@gc(40-60%/20bp) & @no(BsaI_site) & @keep"
+    annotate_record(record, label=label)
+    problem = DnaOptimizationProblem.from_record(record)
+    assert len(problem.constraints) == 3
+    c1, c2, c3 = problem.constraints
+    assert c1.mini == 0.4
+    assert c2.pattern.name == "BsaI"
+
+def test_feature_to_spec():
+    sequence = random_dna_sequence(100)
+    record = sequence_to_biopython_record(sequence)
+    label = "@gc(40-60%/20bp) & @no(BsaI_site) & @keep"
+    annotate_record(record, label=label)
+    feature = record.features[0]
+    specs = Specification.list_from_biopython_feature(feature)
+    assert len(specs) == 3

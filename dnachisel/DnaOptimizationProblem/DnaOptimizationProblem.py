@@ -146,7 +146,6 @@ class DnaOptimizationProblem(
         # Find the specifications (ibjectives, constraints) which are actually
         #  SpecificationSets, and unpack these to complete the lists of
         # objectives and constraints.
-
         for specs in (self.constraints, self.objectives):
             specsets = [
                 spec for spec in specs if isinstance(spec, SpecificationSet)

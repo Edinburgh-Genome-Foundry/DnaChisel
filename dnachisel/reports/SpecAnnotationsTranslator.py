@@ -1,4 +1,4 @@
-from ..biotools import find_specification_in_feature
+from ..biotools import find_specification_label_in_feature
 from .tools import install_extras_message
 
 DFV_AVAILABLE = False
@@ -41,7 +41,7 @@ class SpecAnnotationsTranslator(BiopythonTranslator):
             return color
 
         if f.type == "misc_feature":
-            specification = find_specification_in_feature(f)
+            specification = find_specification_label_in_feature(f)
             if specification is not None:
                 return self.feature_prefixes_colors.get(
                     specification[0], "#f4df42"

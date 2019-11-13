@@ -1,13 +1,14 @@
-
 import re
 from Bio.SeqFeature import SeqFeature
 from ..Location import Location
-from ..biotools import find_specification_in_feature
+from ..biotools import find_specification_label_in_feature
 
 
 class FeatureRepresentationMixin:
     """Mixin for class Specification. Defines methods for converting
     Specifications from and to Biopython records."""
+
+    DEFAULT_SPECIFICATIONS_DICT = None
 
     def to_biopython_feature(
         self,
@@ -39,11 +40,11 @@ class FeatureRepresentationMixin:
             )
 
         if "color" not in qualifiers:
-            qualifiers['color'] = colors_dict[role]
+            qualifiers["color"] = colors_dict[role]
         qualifiers.update(
             dict(
-                ApEinfo_fwdcolor=qualifiers['color'],
-                ApEinfo_revcolor=qualifiers['color'],
+                ApEinfo_fwdcolor=qualifiers["color"],
+                ApEinfo_revcolor=qualifiers["color"],
             )
         )
         return SeqFeature(
@@ -52,20 +53,31 @@ class FeatureRepresentationMixin:
             qualifiers=qualifiers,
         )
 
-    @staticmethod
-    def from_biopython_feature(feature, specifications_dict):
-        """Parse a Biopython feature create an annotation.
+    @classmethod
+    def _format_string_value(cls, value):
+        """Converts stringed integers and floats back to numerical. Also
+        converts "'bla'" => "bla". If the value is a list, apply to all
+        elements."""
+        if isinstance(value, (list, tuple)):
+            return [cls.format_value(v) for v in value]
+        match = re.match(r"'(.*)'", value)
+        if match is not None:
+            return match.groups()[0]
+        else:
+            try:
+                return int(value)
+            except ValueError:
+                try:
+                    return float(value)
+                except Exception:
+                    return value
 
-        The specifications_dict enables to map specification names to the
-        actual implemented class.
-
-        """
-
-        # PARSE THE SPECIFICATION, IDENTIFY THE TYPE AND ARGUMENTS
-
-        label = find_specification_in_feature(feature)
-        if isinstance(label, list):
-            label = label[0]
+    @classmethod
+    def from_label(cls, label, location, specifications_dict='default'):
+        location = Location.load(location)
+        if specifications_dict == 'default':
+            specifications_dict = cls.DEFAULT_SPECIFICATIONS_DICT
+        label = label.strip()
         if not label.endswith(")"):
             # Standardizes the expression: @cds => @cds()
             label += "()"
@@ -73,6 +85,11 @@ class FeatureRepresentationMixin:
         # ~Avoidpattern(ARGS) => ~, AvoidPattern, ARGS
         pattern = r"([@~])(\S+)(\(.*\))"
         match = re.match(pattern, label)
+        if match is None:
+            raise ValueError(
+                "Failed to recognize a specification definition in label "
+                "%s at location %s" % (label, location)
+            )
         role, specification, parameters = match.groups()
         if specification not in specifications_dict:
             raise TypeError("Unknown specification %s" % specification)
@@ -80,24 +97,6 @@ class FeatureRepresentationMixin:
         role = {"@": "constraint", "~": "objective"}[role]
 
         # PARSE THE ARGUMENTS AND KEYWORD ARGUMENTS
-
-        def format_value(value):
-            """Converts stringed integers and floats back to numerical.
-            Also converts "'bla'" => "bla"
-            If the value is a list, apply to all elements."""
-            if isinstance(value, (list, tuple)):
-                return [format_value(v) for v in value]
-            match = re.match(r"'(.*)'", value)
-            if match is not None:
-                return match.groups()[0]
-            else:
-                try:
-                    return int(value)
-                except ValueError:
-                    try:
-                        return float(value)
-                    except Exception:
-                        return value
 
         args, kwargs = [], {}
         for arg in parameters[1:-1].split(", "):
@@ -107,15 +106,15 @@ class FeatureRepresentationMixin:
                 key, value = arg.split(":")
                 if "|" in value:
                     value = value.split("|")
-                kwargs[key] = format_value(value)
+                kwargs[key] = cls._format_string_value(value)
             elif "=" in arg:
                 key, value = arg.split("=")
                 if "|" in value:
                     value = value.split("|")
-                kwargs[key] = format_value(value)
+                kwargs[key] = cls._format_string_value(value)
             else:
-                args.append(format_value(arg))
-        kwargs["location"] = Location.from_biopython_location(feature.location)
+                args.append(cls._format_string_value(arg))
+        kwargs["location"] = location
 
         # ATTEMPT TO CREATE A SPECIFICATION WITH THE GIVEN TYPE AND ARGS
 
@@ -131,3 +130,45 @@ class FeatureRepresentationMixin:
             )
 
         return role, specification_instance
+
+    @classmethod
+    def list_from_label(cls, label, location, specifications_dict='default'):
+        """Return a list of all specs defined in the string label.
+        
+        The labels are normal spec labels, like @no(BsmBI_site), separated
+        by the "&" symbol.
+        """
+        return [
+            cls.from_label(
+                label=sublabel,
+                location=location,
+                specifications_dict=specifications_dict,
+            )
+            for sublabel in label.split("&")
+        ]
+
+    @classmethod
+    def list_from_biopython_feature(
+        cls, feature, specifications_dict="default"
+    ):
+        """Parse a Biopython feature to create an annotation.
+
+        The specifications_dict enables to map specification names to the
+        actual implemented class.
+
+        """
+
+        # PARSE THE SPECIFICATION, IDENTIFY THE TYPE AND ARGUMENTS
+        label = find_specification_label_in_feature(feature)
+        if label is None:
+            location = Location.from_biopython_location(feature.location)
+            raise ValueError(
+                "Feature at %s cannot be converted into a specification, as "
+                "no label could be recognized." % location
+            )
+
+        return cls.list_from_label(
+            label=label,
+            specifications_dict=specifications_dict,
+            location=feature.location,
+        )

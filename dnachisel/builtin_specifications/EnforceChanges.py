@@ -246,10 +246,16 @@ class EnforceChanges(Specification):
     def localized(self, location, problem=None, with_righthand=True):
         """Localize the spec to the overlap of its location and the new.
         """
-        if not self.minimum_percent == 100:
-            return self
 
-        # BELOW ONLY APPLIES WHEN 100% OF THE SEQUENCE SHOULD BE CHANGED.
+        # If minimum_percent=100: everything is covered by mutation restriction
+        # If minimum_percent<100: no smart strategy return self.
+        # If amount_percent<100: no smart strategy return self.
+        # If amount_percent==100: easy to localize, it is always locally 100%
+        
+        if self.amount_percent != 100:
+            return self
+        
+        # Now the only case where localization makes sense: amount_percent=100
 
         start, end = location.start, location.end
         if self.indices is not None:

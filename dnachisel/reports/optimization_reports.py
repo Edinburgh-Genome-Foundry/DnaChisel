@@ -12,7 +12,7 @@ import numpy as np
 
 from ..biotools import (
     sequence_to_biopython_record,
-    find_specification_in_feature,
+    find_specification_label_in_feature,
 )
 from ..version import __version__
 from .SpecAnnotationsTranslator import SpecAnnotationsTranslator

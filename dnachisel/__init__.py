@@ -65,6 +65,8 @@ from .utils import random_compatible_dna_sequence
 
 from .version import __version__
 
+Specification.DEFAULT_SPECIFICATIONS_DICT = DEFAULT_SPECIFICATIONS_DICT
+
 __all__ = [
     "DnaOptimizationProblem",
     "NoSolutionError",
