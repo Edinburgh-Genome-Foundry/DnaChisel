@@ -1,11 +1,11 @@
 """Ensure that the location is primer-frienly.
 
-AllowPrimer is a good example SpecificationsSet that will create specifications
+AllowPrimer is a good example SpecificationSet that will create specifications
 of type RepeatedKmerPattern, AvoidNonUniqueSegments, AvoidPattern,
 EnforceMeltingTemperature, AvoidHeterodimerization.
 """
 
-from ..Specification import SpecificationsSet
+from ..Specification import SpecificationSet
 from ..Location import Location
 from ..SequencePattern import RepeatedKmerPattern
 from .AvoidNonUniqueSegments import AvoidNonUniqueSegments
@@ -14,7 +14,7 @@ from .EnforceMeltingTemperature import EnforceMeltingTemperature
 from .AvoidHeterodimerization import AvoidHeterodimerization
 
 
-class AllowPrimer(SpecificationsSet):
+class AllowPrimer(SpecificationSet):
     """Enforce various specifications for enabling primers at the location.
 
     This is useful for making sure that you will be able to conduct a PCR or

@@ -29,7 +29,7 @@ from .builtin_specifications import (
     DEFAULT_SPECIFICATIONS_DICT,
 )
 
-from .Specification import Specification, SpecificationsSet
+from .Specification import Specification, SpecificationSet
 from .SpecEvaluation import SpecEvaluation
 
 from .SequencePattern import (
@@ -90,7 +90,7 @@ __all__ = [
     "EnforceTranslation",
     "SequenceLengthBounds",
     "Specification",
-    "SpecificationsSet",
+    "SpecificationSet",
     "SpecEvaluation",
     "SequencePattern",
     "DnaNotationPattern",

@@ -6,14 +6,11 @@ Notable features implemented here:
 - Feature import/export from/to Genbank features.
 """
 import copy
-import re
-
-from .biotools import find_specification_in_feature
-from .Location import Location
-from Bio.SeqFeature import SeqFeature
+from ..Location import Location
+from .FeatureRepresentationMixin import FeatureRepresentationMixin
 
 
-class Specification:
+class Specification(FeatureRepresentationMixin):
     """General class to define specifications to optimize.
 
     Note that all specifications have a ``boost`` attribute that is a
@@ -31,13 +28,13 @@ class Specification:
     boost
       Relative importance of the Specification's score in a multi-specification
       problem.
-    
+
     Attributes
     ----------
+
     best_possible_score
       Best score that the specification can achieve. Used by the optimization
       algorithm to understand when no more optimization is required.
-      
 
     optimize_passively (boolean)
       Indicates that there should not be a pass of the optimization algorithm
@@ -119,98 +116,40 @@ class Specification:
         """
         return self
 
-    @staticmethod
-    def from_biopython_feature(feature, specifications_dict):
-        """Parse a Biopython feature create an annotation.
-
-        The specifications_dict enables to map specification names to the
-        actual implemented class.
-
-        """
-
-        # PARSE THE SPECIFICATION, IDENTIFY THE TYPE AND ARGUMENTS
-
-        label = find_specification_in_feature(feature)
-        if isinstance(label, list):
-            label = label[0]
-        if not label.endswith(")"):
-            # Standardizes the expression: @cds => @cds()
-            label += "()"
-        # The regular expression below detects spec definitions:
-        # ~Avoidpattern(ARGS) => ~, AvoidPattern, ARGS
-        pattern = r"([@~])(\S+)(\(.*\))"
-        match = re.match(pattern, label)
-        role, specification, parameters = match.groups()
-        if specification not in specifications_dict:
-            raise TypeError("Unknown specification %s" % specification)
-        specification_class = specifications_dict[specification]
-        role = {"@": "constraint", "~": "objective"}[role]
-
-        # PARSE THE ARGUMENTS AND KEYWORD ARGUMENTS
-
-        def format_value(value):
-            """Converts stringed integers and floats back to numerical.
-            Also converts "'bla'" => "bla"
-            If the value is a list, apply to all elements."""
-            if isinstance(value, (list, tuple)):
-                return [format_value(v) for v in value]
-            match = re.match(r"'(.*)'", value)
-            if match is not None:
-                return match.groups()[0]
-            else:
-                try:
-                    return int(value)
-                except ValueError:
-                    try:
-                        return float(value)
-                    except Exception:
-                        return value
-
-        args, kwargs = [], {}
-        for arg in parameters[1:-1].split(", "):
-            if arg == "":
-                continue
-            if ":" in arg:
-                key, value = arg.split(":")
-                if "|" in value:
-                    value = value.split("|")
-                kwargs[key] = format_value(value)
-            elif "=" in arg:
-                key, value = arg.split("=")
-                if "|" in value:
-                    value = value.split("|")
-                kwargs[key] = format_value(value)
-            else:
-                args.append(format_value(arg))
-        kwargs["location"] = Location.from_biopython_location(feature.location)
-        # ATTEMPT TO CREATE A SPECIFICATION WITH THE GIVEN TYPE AND ARGS
-
-        try:
-            specification_instance = specification_class(*args, **kwargs)
-        except TypeError as err:
-            message = err.args[0]
-            faulty_parameter = message.split("'")[1]
-            raise TypeError(
-                "Unknown parameter %s for specification %s "
-                "at location %s"
-                % (faulty_parameter, specification, kwargs["location"])
-            )
-
-        return role, specification_instance
-
     def label(
         self,
         role=None,
         with_location=True,
-        assignment=":",
+        assignment_symbol=":",
         use_short_form=False,
     ):
+        """Return a string label for this specification.
+
+        Parameters
+        ----------
+
+        role
+          Either 'constraint' or 'objective' (for prefixing the label with @
+          or ~), or None.
+
+        with_location
+          If true, the location will appear in the label.
+
+        assignment_symbol
+          Indicates whether to use ":" or "=" or anything else when indicating
+          parameters values.
+
+        use_short_form
+          If True, the label will use self.short_label(), so for instance
+          AvoidPattern(BsmBI_site) will become "no BsmBI". How this is handled
+          is dependent on the specification.
+        """
         prefix = {"constraint": "@", "objective": "~", None: ""}[role]
         if use_short_form:
             label = self.short_label()
             if with_location:
                 label += ", %s" % self.location
-            return label
+            return prefix + label
         if with_location and hasattr(self, "location") and self.location:
             location = "[%s]" % self.location
         else:
@@ -221,10 +160,13 @@ class Specification:
         else:
             params = "(%s)" % ", ".join(
                 [
-                    assignment.join(map(str, p)) if isinstance(p, tuple) else p
+                    assignment_symbol.join(map(str, p))
+                    if isinstance(p, tuple)
+                    else p
                     for p in params
                 ]
             )
+
         return "".join([prefix, self.__class__.__name__, location, params])
 
     def short_label(self):
@@ -250,49 +192,6 @@ class Specification:
         """By default, represent the Specification using its label()"""
         return self.label()
 
-    def to_biopython_feature(
-        self,
-        feature_type="misc_feature",
-        role="constraint",
-        colors_dict=None,
-        use_short_label=True,
-        **qualifiers
-    ):
-        """Return a Biopython feature representing the specification.
-
-        The feature label is a string representation of the specification,
-        and its location indicates the specification's scope.
-
-        This method is primarily meant to display specifications in Genbank.
-        They may result in "viable", DnaChisel-compatible annotations that can
-        be imported back into DNA Chisel, but this is not the intended goal.
-
-        """
-        if colors_dict is None:
-            colors_dict = {"constraint": "#355c87", "objective": "#f9cd60"}
-        qualifiers["role"] = role
-        if "label" not in qualifiers:
-            qualifiers["label"] = self.label(
-                role=role,
-                with_location=False,
-                assignment=":",
-                use_short_form=use_short_label,
-            )
-
-        if "color" not in qualifiers:
-            qualifiers['color'] = colors_dict[role]
-        qualifiers.update(
-            dict(
-                ApEinfo_fwdcolor=qualifiers['color'],
-                ApEinfo_revcolor=qualifiers['color'],
-            )
-        )
-        return SeqFeature(
-            self.location.to_biopython_location(),
-            type=feature_type,
-            qualifiers=qualifiers,
-        )
-
     def restrict_nucleotides(self, sequence, location=None):
         """Restrict the mutation space to speed up optimization.
 
@@ -302,7 +201,8 @@ class Specification:
         methods.
 
         In the code, this method is run during the initialize() step of
-        DNAOptimizationProblem, when the MutationSpace is created for each constraint
+        DNAOptimizationProblem, when the MutationSpace is created for each
+        constraint
         """
         return []
 
@@ -331,18 +231,3 @@ class Specification:
             return self.copy_with_changes(location=location)
         else:
             return self
-
-
-class SpecificationsSet:
-    """Generic class for writing Specs which are actually made of more specs.
-
-    Behaves as a Specification when it comes to instanciation, reading it
-    from annotated records, etc. but the initialization actually creates a
-    dictionnary of standard Specifications in the DNAOptimizationProblem
-    """
-
-    def register_specifications(self, specifications):
-        for name, spec in specifications.items():
-            spec.parent_specification = self
-            spec.name_in_parent = name
-        self.specifications = specifications

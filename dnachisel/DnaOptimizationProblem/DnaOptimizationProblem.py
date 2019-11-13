@@ -8,7 +8,7 @@ from Bio.SeqRecord import SeqRecord
 from proglog import default_bar_logger
 
 from ..biotools import sequences_differences_array
-from ..Specification import SpecificationsSet
+from ..Specification import SpecificationSet
 from ..MutationSpace import MutationSpace
 from ..reports.optimization_reports import (
     write_optimization_report,
@@ -149,7 +149,7 @@ class DnaOptimizationProblem(
 
         for specs in (self.constraints, self.objectives):
             specsets = [
-                spec for spec in specs if isinstance(spec, SpecificationsSet)
+                spec for spec in specs if isinstance(spec, SpecificationSet)
             ]
             specs_in_sets = [
                 spec

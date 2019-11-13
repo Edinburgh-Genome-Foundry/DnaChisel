@@ -18,7 +18,7 @@ The `.py` files at the root implement the core classes. Here we explain the rela
   - A _Location_ indicating where it applies in a sequence (absence of location implies that it applies to the whole sequence).
   - A _SequencePattern_ if the Specification is about inserting or removing a pattern.
 
-- **SpecificationsSet** (same file) is a special Specification class which actually groups together several _Specifications_. See [AllowPrimers](https://github.com/Edinburgh-Genome-Foundry/DnaChisel/blob/master/dnachisel/builtin_specifications/AllowPrimer.py) for an example.
+- **SpecificationSet** (same file) is a special Specification class which actually groups together several _Specifications_. See [AllowPrimers](https://github.com/Edinburgh-Genome-Foundry/DnaChisel/blob/master/dnachisel/builtin_specifications/AllowPrimer.py) for an example.
 - **Location** is a class representing the location of a segment of a sequence. It is used primarily to indicate where a _Specification_ applies in the sequence, but also in _SpecEvaluation_ to indicate constraint breaches, in _SequencePattern_ to indicate the location of a pattern, etc.
   Class methods describe how _Locations_ are created, extended, merged, intersected, imported from Genbank locations, etc.
 - **SpecEvaluation** is a class describing the result of the evaluation of a *DnaOptimizationProblem* by a *Specification*. Contains a score, a message, a list of *Locations* of sub-optimal regions. Several evaluations can be grouped using classes *ProblemConstraintsEvaluations* and *ProblemObjectivesEvaluations*, which implement methods for printing or exporting as Genbank a set of evaluations.
