@@ -13,7 +13,7 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
     In simple, rare Host 1 codons will be replaced by rare Host 2 codons, and
     high-frequency Host 1 codons will get replaced by codons that are
     high-frequency in Host 2.
-    
+
     In more specific, each codon along Sequence 1 gets replaced by the codon
     whose Relative Codon Adaptiveness (RCA) in Host 2 is the closest from the
     RCA of the original codon in Host 1. A codon's RCA in a given organism is
@@ -33,23 +33,30 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
     Parameters
     ----------
     species
-      Name of the species for which to optimize the sequence. A custom
+      Name or TaxID of the species for which to optimize the sequence. A custom
       codon_usage_table can be provided instead (or in addition, for species
       names whose codon usage table cannot be imported).
-    
+
     codon_usage_table
       A dict of the form ``{'*': {"TGA": 0.112, "TAA": 0.68}, 'K': ...}``
-      giving the RSCU table (relative usage of each codon). Only provide if
-      no ``species`` parameter was provided.
-      
-    
+      giving the RSCU table (relative usage of each codon).
+
     original_species
-    
+      Name or TaxID of the species the original sequence was taken from. This
+      information will be used to spot codons which are supposed to be rare
+      or common. A codon_usage_table can be provided instead (or in addition,
+      for species names whose codon usage table cannot be imported).
+
     original_codon_usage_table
-    
+      A dict of the form ``{'*': {"TGA": 0.112, "TAA": 0.68}, 'K': ...}``
+      giving the RSCU table (relative usage of each codon).
+
     location
-    
+      Location on which the specification applies
+
     boost
+      Score multiplicator (=weight) for when the specification is used as an
+      optimization objective alongside competing objectives.
 
 
     References

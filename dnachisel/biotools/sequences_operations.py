@@ -69,8 +69,8 @@ def translate(dna_sequence, table="Standard", assume_start_codon=False):
     ``translation_table`` can also be a dictionnary of the form
     ``{"ATT": "M", "CTC": "X", etc.}`` for more exotic translation tables
 
-    Is CDS will indicate to 
-
+    If assume_start_codon is True and the first codon is a start codon in the
+    given genetic table, then the first amino acid will be M (methionine).
 
     """
     if isinstance(table, dict):

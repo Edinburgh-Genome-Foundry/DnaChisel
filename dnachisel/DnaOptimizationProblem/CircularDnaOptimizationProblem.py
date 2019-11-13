@@ -42,7 +42,7 @@ class CircularViewProblem(DnaOptimizationProblem):
 
 class CircularDnaOptimizationProblem(DnaOptimizationProblem):
     """Class for solving circular DNA optimization problems.
-    
+
     The high-level interface is the same as for DnaOptimizationProblem:
     initialization, resolve_constraints(), and optimize() work the same way.
     """
@@ -109,7 +109,7 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
 
     def constraints_evaluations(self, autopass=True):
         """Return the evaluation of constraints.
-        
+
         The "autopass_constraints" enables to just assume that constraints
         enforced by the mutation space are verified.
 
@@ -159,7 +159,7 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
         WARNING: in case of optimization failure, the report generated will
         show a "pseudo-circular" sequence formed by concatenating the sequence
         with itself three times.
-        
+
         TODO: fix the warning above, at some point?
 
         The report's content may vary depending on the optimization's success.
@@ -217,4 +217,3 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
             file_content=file_content,
         )
         return True, "Optimization successful.", data
-

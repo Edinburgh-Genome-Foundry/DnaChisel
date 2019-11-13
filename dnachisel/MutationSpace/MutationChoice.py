@@ -1,8 +1,7 @@
 from ..biotools import windows_overlap
-from ..Location import Location
-
 import itertools
 import numpy as np
+
 
 class MutationChoice:
     """Represent a segment of a sequence with several possible variants.

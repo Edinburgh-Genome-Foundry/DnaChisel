@@ -4,7 +4,6 @@ from ..NoSolutionError import NoSolutionError
 
 
 class ObjectivesMaximizerMixin:
-
     def optimize_by_exhaustive_search(self):
         """
         """
@@ -119,12 +118,12 @@ class ObjectivesMaximizerMixin:
 
     def optimize_objective(self, objective):
         """Optimize the total objective score, focusing on a single objective.
-        
+
         This method will attempt to increase the global objective score by
         focusing on a single objective. First the locations of under-optimal
         subsequences for this objective are identified, then these locations
         are optimized one after the other, left to right.
-        
+
         For each location, a local problem is created and the optimization uses
         either a custom optimization algorithm, an exhaustive search, or a
         random search, to optimize the local problem

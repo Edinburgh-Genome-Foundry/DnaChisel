@@ -9,7 +9,7 @@ class MaximizeCAI(BaseCodonOptimizationClass):
 
     To be precise, the score computed by this specification is N*log(CAI) where
     N is the number of codons. Maximizing this score also maximizes the CAI.
-    
+
     Index (CAI). For a sequence with N codons, the CAI is the geometric mean
     of the Relative Codon Adaptiveness (RCA) of the different codons. The RCA
     of a codon is (f_i/fmax_i) were fi is the frequency of an oligo in the
@@ -45,6 +45,10 @@ class MaximizeCAI(BaseCodonOptimizationClass):
       A dict of the form ``{'*': {"TGA": 0.112, "TAA": 0.68}, 'K': ...}``
       giving the RSCU table (relative usage of each codon). Only provide if
       no ``species`` parameter was provided.
+
+    boost
+      Score multiplicator (=weight) for when the specification is used as an
+      optimization objective alongside competing objectives.
 
     Examples
     --------
@@ -138,4 +142,3 @@ class MaximizeCAI(BaseCodonOptimizationClass):
         if self.species is not None:
             result += " (%s)" % self.species
         return result
-

@@ -50,6 +50,7 @@ from .biotables import (
     IUPAC_NOTATION,
     NUCLEOTIDE_TO_REGEXPR,
     OTHER_BASES,
+    CODON_TABLE_NAMES,
     get_backtranslation_table
 )
 
@@ -87,5 +88,6 @@ __all__ = [
     'random_protein_sequence',
     'IUPAC_NOTATION',
     'NUCLEOTIDE_TO_REGEXPR',
-    'OTHER_BASES'
+    'OTHER_BASES',
+    'CODON_TABLE_NAMES'
 ]

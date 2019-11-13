@@ -18,7 +18,7 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
     Codon Harmonization in Jayaral 2005. We didn't call it "harmonization"
     in DNA Chisel to avoid any confusion with the now more common
     host-to-target codon harmonization. See DnaChisel's HarmonizeRCA class
-    for Codon Harmonization. 
+    for Codon Harmonization.
 
     Parameters
     ----------
@@ -46,6 +46,10 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
       giving the RSCU table (relative usage of each codon). Only provide if
       no ``species`` parameter was provided.
 
+    boost
+      Score multiplicator (=weight) for when the specification is used as an
+      optimization objective alongside competing objectives.
+
     References
     ----------
     Hale and Thompson, Codon Optimization of the Gene Encoding a
@@ -54,7 +58,7 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
 
     Jayaraj et. al. GeMS: an advanced software package for designing synthetic
     genes, Nucleic Acids Research, 2005
-    
+
     Mignon et. al. Codon harmonization – going beyond the speed limit for
     protein expression. FEBS Lett, 2018
 
@@ -80,7 +84,7 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
         )
         self.codons_translations = self.get_codons_translations()
 
-    def codon_harmonization_stats(self, problem):
+    def codon_usage_matching_stats(self, problem):
         """Return a codon harmonisation score and a suboptimal locations list.
 
         Parameters
@@ -119,7 +123,7 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
 
     def evaluate(self, problem):
         """Evaluate on a problem"""
-        score, nonoptimal_indices = self.codon_harmonization_stats(problem)
+        score, nonoptimal_indices = self.codon_usage_matching_stats(problem)
         locations = self.codons_indices_to_locations(nonoptimal_indices)
         np.random.shuffle(locations)
         return SpecEvaluation(

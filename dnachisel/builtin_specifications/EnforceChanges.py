@@ -34,9 +34,9 @@ class EnforceChanges(Specification):
       nucleotide changes, or use EnforceChanges(amount=10) to aim at a
       10-nucleotides change (no more, no less), or use
       EnforceChanges(minumum_amount=70) to aim at 70% change, no more no less.
-    
+
     As a genbank annotation:
-    
+
     - ``@change``, ``@change(minimum=40%)``, ``@change(minimum=3)`` will
       enforce respectivel 100% different nucleotides, 40%+ different, and 3+
       nucleotides different.
@@ -51,21 +51,21 @@ class EnforceChanges(Specification):
       different from the original sequence. Alternatively,
       indices can be provided. If neither is provided, the assumed location
       is the whole sequence.
-    
+
     amount
        Number of differences desired in the final sequence when the spec. is
        used as an objective. An amount_percent can be provided instead.
-    
+
     amount_percent
       Same as ``amount``, except the desired number of differences is decided
       at initialization, as a percentage of the number of nucleotides in the
       region covered.
-    
+
     minimum
       Minimal number of differences enforced in the final sequence when the
       spec. is used as an constraint. A minimum_percent can be provided
       instead.
-    
+
     minimum_percent
       Same as ``minimum``, except the desired number of differences is decided
       at initialization, as a percentage of the number of nucleotides in the
@@ -308,4 +308,3 @@ class EnforceChanges(Specification):
 
     def short_label(self):
         return "change"
-

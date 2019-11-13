@@ -20,10 +20,10 @@ from . import mixins
 
 
 class DnaOptimizationProblem(
-        mixins.ConstraintsSolverMixin,
-        mixins.ObjectivesMaximizerMixin,
-        mixins.RecordRepresentationMixin,
-    ):
+    mixins.ConstraintsSolverMixin,
+    mixins.ObjectivesMaximizerMixin,
+    mixins.RecordRepresentationMixin,
+):
     """Problem specifications: sequence, constraints, optimization objectives.
 
     The original constraints, objectives, and original sequence of the problem
@@ -64,8 +64,6 @@ class DnaOptimizationProblem(
     logger
       Either None for no logger, 'bar' for a tqdm progress bar logger, or
       any ProgLog progress bar logger.
-    
-
 
     mutations_space
       A MutationSpace indicating the possible mutations. In most case the
@@ -161,7 +159,7 @@ class DnaOptimizationProblem(
             for specset in specsets:
                 specs.remove(specset)
             specs.extend(specs_in_sets)
-        
+
         # INITIALIZE THE CONSTRAINTS AND OBJECTIVES
 
         self.constraints = [
@@ -172,15 +170,15 @@ class DnaOptimizationProblem(
             objective.initialized_on_problem(self, role="objective")
             for objective in self.objectives
         ]
-        
+
         # INITIALIZE THE "BEFORE" CLASS ATTRIBUTES, USED IN REPORTS
 
         self.sequence_before = self.sequence
         self._constraints_before = None
         self._objectives_before = None
-        
+
         # INITIALIZE THE MUTATION SPACE
-        
+
         if self.mutation_space is None:
             self.mutation_space = MutationSpace.from_optimization_problem(self)
             # If the original sequence is outside of the allowed mutations

@@ -32,6 +32,10 @@ class EnforceTranslation(CodonSpecification):
       that is a multiple of 3. The location strand is either 1 if the gene is
       encoded on the (+) strand, or -1 for antisense.
 
+    genetic_table
+      Either "Standard", "Bacterial", or any other Biopython genetic table name
+      (see dnachisel.biotools.CODON_TABLES_NAMES for a list of accepted names).
+
     start_codon
       Signals that the first codon is a start codon and provides a policy for
       changing it. It is very important that this parameter be set when dealing
@@ -47,10 +51,10 @@ class EnforceTranslation(CodonSpecification):
       String representing the protein sequence that the DNA segment should
       translate to, eg. "MKY...LL*" ("*" stands for stop codon).
       Can be omitted if the sequence initially encodes the right sequence.
-    
-    
-    table
 
+    boost
+      Score multiplicator (=weight) for when the specification is used as an
+      optimization objective alongside competing objectives.
     """
 
     best_possible_score = 0

@@ -17,7 +17,7 @@ class BaseCodonOptimizationClass(CodonSpecification):
         self.codon_usage_table = self.get_codons_table(
             species, codon_usage_table
         )
-    
+
     def get_codons(self, problem):
         subsequence = self.location.extract_sequence(problem.sequence)
         if len(subsequence) % 3:
@@ -64,7 +64,7 @@ class BaseCodonOptimizationClass(CodonSpecification):
                     indices, max_group_spread=self.localization_group_spread
                 )
             ]
-    
+
     def get_codons_synonyms(self):
         """Return a dict {"GTG": [GTG, GTC, ...]} of synonymous codons."""
         return {
@@ -73,7 +73,7 @@ class BaseCodonOptimizationClass(CodonSpecification):
             if len(aa) == 1
             for codon in aa_codons
         }
-    
+
     def get_codons_translations(self):
         """Return a dict {"ATG": "M", "TAG": "*", ...}."""
         return {

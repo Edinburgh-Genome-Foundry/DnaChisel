@@ -63,7 +63,7 @@ Here is the code to achieve that:
 DnaChisel implements advanced constraints such as the preservation of coding
 sequences,  or the inclusion or exclusion of advanced patterns (see
 `this page <https://edinburgh-genome-foundry.github.io/DnaChisel/ref/builtin_specifications.html>`_
-for an overview of available specifications), but it is also easy to implement 
+for an overview of available specifications), but it is also easy to implement
 our own constraints and objectives as subclasses of ``dnachisel.Specification``.
 
 
@@ -92,7 +92,7 @@ The file can be directly fed to the `web app <https://cuba.genomefoundry.org/scu
 or processed via the command line interface:
 
 .. code:: bash
-     
+
     # Output the result to "optimized_record.gb"
     dnachisel annotated_record.gb optimized_record.gb
 
@@ -106,7 +106,8 @@ Or via a Python script:
 
 By default, only the built-in specifications of DnaChisel can be used in the
 annotations, however it is easy to add your own specifications to the Genbank
-parser, and build applications supporting custom specifications on top of DnaChisel.
+parser, and build applications supporting custom specifications on top of
+DnaChisel.
 
 
 Reports
@@ -134,7 +135,10 @@ Here is an example of summary report:
 How it works
 ------------
 
-DnaChisel hunts down every constraint breach and suboptimal region by recreating local version of the problem around these regions. Each type of constraint can be locally *reduced* and solved in its own way, to ensure fast and reliable resolution.
+DnaChisel hunts down every constraint breach and suboptimal region by
+recreating local version of the problem around these regions. Each type of
+constraint can be locally *reduced* and solved in its own way, to ensure fast
+and reliable resolution.
 
 Below is an animation of the algorithm in action:
 
@@ -171,6 +175,7 @@ removes short homologies with existing genomes). On Ubuntu:
 .. code::
 
     sudo apt-get install ncbi-blast+
+
 
 License = MIT
 --------------

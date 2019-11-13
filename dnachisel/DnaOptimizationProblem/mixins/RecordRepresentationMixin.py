@@ -188,7 +188,7 @@ class RecordRepresentationMixin:
             write_record(record=record, target=filepath, file_format="genbank")
         else:
             return record
-    
+
     def sequence_edits_as_features(self, feature_type="misc_feature"):
         """Return a list of Biopython Record Features indicating each of the
         edits."""

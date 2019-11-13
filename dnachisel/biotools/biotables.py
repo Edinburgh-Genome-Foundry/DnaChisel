@@ -39,6 +39,7 @@ OTHER_BASES = {
     "G": ["T", "A", "C"],
     "C": ["T", "G", "A"],
 }
+CODON_TABLE_NAMES = list(CodonTable.unambiguous_dna_by_name)
 
 NUCLEOTIDE_TO_REGEXPR = dict_from_csv(
     os.path.join(data_dir, "nucleotide_to_regexpr.csv")
