@@ -208,24 +208,24 @@ class DnaOptimizationProblem:
             self.sequence = sequence
         return self._objectives_before
 
-    def constraints_evaluations(self, autopass_constraints=True):
+    def constraints_evaluations(self, autopass=True):
         """Return a list of the evaluations of each constraint of the canvas.
 
-        The "autopass_constraints" enables to just assume that constraints
+        The "autopass" enables to just assume that constraints
         enforced by the mutation space are verified.
         """
         return ProblemConstraintsEvaluations.from_problem(
-            self, autopass_constraints=autopass_constraints
+            self, autopass_constraints=autopass
         )
 
-    def all_constraints_pass(self):
+    def all_constraints_pass(self, autopass=True):
         """Return True iff the current problem sequence passes all constraints.
         """
-        evals = self.constraints_evaluations(autopass_constraints=True)
+        evals = self.constraints_evaluations(autopass=autopass)
         return evals.all_evaluations_pass()
 
-    def constraints_text_summary(self, failed_only=False):
-        evals = self.constraints_evaluations()
+    def constraints_text_summary(self, failed_only=False, autopass=True):
+        evals = self.constraints_evaluations(autopass=autopass)
         if failed_only:
             evals = evals.filter("failing")
         return evals.to_text()
@@ -523,7 +523,7 @@ class DnaOptimizationProblem:
                     " likely due to a complex problem. Try running the"
                     " solver on the same sequence again, or report the"
                     " error to the maintainers:\n\n"
-                    + self.constraints_text_summary(failed_only=True),
+                    + self.constraints_text_summary(failed_only=True, autopass=False),
                     problem=self,
                 )
 

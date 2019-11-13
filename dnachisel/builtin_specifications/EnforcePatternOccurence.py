@@ -52,7 +52,6 @@ class EnforcePatternOccurence(Specification):
         if isinstance(location, tuple):
             location = Location.from_tuple(location)
         self.location = location
-        self.boost = boost
         self.occurences = occurences
         self.center = center
         self.boost = boost

@@ -3,7 +3,7 @@ python:
   - "3.6"
 # command to install dependencies
 install:
-  - pip install matplotlib primer3-py
+  - pip install matplotlib primer3-py genome_collector
   - pip install coveralls pytest-cov==2.6 pytest==3.2.3 geneblocks
   - sudo apt-get install ncbi-blast+
   - pip install -e .[reports]

@@ -4,32 +4,20 @@ In this example we create a 1000bp random sequence, then edit out every match
 with E. coli that is 14bp or longer.
 
 """
-import os
+from dnachisel import DnaOptimizationProblem, random_dna_sequence, AvoidMatches
 from genome_collector import GenomeCollection
-from dnachisel import (
-    DnaOptimizationProblem,
-    random_dna_sequence,
-    AvoidBlastMatches,
-)
 
 # THIS CREATES THE ECOLI BLAST DATABASE ON YOUR MACHINE IF NOT ALREADY HERE
 
 collection = GenomeCollection()
-ecoli_blastdb = collection.get_taxid_blastdb_path(511145, db_type="nucl")
+ecoli_blastdb = collection.get_taxid_bowtie_index_path(511145, version="1")
 
 # DEFINE AND SOLVE THE PROBLEM
 
 problem = DnaOptimizationProblem(
     sequence=random_dna_sequence(500, seed=123),
     constraints=[
-        AvoidBlastMatches(
-            blast_db=ecoli_blastdb,
-            min_align_length=13,
-            perc_identity=100,
-            word_size=5, # The bigger the word size, the faster
-            e_value=1e20,
-            # ungapped=False
-        )
+        AvoidMatches(bowtie_index=ecoli_blastdb, match_length=15, mismatches=1)
     ],
 )
 

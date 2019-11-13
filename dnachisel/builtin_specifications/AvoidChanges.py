@@ -1,4 +1,4 @@
-"""Implementation of AvoidBlastMatches."""
+"""Implementation of AvoidChanges."""
 
 import numpy as np
 

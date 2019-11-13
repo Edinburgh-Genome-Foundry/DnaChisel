@@ -7,6 +7,7 @@ Run with:
 import dna_features_viewer as dfv
 import pandas
 import matplotlib.pyplot as plt
+import tqdm
 
 
 def parse_locations(s):
@@ -58,7 +59,7 @@ def plot_row_feature(row):
 
 
 data = pandas.read_csv("./examples.csv")
-for i, row in data.iterrows():
+for i, row in tqdm.tqdm(list(data.iterrows())):
     ax = plot_row_feature(row)
     ax.figure.savefig(
         "./%s.png" % row.filename, bbox_inches="tight", dpi=200

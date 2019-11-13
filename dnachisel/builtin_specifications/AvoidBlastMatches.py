@@ -1,13 +1,17 @@
 """Implementation of AvoidBlastMatches."""
 
 from ..Specification import Specification
+
 # from .VoidSpecification import VoidSpecification
 from ..SpecEvaluation import SpecEvaluation
-from dnachisel.biotools import blast_sequence, group_nearby_segments
+from dnachisel.biotools import blast_sequence
 from dnachisel.Location import Location
+
 
 class AvoidBlastMatches(Specification):
     """Enforce that the given pattern is absent in the sequence.
+
+    WARNING: try using AvoidMatches instead, it is much better!!
 
     Uses NCBI Blast+. Only local BLAST is supported/tested as for now
 
@@ -34,13 +38,25 @@ class AvoidBlastMatches(Specification):
     min_align_length
       Minimal length that an alignment should have to be considered.
     """
+
     priority = -2
     best_possible_score = 0
+    blasts_paths = {}
 
-    def __init__(self, blast_db=None, sequences=None, word_size=4,
-                 perc_identity=100, num_alignments=100000, num_threads=3,
-                 min_align_length=20, ungapped=True, e_value=1e80,
-                 culling_limit=1, location=None):
+    def __init__(
+        self,
+        blast_db=None,
+        sequences=None,
+        word_size=4,
+        perc_identity=100,
+        num_alignments=100000,
+        num_threads=3,
+        min_align_length=20,
+        ungapped=True,
+        e_value=1e80,
+        culling_limit=1,
+        location=None,
+    ):
         """Initialize."""
         if isinstance(location, tuple):
             location = Location.from_tuple(location)
@@ -67,7 +83,8 @@ class AvoidBlastMatches(Specification):
         sequence = location.extract_sequence(problem.sequence)
 
         blast_record = blast_sequence(
-            sequence, blast_db=self.blast_db,
+            sequence,
+            blast_db=self.blast_db,
             subject_sequences=self.sequences,
             word_size=self.word_size,
             perc_identity=self.perc_identity,
@@ -75,7 +92,8 @@ class AvoidBlastMatches(Specification):
             num_threads=self.num_threads,
             ungapped=self.ungapped,
             e_value=self.e_value,
-            culling_limit=self.culling_limit
+            culling_limit=self.culling_limit,
+            task="megablast"
         )
 
         if isinstance(blast_record, list):
@@ -92,44 +110,44 @@ class AvoidBlastMatches(Specification):
                 min(hit.query_start, hit.query_end) + location.start - 1,
                 max(hit.query_start, hit.query_end) + location.start,
                 1 - 2 * (hit.query_start > hit.query_end),
-                hit.identities
+                hit.identities,
             )
             for alignment in alignments
             for hit in alignment.hsps
         ]
 
-        locations = sorted([
-            (start, end, ids)
-            for (start, end, strand, ids) in query_hits
-            if (end - start) >= self.min_align_length
-        ])
-        # locations = [
-        #     (r[0][0], r[-1][-1])
-        #     for r in group_nearby_segments(locations, max_start_spread=2)
-        # ]
+        locations = sorted(
+            [
+                (start, end, ids)
+                for (start, end, strand, ids) in query_hits
+                if (end - start) >= self.min_align_length
+            ]
+        )
 
         score = -sum([ids for start, end, ids in locations])
         locations = [Location(start, end) for start, end, ids in locations]
 
         if locations == []:
-            return SpecEvaluation(self, problem, score=1,
-                                  message="Passed: no BLAST match found")
-
-
+            return SpecEvaluation(
+                self, problem, score=1, message="Passed: no BLAST match found"
+            )
 
         return SpecEvaluation(
-            self, problem, score=score, locations=locations,
-            message="Failed - matches at %s" % locations)
+            self,
+            problem,
+            score=score,
+            locations=locations,
+            message="Failed - %s matches at %s" % (len(locations), locations),
+        )
 
     def localized(self, location, problem=None, with_righthand=True):
         """Localize the evaluation."""
         new_location = self.location.overlap_region(location)
         if new_location is None:
-            return None 
- # VoidSpecification(parent_specification=self)
-
-        new_location = location.extended(self.min_align_length - 1,
-                                         right=with_righthand)
+            return None
+        new_location = location.extended(
+            self.min_align_length - 1, right=with_righthand
+        )
         return self.copy_with_changes(location=new_location)
 
     def feature_label_parameters(self):

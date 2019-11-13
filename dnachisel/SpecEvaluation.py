@@ -248,6 +248,13 @@ class SpecEvaluations:
             evaluations=[ev for ev in self.evaluations if eval_filter(ev)],
             problem=self.problem,
         )
+    
+    def all_locations(self):
+        return [
+            location
+            for evaluation in self.evaluations_with_locations()
+            for location in evaluation.locations
+        ]
 
     def to_text(self):
         """Return a long representation of the evaluations list."""
@@ -275,14 +282,14 @@ class SpecEvaluations:
 
         """
         return [
-            ev.specification.to_biopython_feature(
+            evaluation.specification.to_biopython_feature(
                 feature_type=feature_type,
-                color=self.success_failure_color(ev),
-                passes="true" if ev.passes else "false",
-                is_optimal="true" if ev.is_optimal else "false",
+                color=self.success_failure_color(evaluation),
+                passes="true" if evaluation.passes else "false",
+                is_optimal="true" if evaluation.is_optimal else "false",
             )
-            for ev in self.evaluations
-            if ev.specification.__dict__.get("location", False)
+            for evaluation in self.evaluations
+            if evaluation.specification.__dict__.get("location", False)
         ]
 
     def locations_as_features(
@@ -325,6 +332,7 @@ class SpecEvaluations:
                 color_shift=self.color_shift,
             )
             colors = [next(cycle) for ev in self.evaluations]
+        
         features = [
             location.to_biopython_feature(
                 feature_type="misc_feature",

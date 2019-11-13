@@ -35,17 +35,28 @@ class EnforceTranslation(CodonSpecification):
       that is a multiple of 3. The location strand is either 1 if the gene is
       encoded on the (+) strand, or -1 for antisense.
 
+    start_codon
+      Signals that the first codon is a start codon and provides a policy for
+      changing it. It is very important that this parameter be set when dealing
+      with full coding sequences in organisms with different start codons, e.g.
+      GTG in bacteria. If it is not set, then a GTG (start codon or Valine)
+      could be changed into GTA (also valine but NOT a start codon).
+      Can be False (the first codon is not considered a start codon, but can
+      still naturally code for methionine), ``keep`` (freezes the original
+      sub-sequence at this location, or a codon e.g. ``ATG`` or ``GTG`` or
+      ``["ATG", "GTG"]``.
+
     translation
       String representing the protein sequence that the DNA segment should
       translate to, eg. "MKY...LL*" ("*" stands for stop codon).
       Can be omitted if the sequence initially encodes the right sequence.
+    
     
     table
 
     """
 
     best_possible_score = 0
-    # codons_sequences = CODONS_SEQUENCES
     enforced_by_nucleotide_restrictions = True
     shorthand_name = "cds"
     default_genetic_table = "Standard"
@@ -53,7 +64,7 @@ class EnforceTranslation(CodonSpecification):
     def __init__(
         self,
         genetic_table="default",
-        has_start_codon=False,
+        start_codon=None,
         translation=None,
         location=None,
         boost=1.0,
@@ -65,11 +76,11 @@ class EnforceTranslation(CodonSpecification):
         if (location is not None) and (location.strand not in [-1, 1]):
             location = Location(location.start, location.end, 1)
         self.set_location(location)
+        self.start_codon = start_codon
         self.boost = boost
         if genetic_table == "default":
             genetic_table = self.default_genetic_table
         self.genetic_table = genetic_table
-        self.has_start_codon = has_start_codon
 
         self.initialize_translation_from_problem = translation is None
         self.initialize_location_from_problem = location is None
@@ -111,53 +122,48 @@ class EnforceTranslation(CodonSpecification):
 
     def initialized_on_problem(self, problem, role):
         """Get translation from the sequence if it is not already set."""
-        if self.location is None:
-            location = Location(0, len(problem.sequence), 1)
-            result = self.copy_with_changes()
-            result.set_location(location)
-        else:
-            result = self
+        result = self._copy_with_full_span_if_no_location(problem)
         if result.translation is None:
             subsequence = result.location.extract_sequence(problem.sequence)
             translation = translate(
                 subsequence,
-                table=self.genetic_table,
-                assume_start_codon=self.has_start_codon,
+                table=result.genetic_table,
+                assume_start_codon=result.start_codon is not None,
+            )
+            result = result.copy_with_changes(translation=translation)
+        if (result.start_codon is not None) and result.translation[0] != "M":
+            raise ValueError(
+                (
+                    "Spec. %s specificies a start_codon parameter, but the "
+                    "translation at this location does not start with Met. "
+                    "Maybe you should provide a 'translation' parameter or "
+                    "set up a different Genetic Code."
+                )
+                % result.label(use_short_form=True)
             )
 
-            result = result.copy_with_changes(translation=translation)
         return result
 
     def evaluate(self, problem):
         """Score is the number of wrong-translation codons."""
-        # print ("here")
+        # Note: this method is actually very little used as this specification
+        # class sets the enforced_by_nucleotide_restrictions attribute.
         location = (
             self.location
             if self.location is not None
             else Location(0, len(problem.sequence))
         )
         subsequence = location.extract_sequence(problem.sequence)
-        translation = translate(subsequence, table=self.genetic_table)
+        translation = translate(
+            subsequence,
+            table=self.genetic_table,
+            assume_start_codon=self.start_codon is not None,
+        )
         errors_locations = [
             self.codon_index_to_location(index)
             for (index, amino_acid) in enumerate(translation)
             if amino_acid != self.translation[index]
         ]
-        # errors = [
-        #     ind
-        #     for ind in range(len(translation))
-        #     if translation[ind] != self.translation[ind]
-        # ]
-        # errors_locations = [
-        #     Location(3 * ind, 3 * (ind + 1))
-        #     if self.location.strand >= 0
-        #     else Location(
-        #         start=self.location.end - 3 * (ind + 1),
-        #         end=self.location.end - 3 * ind,
-        #         strand=-1,
-        #     )
-        #     for ind in errors
-        # ]
         return SpecEvaluation(
             self,
             problem,
@@ -170,16 +176,17 @@ class EnforceTranslation(CodonSpecification):
 
     def localized_on_window(self, new_location, start_codon, end_codon):
         new_translation = self.translation[start_codon:end_codon]
-        location_is_at_start = (
-            self.location.strand == -1
-            and new_location.end >= self.location.end
-        ) or (new_location.start <= self.location.start)
+        if self.location.strand == -1:
+            location_is_at_start = new_location.end >= self.location.end
+        else:
+            location_is_at_start = new_location.start <= self.location.start
         return self.__class__(
             location=new_location,
             translation=new_translation,
             boost=self.boost,
             genetic_table=self.genetic_table,
-            has_start_codon=self.has_start_codon and location_is_at_start,
+            start_codon=self.start_codon if location_is_at_start else None
+            # has_start_codon=self.has_start_codon and location_is_at_start,
         )
 
     def restrict_nucleotides(self, sequence, location=None):
@@ -187,22 +194,14 @@ class EnforceTranslation(CodonSpecification):
             return []
 
         def get_first_codon_choices(first_codon):
-            if not self.has_start_codon:
+            if self.start_codon is None:
                 return self.backtranslation_table[self.translation[0]]
-            start_codons = self.backtranslation_table["START"]
-            if first_codon not in start_codons:
-                raise ValueError(
-                    (
-                        "Spec. %s starts with %s, not a start codon, yet "
-                        "it has parameter has_start_codon set to True"
-                    )
-                    % (self.label(use_short_form=True), first_codon)
-                )
-            standard_amino_acid = translate(
-                first_codon, table=self.genetic_table
-            )
-            synonyms = self.backtranslation_table[standard_amino_acid]
-            return [codon for codon in synonyms if codon in start_codons]
+            elif isinstance(self.start_codon, (list, tuple)):
+                return list(self.start_codon)
+            elif self.start_codon == "keep":
+                return [first_codon]
+            else:
+                return [self.start_codon]  # "ATG"
 
         first_codon_location = self.codon_index_to_location(0)
         first_codon = first_codon_location.extract_sequence(sequence)
@@ -212,8 +211,7 @@ class EnforceTranslation(CodonSpecification):
             (self.codon_index_to_location(i), self.backtranslation_table[aa])
             for i, aa in list(enumerate(self.translation))[1:]
         ]
-        # print (choices)
-        # print (sorted([standardize_choice(choice) for choice in choices]))
+
         def standardize_choice(choice):
             location, choices_list = choice
             if location.strand == -1:
@@ -221,45 +219,6 @@ class EnforceTranslation(CodonSpecification):
             return (location.to_tuple()[:2], choices_list)
 
         return sorted([standardize_choice(choice) for choice in choices])
-
-        # if strand == 1:
-        #     if self.has_start_codon:
-        #         first_codon = sequence[start : start + 3]
-        #         first_choice = get_first_codon_choices(first_codon)
-        #     else:
-        #         first_choice = self.backtranslation_table[self.translation[0]]
-        #     return [((start, start + 3), first_choice)] + [
-        #         (
-        #             (i, i + 3),
-        #             set(
-        #                 self.backtranslation_table[
-        #                     self.translation[int((i - start) / 3)]
-        #                 ]
-        #             ),
-        #         )
-        #         for i in range(start + 3, end, 3)
-        #     ]
-        # else:
-        #     if self.has_start_codon:
-        #         first_codon = reverse_complement(sequence[end - 3 : end])
-        #         last_choice = [
-        #             codon for codon in get_first_codon_choices(first_codon)
-        #         ]
-        #     else:
-        #         last_choice = self.backtranslation_table[self.translation[0]]
-        #     last_choice = [reverse_complement(c) for c in last_choice]
-        #     return [
-        #         (
-        #             (i, i + 3),
-        #             set(
-        #                 reverse_complement(n)
-        #                 for n in self.backtranslation_table[
-        #                     self.translation[-int((i - start) / 3) - 1]
-        #                 ]
-        #             ),
-        #         )
-        #         for i in range(start, end - 3, 3)
-        #     ] + [((end - 3, end), last_choice)]
 
     def __repr__(self):
         return "EnforceTranslation(%s)" % str(self.location)

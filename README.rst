@@ -165,6 +165,13 @@ Alternatively, you can unzip the sources in a folder and type
 
     sudo python setup.py install
 
+Optionally, also install Bowtie to be able to use ``AvoidMatches`` (which
+removes short homologies with existing genomes). On Ubuntu:
+
+.. code::
+
+    sudo apt-get install ncbi-blast+
+
 License = MIT
 --------------
 

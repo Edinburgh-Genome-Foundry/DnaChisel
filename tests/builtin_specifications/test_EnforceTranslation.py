@@ -65,11 +65,10 @@ def test_EnforceTranslation_bacterial_valine():
     for first_codon_before, first_codon_after in [
         ("ATG", "ATG"),  # methionine stays the only methionine codon
         ("GTG", "GTG"),  # valine-start-codon stays the only valine-start-codon
-        ("TTG", "CTG"),  # Two isoleucines are start codons (says Biopython)
     ]:
         sequence = first_codon_before + protein_sequence
         cds_constraint = EnforceTranslation(
-            genetic_table="Bacterial", has_start_codon=True
+            genetic_table="Bacterial", start_codon='keep'
         )
         problem = DnaOptimizationProblem(
             sequence=sequence,
@@ -93,11 +92,10 @@ def test_EnforceTranslation_bacterial_valine_antisense():
     for first_codon_before, first_codon_after in [
         ("ATG", "ATG"),  # methionine stays the only methionine codon
         ("GTG", "GTG"),  # valine-start-codon stays the only valine-start-codon
-        ("TTG", "CTG"),  # Two isoleucines are start codons (says Biopython)
     ]:
         sequence = first_codon_before + protein_sequence
         cds_constraint = EnforceTranslation(
-            genetic_table="Bacterial", has_start_codon=True,
+            genetic_table="Bacterial", start_codon='keep',
             location=Location(0, len(sequence), -1)
         )
         problem = DnaOptimizationProblem(

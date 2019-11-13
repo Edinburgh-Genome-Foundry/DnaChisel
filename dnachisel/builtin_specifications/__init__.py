@@ -5,6 +5,7 @@ from .AvoidBlastMatches import AvoidBlastMatches
 from .AvoidChanges import AvoidChanges
 from .AvoidHairpins import AvoidHairpins
 from .AvoidHeterodimerization import AvoidHeterodimerization
+from .AvoidMatches import AvoidMatches
 from .AvoidNonUniqueSegments import AvoidNonUniqueSegments
 from .AvoidPattern import AvoidPattern
 from .AvoidStopCodons import AvoidStopCodons
@@ -58,6 +59,7 @@ __all__ = [
     "AvoidChanges",
     "AvoidHairpins",
     "AvoidHeterodimerization",
+    "AvoidMatches",
     "AvoidNonUniqueSegments",
     "AvoidPattern",
     "AvoidStopCodons",

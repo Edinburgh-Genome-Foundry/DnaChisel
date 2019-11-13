@@ -1,6 +1,7 @@
 """Biologically-related useful methods."""
 
 from .blast_sequence import blast_sequence
+from .bowtie import find_all_bowtie_matches
 from .genbank_operations import (
     change_biopython_record_sequence,
     find_specification_in_feature,
@@ -57,6 +58,7 @@ from .biotables import (
 
 __all__ = [
     'blast_sequence',
+    'find_all_bowtie_matches',
     'change_biopython_record_sequence',
     'find_specification_in_feature',
     'load_record',

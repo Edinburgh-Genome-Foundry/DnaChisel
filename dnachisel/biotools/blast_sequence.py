@@ -17,7 +17,7 @@ def blast_sequence(
     num_threads=3,
     culling_limit=None,
     e_value=None,
-    use_megablast=True,
+    task=None,
     dust="no",
 ):
     """Return a Biopython BLAST record of the given sequence BLASTed
@@ -88,34 +88,25 @@ def blast_sequence(
         + parameter_if_not_none("-dust", dust)
         + parameter_if_not_none("-evalue", e_value)
         + parameter_if_not_none("-culling_limit", culling_limit)
+        + parameter_if_not_none("-task", task)
     )
-    if use_megablast:
-        command += ["-task", "megablast"]
     if ungapped:
         command += ["-ungapped"]
-
-    p = subprocess.Popen(command, close_fds=True)
-    out, err = p.communicate()
-    p.wait()
-    n_trials = 3
-    for i in range(n_trials):
-        try:
-            with open(xml_name, "r") as f:
-                res = list(NCBIXML.parse(f))
-                os.fdopen(xml_file, "w").close()
-                os.fdopen(fasta_file, "w").close()
-                os.remove(xml_name)
-                os.remove(fasta_name)
-                if close_subject:
-                    open(subject, "w").close()
-                    if remove_subject:
-                        os.remove(subject)
-                if len(res) == 1:
-                    return res[0]
-                else:
-                    return res
-            break
-        except ValueError:
-            if i == n_trials - 1:
-                raise err
-            time.sleep(0.1)
+    
+    process = subprocess.run(command, stderr=subprocess.PIPE, close_fds=True)
+    if process.returncode:
+        raise OSError("BLAST failed: %s" % process.stderr)
+    with open(xml_name, "r") as f:
+        result = list(NCBIXML.parse(f))
+    os.fdopen(xml_file, "w").close()
+    os.fdopen(fasta_file, "w").close()
+    os.remove(xml_name)
+    os.remove(fasta_name)
+    if close_subject:
+        open(subject, "w").close()
+        if remove_subject:
+            os.remove(subject)
+    if len(result) == 1:
+        return result[0]
+    else:
+        return result

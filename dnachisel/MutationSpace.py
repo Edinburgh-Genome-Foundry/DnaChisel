@@ -3,6 +3,7 @@
 import itertools
 import numpy as np
 from .biotools import windows_overlap
+from .Location import Location
 
 # TODO: better in-code docs
 
@@ -349,9 +350,7 @@ class MutationSpace:
             constraints = new_constraints
         mutation_choices = sorted(
             [
-                choice
-                if isinstance(choice, MutationChoice)
-                else MutationChoice(segment=choice[0], variants=set(choice[1]))
+                MutationChoice(segment=choice[0], variants=set(choice[1]))
                 for cst in constraints
                 for choice in cst.restrict_nucleotides(sequence)
             ],

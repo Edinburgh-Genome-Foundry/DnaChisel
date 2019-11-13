@@ -52,9 +52,8 @@ class EnforceChoice(Specification):
         result = self._copy_with_full_span_if_no_location(problem)
         if not all([len(c) == len(result.location) for c in result.choices]):
             raise ValueError(
-                "All sequence choices should have the same "
-                "length as the region on which the spec is "
-                "applied."
+                "All sequence choices should have the same length as the "
+                "region on which the spec is applied."
             )
         return result
 
@@ -74,7 +73,8 @@ class EnforceChoice(Specification):
         return self
 
     def restrict_nucleotides(self, sequence, location=None):
-        """When localizing, forbid any nucleotide but the one already there."""
+        """As a constraint, put the choices in the mutation space."""
+
         if self.location.strand != -1:
             choices = set(self.choices)
         else:
