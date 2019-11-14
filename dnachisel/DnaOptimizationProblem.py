@@ -219,7 +219,7 @@ class DnaOptimizationProblem:
         )
 
     def all_constraints_pass(self):
-        """Return True iff the current problem sequence passes all constraints.
+        """Return True if the current problem sequence passes all constraints.
         """
         evals = self.constraints_evaluations(autopass_constraints=True)
         return evals.all_evaluations_pass()
