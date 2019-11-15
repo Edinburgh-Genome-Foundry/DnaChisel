@@ -74,7 +74,7 @@ class FeatureRepresentationMixin:
 
     @classmethod
     def from_label(cls, label, location, specifications_dict='default'):
-        location = Location.load(location)
+        location = Location.from_data(location)
         if specifications_dict == 'default':
             specifications_dict = cls.DEFAULT_SPECIFICATIONS_DICT
         label = label.strip()

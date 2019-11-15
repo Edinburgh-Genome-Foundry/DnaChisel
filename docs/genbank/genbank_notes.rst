@@ -1,3 +1,5 @@
+.. _genbank-usage-notes:
+
 Genbank usage notes
 ===================
 
@@ -22,7 +24,8 @@ Weighted objectives
 -------------------
 
 Like with python scripts, when in presence of multiple competing optimization
-objectives, you can give them a weight multiplicator via the ``boost`` parameter,
+objectives, you can give them a weight multiplicator via the ``boost``
+parameter,
 e.g. ``~MySpec(..., boost=2)``.
 
 .. raw:: html

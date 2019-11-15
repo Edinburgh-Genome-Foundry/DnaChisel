@@ -36,7 +36,7 @@ class AvoidStopCodons(CodonSpecification):
     def __init__(self, genetic_table="Standard", location=None, boost=1.0):
         self.genetic_table = genetic_table
         self.boost = boost
-        self.location = location
+        self.location = Location.from_data(location)
 
     def initialized_on_problem(self, problem, role):
         """Get translation from the sequence if it is not already set."""

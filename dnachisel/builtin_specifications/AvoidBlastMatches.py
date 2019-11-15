@@ -57,8 +57,6 @@ class AvoidBlastMatches(Specification):
         location=None,
     ):
         """Initialize."""
-        if isinstance(location, tuple):
-            location = Location.from_tuple(location)
         self.blast_db = blast_db
         self.sequences = sequences
         self.word_size = word_size
@@ -66,7 +64,7 @@ class AvoidBlastMatches(Specification):
         self.num_alignments = num_alignments
         self.num_threads = num_threads
         self.min_align_length = min_align_length
-        self.location = location
+        self.location = Location.from_data(location)
         self.e_value = e_value
         self.ungapped = ungapped
         self.culling_limit = culling_limit

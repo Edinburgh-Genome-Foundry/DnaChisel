@@ -50,9 +50,7 @@ class EnforcePatternOccurence(Specification):
         if isinstance(pattern, str):
             pattern = SequencePattern.from_string(pattern)
         self.pattern = pattern
-        if isinstance(location, tuple):
-            location = Location.from_tuple(location)
-        self.location = location
+        self.location = Location.from_data(location)
         self.occurences = occurences
         self.center = center
         self.boost = boost

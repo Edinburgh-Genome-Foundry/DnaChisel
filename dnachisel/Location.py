@@ -154,12 +154,23 @@ class Location:
         return Location(start, end, strand)
 
     @staticmethod
-    def load(location_data):
+    def from_data(location_data):
+        """Return a location, from varied data formats.
+
+        This method is used in particular in every built-in specification to
+        quickly standardize the input location.
+        
+        ``location_data`` can be a tuple (start, end) or (start, end, strand),
+        or a Biopython FeatureLocation, or a Location instance. In any case,
+        a new Location object will be returned. 
+        """
+        if location_data is None:
+            return None
         if isinstance(location_data, (tuple, list)):
             return Location.from_tuple(location_data)
         if isinstance(location_data, FeatureLocation):
             return Location.from_biopython_location(location_data)
-        elif isinstance(location_data, Location):
+        if isinstance(location_data, Location):
             return Location(
                 location_data.start, location_data.end, location_data.strand
             )

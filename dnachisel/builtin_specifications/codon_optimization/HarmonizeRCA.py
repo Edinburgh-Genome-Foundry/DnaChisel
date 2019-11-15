@@ -20,7 +20,7 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
     defined by f/fmax where f is the codon's frequency in the organism and fmax
     is the highest frequency of all synonymous codons.
 
-    The minimized quantity is sum_i |RCA(c_i, H1) - RCA(c'_i, H2)|
+    The minimized quantity is sum_i abs(RCA(c_i, H1) - RCA(c'_i, H2))
     where c_i, c'_i represent the i-th codon before and after optimization
 
     This method is taken from Claassens 2017, where they simplify a previous

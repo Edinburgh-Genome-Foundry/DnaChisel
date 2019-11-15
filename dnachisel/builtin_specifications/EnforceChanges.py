@@ -96,9 +96,7 @@ class EnforceChanges(Specification):
         # raise NotImplementedError("This class is not yet implemented")
         # if location is None and (indices is not None):
         #     location = (min(indices), max(indices) + 1)
-        if isinstance(location, tuple):
-            location = Location.from_tuple(location)
-        self.location = location
+        self.location = Location.from_data(location)
         if (self.location is not None) and self.location.strand == -1:
             self.location.strand = 1
         self.indices = np.array(indices) if (indices is not None) else None

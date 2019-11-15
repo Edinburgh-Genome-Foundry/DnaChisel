@@ -2,7 +2,7 @@ Genbank API
 ===========
 
 This section documents the Genbank API for all builtin specifications of
-DNA chisel. 
+DNA chisel. See also the :ref:`genbank-usage-notes` section for tips.
 
 .. contents::
 
@@ -101,6 +101,7 @@ different from the original.
 
 Pattern insertion
 -----------------
+
 You can control how many times a pattern should appear in a sequence region
 with the ``@insert()`` specification (short form of ``@EnforcePatternOccurence``):
 
@@ -138,8 +139,8 @@ To enforce several same-length but quite different sequences, use
     <img class='annotation-example'
     src='../_static/images/genbank_annotations/choice.png'></img>
 
-CDS and Codon optimization
---------------------------
+Indicating coding sequences
+---------------------------
 
 To indicate that a region is a CDS and the protein sequence should be conserved
 (i.e. only synonymous codon mutations are allowed), use @cds (short for
@@ -150,11 +151,22 @@ To indicate that a region is a CDS and the protein sequence should be conserved
     <img class='annotation-example'
     src='../_static/images/genbank_annotations/cds.png'></img>
 
-Importantly, if the coding region has a start codon in an organims using non-ATG
-start codons (for instance, GTG in e_coli), make sure to define a policy for the
-start codon, for instance ``start_codon=keep`` to keep the sequence of the
-original start codon, or ``start_codon=ATG`` to use ATG as a start codon.
-See the documentation of EnforceTranslation for more details and options.
+.. caution:: Non-ATG start codons
+
+    If the coding region has a start codon in an organims using non-ATG
+    start codons (for instance, E. coli sometimes use GTG), make sure to define
+    a policy for the start codon, for instance ``start_codon=keep`` to keep the
+    sequence of the original start codon, or ``start_codon=ATG`` to use ATG as
+    a start codon. See the documentation of EnforceTranslation for more details
+    and options.
+
+Codon Optimization
+-------------------
+
+.. caution:: Always use with @cds
+
+   If the CodonOptimize specification is used without a @cds constraint covering
+   the same region, then the protein sequence is not guaranteed!
 
 To codon-optimize a gene you can use the ``~CodonOptimize()`` specification but
 it is faster and clearer to refer directly to one of the different methods available.
@@ -184,18 +196,14 @@ codons), use ``~harmonize_rca``:
     <img class='annotation-example'
     src='../_static/images/genbank_annotations/harmonize_rca.png'></img>
 
-As you noticed we used species names in these examples. See `the Codon Usage Tables package webpage <https://github.com/Edinburgh-Genome-Foundry/codon-usage-tables/tree/master/codon_usage_data/tables>`_
+As you noticed we used species names in these examples. See
+`the Codon Usage Tables package webpage <https://github.com/Edinburgh-Genome-Foundry/codon-usage-tables/tree/master/codon_usage_data/tables>`_
 for species that can be referred to by name. This includes ``b_subtilis``,
 ``c_elegans``, ``d_melanogaster``, ``e_coli``, ``g_gallus``, ``h_sapiens``,
 ``m_musculus``, ``s_cerevisiae``. You can also use a TaxID to refer to a species,
 e.g. ``species=1423`` at which case the codon frequencies will be downloaded from
-the `Kazusa codon usage database <https://www.kazusa.or.jp/codon/>`_, assuming it
-isn't down.
-
-.. caution:: Always use with @cds
-
-   If the CodonOptimize specification is used without a @cds constraint covering
-   the same region, then the protein sequence is not guaranteed!
+the `Kazusa codon usage database <https://www.kazusa.or.jp/codon/>`_ (assuming it
+isn't down!)
 
 
 GC content
@@ -224,18 +232,42 @@ it is preferable to provide a target rather than a range:
 Removing homologies
 -------------------
 
-.. raw:: html
-
-    <img class='annotation-example'
-    src='../_static/images/genbank_annotations/avoid_non_unique_segments.png'></img>
+To ensure that a sequence region has no homologies anywhere else in the sequence
+you can use ``all_unique_kmers``:
 
 .. raw:: html
 
     <img class='annotation-example'
-    src='../_static/images/genbank_annotations/avoid_blast.png'></img>
+    src='../_static/images/genbank_annotations/all_unique_kmers.png'></img>
 
-Primer-friendly segments
-------------------------
+The annotation above ensures that each 20-mer in the annotated segment does not
+appear anywhere else in the sequence or in its reverse-complement.
+
+To ensure that a sequence region has no homologies within itself, use the "here"
+parameter:
+
+.. raw:: html
+
+    <img class='annotation-example'
+    src='../_static/images/genbank_annotations/all_unique_kmers_here.png'></img>
+
+You can also avoid matches with a given organism you can also use ``avoid_matches``
+.. raw:: html
+
+    <img class='annotation-example'
+    src='../_static/images/genbank_annotations/avoid_matches.png'></img>
+
+.. caution:: Only works if supported by the server
+
+   This specification, originally meant to be used via scripts, will only work
+   if the server associates the organism name to a Bowtie index path.
+
+Melting temperature
+--------------------
+
+The annotation ``tm`` can be used to ensure that a given subsequence has the
+desired melting temperature. It can be used either as a constraint or as an
+optimization objective:
 
 .. raw:: html
 
@@ -247,11 +279,13 @@ Primer-friendly segments
     <img class='annotation-example'
     src='../_static/images/genbank_annotations/enforce_melting_obj.png'></img>
 
+As a suggestion, you can use this specification with ``all_unique_kmers`` to
+ensure that the resulting region is primer-friendly:
+
 .. raw:: html
 
     <img class='annotation-example'
-    src='../_static/images/genbank_annotations/allow_primer.png'></img>
-
+    src='../_static/images/genbank_annotations/enforce_melting_and_kmers.png'></img>
 
 Specifications not yet supported as Genbank annotations
 --------------------------------------------------------

@@ -1,14 +1,14 @@
 """Ensure that the location is primer-frienly.
 
 AllowPrimer is a good example SpecificationSet that will create specifications
-of type RepeatedKmerPattern, AvoidNonUniqueSegments, AvoidPattern,
+of type RepeatedKmerPattern, UniquifyAllKmers, AvoidPattern,
 EnforceMeltingTemperature, AvoidHeterodimerization.
 """
 
 from ..Specification.SpecificationSet import SpecificationSet
 from dnachisel.Location import Location
 from dnachisel.SequencePattern import RepeatedKmerPattern
-from .AvoidNonUniqueSegments import AvoidNonUniqueSegments
+from .UniquifyAllKmers import UniquifyAllKmers
 from .AvoidPattern import AvoidPattern
 from .EnforceMeltingTemperature import EnforceMeltingTemperature
 from .AvoidHeterodimerization import AvoidHeterodimerization
@@ -63,11 +63,10 @@ class AllowPrimer(SpecificationSet):
         max_heterodim_tm=5,
         avoided_repeats=((2, 5), (3, 4), (4, 3)),
     ):
-        if isinstance(location, tuple):
-            location = Location.from_tuple(location)
+        location = Location.from_data(location)
         specs = {
-            "unique_sequence": AvoidNonUniqueSegments(
-                min_length=max_homology_length, location=location
+            "unique_sequence": UniquifyAllKmers(
+                k=max_homology_length, location=location
             ),
             "melting_temperature": EnforceMeltingTemperature(
                 mini=tmin, maxi=tmax, location=location

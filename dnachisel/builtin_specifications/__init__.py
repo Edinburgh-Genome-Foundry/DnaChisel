@@ -6,7 +6,7 @@ from .AvoidChanges import AvoidChanges
 from .AvoidHairpins import AvoidHairpins
 from .AvoidHeterodimerization import AvoidHeterodimerization
 from .AvoidMatches import AvoidMatches
-from .AvoidNonUniqueSegments import AvoidNonUniqueSegments
+from .UniquifyAllKmers import UniquifyAllKmers
 from .AvoidPattern import AvoidPattern
 from .AvoidStopCodons import AvoidStopCodons
 from .EnforceChanges import EnforceChanges
@@ -33,7 +33,7 @@ DEFAULT_SPECIFICATIONS_DICT = {
     "AvoidBlastMatches": AvoidBlastMatches,
     "AvoidChanges": AvoidChanges,
     "AvoidHairpins": AvoidHairpins,
-    "AvoidNonUniqueSegments": AvoidNonUniqueSegments,
+    "UniquifyAllKmers": UniquifyAllKmers,
     "AvoidPattern": AvoidPattern,
     "CodonOptimize": CodonOptimize,
     "EnforceGCContent": EnforceGCContent,
@@ -60,7 +60,7 @@ __all__ = [
     "AvoidHairpins",
     "AvoidHeterodimerization",
     "AvoidMatches",
-    "AvoidNonUniqueSegments",
+    "UniquifyAllKmers",
     "AvoidPattern",
     "AvoidStopCodons",
     "CodonOptimize",

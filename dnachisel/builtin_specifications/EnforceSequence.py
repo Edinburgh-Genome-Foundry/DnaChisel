@@ -36,9 +36,7 @@ class EnforceSequence(Specification):
         """Initialize."""
 
         self.sequence = sequence
-        if isinstance(location, tuple):
-            location = Location.from_tuple(location, default_strand=+1)
-        self.location = location
+        self.location = Location.from_data(location)
         self.boost = boost
 
     def initialized_on_problem(self, problem, role):

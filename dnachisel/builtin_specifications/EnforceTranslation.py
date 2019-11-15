@@ -71,8 +71,7 @@ class EnforceTranslation(CodonSpecification):
     ):
         """Initialize."""
         self.translation = translation
-        if isinstance(location, tuple):
-            location = Location.from_tuple(location, default_strand=+1)
+        location = Location.from_data(location)
         if (location is not None) and (location.strand not in [-1, 1]):
             location = Location(location.start, location.end, 1)
         self.set_location(location)

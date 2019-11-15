@@ -57,9 +57,7 @@ class EnforceMeltingTemperature(Specification):
         self.mini = mini
         self.maxi = maxi
         self.target = target
-        if isinstance(location, tuple):
-            location = Location.from_tuple(location)
-        self.location = location
+        self.location = Location.from_data(location)
         self.boost = boost
 
     def initialize_on_problem(self, problem, role=None):

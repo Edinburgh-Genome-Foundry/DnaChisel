@@ -140,7 +140,7 @@ def constraints_breaches_dataframe(
     >>> constraints = [
     >>>     dc.AvoidPattern('ATTG'),
     >>>     dc.EnforceGCContent(0.4, 0.6),
-    >>>     dc.AvoidNonUniqueSegments(5)
+    >>>     dc.UniquifyAllKmers(5)
     >>> ]
     >>> dataframe = constraints_breaches_dataframe(constraints, sequences)
     >>> dataframe.to_excel('summary_spreadsheet.xlsx')

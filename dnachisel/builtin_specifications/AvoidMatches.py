@@ -13,7 +13,7 @@ import shutil
 class AvoidMatches(Specification):
     """Enforce that the given pattern is absent in the sequence.
 
-    Uses NCBI Blast+. Only local BLAST is supported/tested as for now
+    Uses Bowtie.
 
     Parameters
     ----------
@@ -25,7 +25,8 @@ class AvoidMatches(Specification):
       Length of the matches to avoid
 
     mismatches
-      Number of single-nucleotide mismatches allowed inside each match.
+      Number of single-nucleotide mismatches allowed inside each match. Only
+      0-3 mismatches is supported (this is what Bowtie supports.)
 
     location
       Location of the sequence on which the specification applies
@@ -47,13 +48,11 @@ class AvoidMatches(Specification):
         boost=1,
     ):
         """Initialize."""
-        if isinstance(location, tuple):
-            location = Location.from_tuple(location)
         self.bowtie_index = bowtie_index
         self.match_length = match_length
         self.mismatches = mismatches
         self.sequences = sequences
-        self.location = location
+        self.location = Location.from_data(location)
         self.boost = boost
         self._tmp_data_dir = None
 

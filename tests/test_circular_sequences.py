@@ -22,7 +22,7 @@ def test_circular_sequence_basic():
                 dc.EnforceGCContent(
                     mini=0.4, maxi=0.6, location=(150, 250), window=50
                 ),
-                dc.AvoidNonUniqueSegments(min_length=9, location=(10, 100)),
+                dc.UniquifyAllKmers(k=9, location=(10, 100)),
             ],
             logger=None,
         )
@@ -51,7 +51,7 @@ def test_circular_sequence_optimize_with_report(tmpdir):
             dc.EnforceGCContent(
                 mini=0.4, maxi=0.6, location=(150, 250), window=50
             ),
-            dc.AvoidNonUniqueSegments(min_length=9, location=(10, 100)),
+            dc.UniquifyAllKmers(k=9, location=(10, 100)),
         ],
         logger=None,
     )

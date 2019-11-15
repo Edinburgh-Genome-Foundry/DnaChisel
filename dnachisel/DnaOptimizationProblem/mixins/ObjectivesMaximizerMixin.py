@@ -4,6 +4,26 @@ from ..NoSolutionError import NoSolutionError
 
 
 class ObjectivesMaximizerMixin:
+
+    @property
+    def objectives_before(self):
+        if self._objectives_before is None:
+            sequence = self.sequence
+            self.sequence = self.sequence_before
+            self._objectives_before = self.objectives_evaluations()
+            self.sequence = sequence
+        return self._objectives_before
+
+    def objectives_evaluations(self):
+        """Return a list of the evaluation of each objective of the canvas"""
+        return ProblemObjectivesEvaluations.from_problem(self)
+
+    def objective_scores_sum(self):
+        return self.objectives_evaluations().scores_sum()
+
+    def objectives_text_summary(self):
+        return self.objectives_evaluations().to_text()
+
     def optimize_by_exhaustive_search(self):
         """
         """
@@ -42,28 +62,7 @@ class ObjectivesMaximizerMixin:
                     ):
                         self.logger(mutation__index=space_size)
                         break
-            self.sequence = self.sequence_before
         self.sequence = current_best_sequence
-        assert self.all_constraints_pass()
-
-    @property
-    def objectives_before(self):
-        if self._objectives_before is None:
-            sequence = self.sequence
-            self.sequence = self.sequence_before
-            self._objectives_before = self.objectives_evaluations()
-            self.sequence = sequence
-        return self._objectives_before
-
-    def objectives_evaluations(self):
-        """Return a list of the evaluation of each objective of the canvas"""
-        return ProblemObjectivesEvaluations.from_problem(self)
-
-    def objective_scores_sum(self):
-        return self.objectives_evaluations().scores_sum()
-
-    def objectives_text_summary(self):
-        return self.objectives_evaluations().to_text()
 
     def optimize_by_random_mutations(self):
         """

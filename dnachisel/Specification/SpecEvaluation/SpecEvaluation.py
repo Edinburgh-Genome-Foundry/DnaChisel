@@ -89,7 +89,7 @@ class SpecEvaluation:
 
         Example output for a constraint:
 
-        >>> FAIL ┍ AvoidNonUniqueSegments[10-1000](min_length:9)
+        >>> FAIL ┍ UniquifyAllKmers[10-1000](k:9)
         >>>      │ Score:        -2. Locations: [232-241, 233-242]
 
         Parameters

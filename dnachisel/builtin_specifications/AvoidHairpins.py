@@ -31,12 +31,9 @@ class AvoidHairpins(Specification):
         self, stem_size=20, hairpin_window=200, location=None, boost=1.0
     ):
         """Initialize."""
-        if isinstance(location, tuple):
-            location = Location.from_tuple(location)
-
         self.stem_size = stem_size
         self.hairpin_window = hairpin_window
-        self.location = location
+        self.location = Location.from_data(location)
         self.boost = boost
 
     def initialized_on_problem(self, problem, role=None):

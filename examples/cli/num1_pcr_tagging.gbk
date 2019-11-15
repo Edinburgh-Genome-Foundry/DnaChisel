@@ -39,7 +39,7 @@ FEATURES             Location/Qualifiers
                      /label=~CodonOptimize(s_cerevisiae)
                      /note="color: #ffff00"
      misc_feature    3000..5000
-                     /label=@AvoidNonUniqueSegments(20, here)
+                     /label=@UniquifyAllKmers(20, here)
                      /note="color: #3366ff"
      misc_feature    9248..10247
                      /label=@keep

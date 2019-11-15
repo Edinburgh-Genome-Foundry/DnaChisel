@@ -46,14 +46,11 @@ class AvoidChanges(Specification):
         """Initialize."""
         if location is None and (indices is not None):
             location = (min(indices), max(indices) + 1)
-        if isinstance(location, tuple):
-            location = Location.from_tuple(location)
-        self.location = location
+        self.location = Location.from_data(location)
         if (self.location is not None) and self.location.strand == -1:
             self.location.strand = 1
         self.indices = np.array(indices) if (indices is not None) else None
         self.target_sequence = target_sequence
-        # self.passive_objective = passive_objective
         self.boost = boost
 
     def extract_subsequence(self, sequence):
@@ -92,29 +89,29 @@ class AvoidChanges(Specification):
         """
         target = self.target_sequence
         sequence = self.extract_subsequence(problem.sequence)
-        discrepancies = np.nonzero(
+        differing_indices = np.nonzero(
             sequences_differences_array(sequence, target)
         )[0]
 
         if self.indices is not None:
-            discrepancies = self.indices[discrepancies]
+            differing_indices = self.indices[differing_indices]
         elif self.location is not None:
             if self.location.strand == -1:
-                discrepancies = self.location.end - discrepancies
+                differing_indices = self.location.end - differing_indices
             else:
-                discrepancies = discrepancies + self.location.start
+                differing_indices = differing_indices + self.location.start
 
         intervals = [
             (r[0], r[-1] + 1)
             for r in group_nearby_indices(
-                discrepancies,
+                differing_indices,
                 max_group_spread=self.localization_interval_length,
             )
         ]
         locations = [Location(start, end, 1) for start, end in intervals]
 
         return SpecEvaluation(
-            self, problem, score=-len(discrepancies), locations=locations
+            self, problem, score=-len(differing_indices), locations=locations
         )
 
     def localized(self, location, problem=None):

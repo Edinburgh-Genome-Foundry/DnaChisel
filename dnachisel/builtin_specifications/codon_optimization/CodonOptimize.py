@@ -13,9 +13,10 @@ def CodonOptimize(
     boost=1.0
 ):
     """Codon-optimize a coding sequence using a user-selected method.
-    
+
     This pseudo-specification is actually a function which returns an instance
     of another specification class depending on the selected "method":
+
     - For method="use_best_codon", every codon will be replaced by the "best"
       (i.e. most frequent) synonymous codon in the target organism. This is
       equivalent to Codon Adaptation Index (CAI) optimization.
@@ -50,25 +51,26 @@ def CodonOptimize(
       sequence is considered as the gene. The location should have a length
       that is a multiple of 3. The location strand is either 1 if the gene is
       encoded on the (+) strand, or -1 for antisense.
-    
+
     codon_usage_table
       Optional codon usage table of the species for which the sequence will be
       codon-optimized. A dict of the form ``{'*': {"TGA": 0.112, "TAA": 0.68},
       'K': ...}`` giving the RSCU table (relative usage of each codon). See
       parameter ``species`` above.
-    
+
     original_species
       When the method is 'harmonize_rca', this is the native species of the
       original coding sequene. Same characteristics as parameter ``species``
       above.
-    
+  
     original_codon_usage_table
       Optional codon usage table of the original sequence's native species.
       A dict of the form ``{'*': {"TGA": 0.112, "TAA": 0.68}, 'K': ...}``
       giving the codon usage table.
-    
+  
     References
     ==========
+  
     Claassens et. al., Improving heterologous membrane protein
     production in Escherichia coli by combining transcriptional tuning and
     codon usage algorithms. PLOS One, 2017
@@ -76,9 +78,6 @@ def CodonOptimize(
     Hale and Thompson, Codon Optimization of the Gene Encoding a
     Domain from Human Type 1 Neurofibromin Protein... Protein Expression and
     Purification 1998.
-
-
-
 
     """
     if method == "use_best_codon":

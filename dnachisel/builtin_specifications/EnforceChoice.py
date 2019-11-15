@@ -42,9 +42,7 @@ class EnforceChoice(Specification):
             variant for choice in choices for variant in choice.all_variants()
         ]
         self.choices = choices
-        if isinstance(location, tuple):
-            location = Location.from_tuple(location, default_strand=+1)
-        self.location = location
+        self.location = Location.from_data(location)
         self.boost = boost
 
     def initialized_on_problem(self, problem, role="constraint"):

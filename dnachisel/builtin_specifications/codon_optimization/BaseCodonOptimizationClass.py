@@ -10,9 +10,7 @@ class BaseCodonOptimizationClass(CodonSpecification):
         self, species=None, location=None, codon_usage_table=None, boost=1.0
     ):
         self.boost = boost
-        if isinstance(location, tuple):
-            location = Location.from_tuple(location, default_strand=+1)
-        self.location = location
+        self.location = Location.from_data(location)
         self.species = species
         self.codon_usage_table = self.get_codons_table(
             species, codon_usage_table
