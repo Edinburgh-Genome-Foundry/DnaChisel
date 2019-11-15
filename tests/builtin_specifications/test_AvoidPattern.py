@@ -58,3 +58,32 @@ def test_pattern_and_reverse():
     problem.resolve_constraints()
     problem.optimize()
     assert sum(problem.sequence_edits_as_array()) < 70
+
+
+def test_AvoidPattern_on_strands():
+    sequence = "ATGCATGC"
+    problem = DnaOptimizationProblem(
+        sequence,
+        constraints=[AvoidPattern("ATG", location=(0, 10, -1))],
+        logger=None,
+    )
+    problem.resolve_constraints()
+    assert "ATG" in problem.sequence
+
+    sequence = "CATGCTATGC"
+    problem = DnaOptimizationProblem(
+        sequence,
+        constraints=[AvoidPattern("CAT", location=(0, 10, -1))],
+        logger=None,
+    )
+    problem.resolve_constraints()
+    assert "CAT" in problem.sequence
+    assert "ATG" not in problem.sequence
+
+    sequence = "CATGCTATGC"
+    problem = DnaOptimizationProblem(
+        sequence, constraints=[AvoidPattern("CAT")], logger=None,
+    )
+    problem.resolve_constraints()
+    assert "CAT" not in problem.sequence
+    assert "ATG" not in problem.sequence
