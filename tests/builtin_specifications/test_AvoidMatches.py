@@ -21,7 +21,7 @@ def test_avoid_matches_with_list():
     ]
     constraint = AvoidMatches(sequences=avoided_seqs, match_length=6)
     problem = DnaOptimizationProblem(
-        sequence=sequence, constraints=[constraint]
+        sequence=sequence, constraints=[constraint], logger=None
     )
     cst_eval = constraint.evaluate(problem)
     assert len(cst_eval.locations) == 2
@@ -37,6 +37,7 @@ def test_avoid_matches_with_phage():
     problem = DnaOptimizationProblem(
         sequence=random_dna_sequence(30, seed=123),
         constraints=[AvoidMatches(bowtie_index=index, match_length=10)],
+        logger=None,
     )
     all_breaches = problem.constraints_evaluations().all_locations()
     assert len(all_breaches) == 5

@@ -39,6 +39,7 @@ def test_EnforceTranlationReversed():
             AvoidPattern("AGC"),
             EnforceTranslation(location=(0, len(sequence), -1)),
         ],
+        logger=None,
     )
     assert not problem.all_constraints_pass()
     problem.resolve_constraints()
@@ -53,6 +54,7 @@ def test_EnforceTranlation_error_location_not_3x():
         _ = DnaOptimizationProblem(
             sequence=sequence,
             constraints=[EnforceTranslation(location=(0, 16))],
+            logger=None,
         )
     assert "Location 0-16(+) has length 16" in str(err.value)
 
@@ -69,6 +71,7 @@ def test_EnforceTranlation_error_location_smaller_than_translation():
                     translation=random_protein_sequence(30, seed=111)
                 )
             ],
+            logger=None,
         )
     assert str(err.value).startswith("Window size")
 

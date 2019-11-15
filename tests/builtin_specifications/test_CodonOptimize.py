@@ -22,6 +22,7 @@ def test_codon_optimize_bestcodon():
         sequence=sequence,
         constraints=[EnforceTranslation()],
         objectives=[CodonOptimize(species="e_coli")],
+        logger=None,
     )
     assert problem.objective_scores_sum() < 0
     problem.optimize()
@@ -38,6 +39,7 @@ def test_codon_optimize_match_usage():
         objectives=[
             CodonOptimize(species="e_coli", method="match_codon_usage")
         ],
+        logger=None,
     )
     assert -600 < problem.objective_scores_sum() < -550
     problem.optimize()
@@ -55,26 +57,30 @@ def test_codon_optimize_match_usage_short_sequence():
         sequence=sequence,
         constraints=[EnforceTranslation()],
         objectives=[harmonization],
+        logger=None,
     )
     assert problem.objective_scores_sum() < -5.5
     problem.optimize()
     assert -0.6 < problem.objective_scores_sum()
     assert problem.sequence == "GATGATGACAAGAAAAAGAAAAAAAAA"
 
+
 def test_codon_optimize_harmonize_rca_short_sequence():
     protein = random_protein_sequence(500, seed=123)
     sequence = reverse_translate(protein)
     harmonization = CodonOptimize(
-        species="h_sapiens", original_species='e_coli', method="harmonize_rca"
+        species="h_sapiens", original_species="e_coli", method="harmonize_rca"
     )
     problem = DnaOptimizationProblem(
         sequence=sequence,
         constraints=[EnforceTranslation()],
         objectives=[harmonization],
+        logger=None,
     )
     assert problem.objective_scores_sum() < -123
     problem.optimize()
     assert -74 < problem.objective_scores_sum()
+
 
 def test_codon_optimize_as_hard_constraint():
     numpy.random.seed(123)
@@ -84,6 +90,7 @@ def test_codon_optimize_as_hard_constraint():
             EnforceTranslation(location=Location(1000, 1300)),
             CodonOptimize(location=Location(1000, 1300), species="e_coli"),
         ],
+        logger=None,
     )
     assert not problem.all_constraints_pass()
     problem.resolve_constraints()
@@ -96,6 +103,7 @@ def test_codon_optimize_with_custom_table():
         sequence=random_dna_sequence(1200, seed=123),
         constraints=[EnforceTranslation()],
         objectives=[CodonOptimize(codon_usage_table=table)],
+        logger=None,
     )
     assert problem.objective_scores_sum() < -10
     problem.optimize()

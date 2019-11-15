@@ -7,12 +7,12 @@ def test_circular_sequence_basic():
     np.random.seed(123)
     # Until the feature gets more battle-test, we're making sure it works
     # across a range of sequences.
-    for i in range(10):
+    for i in range(4):
         dna_sequence = (
             "CTC"
-            + dc.random_dna_sequence(1000)
+            + dc.random_dna_sequence(100)
             + "CGTCTC"
-            + dc.random_dna_sequence(1000)
+            + dc.random_dna_sequence(100)
             + "CGT"
         )
         problem = dc.CircularDnaOptimizationProblem(
@@ -20,9 +20,9 @@ def test_circular_sequence_basic():
             constraints=[
                 dc.AvoidPattern("BsmBI_site"),
                 dc.EnforceGCContent(
-                    mini=0.4, maxi=0.6, location=(1500, 2500), window=50
+                    mini=0.4, maxi=0.6, location=(150, 250), window=50
                 ),
-                dc.AvoidNonUniqueSegments(min_length=9, location=(10, 1000)),
+                dc.AvoidNonUniqueSegments(min_length=9, location=(10, 100)),
             ],
             logger=None,
         )
@@ -39,9 +39,9 @@ def test_circular_sequence_optimize_with_report(tmpdir):
     # across a range of sequences.
     dna_sequence = (
         "CTC"
-        + dc.random_dna_sequence(1000)
+        + dc.random_dna_sequence(100)
         + "CGTCTC"
-        + dc.random_dna_sequence(1000)
+        + dc.random_dna_sequence(100)
         + "CGT"
     )
     problem = dc.CircularDnaOptimizationProblem(
@@ -49,9 +49,9 @@ def test_circular_sequence_optimize_with_report(tmpdir):
         constraints=[
             dc.AvoidPattern("BsmBI_site"),
             dc.EnforceGCContent(
-                mini=0.4, maxi=0.6, location=(1500, 2500), window=50
+                mini=0.4, maxi=0.6, location=(150, 250), window=50
             ),
-            dc.AvoidNonUniqueSegments(min_length=9, location=(10, 1000)),
+            dc.AvoidNonUniqueSegments(min_length=9, location=(10, 100)),
         ],
         logger=None,
     )
