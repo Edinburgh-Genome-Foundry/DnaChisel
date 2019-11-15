@@ -131,9 +131,7 @@ class EnforceChanges(Specification):
         """Find out what sequence it is that we are supposed to conserve."""
 
         result = self._copy_with_full_span_if_no_location(problem)
-        L = len(
-            result.indices if result.indices is not None else result.location
-        )
+        L = len(result.location if result.indices is None else result.indices)
 
         # FIRST DEAL WITH THE AMOUNTS OF CHANGE
 
@@ -145,6 +143,7 @@ class EnforceChanges(Specification):
         )
 
         # Only if minimum_percent=100 is the constraint nucleotide-enforced
+        # So this variable is updated below if necessary
         self.enforced_by_nucleotide_restrictions = False
 
         if role == "constraint":
@@ -246,10 +245,10 @@ class EnforceChanges(Specification):
         # If minimum_percent<100: no smart strategy return self.
         # If amount_percent<100: no smart strategy return self.
         # If amount_percent==100: easy to localize, it is always locally 100%
-        
+
         if self.amount_percent != 100:
             return self
-        
+
         # Now the only case where localization makes sense: amount_percent=100
 
         start, end = location.start, location.end

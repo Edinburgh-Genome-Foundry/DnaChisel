@@ -151,15 +151,15 @@ class ObjectivesMaximizerMixin:
             # location.
             location = Location(*mutation_space.choices_span)
             localized_constraints = [
-                _constraint.localized(location, problem=self)
-                for _constraint in self.constraints
+                cst.localized(location, problem=self)
+                for cst in self.constraints
             ]
             localized_constraints = [
                 cst for cst in localized_constraints if cst is not None
             ]
             localized_objectives = [
-                _objective.localized(location, problem=self)
-                for _objective in self.objectives
+                obj.localized(location, problem=self)
+                for obj in self.objectives
             ]
             localized_objectives = [
                 obj for obj in localized_objectives if obj is not None

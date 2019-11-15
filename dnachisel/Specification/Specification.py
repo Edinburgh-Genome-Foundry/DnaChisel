@@ -62,6 +62,7 @@ class Specification(FeatureRepresentationMixin):
     enforced_by_nucleotide_restrictions = False
     priority = 0
     shorthand_name = None
+    is_focus = False
 
     def __init__(self, evaluate=None, boost=1.0):
         """Initialize."""
@@ -227,7 +228,7 @@ class Specification(FeatureRepresentationMixin):
         custom method.
         """
         if self.location is None:
-            location = Location(0, len(problem.sequence), 1)
+            location = Location(0, len(problem.sequence))
             return self.copy_with_changes(location=location)
         else:
             return self

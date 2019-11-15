@@ -40,7 +40,13 @@ class AvoidChanges(Specification):
     shorthand_name = "keep"
 
     def __init__(
-        self, location=None, indices=None, target_sequence=None, boost=1.0
+        self,
+        max_edits=0,
+        max_edits_percent=None,
+        location=None,
+        indices=None,
+        target_sequence=None,
+        boost=1.0,
     ):
 
         """Initialize."""
@@ -51,6 +57,8 @@ class AvoidChanges(Specification):
             self.location.strand = 1
         self.indices = np.array(indices) if (indices is not None) else None
         self.target_sequence = target_sequence
+        self.max_edits = max_edits
+        self.max_edits_percent = max_edits_percent
         self.boost = boost
 
     def extract_subsequence(self, sequence):
@@ -69,13 +77,18 @@ class AvoidChanges(Specification):
     def initialized_on_problem(self, problem, role=None):
         """Find out what sequence it is that we are supposed to conserve."""
         result = self._copy_with_full_span_if_no_location(problem)
+        L = len(result.location if result.indices is None else result.indices)
+        if result.max_edits_percent is not None:
+            result.max_edits = np.floor(result.max_edits_percent * L / 100.0)
+
+        result.enforced_by_nucleotide_restrictions = (result.max_edits == 0)
 
         # Initialize the "target_sequence" in two cases:
         # - Always at the very beginning
         # - When the new sequence is bigger than the previous one
         #   (used in CircularDnaOptimizationProblem)
-        if self.target_sequence is None or (
-            len(self.target_sequence) < len(self.location)
+        if result.target_sequence is None or (
+            len(result.target_sequence) < len(self.location)
         ):
             result = result.copy_with_changes()
             result.target_sequence = self.extract_subsequence(problem.sequence)
@@ -109,10 +122,8 @@ class AvoidChanges(Specification):
             )
         ]
         locations = [Location(start, end, 1) for start, end in intervals]
-
-        return SpecEvaluation(
-            self, problem, score=-len(differing_indices), locations=locations
-        )
+        score = self.max_edits - len(differing_indices)
+        return SpecEvaluation(self, problem, score=score, locations=locations)
 
     def localized(self, location, problem=None):
         """Localize the spec to the overlap of its location and the new.
@@ -139,6 +150,8 @@ class AvoidChanges(Specification):
 
     def restrict_nucleotides(self, sequence, location=None):
         """When localizing, forbid any nucleotide but the one already there."""
+        if self.max_edits or self.max_edits_percent:
+            return []
         if location is not None:
             start = max(location.start, self.location.start)
             end = min(location.end, self.location.end)

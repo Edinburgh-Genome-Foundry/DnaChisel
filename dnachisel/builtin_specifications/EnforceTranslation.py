@@ -145,7 +145,7 @@ class EnforceTranslation(CodonSpecification):
         location = (
             self.location
             if self.location is not None
-            else Location(0, len(problem.sequence))
+            else Location(0, len(problem.sequence), 1)
         )
         subsequence = location.extract_sequence(problem.sequence)
         translation = translate(
@@ -196,7 +196,6 @@ class EnforceTranslation(CodonSpecification):
                 return [first_codon]
             else:
                 return [self.start_codon]  # "ATG"
-
         first_codon_location = self.codon_index_to_location(0)
         first_codon = first_codon_location.extract_sequence(sequence)
         choices = [

@@ -1,29 +1,9 @@
-
 from ..biotools import translate
 from ..Location import Location
 from ..Specification import SpecEvaluation
 from .CodonSpecification import CodonSpecification
 
 from Bio.Data import CodonTable
-
-
-def get_backtranslation_table(table_name="Standard"):
-    table = CodonTable.unambiguous_dna_by_name[table_name]
-    back_translation_table = {}
-    for codon, amino_acid in table.forward_table.items():
-        if amino_acid not in back_translation_table:
-            back_translation_table[amino_acid] = []
-        back_translation_table[amino_acid].append(codon)
-    back_translation_table["*"] = table.stop_codons
-    back_translation_table["START"] = table.start_codons
-    return back_translation_table
-
-
-def get_genetic_table(table_name="Standard"):
-    table = CodonTable.unambiguous_dna_by_name[table_name]
-    genetic_table = {stop_codon: "*" for stop_codon in table.stop_codons}
-    genetic_table.update(table.forward_table)
-    return genetic_table
 
 
 class AvoidStopCodons(CodonSpecification):
@@ -67,8 +47,6 @@ class AvoidStopCodons(CodonSpecification):
             if len(errors_locations) == 0
             else "Stop codons found at indices %s" % errors_locations,
         )
-
-        
 
     def __str__(self):
         """Represent."""

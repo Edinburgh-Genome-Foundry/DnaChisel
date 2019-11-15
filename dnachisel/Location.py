@@ -33,7 +33,7 @@ class Location:
 
     __slots__ = ["strand", "start", "end"]
 
-    def __init__(self, start, end, strand=None):
+    def __init__(self, start, end, strand=0):
         """Initialize."""
         self.start = start
         self.end = end

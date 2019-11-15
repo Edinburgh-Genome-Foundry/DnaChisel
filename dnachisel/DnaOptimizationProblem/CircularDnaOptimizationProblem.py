@@ -118,6 +118,12 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
         )
         evals = circularized.constraints_evaluations(autopass=autopass)
         return self._recentered_evaluations(evals)
+    
+    def all_constraints_pass(self, autopass=True):
+        """Return True iff the current problem sequence passes all constraints.
+        """
+        evals = self.constraints_evaluations(autopass=autopass)
+        return evals.all_evaluations_pass()
 
     def objectives_evaluations(self):
         circularized = self._circularized_view(

@@ -29,14 +29,27 @@ class ConstraintsSolverMixin:
     def all_constraints_pass(self, autopass=True):
         """Return True iff the current problem sequence passes all constraints.
         """
-        evals = self.constraints_evaluations(autopass=autopass)
-        return evals.all_evaluations_pass()
+        if len(self.constraints) == 0:
+            return True
+        return all(
+            c.evaluate(self).passes
+            for c in self.constraints
+            if (not autopass) or (not c.enforced_by_nucleotide_restrictions)
+        )
 
     def constraints_text_summary(self, failed_only=False, autopass=True):
         evals = self.constraints_evaluations(autopass=autopass)
         if failed_only:
             evals = evals.filter("failing")
         return evals.to_text()
+
+    def get_focus_constraint(self):
+        focus_constraints = [c for c in self.constraints if c.is_focus]
+        if len(focus_constraints) == 1:
+            focus = focus_constraints[0]
+            other_constraints = [c for c in self.constraints if not c.is_focus]
+            return focus, other_constraints
+        return None, None
 
     def resolve_constraints_by_exhaustive_search(self):
         """Solve all constraints by exploring the whole search space.
@@ -46,13 +59,19 @@ class ConstraintsSolverMixin:
         stops when it finds a sequence which meets all the constraints of the
         canvas.
         """
+        focus_constraint, other_constraints = self.get_focus_constraint()
         sequence_before = self.sequence
         all_variants = self.mutation_space.all_variants(self.sequence)
         space_size = int(self.mutation_space.space_size)
         self.logger(mutation__total=space_size)
         for variant in self.logger.iter_bar(mutation=all_variants):
             self.sequence = variant
-            if self.all_constraints_pass():
+            if focus_constraint is not None:
+                if focus_constraint.evaluate(self).passes:
+                    if all(c.evaluate(self).passes for c in other_constraints):
+                        self.logger(mutation__index=space_size)
+                        return
+            elif self.all_constraints_pass():
                 self.logger(mutation__index=space_size)
                 return
         self.sequence = sequence_before
@@ -77,10 +96,16 @@ class ConstraintsSolverMixin:
         a ``NoSolutionError`` is thrown if no solution was found.
         """
 
+        focus_constraint, other_constraints = self.get_focus_constraint()
+        if focus_constraint is not None:
+            self.resolve_single_constraint_by_random_mutations(
+                focus_constraint, other_constraints
+            )
+            return
+
         evaluations = self.constraints_evaluations()
         score = sum([e.score for e in evaluations if not e.passes])
-
-        iters = range(3 * self.max_random_iters)
+        iters = range(self.max_random_iters)
         for i in self.logger.iter_bar(mutation=iters):
 
             if all(e.passes for e in evaluations):
@@ -99,6 +124,39 @@ class ConstraintsSolverMixin:
                 score = new_score
             else:
                 self.sequence = previous_sequence
+        raise NoSolutionError(
+            "Random search did not find a solution in the given number of "
+            "attempts. Try to increase the number of attempts with:\n\n"
+            "problem.max_random_iters = 5000 # or even 10000, 20000, etc.\n\n"
+            "If the problem persists, you may be in presence of a complex or "
+            "unsolvable problem.",
+            problem=self,
+        )
+
+    def resolve_single_constraint_by_random_mutations(
+        self, constraint, other_constraints
+    ):
+        evaluation = constraint.evaluation
+        score = evaluation.score
+        iters = range(self.max_random_iters)
+        for i in self.logger.iter_bar(mutation=iters):
+            previous_sequence = self.sequence
+            self.sequence = self.mutation_space.apply_random_mutations(
+                n_mutations=self.mutations_per_iteration,
+                sequence=self.sequence,
+            )
+            new_evaluation = constraint.evaluate(self)
+            if new_evaluation.score > score:
+                if all(c.evaluate(self).passes for c in other_constraints):
+                    score = new_evaluation.score
+                    if new_evaluation.passes:
+                        self.logger(mutation__index=iters)
+                        return
+                else:
+                    self.sequence = previous_sequence
+            else:
+                self.sequence = previous_sequence
+
         raise NoSolutionError(
             "Random search did not find a solution in the given number of "
             "attempts. Try to increase the number of attempts with:\n\n"
@@ -190,28 +248,29 @@ class ConstraintsSolverMixin:
                     this_local_constraint = constraint.localized(
                         new_location, problem=self
                     )
+                evaluation = this_local_constraint.evaluate(self)
 
                 # MAYBE THE LOCAL BREACH WAS ALREADY RESOLVED AS A SIDE EFFECT
                 # OF SOLVING PREVIOUS BREACHES. IN THAT CASE, PASS.
 
-                if this_local_constraint.evaluate(self).passes:
+                if evaluation.passes:
                     continue
 
                 # ELSE, CREATE A NEW LOCAL PROBLEM WITH LOCALIZED CONSTRAINTS
 
+                this_local_constraint.is_focus = True
+                this_local_constraint.evaluation = evaluation
+
                 localized_constraints = [
-                    _constraint.localized(new_location, problem=self)
-                    for _constraint in self.constraints
-                    if _constraint != constraint
-                    if not _constraint.enforced_by_nucleotide_restrictions
-                ]
-                localized_constraints = [
-                    cst for cst in localized_constraints if cst is not None
+                    cst.localized(new_location, problem=self)
+                    for cst in self.constraints
+                    if cst != constraint
+                    and not cst.enforced_by_nucleotide_restrictions
                 ]
                 passing_localized_constraints = [
-                    _constraint
-                    for _constraint in localized_constraints
-                    if _constraint.evaluate(self).passes
+                    cst
+                    for cst in localized_constraints
+                    if cst is not None and cst.evaluate(self).passes
                 ]
                 local_problem = self.__class__(
                     sequence=self.sequence,
