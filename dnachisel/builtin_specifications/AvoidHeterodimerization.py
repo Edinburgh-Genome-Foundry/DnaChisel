@@ -5,8 +5,7 @@ try:
 except (ImportError, OSError):
     primer3 = None
 
-from ..Specification import Specification
-from ..SpecEvaluation import SpecEvaluation
+from ..Specification import Specification, SpecEvaluation
 
 
 class AvoidHeterodimerization(Specification):

@@ -5,7 +5,7 @@ from dnachisel.biotools import (
     find_specification_label_in_feature,
     sequences_differences_segments,
 )
-from dnachisel.Specification import Specification
+from dnachisel.Specification.Specification import Specification
 from dnachisel.Location import Location
 
 

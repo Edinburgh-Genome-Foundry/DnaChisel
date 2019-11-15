@@ -1,7 +1,8 @@
-from .CodonSpecification import CodonSpecification
-from dnachisel.biotools import translate
+
+from ..biotools import translate
 from ..Location import Location
-from ..SpecEvaluation import SpecEvaluation
+from ..Specification import SpecEvaluation
+from .CodonSpecification import CodonSpecification
 
 from Bio.Data import CodonTable
 

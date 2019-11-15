@@ -27,7 +27,7 @@ def dict_to_pretty_string(d, rounding_digits=2, indent=2):
 
 def score_to_formatted_string(score, characters=9):
     """Transform a number (score) into a best-format string.
-    
+
     The format will be either int (2234), float (10.234) or engineering
     (1.20E5), whichever is shorter. The score is then padded with left
     whitespaces to obtained the desired number of ``characters``."""

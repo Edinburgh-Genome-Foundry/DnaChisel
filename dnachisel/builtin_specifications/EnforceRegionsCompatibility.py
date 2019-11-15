@@ -1,10 +1,8 @@
 from collections import Counter
 import itertools
 
-from ..Specification import Specification
-from ..Location import Location
-# from .VoidSpecification import VoidSpecification
-from ..SpecEvaluation import SpecEvaluation
+from dnachisel.Location import Location
+from ..Specification import Specification, SpecEvaluation
 
 class EnforceRegionsCompatibility(Specification):
     """Ensure that different subregions satisfy compatibility constraints."""

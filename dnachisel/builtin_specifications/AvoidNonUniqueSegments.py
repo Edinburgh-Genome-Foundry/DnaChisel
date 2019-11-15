@@ -5,7 +5,7 @@ from collections import defaultdict
 from ..Specification import Specification
 
 # from .VoidSpecification import VoidSpecification
-from ..SpecEvaluation import SpecEvaluation
+from ..Specification.SpecEvaluation import SpecEvaluation
 from dnachisel.biotools import reverse_complement
 from dnachisel.Location import Location
 

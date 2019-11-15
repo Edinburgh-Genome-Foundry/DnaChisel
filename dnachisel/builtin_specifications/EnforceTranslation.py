@@ -1,15 +1,14 @@
 "Implement EnforceTranslation."
 
-from .CodonSpecification import CodonSpecification
 
-# from .VoidSpecification import VoidSpecification
-from ..SpecEvaluation import SpecEvaluation
-from dnachisel.biotools import (
+from ..Specification import SpecEvaluation
+from ..biotools import (
     translate,
     reverse_complement,
     get_backtranslation_table,
 )
-from dnachisel.Location import Location
+from ..Location import Location
+from .CodonSpecification import CodonSpecification
 
 
 class EnforceTranslation(CodonSpecification):

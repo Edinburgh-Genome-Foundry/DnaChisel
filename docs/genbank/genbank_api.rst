@@ -79,6 +79,26 @@ modifications will not be strictly forbidden, but they will be minimized:
     <img class='annotation-example'
     src='../_static/images/genbank_annotations/keep_obj.png'></img>
 
+Forcing changes
+---------------
+
+In DNA Chisel, the opposite of specification ``AvoidChanges`` is
+``EnforceChanges`` (shorthand notation ``change``). For instance, if you want
+the solver to change a region as much as possible (for instance, to obfuscate a
+sequence), use a ``~change`` annotation:
+
+.. raw:: html
+
+    <img class='annotation-example'
+    src='../_static/images/genbank_annotations/change_objective.png'></img>
+
+You can also ask for a certain amount of change, with for instance
+``~change(40%)`` which will aim at changing 40% (no more, no less) of the
+nucleotides under the annotation. You can also use the specification as a
+constraint, for instance ``@change`` (the sequence will be totally changed) or
+``@change(minimum=50%)`` which will ensures that the final sequence will be 50%
+different from the original.
+
 Pattern insertion
 -----------------
 You can control how many times a pattern should appear in a sequence region
@@ -130,30 +150,52 @@ To indicate that a region is a CDS and the protein sequence should be conserved
     <img class='annotation-example'
     src='../_static/images/genbank_annotations/cds.png'></img>
 
-To codon-optimize a gene use ``~CodonOptimize()``:
+Importantly, if the coding region has a start codon in an organims using non-ATG
+start codons (for instance, GTG in e_coli), make sure to define a policy for the
+start codon, for instance ``start_codon=keep`` to keep the sequence of the
+original start codon, or ``start_codon=ATG`` to use ATG as a start codon.
+See the documentation of EnforceTranslation for more details and options.
+
+To codon-optimize a gene you can use the ``~CodonOptimize()`` specification but
+it is faster and clearer to refer directly to one of the different methods available.
+
+To replace each codon by its most common synonym (which is equivalent to maximizing
+the CAI index):
 
 .. raw:: html
 
     <img class='annotation-example'
-    src='../_static/images/genbank_annotations/codon_optimize.png'></img>
+    src='../_static/images/genbank_annotations/use_best_codon.png'></img>
 
-See `the Codon Tables package webpage <https://github.com/Edinburgh-Genome-Foundry/codon-usage-tables/tree/master/codon_usage_data/tables>`_
+To optimize the gene sequence so that the final codon representation matches
+the codons frequencies of the target organism, use ``~match_codon_usage``:
+
+.. raw:: html
+
+    <img class='annotation-example'
+    src='../_static/images/genbank_annotations/match_codon_usage.png'></img>
+
+To harmonize codons so that a rare codon in the original host will be replaced
+by a rare codon in the target host (and common codons are replaced by common
+codons), use ``~harmonize_rca``:
+
+.. raw:: html
+
+    <img class='annotation-example'
+    src='../_static/images/genbank_annotations/harmonize_rca.png'></img>
+
+As you noticed we used species names in these examples. See `the Codon Usage Tables package webpage <https://github.com/Edinburgh-Genome-Foundry/codon-usage-tables/tree/master/codon_usage_data/tables>`_
 for species that can be referred to by name. This includes ``b_subtilis``,
 ``c_elegans``, ``d_melanogaster``, ``e_coli``, ``g_gallus``, ``h_sapiens``,
 ``m_musculus``, ``s_cerevisiae``. You can also use a TaxID to refer to a species,
 e.g. ``species=1423`` at which case the codon frequencies will be downloaded from
-the `Kazusa codon usage database <https://www.kazusa.or.jp/codon/>`_, assuming it not down.
+the `Kazusa codon usage database <https://www.kazusa.or.jp/codon/>`_, assuming it
+isn't down.
 
 .. caution:: Always use with @cds
 
    If the CodonOptimize specification is used without a @cds constraint covering
    the same region, then the protein sequence is not guaranteed!
-
-.. caution:: Codon optimization method
-
-    By default, the optimization will replace every codon by the most-frequent codon.
-    Use ``method=harmonized_frequencies`` for an optimization method where the
-    codons frequency of each amino-acid will reflect the frequencies in the target organism
 
 
 GC content

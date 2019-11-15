@@ -28,6 +28,7 @@ def test_avoid_change_as_objectives_basics():
                 ).copy_with_changes(locations_span=300),
                 AvoidChanges(boost=boost).as_passive_objective(),
             ],
+            logger=None
         )
 
         problem.optimize()
@@ -53,6 +54,7 @@ def test_avoid_change_circular():
                 ).copy_with_changes(locations_span=300),
                 AvoidChanges(boost=boost).as_passive_objective(),
             ],
+            logger=None
         )
 
         problem.optimize()
@@ -75,6 +77,7 @@ def test_avoid_changes_with_indices_as_constraint():
         sequence=sequence,
         constraints=[AvoidChanges(indices=indices)],
         objectives=[EnforceChanges()],
+        logger=None
     )
     problem.optimize()
     assert problem.number_of_edits() == 50 - 15
@@ -89,6 +92,7 @@ def test_avoid_changes_with_indices_as_objectives():
     problem = DnaOptimizationProblem(
         sequence=sequence,
         objectives=[EnforceChanges(boost=0.5), AvoidChanges(indices=indices)],
+        logger=None
     )
     problem.optimize()
     assert problem.number_of_edits() == 50 - 15  # 15 == len(indices)
@@ -96,6 +100,7 @@ def test_avoid_changes_with_indices_as_objectives():
     problem = DnaOptimizationProblem(
         sequence=sequence,
         objectives=[EnforceChanges(boost=1.5), AvoidChanges(indices=indices)],
+        logger=None
     )
     problem.optimize()
     assert problem.number_of_edits() == 50

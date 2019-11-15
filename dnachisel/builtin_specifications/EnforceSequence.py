@@ -4,9 +4,7 @@
 
 import numpy as np
 
-from ..Specification import Specification
-# from .VoidSpecification import VoidSpecification
-from ..SpecEvaluation import SpecEvaluation
+from ..Specification import Specification, SpecEvaluation
 from dnachisel.Location import Location
 from dnachisel.biotools import (group_nearby_indices,
                                 reverse_complement,

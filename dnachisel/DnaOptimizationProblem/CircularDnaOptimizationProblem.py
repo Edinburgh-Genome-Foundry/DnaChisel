@@ -1,13 +1,12 @@
 """Attempt at a special subclass of DnaOptimizationProblem for circular
 sequences. Needs more docs. See example in the examples folder.
 """
-
-from .DnaOptimizationProblem import DnaOptimizationProblem
-from .NoSolutionError import NoSolutionError
 from dnachisel.reports.optimization_reports import (
     write_optimization_report,
     write_no_solution_report,
 )
+from .DnaOptimizationProblem import DnaOptimizationProblem
+from .NoSolutionError import NoSolutionError
 from ..Location import Location
 
 

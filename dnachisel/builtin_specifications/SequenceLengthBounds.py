@@ -1,7 +1,6 @@
 """Implement SequenceLengthBounds."""
 
-from ..Specification import Specification
-from ..SpecEvaluation import SpecEvaluation
+from ..Specification import Specification, SpecEvaluation
 
 
 class SequenceLengthBounds(Specification):

@@ -2,11 +2,11 @@
 
 # TODO: factorize with self.sequence ?
 
-from ..Specification import Specification
-from ..SpecEvaluation import SpecEvaluation
-from ..SequencePattern import SequencePattern
+from dnachisel.SequencePattern import SequencePattern
 from dnachisel.Location import Location
 from dnachisel.biotools import reverse_complement
+from ..Specification import Specification, SpecEvaluation
+
 
 
 class EnforceChoice(Specification):

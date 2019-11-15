@@ -1,14 +1,11 @@
 """Implementation of AvoidMatches."""
 
-from ..Specification import Specification
-
-# from .VoidSpecification import VoidSpecification
-from ..SpecEvaluation import SpecEvaluation
-from dnachisel.biotools.bowtie import (
+from ..Specification import Specification, SpecEvaluation
+from ..biotools.bowtie import (
     find_all_bowtie_matches,
     create_bowtie_index_from_sequences,
 )
-from dnachisel.Location import Location
+from ..Location import Location
 import tempfile
 import shutil
 

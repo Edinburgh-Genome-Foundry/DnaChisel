@@ -2,10 +2,7 @@
 
 import numpy as np
 
-from ..Specification import Specification
-from ..SpecEvaluation import SpecEvaluation
-
-# from .VoidSpecification import VoidSpecification
+from ..Specification import Specification, SpecEvaluation
 from dnachisel.biotools import (
     sequences_differences_array,
     group_nearby_indices,

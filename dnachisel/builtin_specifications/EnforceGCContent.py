@@ -3,13 +3,10 @@
 import numpy as np
 import re
 
-from ..Specification import Specification
-
-# from .VoidSpecification import VoidSpecification
-from ..SpecEvaluation import SpecEvaluation
-from ..biotools import group_nearby_segments
-from dnachisel.biotools import gc_content
+from dnachisel.biotools import gc_content, group_nearby_segments
 from dnachisel.Location import Location
+from ..Specification import Specification, SpecEvaluation
+
 
 
 class EnforceGCContent(Specification):

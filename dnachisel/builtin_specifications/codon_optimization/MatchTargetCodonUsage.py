@@ -1,5 +1,5 @@
 import numpy as np
-from dnachisel.SpecEvaluation import SpecEvaluation
+from dnachisel.Specification.SpecEvaluation import SpecEvaluation
 from dnachisel.biotools import dict_to_pretty_string
 
 from .BaseCodonOptimizationClass import BaseCodonOptimizationClass

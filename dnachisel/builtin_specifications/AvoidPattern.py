@@ -1,9 +1,10 @@
 """Implement AvoidPattern"""
 
-from ..Specification import Specification
-from ..SpecEvaluation import SpecEvaluation
 from ..SequencePattern import SequencePattern
 from ..Location import Location
+from ..Specification.Specification import Specification
+from ..Specification.SpecEvaluation import SpecEvaluation
+
 
 
 class AvoidPattern(Specification):

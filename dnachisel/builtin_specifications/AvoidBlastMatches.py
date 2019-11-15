@@ -1,11 +1,10 @@
 """Implementation of AvoidBlastMatches."""
 
-from ..Specification import Specification
+from ..Specification import Specification, SpecEvaluation
 
 # from .VoidSpecification import VoidSpecification
-from ..SpecEvaluation import SpecEvaluation
-from dnachisel.biotools import blast_sequence
-from dnachisel.Location import Location
+from ..biotools import blast_sequence
+from ..Location import Location
 
 
 class AvoidBlastMatches(Specification):

@@ -1,13 +1,14 @@
 """Implement AvoidPattern"""
 
-from ..Specification import Specification
-
-from ..SpecEvaluation import SpecEvaluation
-from ..MutationSpace import MutationSpace
-from ..SequencePattern import SequencePattern, DnaNotationPattern
-from ..Location import Location
-from ..biotools import reverse_complement
-from ..DnaOptimizationProblem import DnaOptimizationProblem, NoSolutionError
+from dnachisel.MutationSpace import MutationSpace
+from dnachisel.SequencePattern import SequencePattern, DnaNotationPattern
+from dnachisel.Location import Location
+from dnachisel.biotools import reverse_complement
+from dnachisel.DnaOptimizationProblem.DnaOptimizationProblem import (
+    DnaOptimizationProblem,
+)
+from dnachisel.DnaOptimizationProblem.NoSolutionError import NoSolutionError
+from ..Specification import Specification, SpecEvaluation
 
 from .EnforceSequence import EnforceSequence
 
@@ -157,6 +158,7 @@ class EnforcePatternOccurence(Specification):
                     new_occurence_cst = self.copy_with_changes(
                         occurences=n_matches + i + 1
                     )
+                    print(DnaOptimizationProblem)
                     new_problem = DnaOptimizationProblem(
                         sequence=new_problem.sequence,
                         constraints=other_constraints + [new_occurence_cst],

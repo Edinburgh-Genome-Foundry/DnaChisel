@@ -5,9 +5,9 @@ of type RepeatedKmerPattern, AvoidNonUniqueSegments, AvoidPattern,
 EnforceMeltingTemperature, AvoidHeterodimerization.
 """
 
-from ..Specification import SpecificationSet
-from ..Location import Location
-from ..SequencePattern import RepeatedKmerPattern
+from ..Specification.SpecificationSet import SpecificationSet
+from dnachisel.Location import Location
+from dnachisel.SequencePattern import RepeatedKmerPattern
 from .AvoidNonUniqueSegments import AvoidNonUniqueSegments
 from .AvoidPattern import AvoidPattern
 from .EnforceMeltingTemperature import EnforceMeltingTemperature

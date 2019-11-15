@@ -1,8 +1,8 @@
 """Implements TerminalSpecification."""
 
-from ..Specification import Specification
-from ..SpecEvaluation import SpecEvaluation
-from ..Location import Location
+from dnachisel.Location import Location
+from ..Specification import Specification, SpecEvaluation
+
 
 class TerminalSpecification(Specification):
     """Specifications that apply in the same way to both ends of the sequence.

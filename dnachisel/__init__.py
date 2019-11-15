@@ -6,6 +6,12 @@ from .DnaOptimizationProblem import (
 
 from .Location import Location
 
+from .Specification import (
+    Specification,
+    SpecificationSet,
+    SpecEvaluation
+)
+
 from .builtin_specifications import (
     AllowPrimer,
     AvoidBlastMatches,
@@ -29,15 +35,13 @@ from .builtin_specifications import (
     DEFAULT_SPECIFICATIONS_DICT,
 )
 
-from .Specification import Specification, SpecificationSet
-from .SpecEvaluation import SpecEvaluation
-
 from .SequencePattern import (
     SequencePattern,
     DnaNotationPattern,
     HomopolymerPattern,
     RepeatedKmerPattern,
     EnzymeSitePattern,
+    PSSMPattern
 )
 
 from .biotools import (
@@ -99,6 +103,7 @@ __all__ = [
     "HomopolymerPattern",
     "RepeatedKmerPattern",
     "EnzymeSitePattern",
+    "PSSMPattern",
     "blast_sequence",
     "complement",
     "list_common_enzymes",

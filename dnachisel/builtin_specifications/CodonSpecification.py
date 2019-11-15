@@ -2,7 +2,7 @@
 from ..Specification import Specification
 
 # from .VoidSpecification import VoidSpecification
-from ..Location import Location
+from dnachisel.Location import Location
 
 
 class CodonSpecification(Specification):

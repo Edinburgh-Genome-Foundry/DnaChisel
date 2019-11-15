@@ -6,10 +6,10 @@ except ImportError:
     primer3 = None
     PRIMER3_AVAILABLE = False
 
-from ..Location import Location
-from ..Specification import Specification
-from ..SpecEvaluation import SpecEvaluation
 from Bio.SeqUtils import MeltingTemp as bio_mt
+from dnachisel.Location import Location
+from ..Specification import Specification, SpecEvaluation
+
 
 
 class EnforceMeltingTemperature(Specification):
