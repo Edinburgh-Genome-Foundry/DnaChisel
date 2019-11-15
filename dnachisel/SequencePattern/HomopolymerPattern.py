@@ -1,6 +1,6 @@
-
 import re
 from .DnaNotationPattern import DnaNotationPattern
+
 
 class HomopolymerPattern(DnaNotationPattern):
     """Homopolymer of the form AAAAAAA, TTTTT, etc.
@@ -18,9 +18,7 @@ class HomopolymerPattern(DnaNotationPattern):
     def __init__(self, nucleotide, number):
         self.nucleotide = nucleotide
         self.number = number
-        DnaNotationPattern.__init__(
-            self, number * nucleotide, in_both_strands=True
-        )
+        DnaNotationPattern.__init__(self, number * nucleotide)
 
     @staticmethod
     def from_string(string):

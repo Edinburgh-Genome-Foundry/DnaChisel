@@ -61,9 +61,7 @@ class PSSMPattern(SequencePattern):
         pssm,
         threshold=None,
         relative_threshold=None,
-        in_both_strands=True,
     ):
-        self.in_both_strands = in_both_strands
         self.name = pssm.name
         self.pssm = pssm.pssm
         if relative_threshold is not None:
@@ -73,6 +71,7 @@ class PSSMPattern(SequencePattern):
         self.relative_threshold = relative_threshold
         self.length = pssm.length
         self.pssm_matrix = np.array([self.pssm[n] for n in "ATGC"])
+        self.is_palyndromic = False
 
     @classmethod
     def apply_pseudocounts(cls, motif, pseudocounts):
@@ -103,7 +102,6 @@ class PSSMPattern(SequencePattern):
         threshold=None,
         relative_threshold=None,
         pseudocounts="jaspar",
-        in_both_strands=True,
     ):
         sequences = [Seq(s) for s in sequences]
         motif = motifs.create(sequences)
@@ -114,7 +112,6 @@ class PSSMPattern(SequencePattern):
             pssm=pssm,
             threshold=threshold,
             relative_threshold=relative_threshold,
-            in_both_strands=in_both_strands,
         )
 
     @classmethod
@@ -125,7 +122,6 @@ class PSSMPattern(SequencePattern):
         threshold=None,
         pseudocounts="jaspar",
         relative_threshold=None,
-        in_both_strands=True,
     ):
         if isinstance(motifs_file, str):
             with open("./jaspar.txt", "r") as f:
@@ -141,7 +137,6 @@ class PSSMPattern(SequencePattern):
                 pssm,
                 threshold=threshold,
                 relative_threshold=relative_threshold,
-                in_both_strands=in_both_strands,
             )
             for pssm in motifs_list
         ]

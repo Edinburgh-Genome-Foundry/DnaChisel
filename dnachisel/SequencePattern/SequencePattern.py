@@ -48,10 +48,6 @@ class SequencePattern:
     name
       Name of the pattern (will be displayed e.g. when the pattern is printed)
 
-    in_both_strands
-      Set to True (default) if the pattern should also be looked for on the
-      reverse-complement of sequences.
-
     """
 
     registered_string_pattern_classes = []
@@ -61,8 +57,8 @@ class SequencePattern:
         expression,
         size=None,
         name=None,
-        in_both_strands=True,
         lookahead="loop",
+        is_palyndromic=False,
     ):
         if size is None:
             size = len(expression)
@@ -76,9 +72,9 @@ class SequencePattern:
         self.compiled_expression = re.compile(self.lookahead_expression)
         self.size = size
         self.name = name
-        self.in_both_strands = in_both_strands
+        self.is_palyndromic = is_palyndromic
 
-    def find_matches(self, sequence, location=None):
+    def find_matches(self, sequence, location=None, forced_strand=None):
         """Return the locations where the sequence matches the expression.
 
         Parameters
@@ -101,26 +97,45 @@ class SequencePattern:
 
         """
 
+        # THE FUNCTION HAS BEEN CALLED WITH A LOCATION AND A FORCED STRAND
+        if forced_strand is not None:
+            subsequence = sequence[location.start: location.end]
+            if forced_strand == 1:
+                return [
+                    (loc + location.start)
+                    for loc in self.find_matches(subsequence)
+                ]
+            if forced_strand == -1:
+                subsequence = reverse_complement(subsequence)
+                return [
+                    Location(
+                        location.end - loc.end,
+                        location.end - loc.start,
+                        strand=-1,
+                    )
+                    for loc in self.find_matches(subsequence)
+                ]
+
+        # THE FUNCTION HAS BEEN CALLED WITH A LOCATION ONLY
+
         if location is not None:
-            subsequence = location.extract_sequence(sequence)
-            return [
-                (loc + location.start)
-                if (location.strand != -1)
-                else Location(
-                    location.end - loc.end, location.end - loc.start, strand=-1
-                )
-                for loc in self.find_matches(subsequence)
-            ]
+            strand = location.strand
+            if strand == 1:
+                return self.find_matches(sequence, location, 1)
+            if strand == -1:
+                if self.is_palyndromic:
+                    return self.find_matches(sequence, location, 1)
+                else:
+                    return self.find_matches(sequence, location, -1)
+            if strand == 0:
+                matches =  self.find_matches(sequence, location, 1)
+                if not self.is_palyndromic:
+                    matches += self.find_matches(sequence, location, -1)
+                return matches
+
+        # THE FUNCTION HAS BEEN CALLED WITH NO LOCATION/STRAND: WHOLE SEQUENCE
+
         matches = self.find_matches_in_string(sequence)
-
-        if self.in_both_strands:
-            reverse = reverse_complement(sequence)
-            L = len(sequence)
-            matches += [
-                (L - end, L - start, -1)
-                for (start, end, strand) in self.find_matches_in_string(reverse)
-            ]
-
         return [Location(start, end, strand) for start, end, strand in matches]
 
     def find_matches_in_string(self, sequence):

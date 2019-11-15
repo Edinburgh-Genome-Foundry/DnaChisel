@@ -14,18 +14,14 @@ class DnaNotationPattern(SequencePattern):
     both strands of sequences.
     """
 
-    def __init__(self, sequence, name=None, in_both_strands="auto"):
+    def __init__(self, sequence, name=None):
         """Initialize"""
-        if in_both_strands == "auto":
-            # If the pattern sequence is palydromic there is no use looking
-            # for the pattern in both strands
-            in_both_strands = not (reverse_complement(sequence) == sequence)
         SequencePattern.__init__(
             self,
             size=len(sequence),
             expression=self.dna_sequence_to_regexpr(sequence),
             name=name,
-            in_both_strands=in_both_strands,
+            is_palyndromic=reverse_complement(sequence) == sequence,
         )
         self.sequence = sequence
 

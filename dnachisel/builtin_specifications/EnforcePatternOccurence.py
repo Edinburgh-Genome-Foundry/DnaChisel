@@ -60,7 +60,7 @@ class EnforcePatternOccurence(Specification):
 
     def evaluate(self, problem):
         """Score the difference between expected and observed n_occurences."""
-        matches = self.pattern.find_matches(problem.sequence, self.location)
+        matches = self.pattern.find_matches(problem.sequence, self.location, )
         score = -abs(len(matches) - self.occurences)
 
         if score == 0:
@@ -130,7 +130,7 @@ class EnforcePatternOccurence(Specification):
                     return
                 except NoSolutionError:
                     pass
-        if (not reverse) and (self.pattern.in_both_strands):
+        if (not reverse) and (not self.pattern.is_palyndromic):
             self.insert_pattern_in_problem(problem, reverse=True)
             return
         raise NoSolutionError(
