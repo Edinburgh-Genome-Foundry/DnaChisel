@@ -174,7 +174,7 @@ removes short homologies with existing genomes). On Ubuntu:
 
 .. code::
 
-    sudo apt-get install ncbi-blast+
+    sudo apt-get install bowtie
 
 
 License = MIT
