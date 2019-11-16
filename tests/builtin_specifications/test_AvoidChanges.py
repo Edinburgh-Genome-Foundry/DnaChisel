@@ -6,6 +6,8 @@ from dnachisel import (
     CircularDnaOptimizationProblem,
     random_dna_sequence,
     AvoidChanges,
+    AvoidPattern,
+    EnforcePatternOccurence,
     sequences_differences,
     EnforceGCContent,
     EnforceChanges,
@@ -28,7 +30,7 @@ def test_avoid_change_as_objectives_basics():
                 ).copy_with_changes(locations_span=300),
                 AvoidChanges(boost=boost).as_passive_objective(),
             ],
-            logger=None
+            logger=None,
         )
 
         problem.optimize()
@@ -54,7 +56,7 @@ def test_avoid_change_circular():
                 ).copy_with_changes(locations_span=300),
                 AvoidChanges(boost=boost).as_passive_objective(),
             ],
-            logger=None
+            logger=None,
         )
 
         problem.optimize()
@@ -77,7 +79,7 @@ def test_avoid_changes_with_indices_as_constraint():
         sequence=sequence,
         constraints=[AvoidChanges(indices=indices)],
         objectives=[EnforceChanges()],
-        logger=None
+        logger=None,
     )
     problem.optimize()
     assert problem.number_of_edits() == 50 - 15
@@ -92,7 +94,7 @@ def test_avoid_changes_with_indices_as_objectives():
     problem = DnaOptimizationProblem(
         sequence=sequence,
         objectives=[EnforceChanges(boost=0.5), AvoidChanges(indices=indices)],
-        logger=None
+        logger=None,
     )
     problem.optimize()
     assert problem.number_of_edits() == 50 - 15  # 15 == len(indices)
@@ -100,7 +102,26 @@ def test_avoid_changes_with_indices_as_objectives():
     problem = DnaOptimizationProblem(
         sequence=sequence,
         objectives=[EnforceChanges(boost=1.5), AvoidChanges(indices=indices)],
-        logger=None
+        logger=None,
     )
     problem.optimize()
     assert problem.number_of_edits() == 50
+
+
+def test_AvoidChanges_with_max_edits():
+    numpy.random.seed(1)
+    problem = DnaOptimizationProblem(
+        sequence="ATATATATATA",
+        constraints=[
+            AvoidChanges(max_edits=2),
+            AvoidPattern("ATATA"),
+            EnforcePatternOccurence("A", occurences=6, location=(0, 11, 1)),
+            EnforcePatternOccurence("T", occurences=3, location=(0, 11, 1)),
+        ],
+        logger=None,
+    )
+    assert not problem.all_constraints_pass()
+    problem.max_random_iters = 1000
+    problem.mutations_per_iteration = 1
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()

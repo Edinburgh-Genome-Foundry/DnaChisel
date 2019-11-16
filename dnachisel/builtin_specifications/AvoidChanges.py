@@ -128,6 +128,10 @@ class AvoidChanges(Specification):
     def localized(self, location, problem=None):
         """Localize the spec to the overlap of its location and the new.
         """
+
+        if self.max_edits != 0:
+            return self
+
         start, end = location.start, location.end
         if self.indices is not None:
             pos = ((start <= self.indices) & (self.indices < end)).nonzero()[0]

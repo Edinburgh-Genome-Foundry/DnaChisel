@@ -5,8 +5,6 @@ from Bio.Alphabet import IUPAC
 from .SequencePattern import SequencePattern
 import numpy as np
 
-alphabet = IUPAC.IUPACUnambiguousDNA()
-
 class MotifPssmPattern(SequencePattern):
     """Motif pattern represented by a Position-Specific Scoring Matrix (PSSM).
 
@@ -57,14 +55,16 @@ class MotifPssmPattern(SequencePattern):
         """
         if pseudocounts is not None:
             if pseudocounts == "jaspar":
+                motif.alphabet = IUPAC.IUPACUnambiguousDNA()
                 pseudocounts = motifs.jaspar.calculate_pseudocounts(motif)
             motif.pseudocounts = pseudocounts
 
     def find_matches_in_string(self, sequence):
         """Find all positions where the PSSM score is above threshold."""
-        sequence = Seq(sequence, alphabet=alphabet)
+        
         # NOTE: Before, I made my PSSM searches with Biopython. It was looong!
         # Now I use Numpy and np.choice(), and I never looked back
+        # sequence = Seq(sequence, alphabet=alphabet)
         # search = self.pssm.search(
         #     sequence, threshold=self.threshold, both=False
         # )
