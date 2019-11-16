@@ -156,7 +156,6 @@ class EnforcePatternOccurence(Specification):
                     new_occurence_cst = self.copy_with_changes(
                         occurences=n_matches + i + 1
                     )
-                    print(DnaOptimizationProblem)
                     new_problem = DnaOptimizationProblem(
                         sequence=new_problem.sequence,
                         constraints=other_constraints + [new_occurence_cst],

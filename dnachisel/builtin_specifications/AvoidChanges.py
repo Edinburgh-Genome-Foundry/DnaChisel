@@ -38,6 +38,7 @@ class AvoidChanges(Specification):
     best_possible_score = 0
     enforced_by_nucleotide_restrictions = True
     shorthand_name = "keep"
+    priority = -1000
 
     def __init__(
         self,
@@ -81,7 +82,7 @@ class AvoidChanges(Specification):
         if result.max_edits_percent is not None:
             result.max_edits = np.floor(result.max_edits_percent * L / 100.0)
 
-        result.enforced_by_nucleotide_restrictions = (result.max_edits == 0)
+        result.enforced_by_nucleotide_restrictions = result.max_edits == 0
 
         # Initialize the "target_sequence" in two cases:
         # - Always at the very beginning
@@ -125,7 +126,7 @@ class AvoidChanges(Specification):
         score = self.max_edits - len(differing_indices)
         return SpecEvaluation(self, problem, score=score, locations=locations)
 
-    def localized(self, location, problem=None):
+    def localized(self, location, problem=None, with_righthand=False):
         """Localize the spec to the overlap of its location and the new.
         """
 

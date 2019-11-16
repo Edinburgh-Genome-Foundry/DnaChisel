@@ -25,3 +25,7 @@
 - Got rid of some tables like Genetic code, now taken from Biopython.
 - Complete code restructuring by cutting large files into smaller ones.
 
+## v2.0.0
+
+- ``problem.n_mutations`` became ``problem.mutations_per_iteration`` for clarity
+- ``'harmonized'`` option in ``CodonOptimize()`` replaced by ``harmonized_frequencies`` for clarity

@@ -116,12 +116,10 @@ def test_AvoidChanges_with_max_edits():
             AvoidChanges(max_edits=2),
             AvoidPattern("ATATA"),
             EnforcePatternOccurence("A", occurences=6, location=(0, 11, 1)),
-            EnforcePatternOccurence("T", occurences=3, location=(0, 11, 1)),
+            EnforcePatternOccurence("T", occurences=4, location=(0, 11, 1)),
         ],
         logger=None,
     )
     assert not problem.all_constraints_pass()
-    problem.max_random_iters = 1000
-    problem.mutations_per_iteration = 1
     problem.resolve_constraints()
     assert problem.all_constraints_pass()

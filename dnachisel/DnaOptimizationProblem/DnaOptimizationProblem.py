@@ -25,7 +25,7 @@ class DnaOptimizationProblem(
     """Problem specifications: sequence, constraints, optimization objectives.
 
     The original constraints, objectives, and original sequence of the problem
-    are stored in the DNA Canvas. This class also has methods to display
+    are stored in the DNA problem. This class also has methods to display
     reports on the constraints and objectives, as well as solving the
     constraints and objectives.
 
@@ -40,8 +40,8 @@ class DnaOptimizationProblem(
     >>> )
     >>> problem.resolve_constraints()
     >>> problem.optimize()
-    >>> print(canvas.constraints_text_summary())
-    >>> print(canvas.objectives_text_summary())
+    >>> print(problem.constraints_text_summary())
+    >>> print(problem.objectives_text_summary())
 
 
     Parameters

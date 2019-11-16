@@ -17,7 +17,7 @@ class ConstraintsSolverMixin:
         return self._constraints_before
 
     def constraints_evaluations(self, autopass=True):
-        """Return a list of the evaluations of each constraint of the canvas.
+        """Return a list of the evaluations of each constraint of the problem.
 
         The "autopass" enables to just assume that constraints
         enforced by the mutation space are verified.
@@ -57,7 +57,7 @@ class ConstraintsSolverMixin:
         This method iterates over ``self.iter_mutations_space()`` (space of
         all sequences that could be reached through successive mutations) and
         stops when it finds a sequence which meets all the constraints of the
-        canvas.
+        problem.
         """
         focus_constraint, other_constraints = self.get_focus_constraint()
         sequence_before = self.sequence
@@ -86,7 +86,7 @@ class ConstraintsSolverMixin:
         This method modifies the problem sequence by applying a number
         ``mutations_per_iteration`` of random mutations. The constraints are
         then evaluated on the new sequence. If all constraints pass, the new
-        sequence becomes the canvas's new sequence.
+        sequence becomes the problem's new sequence.
         If not all constraints pass, the sum of all scores from failing
         constraints is considered. If this score is superior to the score of
         the previous sequence, the new sequence becomes the problem's new

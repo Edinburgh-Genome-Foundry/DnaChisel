@@ -15,7 +15,7 @@ class ObjectivesMaximizerMixin:
         return self._objectives_before
 
     def objectives_evaluations(self):
-        """Return a list of the evaluation of each objective of the canvas"""
+        """Return a list of the evaluation of each objective of the problem"""
         return ProblemObjectivesEvaluations.from_problem(self)
 
     def objective_scores_sum(self):
