@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnachisel.SequencePattern.MotifPssmPattern</title>
+    
+      <link rel="stylesheet" href="../../../_static/pygments.css">
+      <link rel="stylesheet" href="../../../_static/theme.css">
+      <link rel="stylesheet" href="../../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+      
+      <script src="../../../_static/theme-vendors.js"></script>
+      <script src="../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../index.html" class="home-link">
+    
+      <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../ref/core_classes.html" class="reference internal ">Core Classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/constraints_reports.html" class="reference internal ">Constraints reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/cli.html" class="reference internal ">Command Line Interface</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../notes.html" class="reference internal ">Notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Using Genbanks</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../genbank/genbank_api.html" class="reference internal ">Genbank API</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../genbank/genbank_notes.html" class="reference internal ">Genbank usage notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnachisel.SequencePattern.MotifPssmPattern</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for dnachisel.SequencePattern.MotifPssmPattern</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="k">import</span> <span class="n">Seq</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">motifs</span>
+<span class="kn">from</span> <span class="nn">Bio.Align.AlignInfo</span> <span class="k">import</span> <span class="n">PSSM</span>
+<span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="k">import</span> <span class="n">IUPAC</span>
+<span class="kn">from</span> <span class="nn">.SequencePattern</span> <span class="k">import</span> <span class="n">SequencePattern</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="MotifPssmPattern"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.MotifPssmPattern">[docs]</a><span class="k">class</span> <span class="nc">MotifPssmPattern</span><span class="p">(</span><span class="n">SequencePattern</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Motif pattern represented by a Position-Specific Scoring Matrix (PSSM).</span>
+
+<span class="sd">    This class is better instantiated by creating a pattern from a set of</span>
+<span class="sd">    sequence strings with ``MotifPssmPattern.from_sequences()``,  or reading</span>
+<span class="sd">    pattern(s) for a file with ``MotifPssmPattern.from_file()``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    pssm</span>
+<span class="sd">      A Bio.Align.AlignInfo.PSSM object.</span>
+
+<span class="sd">    threshold</span>
+<span class="sd">     locations of the sequence with a PSSM score above this value will be</span>
+<span class="sd">     considered matches. For convenience, a relative_threshold can be</span>
+<span class="sd">     given instead.</span>
+
+<span class="sd">    relative_threshold</span>
+<span class="sd">      Value between 0 and 1 from which the threshold will be auto-computed.</span>
+<span class="sd">      0 means &quot;match everything&quot;, 1 means &quot;only match the one (or several)</span>
+<span class="sd">      sequence(s) with the absolute highest possible score&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">pssm</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">relative_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">pssm</span><span class="o">.</span><span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pssm</span> <span class="o">=</span> <span class="n">pssm</span><span class="o">.</span><span class="n">pssm</span>
+        <span class="k">if</span> <span class="n">relative_threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mini</span><span class="p">,</span> <span class="n">maxi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pssm</span><span class="o">.</span><span class="n">min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pssm</span><span class="o">.</span><span class="n">max</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="n">mini</span> <span class="o">+</span> <span class="n">relative_threshold</span> <span class="o">*</span> <span class="p">(</span><span class="n">maxi</span> <span class="o">-</span> <span class="n">mini</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relative_threshold</span> <span class="o">=</span> <span class="n">relative_threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">pssm</span><span class="o">.</span><span class="n">length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pssm_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">pssm</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="s2">&quot;ATGC&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_palyndromic</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="MotifPssmPattern.apply_pseudocounts"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.MotifPssmPattern.apply_pseudocounts">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">apply_pseudocounts</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">motif</span><span class="p">,</span> <span class="n">pseudocounts</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add pseudocounts to the motif&#39;s pssm matrix.</span>
+<span class="sd">        </span>
+<span class="sd">        Add nothing if pseudocounts is None, auto-compute pseudocounts if</span>
+<span class="sd">        pseudocounts=&quot;jaspar&quot;, else just attribute the pseudocounts as-is</span>
+<span class="sd">        to the motif.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">pseudocounts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pseudocounts</span> <span class="o">==</span> <span class="s2">&quot;jaspar&quot;</span><span class="p">:</span>
+                <span class="n">pseudocounts</span> <span class="o">=</span> <span class="n">motifs</span><span class="o">.</span><span class="n">jaspar</span><span class="o">.</span><span class="n">calculate_pseudocounts</span><span class="p">(</span><span class="n">motif</span><span class="p">)</span>
+            <span class="n">motif</span><span class="o">.</span><span class="n">pseudocounts</span> <span class="o">=</span> <span class="n">pseudocounts</span></div>
+
+<div class="viewcode-block" id="MotifPssmPattern.find_matches_in_string"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.MotifPssmPattern.find_matches_in_string">[docs]</a>    <span class="k">def</span> <span class="nf">find_matches_in_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find all positions where the PSSM score is above threshold.&quot;&quot;&quot;</span>
+        
+        <span class="c1"># NOTE: Before, I made my PSSM searches with Biopython. It was looong!</span>
+        <span class="c1"># Now I use Numpy and np.choice(), and I never looked back</span>
+        <span class="c1"># sequence = Seq(sequence, alphabet=alphabet)</span>
+        <span class="c1"># search = self.pssm.search(</span>
+        <span class="c1">#     sequence, threshold=self.threshold, both=False</span>
+        <span class="c1"># )</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">find_pssm_matches_with_numpy</span><span class="p">(</span>
+            <span class="n">pssm_matrix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pssm_matrix</span><span class="p">,</span>
+            <span class="n">sequence</span><span class="o">=</span><span class="n">sequence</span><span class="p">,</span>
+            <span class="n">threshold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="MotifPssmPattern.from_sequences"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.MotifPssmPattern.from_sequences">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_sequences</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">sequences</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;unnamed&quot;</span><span class="p">,</span>
+        <span class="n">pseudocounts</span><span class="o">=</span><span class="s2">&quot;jaspar&quot;</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">relative_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a PSSM pattern computed from same-length sequences.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        sequences</span>
+<span class="sd">          A list of same-length sequences</span>
+
+<span class="sd">        name</span>
+<span class="sd">          Name to give to the pattern (will appear in reports etc.)</span>
+
+<span class="sd">        pseudocounts</span>
+<span class="sd">          Either a dict {&quot;A&quot;: 0.01, &quot;T&quot;: ...} or &quot;jaspar&quot; for automatic</span>
+<span class="sd">          pseudocounts from the Biopython.motifs.jaspar module (recommended),</span>
+<span class="sd">          or None for no pseudocounts at all (not recommended!)</span>
+
+<span class="sd">        threshold</span>
+<span class="sd">          locations of the sequence with a PSSM score above this value will be</span>
+<span class="sd">          considered matches. For convenience, a relative_threshold can be</span>
+<span class="sd">          given instead.</span>
+
+<span class="sd">        relative_threshold</span>
+<span class="sd">          Value between 0 and 1 from which the threshold will be auto-computed.</span>
+<span class="sd">          0 means &quot;match everything&quot;, 1 means &quot;only match the one (or several)</span>
+<span class="sd">          sequence(s) with the absolute highest possible score&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sequences</span> <span class="o">=</span> <span class="p">[</span><span class="n">Seq</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">]</span>
+        <span class="n">motif</span> <span class="o">=</span> <span class="n">motifs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">apply_pseudocounts</span><span class="p">(</span><span class="n">motif</span><span class="p">,</span> <span class="n">pseudocounts</span><span class="p">)</span>
+        <span class="n">pssm</span> <span class="o">=</span> <span class="n">PSSM</span><span class="p">(</span><span class="n">motif</span><span class="o">.</span><span class="n">pssm</span><span class="p">)</span>
+        <span class="n">pssm</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">return</span> <span class="n">MotifPssmPattern</span><span class="p">(</span>
+            <span class="n">pssm</span><span class="o">=</span><span class="n">pssm</span><span class="p">,</span>
+            <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span>
+            <span class="n">relative_threshold</span><span class="o">=</span><span class="n">relative_threshold</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="MotifPssmPattern.list_from_file"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.MotifPssmPattern.list_from_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">list_from_file</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">motifs_file</span><span class="p">,</span>
+        <span class="n">file_format</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">pseudocounts</span><span class="o">=</span><span class="s2">&quot;jaspar&quot;</span><span class="p">,</span>
+        <span class="n">relative_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of PSSM patterns from a file in JASPAR, MEME, etc.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        motifs_file</span>
+<span class="sd">          Path to a motifs file, or file handle.</span>
+
+<span class="sd">        file_format</span>
+<span class="sd">          File format. one of &quot;jaspar&quot;, &quot;meme&quot;, &quot;TRANSFAC&quot;.</span>
+<span class="sd">        </span>
+<span class="sd">        pseudocounts</span>
+<span class="sd">          Either a dict {&quot;A&quot;: 0.01, &quot;T&quot;: ...} or &quot;jaspar&quot; for automatic</span>
+<span class="sd">          pseudocounts from the Biopython.motifs.jaspar module (recommended),</span>
+<span class="sd">          or None for no pseudocounts at all (not recommended!)</span>
+<span class="sd">        </span>
+<span class="sd">        threshold</span>
+<span class="sd">          locations of the sequence with a PSSM score above this value will be</span>
+<span class="sd">          considered matches. For convenience, a relative_threshold can be</span>
+<span class="sd">          given instead.</span>
+
+<span class="sd">        relative_threshold</span>
+<span class="sd">          Value between 0 and 1 from which the threshold will be auto-computed.</span>
+<span class="sd">          0 means &quot;match everything&quot;, 1 means &quot;only match the one (or several)</span>
+<span class="sd">          sequence(s) with the absolute highest possible score&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">motifs_file</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./jaspar.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">motifs_list</span> <span class="o">=</span> <span class="n">motifs</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">file_format</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">motifs_list</span> <span class="o">=</span> <span class="n">motifs</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">motifs_file</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">file_format</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pseudocounts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">motif</span> <span class="ow">in</span> <span class="n">motifs_list</span><span class="p">:</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">apply_pseudocounts</span><span class="p">(</span><span class="n">motif</span><span class="p">,</span> <span class="n">pseudocounts</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">MotifPssmPattern</span><span class="p">(</span>
+                <span class="n">pssm</span><span class="p">,</span>
+                <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span>
+                <span class="n">relative_threshold</span><span class="o">=</span><span class="n">relative_threshold</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">pssm</span> <span class="ow">in</span> <span class="n">motifs_list</span>
+        <span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative_threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative_threshold</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">-PSSM(</span><span class="si">%s</span><span class="s2">+)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative_threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative_threshold</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">-PSSM(</span><span class="si">%s</span><span class="s2">+)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">find_pssm_matches_with_numpy</span><span class="p">(</span><span class="n">pssm_matrix</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">threshold</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return every index in the +1 strand wit a PSSM score above threshold.</span>
+<span class="sd">    </span>
+<span class="sd">    My numpy-based implementation is 10 times faster than Biopython for some</span>
+<span class="sd">    reason. Weird. Can someone else check?</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    pssm</span>
+<span class="sd">      A matrix whose rows give the frequency motif of ATGC (in this order).</span>
+<span class="sd">    </span>
+<span class="sd">    sequence</span>
+<span class="sd">      A string representing a DNA sequence.</span>
+<span class="sd">    </span>
+<span class="sd">    threshold</span>
+<span class="sd">      Every index with a score above this threshold will be returned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nucleotide_to_index</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="s2">&quot;ATGC&quot;</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
+    <span class="n">len_pattern</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pssm_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># If sequence is small, use normal python to avoid numpy overhead</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="p">:</span>
+        <span class="n">nucl_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">nucleotide_to_index</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">i</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span> <span class="o">-</span> <span class="n">len_pattern</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="n">nucl_indices</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">len_pattern</span> <span class="o">+</span> <span class="n">i</span><span class="p">],</span> <span class="n">pssm_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="o">&gt;=</span> <span class="n">threshold</span>
+        <span class="p">]</span>
+
+    <span class="c1"># If sequence is large, use Numpy for speed. tested experimentally</span>
+
+    <span class="n">nucl_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">nucleotide_to_index</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span>
+    <span class="p">)</span>
+    <span class="n">len_pattern</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pssm_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="n">nucl_indices</span><span class="p">[</span><span class="n">k</span> <span class="p">:</span> <span class="n">len_pattern</span> <span class="o">+</span> <span class="n">k</span><span class="p">],</span> <span class="n">pssm_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span> <span class="o">-</span> <span class="n">len_pattern</span><span class="p">)</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">scores</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>

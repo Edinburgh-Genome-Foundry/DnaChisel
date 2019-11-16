@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,7 +7,9 @@
     
       <link rel="stylesheet" href="../../_static/pygments.css">
       <link rel="stylesheet" href="../../_static/theme.css">
-      <link rel="stylesheet" href="../../_static/css/custom.css">
+      <link rel="stylesheet" href="../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../_static/css/press_main.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
 
@@ -27,7 +27,8 @@
   <link rel="search" title="Search" href="../../search.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../../index.html" class="home-link">
     
       <img class="logo" src="../../_static/html_logo.png" alt="doit logo"/>
@@ -61,12 +62,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -104,12 +108,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -239,7 +246,11 @@
 <span class="sd">sequences. Needs more docs. See example in the examples folder.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">.DnaOptimizationProblem</span> <span class="k">import</span> <span class="n">DnaOptimizationProblem</span>
+<span class="kn">from</span> <span class="nn">.DnaOptimizationProblem</span> <span class="k">import</span> <span class="n">DnaOptimizationProblem</span><span class="p">,</span> <span class="n">NoSolutionError</span>
+<span class="kn">from</span> <span class="nn">.reports.optimization_reports</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">write_optimization_report</span><span class="p">,</span>
+    <span class="n">write_no_solution_report</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.Location</span> <span class="k">import</span> <span class="n">Location</span>
 
 
@@ -247,6 +258,7 @@
     <span class="sd">&quot;&quot;&quot;Class representing an optimization problem as the concatenation of 3</span>
 <span class="sd">    times the same sequence and specifications, in order to model the</span>
 <span class="sd">    circularity of the DNA sequence&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">change_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_sequence</span><span class="p">):</span>
         <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_sequence</span><span class="p">)</span> <span class="o">//</span> <span class="mi">3</span>
 
@@ -277,6 +289,7 @@
 <span class="sd">    The high-level interface is the same as for DnaOptimizationProblem:</span>
 <span class="sd">    initialization, resolve_constraints(), and optimize() work the same way.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">_circularized_specs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">specs</span><span class="p">,</span> <span class="n">central_specs_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
         <span class="n">new_specs</span> <span class="o">=</span> <span class="p">[]</span>
@@ -337,16 +350,24 @@
                 <span class="n">e</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">default_message</span>
         <span class="k">return</span> <span class="n">evals</span>
 
-<div class="viewcode-block" id="CircularDnaOptimizationProblem.constraints_evaluations"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.CircularDnaOptimizationProblem.constraints_evaluations">[docs]</a>    <span class="k">def</span> <span class="nf">constraints_evaluations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CircularDnaOptimizationProblem.constraints_evaluations"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.CircularDnaOptimizationProblem.constraints_evaluations">[docs]</a>    <span class="k">def</span> <span class="nf">constraints_evaluations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">autopass_constraints</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the evaluation of constraints.</span>
+<span class="sd">        </span>
+<span class="sd">        The &quot;autopass_constraints&quot; enables to just assume that constraints</span>
+<span class="sd">        enforced by the mutation space are verified.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">circularized</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circularized_view</span><span class="p">(</span>
             <span class="n">with_constraints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">central_specs_only</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
-        <span class="n">evals</span> <span class="o">=</span> <span class="n">circularized</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">()</span>
+        <span class="n">evals</span> <span class="o">=</span> <span class="n">circularized</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">(</span>
+            <span class="n">autopass_constraints</span><span class="o">=</span><span class="n">autopass_constraints</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recentered_evaluations</span><span class="p">(</span><span class="n">evals</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CircularDnaOptimizationProblem.objectives_evaluations"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.CircularDnaOptimizationProblem.objectives_evaluations">[docs]</a>    <span class="k">def</span> <span class="nf">objectives_evaluations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">circularized</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circularized_view</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">with_objectives</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">central_specs_only</span><span class="o">=</span><span class="kc">False</span>
+            <span class="n">with_objectives</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">central_specs_only</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
         <span class="n">evals</span> <span class="o">=</span> <span class="n">circularized</span><span class="o">.</span><span class="n">objectives_evaluations</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recentered_evaluations</span><span class="p">(</span><span class="n">evals</span><span class="p">)</span></div>
@@ -358,24 +379,89 @@
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span><span class="n">central_loc</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">problem</span><span class="o">.</span><span class="n">resolve_constraint</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="n">L</span> <span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">L</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">final_check</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">perform_final_check</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="CircularDnaOptimizationProblem.optimize"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.CircularDnaOptimizationProblem.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">problem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circularized_view</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">with_constraints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">with_objectives</span><span class="o">=</span><span class="kc">True</span>
+            <span class="n">with_constraints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">with_objectives</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
         <span class="n">problem</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
         <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="n">L</span> <span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">L</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="CircularDnaOptimizationProblem.optimize_with_report"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.CircularDnaOptimizationProblem.optimize_with_report">[docs]</a>    <span class="k">def</span> <span class="nf">optimize_with_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="s2">&quot;My project&quot;</span><span class="p">):</span>
-        <span class="n">problem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circularized_view</span><span class="p">(</span>
-            <span class="n">with_constraints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">with_objectives</span><span class="o">=</span><span class="kc">True</span>
+<div class="viewcode-block" id="CircularDnaOptimizationProblem.optimize_with_report"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.CircularDnaOptimizationProblem.optimize_with_report">[docs]</a>    <span class="k">def</span> <span class="nf">optimize_with_report</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">target</span><span class="p">,</span>
+        <span class="n">project_name</span><span class="o">=</span><span class="s2">&quot;My project&quot;</span><span class="p">,</span>
+        <span class="n">file_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">file_content</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Resolve constraints, optimize objectives, write a multi-file report.</span>
+
+<span class="sd">        WARNING: in case of optimization failure, the report generated will</span>
+<span class="sd">        show a &quot;pseudo-circular&quot; sequence formed by concatenating the sequence</span>
+<span class="sd">        with itself three times.</span>
+<span class="sd">        </span>
+<span class="sd">        TODO: fix the warning above, at some point?</span>
+
+<span class="sd">        The report&#39;s content may vary depending on the optimization&#39;s success.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        target</span>
+<span class="sd">          Either a path to a folder that will containt the report, or a path to</span>
+<span class="sd">          a zip archive, or &quot;@memory&quot; to return raw data of a zip archive</span>
+<span class="sd">          containing the report.</span>
+
+<span class="sd">        project_name</span>
+<span class="sd">          Project name to write on PDF reports</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        (success, message, zip_data)</span>
+<span class="sd">          Triplet where success is True/False, message is a one-line string</span>
+<span class="sd">          summary indication whether some clash was found, or some solution, or</span>
+<span class="sd">          maybe no solution was found because the random searches were too</span>
+<span class="sd">          short</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Solving constraints&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">resolve_constraints</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">NoSolutionError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">problem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circularized_view</span><span class="p">(</span>
+                <span class="n">with_constraints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">with_objectives</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;No solution found: making report&quot;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">write_no_solution_report</span><span class="p">(</span>
+                <span class="n">target</span><span class="p">,</span>
+                <span class="n">problem</span><span class="p">,</span>
+                <span class="n">error</span><span class="p">,</span>
+                <span class="n">file_path</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span>
+                <span class="n">file_content</span><span class="o">=</span><span class="n">file_content</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;No solution found in zone [</span><span class="si">%d</span><span class="s2">, </span><span class="si">%d</span><span class="s2">]: </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">start</span><span class="p">,</span>
+                <span class="n">end</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Now optimizing the sequence&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Success! Generating report.&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">write_optimization_report</span><span class="p">(</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">project_name</span><span class="o">=</span><span class="n">project_name</span><span class="p">,</span>
+            <span class="n">file_path</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span>
+            <span class="n">file_content</span><span class="o">=</span><span class="n">file_content</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">problem</span><span class="o">.</span><span class="n">optimize_with_report</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="n">project_name</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;Optimization successful.&quot;</span><span class="p">,</span> <span class="n">data</span></div></div>
 
 </pre></div>
 
@@ -390,5 +476,8 @@
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

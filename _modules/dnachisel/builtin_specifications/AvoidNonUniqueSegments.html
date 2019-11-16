@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,7 +7,9 @@
     
       <link rel="stylesheet" href="../../../_static/pygments.css">
       <link rel="stylesheet" href="../../../_static/theme.css">
-      <link rel="stylesheet" href="../../../_static/css/custom.css">
+      <link rel="stylesheet" href="../../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
@@ -27,7 +27,8 @@
   <link rel="search" title="Search" href="../../../search.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../../../index.html" class="home-link">
     
       <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
@@ -61,12 +62,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -104,12 +108,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -305,7 +312,7 @@
 <span class="sd">    specification may not work as a problem constraint, but will work as a</span>
 <span class="sd">    problem optimization objective.</span>
 
-<span class="sd">    You can define a location L and an extended location L* (by default they</span>
+<span class="sd">    You can define a location L and an reference L* (by default they</span>
 <span class="sd">    are both the full sequence)</span>
 
 <span class="sd">    &gt;&gt;&gt;          [=== L ===]</span>
@@ -356,8 +363,8 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">min_length</span><span class="p">,</span>
+        <span class="n">reference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">extended_location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">include_reverse_complement</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">boost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
         <span class="n">localization_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -367,9 +374,11 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_tuple</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">extended_location</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-            <span class="n">extended_location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_tuple</span><span class="p">(</span><span class="n">extended_location</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">extended_location</span> <span class="o">=</span> <span class="n">extended_location</span>
+        <span class="k">if</span> <span class="n">reference</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;here&#39;</span><span class="p">,</span> <span class="s1">&#39;same&#39;</span><span class="p">]:</span>
+            <span class="n">reference</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">reference</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_tuple</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference</span> <span class="o">=</span> <span class="n">reference</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">include_reverse_complement</span> <span class="o">=</span> <span class="n">include_reverse_complement</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">boost</span> <span class="o">=</span> <span class="mf">1.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">localization_data</span> <span class="o">=</span> <span class="n">localization_data</span>
@@ -382,9 +391,9 @@
             <span class="k">return</span> <span class="n">default</span> <span class="k">if</span> <span class="n">location</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">location</span>
 
         <span class="n">location</span> <span class="o">=</span> <span class="n">location_or_default</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
-        <span class="n">extended_location</span> <span class="o">=</span> <span class="n">location_or_default</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extended_location</span><span class="p">)</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="n">location_or_default</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span>
-            <span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span> <span class="n">extended_location</span><span class="o">=</span><span class="n">extended_location</span>
+            <span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">reference</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
@@ -462,7 +471,7 @@
     <span class="k">def</span> <span class="nf">global_evaluation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
         <span class="n">extract_kmer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kmer_extractor</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
         <span class="n">kmers_locations</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[])</span>
-        <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extended_location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">extended_location</span><span class="o">.</span><span class="n">end</span>
+        <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">end</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="p">):</span>
             <span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="p">)</span>
             <span class="n">kmer_sequence</span> <span class="o">=</span> <span class="n">extract_kmer</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
@@ -499,21 +508,21 @@
     <span class="k">def</span> <span class="nf">localized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">with_righthand</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Localize the evaluation.&quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="n">location</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extended_location</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">location</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">problem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
         <span class="n">extract_kmer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kmer_extractor</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
         <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span>
-        <span class="n">extended_location</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">extended</span><span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">with_righthand</span><span class="p">)</span>
-        <span class="n">changing_kmers_zone</span> <span class="o">=</span> <span class="n">extended_location</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">extended_location</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">extended</span><span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">with_righthand</span><span class="p">)</span>
+        <span class="n">changing_kmers_zone</span> <span class="o">=</span> <span class="n">reference</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reference</span>
         <span class="p">)</span>
         <span class="n">changing_kmer_indices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">changing_kmers_zone</span><span class="o">.</span><span class="n">indices</span><span class="p">[:</span> <span class="o">-</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
         <span class="n">localization_data</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">loc</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="p">[</span>
             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="s2">&quot;location&quot;</span><span class="p">),</span>
-            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extended_location</span><span class="p">,</span> <span class="s2">&quot;extended&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="p">,</span> <span class="s2">&quot;extended&quot;</span><span class="p">),</span>
         <span class="p">]:</span>
             <span class="n">kmer_indices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">loc</span><span class="o">.</span><span class="n">indices</span><span class="p">[:</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="p">])</span>
             <span class="n">fixed_kmer_indices</span> <span class="o">=</span> <span class="n">kmer_indices</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">changing_kmer_indices</span><span class="p">)</span>
@@ -532,17 +541,17 @@
 
     <span class="k">def</span> <span class="nf">shifted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shift</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Shift the location of the specification.</span>
-<span class="sd">        This will also shift the extended location.</span>
+<span class="sd">        This will also shift the reference.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">new_location</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="n">shift</span>
-        <span class="n">extended_location</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="p">(</span>
             <span class="kc">None</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extended_location</span> <span class="ow">is</span> <span class="kc">None</span>
-            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">extended_location</span> <span class="o">+</span> <span class="n">shift</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span> <span class="o">+</span> <span class="n">shift</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span>
             <span class="n">location</span><span class="o">=</span><span class="n">new_location</span><span class="p">,</span>
-            <span class="n">extended_location</span><span class="o">=</span><span class="n">extended_location</span><span class="p">,</span>
+            <span class="n">reference</span><span class="o">=</span><span class="n">reference</span><span class="p">,</span>
             <span class="n">derived_from</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -564,5 +573,8 @@
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

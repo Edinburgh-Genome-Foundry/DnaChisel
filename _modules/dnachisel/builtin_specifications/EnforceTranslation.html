@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,7 +7,9 @@
     
       <link rel="stylesheet" href="../../../_static/pygments.css">
       <link rel="stylesheet" href="../../../_static/theme.css">
-      <link rel="stylesheet" href="../../../_static/css/custom.css">
+      <link rel="stylesheet" href="../../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
@@ -27,7 +27,8 @@
   <link rel="search" title="Search" href="../../../search.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../../../index.html" class="home-link">
     
       <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
@@ -61,12 +62,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -104,12 +108,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -237,12 +244,15 @@
   <h1>Source code for dnachisel.builtin_specifications.EnforceTranslation</h1><div class="highlight"><pre>
 <span></span><span class="s2">&quot;Implement EnforceTranslation.&quot;</span>
 
-<span class="kn">from</span> <span class="nn">.CodonSpecification</span> <span class="k">import</span> <span class="n">CodonSpecification</span>
 
-<span class="c1"># from .VoidSpecification import VoidSpecification</span>
-<span class="kn">from</span> <span class="nn">..SpecEvaluation</span> <span class="k">import</span> <span class="n">SpecEvaluation</span>
-<span class="kn">from</span> <span class="nn">dnachisel.biotools</span> <span class="k">import</span> <span class="n">CODONS_SEQUENCES</span><span class="p">,</span> <span class="n">translate</span><span class="p">,</span> <span class="n">reverse_complement</span>
-<span class="kn">from</span> <span class="nn">dnachisel.Location</span> <span class="k">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">..Specification</span> <span class="k">import</span> <span class="n">SpecEvaluation</span>
+<span class="kn">from</span> <span class="nn">..biotools</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">translate</span><span class="p">,</span>
+    <span class="n">reverse_complement</span><span class="p">,</span>
+    <span class="n">get_backtranslation_table</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..Location</span> <span class="k">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">.CodonSpecification</span> <span class="k">import</span> <span class="n">CodonSpecification</span>
 
 
 <div class="viewcode-block" id="EnforceTranslation"><a class="viewcode-back" href="../../../ref/builtin_specifications.html#dnachisel.builtin_specifications.EnforceTranslation">[docs]</a><span class="k">class</span> <span class="nc">EnforceTranslation</span><span class="p">(</span><span class="n">CodonSpecification</span><span class="p">):</span>
@@ -251,6 +261,8 @@
 <span class="sd">    This class enforces the standard translation, but it is also possible to</span>
 <span class="sd">    change the class&#39; `codons_sequences` and `codons_translations`</span>
 <span class="sd">    dictionnaries for more exotic kind of translations</span>
+
+<span class="sd">    Shorthand for annotations: &quot;cds&quot;.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    -----------</span>
@@ -263,30 +275,59 @@
 <span class="sd">      that is a multiple of 3. The location strand is either 1 if the gene is</span>
 <span class="sd">      encoded on the (+) strand, or -1 for antisense.</span>
 
+<span class="sd">    genetic_table</span>
+<span class="sd">      Either &quot;Standard&quot;, &quot;Bacterial&quot;, or any other Biopython genetic table name</span>
+<span class="sd">      (see dnachisel.biotools.CODON_TABLES_NAMES for a list of accepted names).</span>
+
+<span class="sd">    start_codon</span>
+<span class="sd">      Signals that the first codon is a start codon and provides a policy for</span>
+<span class="sd">      changing it. It is very important that this parameter be set when dealing</span>
+<span class="sd">      with full coding sequences in organisms with different start codons, e.g.</span>
+<span class="sd">      GTG in bacteria. If it is not set, then a GTG (start codon or Valine)</span>
+<span class="sd">      could be changed into GTA (also valine but NOT a start codon).</span>
+<span class="sd">      Can be False (the first codon is not considered a start codon, but can</span>
+<span class="sd">      still naturally code for methionine), ``keep`` (freezes the original</span>
+<span class="sd">      sub-sequence at this location, or a codon e.g. ``ATG`` or ``GTG`` or</span>
+<span class="sd">      ``[&quot;ATG&quot;, &quot;GTG&quot;]``.</span>
+
 <span class="sd">    translation</span>
 <span class="sd">      String representing the protein sequence that the DNA segment should</span>
 <span class="sd">      translate to, eg. &quot;MKY...LL*&quot; (&quot;*&quot; stands for stop codon).</span>
 <span class="sd">      Can be omitted if the sequence initially encodes the right sequence.</span>
 
+<span class="sd">    boost</span>
+<span class="sd">      Score multiplicator (=weight) for when the specification is used as an</span>
+<span class="sd">      optimization objective alongside competing objectives.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">best_possible_score</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">codons_sequences</span> <span class="o">=</span> <span class="n">CODONS_SEQUENCES</span>
     <span class="n">enforced_by_nucleotide_restrictions</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">codons_translations</span> <span class="o">=</span> <span class="s2">&quot;Bacterial&quot;</span>
+    <span class="n">shorthand_name</span> <span class="o">=</span> <span class="s2">&quot;cds&quot;</span>
+    <span class="n">default_genetic_table</span> <span class="o">=</span> <span class="s2">&quot;Standard&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">translation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">genetic_table</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+        <span class="n">start_codon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">translation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">boost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">translation</span> <span class="o">=</span> <span class="n">translation</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-            <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_tuple</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">default_strand</span><span class="o">=+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
             <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">location</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_codon</span> <span class="o">=</span> <span class="n">start_codon</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">boost</span> <span class="o">=</span> <span class="n">boost</span>
+        <span class="k">if</span> <span class="n">genetic_table</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+            <span class="n">genetic_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_genetic_table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genetic_table</span> <span class="o">=</span> <span class="n">genetic_table</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">initialize_translation_from_problem</span> <span class="o">=</span> <span class="n">translation</span> <span class="ow">is</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialize_location_from_problem</span> <span class="o">=</span> <span class="n">location</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backtranslation_table</span> <span class="o">=</span> <span class="n">get_backtranslation_table</span><span class="p">(</span><span class="n">genetic_table</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">set_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check that the location length is valid before setting it.&quot;&quot;&quot;</span>
@@ -309,115 +350,121 @@
                 <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
 
-    <span class="k">def</span> <span class="nf">set_translation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">translation</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Check that the translation length is valid before setting it.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">translation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="p">(</span>
-                        <span class="s2">&quot;Window size (</span><span class="si">%d</span><span class="s2"> bp) incompatible with translation &quot;</span>
-                        <span class="s2">&quot;(</span><span class="si">%d</span><span class="s2"> aa)&quot;</span>
-                    <span class="p">)</span>
-                    <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">))</span>
-                <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">translation</span> <span class="o">=</span> <span class="n">translation</span>
-
     <span class="k">def</span> <span class="nf">initialized_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get translation from the sequence if it is not already set.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">()</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">set_location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_with_full_span_if_no_location</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">translation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">subsequence</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">extract_sequence</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
-            <span class="n">translation</span> <span class="o">=</span> <span class="n">translate</span><span class="p">(</span><span class="n">subsequence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codons_translations</span><span class="p">)</span>
-
+            <span class="n">translation</span> <span class="o">=</span> <span class="n">translate</span><span class="p">(</span>
+                <span class="n">subsequence</span><span class="p">,</span>
+                <span class="n">table</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">genetic_table</span><span class="p">,</span>
+                <span class="n">assume_start_codon</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">start_codon</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span><span class="n">translation</span><span class="o">=</span><span class="n">translation</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">location</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">translation</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="s2">&quot;Window size (</span><span class="si">%d</span><span class="s2"> bp) incompatible with translation &quot;</span>
+                    <span class="s2">&quot;(</span><span class="si">%d</span><span class="s2"> aa)&quot;</span>
+                <span class="p">)</span>
+                <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">location</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">translation</span><span class="p">))</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">start_codon</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;M&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="s2">&quot;Spec. </span><span class="si">%s</span><span class="s2"> specificies a start_codon parameter, but the &quot;</span>
+                    <span class="s2">&quot;translation at this location does not start with Met. &quot;</span>
+                    <span class="s2">&quot;Maybe you should provide a &#39;translation&#39; parameter or &quot;</span>
+                    <span class="s2">&quot;set up a different Genetic Code.&quot;</span>
+                <span class="p">)</span>
+                <span class="o">%</span> <span class="n">result</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">use_short_form</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="p">)</span>
+
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Score is the number of wrong-translation codons.&quot;&quot;&quot;</span>
+        <span class="c1"># Note: this method is actually very little used as this specification</span>
+        <span class="c1"># class sets the enforced_by_nucleotide_restrictions attribute.</span>
         <span class="n">location</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">location</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="k">else</span> <span class="n">Location</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">))</span>
+            <span class="k">else</span> <span class="n">Location</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="n">subsequence</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">extract_sequence</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
-        <span class="n">translation</span> <span class="o">=</span> <span class="n">translate</span><span class="p">(</span><span class="n">subsequence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">codons_translations</span><span class="p">)</span>
-        <span class="n">errors</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">ind</span>
-            <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">translation</span><span class="p">))</span>
-            <span class="k">if</span> <span class="n">translation</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span>
-        <span class="p">]</span>
+        <span class="n">translation</span> <span class="o">=</span> <span class="n">translate</span><span class="p">(</span>
+            <span class="n">subsequence</span><span class="p">,</span>
+            <span class="n">table</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">genetic_table</span><span class="p">,</span>
+            <span class="n">assume_start_codon</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">start_codon</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">errors_locations</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">Location</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">ind</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">ind</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span> <span class="o">&gt;=</span> <span class="mi">0</span>
-            <span class="k">else</span> <span class="n">Location</span><span class="p">(</span>
-                <span class="n">start</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">ind</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
-                <span class="n">end</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">ind</span><span class="p">,</span>
-                <span class="n">strand</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">errors</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">codon_index_to_location</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">amino_acid</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">translation</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">amino_acid</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
         <span class="p">]</span>
-        <span class="n">success</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">problem</span><span class="p">,</span>
-            <span class="n">score</span><span class="o">=-</span><span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">),</span>
+            <span class="n">score</span><span class="o">=-</span><span class="nb">len</span><span class="p">(</span><span class="n">errors_locations</span><span class="p">),</span>
             <span class="n">locations</span><span class="o">=</span><span class="n">errors_locations</span><span class="p">,</span>
             <span class="n">message</span><span class="o">=</span><span class="s2">&quot;All OK.&quot;</span>
-            <span class="k">if</span> <span class="n">success</span>
-            <span class="k">else</span> <span class="s2">&quot;Wrong translation at indices </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">errors</span><span class="p">,</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors_locations</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="k">else</span> <span class="s2">&quot;Wrong translation at locations </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">errors_locations</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">localized_on_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_location</span><span class="p">,</span> <span class="n">start_codon</span><span class="p">,</span> <span class="n">end_codon</span><span class="p">):</span>
         <span class="n">new_translation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">start_codon</span><span class="p">:</span><span class="n">end_codon</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">location_is_at_start</span> <span class="o">=</span> <span class="n">new_location</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">location_is_at_start</span> <span class="o">=</span> <span class="n">new_location</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span>
-            <span class="n">new_location</span><span class="p">,</span> <span class="n">translation</span><span class="o">=</span><span class="n">new_translation</span><span class="p">,</span> <span class="n">boost</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boost</span>
+            <span class="n">location</span><span class="o">=</span><span class="n">new_location</span><span class="p">,</span>
+            <span class="n">translation</span><span class="o">=</span><span class="n">new_translation</span><span class="p">,</span>
+            <span class="n">boost</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boost</span><span class="p">,</span>
+            <span class="n">genetic_table</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">genetic_table</span><span class="p">,</span>
+            <span class="n">start_codon</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">start_codon</span> <span class="k">if</span> <span class="n">location_is_at_start</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="c1"># has_start_codon=self.has_start_codon and location_is_at_start,</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">restrict_nucleotides</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">codons_sequences</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backtranslation_table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
 
-        <span class="n">strand</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span>
-        <span class="n">start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span>
-        <span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span>
+        <span class="k">def</span> <span class="nf">get_first_codon_choices</span><span class="p">(</span><span class="n">first_codon</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_codon</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">backtranslation_table</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_codon</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_codon</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_codon</span> <span class="o">==</span> <span class="s2">&quot;keep&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">first_codon</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">start_codon</span><span class="p">]</span>  <span class="c1"># &quot;ATG&quot;</span>
+        <span class="n">first_codon_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codon_index_to_location</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">first_codon</span> <span class="o">=</span> <span class="n">first_codon_location</span><span class="o">.</span><span class="n">extract_sequence</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+        <span class="n">choices</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">first_codon_location</span><span class="p">,</span> <span class="n">get_first_codon_choices</span><span class="p">(</span><span class="n">first_codon</span><span class="p">))</span>
+        <span class="p">]</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">codon_index_to_location</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">backtranslation_table</span><span class="p">[</span><span class="n">aa</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">aa</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">))[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">strand</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">standardize_choice</span><span class="p">(</span><span class="n">choice</span><span class="p">):</span>
+            <span class="n">location</span><span class="p">,</span> <span class="n">choices_list</span> <span class="o">=</span> <span class="n">choice</span>
+            <span class="k">if</span> <span class="n">location</span><span class="o">.</span><span class="n">strand</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">choices_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">reverse_complement</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">choices_list</span><span class="p">]</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()[:</span><span class="mi">2</span><span class="p">],</span> <span class="n">choices_list</span><span class="p">)</span>
 
-            <span class="k">return</span> <span class="p">[</span>
-                <span class="p">(</span>
-                    <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">),</span>
-                    <span class="nb">set</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">codons_sequences</span><span class="p">[</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="nb">int</span><span class="p">((</span><span class="n">i</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)]</span>
-                        <span class="p">]</span>
-                    <span class="p">),</span>
-                <span class="p">)</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-            <span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span>
-                <span class="p">(</span>
-                    <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">),</span>
-                    <span class="nb">set</span><span class="p">(</span>
-                        <span class="n">reverse_complement</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-                        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">codons_sequences</span><span class="p">[</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="o">-</span><span class="nb">int</span><span class="p">((</span><span class="n">i</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-                        <span class="p">]</span>
-                    <span class="p">),</span>
-                <span class="p">)</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-            <span class="p">]</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">standardize_choice</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span> <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">choices</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;EnforceTranslation(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;EnforceTranslation(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="s2">&quot;EnforceTranslation(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">short_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;cds&quot;</span></div>
 </pre></div>
 
           </div>
@@ -431,5 +478,8 @@
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

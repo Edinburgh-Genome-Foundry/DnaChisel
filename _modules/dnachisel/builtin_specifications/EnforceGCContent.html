@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,7 +7,9 @@
     
       <link rel="stylesheet" href="../../../_static/pygments.css">
       <link rel="stylesheet" href="../../../_static/theme.css">
-      <link rel="stylesheet" href="../../../_static/css/custom.css">
+      <link rel="stylesheet" href="../../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
@@ -27,7 +27,8 @@
   <link rel="search" title="Search" href="../../../search.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../../../index.html" class="home-link">
     
       <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
@@ -61,12 +62,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -104,12 +108,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -238,17 +245,18 @@
 <span></span><span class="sd">&quot;&quot;&quot;Implement EnforceGCContent.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
-<span class="kn">from</span> <span class="nn">..Specification</span> <span class="k">import</span> <span class="n">Specification</span>
-<span class="c1"># from .VoidSpecification import VoidSpecification</span>
-<span class="kn">from</span> <span class="nn">..SpecEvaluation</span> <span class="k">import</span> <span class="n">SpecEvaluation</span>
-<span class="kn">from</span> <span class="nn">..biotools</span> <span class="k">import</span> <span class="n">group_nearby_segments</span>
-<span class="kn">from</span> <span class="nn">dnachisel.biotools</span> <span class="k">import</span> <span class="n">gc_content</span>
+<span class="kn">from</span> <span class="nn">dnachisel.biotools</span> <span class="k">import</span> <span class="n">gc_content</span><span class="p">,</span> <span class="n">group_nearby_segments</span>
 <span class="kn">from</span> <span class="nn">dnachisel.Location</span> <span class="k">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">..Specification</span> <span class="k">import</span> <span class="n">Specification</span><span class="p">,</span> <span class="n">SpecEvaluation</span>
+
 
 
 <div class="viewcode-block" id="EnforceGCContent"><a class="viewcode-back" href="../../../ref/builtin_specifications.html#dnachisel.builtin_specifications.EnforceGCContent">[docs]</a><span class="k">class</span> <span class="nc">EnforceGCContent</span><span class="p">(</span><span class="n">Specification</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Specification on the local or global proportion of G/C nucleotides.</span>
+
+<span class="sd">    Shorthand for annotations: &quot;gc&quot;.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -285,46 +293,59 @@
 
     <span class="n">best_possible_score</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">locations_span</span> <span class="o">=</span> <span class="mi">50</span>  <span class="c1"># The resolution will use locations size</span>
+    <span class="n">shorthand_name</span> <span class="o">=</span> <span class="s2">&quot;gc&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mini</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">window</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">mini</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">maxi</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">window</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">boost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mini</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">mini</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">):</span>
-            <span class="c1"># PROCESS CASES &quot;45-55%&quot; and &quot;45%&quot;</span>
-            <span class="n">split</span> <span class="o">=</span> <span class="n">mini</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">split</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="n">mini</span><span class="p">,</span> <span class="n">maxi</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">split</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">split</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">target</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">split</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mini</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">mini</span><span class="p">,</span> <span class="n">maxi</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">string_to_parameters</span><span class="p">(</span><span class="n">mini</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">mini</span> <span class="o">=</span> <span class="n">maxi</span> <span class="o">=</span> <span class="n">target</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mini</span> <span class="o">=</span> <span class="n">mini</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maxi</span> <span class="o">=</span> <span class="n">maxi</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">window</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-            <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_tuple</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">location</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">boost</span> <span class="o">=</span> <span class="n">boost</span>
 
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">string_to_parameters</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">gc_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(\d+)(|-(\d+))%($|/(\d+)bp)&quot;</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">gc_pattern</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
+        <span class="n">mini</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">maxi</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">window</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">maxi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">mini</span>
+            <span class="n">mini</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">mini</span><span class="p">,</span> <span class="n">maxi</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="kc">None</span> <span class="k">if</span> <span class="n">e</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">/</span> <span class="mf">100.0</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="p">(</span><span class="n">mini</span><span class="p">,</span> <span class="n">maxi</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">window</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">window</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mini</span><span class="p">,</span> <span class="n">maxi</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">window</span>
+
     <span class="k">def</span> <span class="nf">initialized_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_with_full_span_if_no_location</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
-        <span class="c1"># if self.location is None:</span>
-        <span class="c1">#     location = Location(0, len(problem.sequence))</span>
-        <span class="c1">#     return self.copy_with_changes(location=location)</span>
-        <span class="c1"># else:</span>
-        <span class="c1">#     return self</span>
 
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the sum of breaches extent for all windowed breaches.&quot;&quot;&quot;</span>
         <span class="n">wstart</span><span class="p">,</span> <span class="n">wend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span>
         <span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">extract_sequence</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
         <span class="n">gc</span> <span class="o">=</span> <span class="n">gc_content</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">)</span>
-        <span class="n">breaches</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mini</span> <span class="o">-</span> <span class="n">gc</span><span class="p">)</span> <span class="o">+</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">gc</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxi</span><span class="p">))</span>
-        <span class="n">score</span> <span class="o">=</span> <span class="o">-</span> <span class="n">breaches</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">breaches</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mini</span> <span class="o">-</span> <span class="n">gc</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="n">gc</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxi</span>
+        <span class="p">)</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="o">-</span><span class="n">breaches</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
         <span class="n">breaches_starts</span> <span class="o">=</span> <span class="n">wstart</span> <span class="o">+</span> <span class="p">(</span><span class="n">breaches</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">breaches_starts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -338,22 +359,22 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">segments</span> <span class="o">=</span> <span class="p">[(</span><span class="n">bs</span><span class="p">,</span> <span class="n">bs</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">)</span> <span class="k">for</span> <span class="n">bs</span> <span class="ow">in</span> <span class="n">breaches_starts</span><span class="p">]</span>
             <span class="n">groups</span> <span class="o">=</span> <span class="n">group_nearby_segments</span><span class="p">(</span>
-                <span class="n">segments</span><span class="p">,</span>
-                <span class="n">max_start_spread</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">locations_span</span><span class="p">))</span>
+                <span class="n">segments</span><span class="p">,</span> <span class="n">max_start_spread</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">locations_span</span><span class="p">)</span>
+            <span class="p">)</span>
             <span class="n">breaches_locations</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">group</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-                <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span>
+                <span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">group</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span>
             <span class="p">]</span>
 
         <span class="k">if</span> <span class="n">breaches_locations</span> <span class="o">==</span> <span class="p">[]:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Passed !&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">breaches_locations</span> <span class="o">=</span> <span class="p">[</span><span class="n">Location</span><span class="p">(</span><span class="o">*</span><span class="n">loc</span><span class="p">)</span> <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">breaches_locations</span><span class="p">]</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Out of bound on segments &quot;</span> <span class="o">+</span>
-                       <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">breaches_locations</span><span class="p">]))</span>
-        <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span>
-                              <span class="n">locations</span><span class="o">=</span><span class="n">breaches_locations</span><span class="p">,</span>
-                              <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Out of bound on segments &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">breaches_locations</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="n">locations</span><span class="o">=</span><span class="n">breaches_locations</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">localized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">with_righthand</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Localize the GC content evaluation.</span>
@@ -363,23 +384,22 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># if self.location is not None:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># NOTE: this makes sense, but could be refined by computing</span>
-            <span class="c1"># how much the local bounds should be in order not to outbound</span>
+            <span class="c1"># No specific location policy at the moment for non-windowed GC</span>
+            <span class="c1"># content. The same specification is returned.</span>
+            <span class="c1"># NOTE: this could be refined by computing</span>
+            <span class="c1"># how much the local bounds should be in order for the global</span>
+            <span class="c1"># sequence not get out of bound. This would be faster but much</span>
+            <span class="c1"># more complicated.</span>
             <span class="k">return</span> <span class="bp">self</span>
         <span class="n">new_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">new_location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span> 
- <span class="c1"># VoidSpecification(parent_specification=self)</span>
+            <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">extension</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">-</span> <span class="mi">1</span>
             <span class="n">extended_location</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">extended</span><span class="p">(</span>
-                <span class="n">extension</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">with_righthand</span><span class="p">)</span>
+                <span class="n">extension</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">with_righthand</span>
+            <span class="p">)</span>
             <span class="n">new_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span><span class="n">extended_location</span><span class="p">)</span>
-        <span class="c1"># else:</span>
-        <span class="c1">#     if self.window is not None:</span>
-        <span class="c1">#         new_location = location.extended(self.window + 1)</span>
-        <span class="c1">#     else:</span>
-        <span class="c1">#         new_location = None</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">new_location</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">label_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -389,24 +409,25 @@
         <span class="n">show_window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="k">return</span> <span class="p">(</span>
-            <span class="n">show_mini</span> <span class="o">*</span> <span class="p">[(</span><span class="s1">&#39;mini&#39;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">mini</span><span class="p">)]</span> <span class="o">+</span>
-            <span class="n">show_maxi</span> <span class="o">*</span> <span class="p">[(</span><span class="s1">&#39;maxi&#39;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxi</span><span class="p">)]</span> <span class="o">+</span>
-            <span class="n">show_target</span> <span class="o">*</span> <span class="p">[(</span><span class="s1">&#39;target&#39;</span><span class="p">,</span>
-                           <span class="p">(</span><span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)]</span> <span class="o">+</span>
-            <span class="n">show_window</span> <span class="o">*</span> <span class="p">[(</span><span class="s1">&#39;window&#39;</span><span class="p">,</span>
-                            <span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)]</span>
+            <span class="n">show_mini</span> <span class="o">*</span> <span class="p">[(</span><span class="s2">&quot;mini&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">mini</span><span class="p">)]</span>
+            <span class="o">+</span> <span class="n">show_maxi</span> <span class="o">*</span> <span class="p">[(</span><span class="s2">&quot;maxi&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxi</span><span class="p">)]</span>
+            <span class="o">+</span> <span class="n">show_target</span>
+            <span class="o">*</span> <span class="p">[(</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)]</span>
+            <span class="o">+</span> <span class="n">show_window</span>
+            <span class="o">*</span> <span class="p">[(</span><span class="s2">&quot;window&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)]</span>
         <span class="p">)</span>
-    
+
     <span class="k">def</span> <span class="nf">short_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d%%</span><span class="s2"> GC&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">-</span><span class="si">%d%%</span><span class="s2"> GC&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mini</span><span class="p">),</span>
-                                     <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxi</span><span class="p">))</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">-</span><span class="si">%d%%</span><span class="s2"> GC&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mini</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxi</span><span class="p">),</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">+=</span> <span class="s2">&quot;/</span><span class="si">%d</span><span class="s2">bp&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span>
         <span class="k">return</span> <span class="n">result</span></div>
-            
 </pre></div>
 
           </div>
@@ -420,5 +441,8 @@
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

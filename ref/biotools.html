@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,7 +7,9 @@
     
       <link rel="stylesheet" href="../_static/pygments.css">
       <link rel="stylesheet" href="../_static/theme.css">
-      <link rel="stylesheet" href="../_static/css/custom.css">
+      <link rel="stylesheet" href="../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../_static/css/press_main.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
@@ -29,7 +29,8 @@
   <link rel="prev" title="Constraints reports" href="constraints_reports.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../index.html" class="home-link">
     
       <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
@@ -63,12 +64,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -106,12 +110,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -253,7 +260,7 @@
 <p>Biologically-related useful methods.</p>
 <dl class="function">
 <dt id="dnachisel.biotools.blast_sequence">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">blast_sequence</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">blast_db=None</em>, <em class="sig-param">subject_sequences=None</em>, <em class="sig-param">subject=None</em>, <em class="sig-param">word_size=4</em>, <em class="sig-param">perc_identity=80</em>, <em class="sig-param">num_alignments=1000</em>, <em class="sig-param">ungapped=False</em>, <em class="sig-param">num_threads=3</em>, <em class="sig-param">culling_limit=None</em>, <em class="sig-param">e_value=None</em>, <em class="sig-param">use_megablast=True</em>, <em class="sig-param">dust='no'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/blast_sequence.html#blast_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.blast_sequence" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">blast_sequence</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">blast_db=None</em>, <em class="sig-param">subject_sequences=None</em>, <em class="sig-param">subject=None</em>, <em class="sig-param">word_size=4</em>, <em class="sig-param">perc_identity=80</em>, <em class="sig-param">num_alignments=1000</em>, <em class="sig-param">ungapped=False</em>, <em class="sig-param">num_threads=3</em>, <em class="sig-param">culling_limit=None</em>, <em class="sig-param">e_value=None</em>, <em class="sig-param">task=None</em>, <em class="sig-param">dust='no'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/blast_sequence.html#blast_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.blast_sequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Biopython BLAST record of the given sequence BLASTed
 against the provided database.</p>
 <dl class="field-list">
@@ -274,14 +281,23 @@ against the provided database.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="dnachisel.biotools.find_all_bowtie_matches">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">find_all_bowtie_matches</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">bowtie_index_path</em>, <em class="sig-param">match_length</em>, <em class="sig-param">max_mismatches=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/bowtie.html#find_all_bowtie_matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.find_all_bowtie_matches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return (short) matches between a sequence and a Bowtie index.</p>
+<p>The result is of the form [(start, end), n_mismatches)] where (start, end)
+indicates the position of the match in the sequence, and n_mismatches is
+the number of mismatches with the closest homology in the index.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="dnachisel.biotools.change_biopython_record_sequence">
 <code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">change_biopython_record_sequence</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">new_seq</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#change_biopython_record_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.change_biopython_record_sequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a version of the record with the sequence set to new_seq</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="dnachisel.biotools.find_specification_in_feature">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">find_specification_in_feature</code><span class="sig-paren">(</span><em class="sig-param">feature</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#find_specification_in_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.find_specification_in_feature" title="Permalink to this definition">¶</a></dt>
+<dt id="dnachisel.biotools.find_specification_label_in_feature">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">find_specification_label_in_feature</code><span class="sig-paren">(</span><em class="sig-param">feature</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#find_specification_label_in_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.find_specification_label_in_feature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Analyse a Biopython feature to find a DnaChisel Specification in it.</p>
 <p>The specification should start with either “&#64;” or “~”, in the feature’s
 field “label” or “note”.</p>
@@ -289,8 +305,42 @@ field “label” or “note”.</p>
 
 <dl class="function">
 <dt id="dnachisel.biotools.load_record">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">load_record</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">linear=True</em>, <em class="sig-param">name='unnamed'</em>, <em class="sig-param">fmt='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#load_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.load_record" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load a FASTA/Genbank/… record</p>
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">load_record</code><span class="sig-paren">(</span><em class="sig-param">filepath</em>, <em class="sig-param">linear=True</em>, <em class="sig-param">name='unnamed'</em>, <em class="sig-param">file_format='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#load_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.load_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a FASTA/Genbank/Snapgene record.</p>
+<p>Note that reading Snapgene records requires the library snapgene_reader
+installed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnachisel.biotools.write_record">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">write_record</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">target</em>, <em class="sig-param">file_format='genbank'</em>, <em class="sig-param">remove_locationless_features=True</em>, <em class="sig-param">max_name_length=20</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#write_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.write_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a record as genbank, fasta, etc. via Biopython, with fixes.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>record</strong></p>
+<blockquote>
+<div><p>A biopython record</p>
+</div></blockquote>
+<p><strong>target</strong></p>
+<blockquote>
+<div><p>Path to a file or filelike object.</p>
+</div></blockquote>
+<p><strong>file_format</strong></p>
+<blockquote>
+<div><p>Format, either Genbank or fasta</p>
+</div></blockquote>
+<p><strong>remove_locationless_features</strong></p>
+<blockquote>
+<div><p>If True, will remove all features whose location is None, to avoid a
+Biopython bug</p>
+</div></blockquote>
+<p><strong>max_name_length</strong></p>
+<blockquote>
+<div><p>The record’s name will be truncated if longer than this (also here to
+avoid a biopython bug).</p>
+</div></blockquote>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -398,7 +448,7 @@ original sequence at the feature’s location. For instance “#A” or “#TT�
 
 <dl class="function">
 <dt id="dnachisel.biotools.reverse_translate">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">reverse_translate</code><span class="sig-paren">(</span><em class="sig-param">protein_sequence</em>, <em class="sig-param">randomize_codons=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#reverse_translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.reverse_translate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">reverse_translate</code><span class="sig-paren">(</span><em class="sig-param">protein_sequence</em>, <em class="sig-param">randomize_codons=False</em>, <em class="sig-param">table='Standard'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#reverse_translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.reverse_translate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a DNA sequence which translates to the provided protein sequence</p>
 <p>Note: at the moment, the first valid codon found is used for each
 amino-acid (so it is deterministic but no codon-optimization is done).</p>
@@ -414,13 +464,15 @@ amino-acid (so it is deterministic but no codon-optimization is done).</p>
 
 <dl class="function">
 <dt id="dnachisel.biotools.translate">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">translate</code><span class="sig-paren">(</span><em class="sig-param">dna_sequence</em>, <em class="sig-param">translation_table='Bacterial'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.translate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">translate</code><span class="sig-paren">(</span><em class="sig-param">dna_sequence</em>, <em class="sig-param">table='Standard'</em>, <em class="sig-param">assume_start_codon=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.translate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Translate the DNA sequence into an amino-acids sequence “MLKYQT…”.
-If <code class="docutils literal notranslate"><span class="pre">translation_table</span></code> is the name or number of  NCBI genetic table,
+If <code class="docutils literal notranslate"><span class="pre">translation_table</span></code> is the name or number of a NCBI genetic table,
 Biopython will be used. See here for options:</p>
 <p><a class="reference external" href="http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc25">http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc25</a></p>
 <p><code class="docutils literal notranslate"><span class="pre">translation_table</span></code> can also be a dictionnary of the form
 <code class="docutils literal notranslate"><span class="pre">{&quot;ATT&quot;:</span> <span class="pre">&quot;M&quot;,</span> <span class="pre">&quot;CTC&quot;:</span> <span class="pre">&quot;X&quot;,</span> <span class="pre">etc.}</span></code> for more exotic translation tables</p>
+<p>If assume_start_codon is True and the first codon is a start codon in the
+given genetic table, then the first amino acid will be M (methionine).</p>
 </dd></dl>
 
 <dl class="function">
@@ -671,5 +723,8 @@ reproducibility</p>
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

@@ -14,10 +14,13 @@ Summary
     AvoidChanges
     AvoidHairpins
     AvoidHeterodimerization
-    AvoidNonUniqueSegments
+    AvoidMatches
     AvoidPattern
     AvoidStopCodons
     CodonOptimize
+    MaximizeCAI
+    MatchTargetCodonUsage
+    HarmonizeRCA
     EnforceGCContent
     EnforceMeltingTemperature
     EnforcePatternOccurence
@@ -25,6 +28,7 @@ Summary
     EnforceSequence
     EnforceTranslation
     SequenceLengthBounds
+    UniquifyAllKmers
 
 API Details
 ~~~~~~~~~~~
@@ -49,10 +53,10 @@ AvoidHairpins
 
 .. autoclass:: AvoidHairpins
 
-AvoidNonUniqueSegments
+UniquifyAllKmers
 ++++++++++++++++++++++
 
-.. autoclass:: AvoidNonUniqueSegments
+.. autoclass:: UniquifyAllKmers
 
 AvoidPattern
 ++++++++++++
@@ -64,10 +68,15 @@ AvoidStopCodons
 
 .. autoclass:: AvoidStopCodons
 
-CodonOptimize
-+++++++++++++
+Codon Optimization Specifications
++++++++++++++++++++++++++++++++++
 
-.. autoclass:: CodonOptimize
+.. autofunction:: CodonOptimize
+
+.. autoclass:: MaximizeCAI
+.. autoclass:: MatchTargetCodonUsage
+.. autoclass:: HarmonizeRCA
+
 
 EnforceGCContent
 ++++++++++++++++

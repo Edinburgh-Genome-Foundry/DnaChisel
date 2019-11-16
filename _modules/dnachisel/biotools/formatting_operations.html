@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,7 +7,9 @@
     
       <link rel="stylesheet" href="../../../_static/pygments.css">
       <link rel="stylesheet" href="../../../_static/theme.css">
-      <link rel="stylesheet" href="../../../_static/css/custom.css">
+      <link rel="stylesheet" href="../../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
@@ -27,7 +27,8 @@
   <link rel="search" title="Search" href="../../../search.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../../../index.html" class="home-link">
     
       <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
@@ -61,12 +62,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -104,12 +108,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -264,7 +271,7 @@
 
 <div class="viewcode-block" id="score_to_formatted_string"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.score_to_formatted_string">[docs]</a><span class="k">def</span> <span class="nf">score_to_formatted_string</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="n">characters</span><span class="o">=</span><span class="mi">9</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Transform a number (score) into a best-format string.</span>
-<span class="sd">    </span>
+
 <span class="sd">    The format will be either int (2234), float (10.234) or engineering</span>
 <span class="sd">    (1.20E5), whichever is shorter. The score is then padded with left</span>
 <span class="sd">    whitespaces to obtained the desired number of ``characters``.&quot;&quot;&quot;</span>
@@ -285,5 +292,8 @@
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,7 +7,9 @@
     
       <link rel="stylesheet" href="../_static/pygments.css">
       <link rel="stylesheet" href="../_static/theme.css">
-      <link rel="stylesheet" href="../_static/css/custom.css">
+      <link rel="stylesheet" href="../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../_static/css/press_main.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
@@ -29,7 +29,8 @@
   <link rel="prev" title="Notes" href="../notes.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../index.html" class="home-link">
     
       <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
@@ -63,12 +64,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -106,12 +110,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -193,15 +200,19 @@
                 
                   <li class="toctree-l2"><a href="#sequence-protection" class="reference internal">Sequence protection</a></li>
                 
+                  <li class="toctree-l2"><a href="#forcing-changes" class="reference internal">Forcing changes</a></li>
+                
                   <li class="toctree-l2"><a href="#pattern-insertion" class="reference internal">Pattern insertion</a></li>
                 
-                  <li class="toctree-l2"><a href="#cds-and-codon-optimization" class="reference internal">CDS and Codon optimization</a></li>
+                  <li class="toctree-l2"><a href="#indicating-coding-sequences" class="reference internal">Indicating coding sequences</a></li>
+                
+                  <li class="toctree-l2"><a href="#codon-optimization" class="reference internal">Codon Optimization</a></li>
                 
                   <li class="toctree-l2"><a href="#gc-content" class="reference internal">GC content</a></li>
                 
                   <li class="toctree-l2"><a href="#removing-homologies" class="reference internal">Removing homologies</a></li>
                 
-                  <li class="toctree-l2"><a href="#primer-friendly-segments" class="reference internal">Primer-friendly segments</a></li>
+                  <li class="toctree-l2"><a href="#melting-temperature" class="reference internal">Melting temperature</a></li>
                 
                   <li class="toctree-l2"><a href="#specifications-not-yet-supported-as-genbank-annotations" class="reference internal">Specifications not yet supported as Genbank annotations</a></li>
                 
@@ -265,7 +276,7 @@
   <div class="section" id="genbank-api">
 <h1><a class="toc-backref" href="#id1">Genbank API</a><a class="headerlink" href="#genbank-api" title="Permalink to this headline">¶</a></h1>
 <p>This section documents the Genbank API for all builtin specifications of
-DNA chisel.</p>
+DNA chisel. See also the <a class="reference internal" href="genbank_notes.html#genbank-usage-notes"><span class="std std-ref">Genbank usage notes</span></a> section for tips.</p>
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
@@ -273,18 +284,30 @@ DNA chisel.</p>
 <ul>
 <li><p><a class="reference internal" href="#pattern-removal" id="id2">Pattern removal</a></p></li>
 <li><p><a class="reference internal" href="#sequence-protection" id="id3">Sequence protection</a></p></li>
-<li><p><a class="reference internal" href="#pattern-insertion" id="id4">Pattern insertion</a></p></li>
-<li><p><a class="reference internal" href="#cds-and-codon-optimization" id="id5">CDS and Codon optimization</a></p></li>
-<li><p><a class="reference internal" href="#gc-content" id="id6">GC content</a></p></li>
-<li><p><a class="reference internal" href="#removing-homologies" id="id7">Removing homologies</a></p></li>
-<li><p><a class="reference internal" href="#primer-friendly-segments" id="id8">Primer-friendly segments</a></p></li>
-<li><p><a class="reference internal" href="#specifications-not-yet-supported-as-genbank-annotations" id="id9">Specifications not yet supported as Genbank annotations</a></p></li>
+<li><p><a class="reference internal" href="#forcing-changes" id="id4">Forcing changes</a></p></li>
+<li><p><a class="reference internal" href="#pattern-insertion" id="id5">Pattern insertion</a></p></li>
+<li><p><a class="reference internal" href="#indicating-coding-sequences" id="id6">Indicating coding sequences</a></p></li>
+<li><p><a class="reference internal" href="#codon-optimization" id="id7">Codon Optimization</a></p></li>
+<li><p><a class="reference internal" href="#gc-content" id="id8">GC content</a></p></li>
+<li><p><a class="reference internal" href="#removing-homologies" id="id9">Removing homologies</a></p></li>
+<li><p><a class="reference internal" href="#melting-temperature" id="id10">Melting temperature</a></p></li>
+<li><p><a class="reference internal" href="#specifications-not-yet-supported-as-genbank-annotations" id="id11">Specifications not yet supported as Genbank annotations</a></p></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="pattern-removal">
 <h2><a class="toc-backref" href="#id2">Pattern removal</a><a class="headerlink" href="#pattern-removal" title="Permalink to this headline">¶</a></h2>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The annotation’s direction matters!</p>
+<p>Since v3.0, the orientation of the annotation of pattern-based
+specifications such as <code class="docutils literal notranslate"><span class="pre">no()</span></code> or <code class="docutils literal notranslate"><span class="pre">insert()</span></code> indicates where to look for
+the pattern. Annotations in the +1 sense indicate that the
+pattern should only be looked for in the +1 (5‘3’) strand. Patterns in the -1
+strand are only looked at in the -1 (3‘5’) sense. Annotations with no
+orientation indicate that the pattern should be looked for in both strands.</p>
+</div>
 <p>To remove a pattern in a given region, use the <code class="docutils literal notranslate"><span class="pre">&#64;no()</span></code> label
 (alias for <code class="docutils literal notranslate"><span class="pre">&#64;AvoidPattern()</span></code>). For instance to remove any GC pattern:</p>
 <img class='annotation-example'
@@ -292,11 +315,11 @@ src='../_static/images/genbank_annotations/avoid_pattern_cg.png'></img><p>This m
 (NKY etc.) For instance to remove any ATC and ATT (which could be written
 together as ATH):</p>
 <img class='annotation-example'
-src='../_static/images/genbank_annotations/avoid_pattern_noisoleucine.png'></img><p>It is also possible to provide an enzyme restriction site by suffixing the enzyme
-name with <code class="docutils literal notranslate"><span class="pre">_site</span></code>:</p>
+src='../_static/images/genbank_annotations/avoid_pattern_noisoleucine.png'></img><p>It is also possible to provide an enzyme restriction site by suffixing the
+enzyme name with <code class="docutils literal notranslate"><span class="pre">_site</span></code>:</p>
 <img class='annotation-example'
-src='../_static/images/genbank_annotations/avoid_pattern_enzyme.png'></img><p>Other pattern shorthands can be used for instance to find sequence repeats (here
-we look for dimers repeated four times in a row):</p>
+src='../_static/images/genbank_annotations/avoid_pattern_enzyme.png'></img><p>Other pattern shorthands can be used for instance to find sequence repeats
+(here we look for dimers repeated four times in a row):</p>
 <img class='annotation-example'
 src='../_static/images/genbank_annotations/avoid_pattern_kmer.png'></img><p>When no pattern shorthand cuts it, use a regular expression! The annotation
 below forbids any TAA sequence following an ATG sequence.</p>
@@ -315,8 +338,22 @@ src='../_static/images/genbank_annotations/keep.png'></img><p>You can also use <
 modifications will not be strictly forbidden, but they will be minimized:</p>
 <img class='annotation-example'
 src='../_static/images/genbank_annotations/keep_obj.png'></img></div>
+<div class="section" id="forcing-changes">
+<h2><a class="toc-backref" href="#id4">Forcing changes</a><a class="headerlink" href="#forcing-changes" title="Permalink to this headline">¶</a></h2>
+<p>In DNA Chisel, the opposite of specification <code class="docutils literal notranslate"><span class="pre">AvoidChanges</span></code> is
+<code class="docutils literal notranslate"><span class="pre">EnforceChanges</span></code> (shorthand notation <code class="docutils literal notranslate"><span class="pre">change</span></code>). For instance, if you want
+the solver to change a region as much as possible (for instance, to obfuscate a
+sequence), use a <code class="docutils literal notranslate"><span class="pre">~change</span></code> annotation:</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/change_objective.png'></img><p>You can also ask for a certain amount of change, with for instance
+<code class="docutils literal notranslate"><span class="pre">~change(40%)</span></code> which will aim at changing 40% (no more, no less) of the
+nucleotides under the annotation. You can also use the specification as a
+constraint, for instance <code class="docutils literal notranslate"><span class="pre">&#64;change</span></code> (the sequence will be totally changed) or
+<code class="docutils literal notranslate"><span class="pre">&#64;change(minimum=50%)</span></code> which will ensures that the final sequence will be 50%
+different from the original.</p>
+</div>
 <div class="section" id="pattern-insertion">
-<h2><a class="toc-backref" href="#id4">Pattern insertion</a><a class="headerlink" href="#pattern-insertion" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">Pattern insertion</a><a class="headerlink" href="#pattern-insertion" title="Permalink to this headline">¶</a></h2>
 <p>You can control how many times a pattern should appear in a sequence region
 with the <code class="docutils literal notranslate"><span class="pre">&#64;insert()</span></code> specification (short form of <code class="docutils literal notranslate"><span class="pre">&#64;EnforcePatternOccurence</span></code>):</p>
 <img class='annotation-example'
@@ -334,36 +371,54 @@ src='../_static/images/genbank_annotations/enforce_sequence.png'></img><p>To enf
 <code class="docutils literal notranslate"><span class="pre">&#64;choice</span></code> (short for <code class="docutils literal notranslate"><span class="pre">&#64;EnforceChoice</span></code>):</p>
 <img class='annotation-example'
 src='../_static/images/genbank_annotations/choice.png'></img></div>
-<div class="section" id="cds-and-codon-optimization">
-<h2><a class="toc-backref" href="#id5">CDS and Codon optimization</a><a class="headerlink" href="#cds-and-codon-optimization" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="indicating-coding-sequences">
+<h2><a class="toc-backref" href="#id6">Indicating coding sequences</a><a class="headerlink" href="#indicating-coding-sequences" title="Permalink to this headline">¶</a></h2>
 <p>To indicate that a region is a CDS and the protein sequence should be conserved
 (i.e. only synonymous codon mutations are allowed), use &#64;cds (short for
 &#64;EnforceTranslation) on a region whose span is a multiple of 3:</p>
 <img class='annotation-example'
-src='../_static/images/genbank_annotations/cds.png'></img><p>To codon-optimize a gene use <code class="docutils literal notranslate"><span class="pre">~CodonOptimize()</span></code>:</p>
-<img class='annotation-example'
-src='../_static/images/genbank_annotations/codon_optimize.png'></img><p>See <a class="reference external" href="https://github.com/Edinburgh-Genome-Foundry/codon-usage-tables/tree/master/codon_usage_data/tables">the Codon Tables package webpage</a>
-for species that can be referred to by name. This includes <code class="docutils literal notranslate"><span class="pre">b_subtilis</span></code>,
-<code class="docutils literal notranslate"><span class="pre">c_elegans</span></code>, <code class="docutils literal notranslate"><span class="pre">d_melanogaster</span></code>, <code class="docutils literal notranslate"><span class="pre">e_coli</span></code>, <code class="docutils literal notranslate"><span class="pre">g_gallus</span></code>, <code class="docutils literal notranslate"><span class="pre">h_sapiens</span></code>,
-<code class="docutils literal notranslate"><span class="pre">m_musculus</span></code>, <code class="docutils literal notranslate"><span class="pre">s_cerevisiae</span></code>. You can also use a TaxID to refer to a species,
-e.g. <code class="docutils literal notranslate"><span class="pre">species=1423</span></code> at which case the codon frequencies will be downloaded from
-the <a class="reference external" href="https://www.kazusa.or.jp/codon/">Kazusa codon usage database</a>, assuming it not down.</p>
+src='../_static/images/genbank_annotations/cds.png'></img><div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Non-ATG start codons</p>
+<p>If the coding region has a start codon in an organims using non-ATG
+start codons (for instance, E. coli sometimes use GTG), make sure to define
+a policy for the start codon, for instance <code class="docutils literal notranslate"><span class="pre">start_codon=keep</span></code> to keep the
+sequence of the original start codon, or <code class="docutils literal notranslate"><span class="pre">start_codon=ATG</span></code> to use ATG as
+a start codon. See the documentation of EnforceTranslation for more details
+and options.</p>
+</div>
+</div>
+<div class="section" id="codon-optimization">
+<h2><a class="toc-backref" href="#id7">Codon Optimization</a><a class="headerlink" href="#codon-optimization" title="Permalink to this headline">¶</a></h2>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
 <p>Always use with &#64;cds</p>
 <p>If the CodonOptimize specification is used without a &#64;cds constraint covering
 the same region, then the protein sequence is not guaranteed!</p>
 </div>
-<div class="admonition caution">
-<p class="admonition-title">Caution</p>
-<p>Codon optimization method</p>
-<p>By default, the optimization will replace every codon by the most-frequent codon.
-Use <code class="docutils literal notranslate"><span class="pre">method=harmonized_frequencies</span></code> for an optimization method where the
-codons frequency of each amino-acid will reflect the frequencies in the target organism</p>
-</div>
+<p>To codon-optimize a gene you can use the <code class="docutils literal notranslate"><span class="pre">~CodonOptimize()</span></code> specification but
+it is faster and clearer to refer directly to one of the different methods available.</p>
+<p>To replace each codon by its most common synonym (which is equivalent to maximizing
+the CAI index):</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/use_best_codon.png'></img><p>To optimize the gene sequence so that the final codon representation matches
+the codons frequencies of the target organism, use <code class="docutils literal notranslate"><span class="pre">~match_codon_usage</span></code>:</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/match_codon_usage.png'></img><p>To harmonize codons so that a rare codon in the original host will be replaced
+by a rare codon in the target host (and common codons are replaced by common
+codons), use <code class="docutils literal notranslate"><span class="pre">~harmonize_rca</span></code>:</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/harmonize_rca.png'></img><p>As you noticed we used species names in these examples. See
+<a class="reference external" href="https://github.com/Edinburgh-Genome-Foundry/codon-usage-tables/tree/master/codon_usage_data/tables">the Codon Usage Tables package webpage</a>
+for species that can be referred to by name. This includes <code class="docutils literal notranslate"><span class="pre">b_subtilis</span></code>,
+<code class="docutils literal notranslate"><span class="pre">c_elegans</span></code>, <code class="docutils literal notranslate"><span class="pre">d_melanogaster</span></code>, <code class="docutils literal notranslate"><span class="pre">e_coli</span></code>, <code class="docutils literal notranslate"><span class="pre">g_gallus</span></code>, <code class="docutils literal notranslate"><span class="pre">h_sapiens</span></code>,
+<code class="docutils literal notranslate"><span class="pre">m_musculus</span></code>, <code class="docutils literal notranslate"><span class="pre">s_cerevisiae</span></code>. You can also use a TaxID to refer to a species,
+e.g. <code class="docutils literal notranslate"><span class="pre">species=1423</span></code> at which case the codon frequencies will be downloaded from
+the <a class="reference external" href="https://www.kazusa.or.jp/codon/">Kazusa codon usage database</a> (assuming it
+isn’t down!)</p>
 </div>
 <div class="section" id="gc-content">
-<h2><a class="toc-backref" href="#id6">GC content</a><a class="headerlink" href="#gc-content" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id8">GC content</a><a class="headerlink" href="#gc-content" title="Permalink to this headline">¶</a></h2>
 <p>Use <code class="docutils literal notranslate"><span class="pre">&#64;gc</span></code> to ensure that a given region’s GC content is between a
 certain range</p>
 <img class='annotation-example'
@@ -375,18 +430,41 @@ it is preferable to provide a target rather than a range:</p>
 <img class='annotation-example'
 src='../_static/images/genbank_annotations/gc_target.png'></img></div>
 <div class="section" id="removing-homologies">
-<h2><a class="toc-backref" href="#id7">Removing homologies</a><a class="headerlink" href="#removing-homologies" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id9">Removing homologies</a><a class="headerlink" href="#removing-homologies" title="Permalink to this headline">¶</a></h2>
+<p>To ensure that a sequence region has no homologies anywhere else in the sequence
+you can use <code class="docutils literal notranslate"><span class="pre">all_unique_kmers</span></code>:</p>
 <img class='annotation-example'
-src='../_static/images/genbank_annotations/avoid_non_unique_segments.png'></img><img class='annotation-example'
-src='../_static/images/genbank_annotations/avoid_blast.png'></img></div>
-<div class="section" id="primer-friendly-segments">
-<h2><a class="toc-backref" href="#id8">Primer-friendly segments</a><a class="headerlink" href="#primer-friendly-segments" title="Permalink to this headline">¶</a></h2>
+src='../_static/images/genbank_annotations/all_unique_kmers.png'></img><p>The annotation above ensures that each 20-mer in the annotated segment does not
+appear anywhere else in the sequence or in its reverse-complement.</p>
+<p>To ensure that a sequence region has no homologies within itself, use the “here”
+parameter:</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/all_unique_kmers_here.png'></img><p>You can also avoid matches with a given organism you can also use <code class="docutils literal notranslate"><span class="pre">avoid_matches</span></code>
+.. raw:: html</p>
+<blockquote>
+<div><p>&lt;img class=’annotation-example’
+src=’../_static/images/genbank_annotations/avoid_matches.png’&gt;&lt;/img&gt;</p>
+</div></blockquote>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Only works if supported by the server</p>
+<p>This specification, originally meant to be used via scripts, will only work
+if the server associates the organism name to a Bowtie index path.</p>
+</div>
+</div>
+<div class="section" id="melting-temperature">
+<h2><a class="toc-backref" href="#id10">Melting temperature</a><a class="headerlink" href="#melting-temperature" title="Permalink to this headline">¶</a></h2>
+<p>The annotation <code class="docutils literal notranslate"><span class="pre">tm</span></code> can be used to ensure that a given subsequence has the
+desired melting temperature. It can be used either as a constraint or as an
+optimization objective:</p>
 <img class='annotation-example'
 src='../_static/images/genbank_annotations/enforce_melting.png'></img><img class='annotation-example'
-src='../_static/images/genbank_annotations/enforce_melting_obj.png'></img><img class='annotation-example'
-src='../_static/images/genbank_annotations/allow_primer.png'></img></div>
+src='../_static/images/genbank_annotations/enforce_melting_obj.png'></img><p>As a suggestion, you can use this specification with <code class="docutils literal notranslate"><span class="pre">all_unique_kmers</span></code> to
+ensure that the resulting region is primer-friendly:</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/enforce_melting_and_kmers.png'></img></div>
 <div class="section" id="specifications-not-yet-supported-as-genbank-annotations">
-<h2><a class="toc-backref" href="#id9">Specifications not yet supported as Genbank annotations</a><a class="headerlink" href="#specifications-not-yet-supported-as-genbank-annotations" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id11">Specifications not yet supported as Genbank annotations</a><a class="headerlink" href="#specifications-not-yet-supported-as-genbank-annotations" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>AvoidHeterodimerization</p></li>
 <li><p>EnforceRegionsCompatibility</p></li>
@@ -414,5 +492,8 @@ src='../_static/images/genbank_annotations/allow_primer.png'></img></div>
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

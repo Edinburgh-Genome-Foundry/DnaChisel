@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,7 +7,9 @@
     
       <link rel="stylesheet" href="../../../_static/pygments.css">
       <link rel="stylesheet" href="../../../_static/theme.css">
-      <link rel="stylesheet" href="../../../_static/css/custom.css">
+      <link rel="stylesheet" href="../../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
@@ -27,7 +27,8 @@
   <link rel="search" title="Search" href="../../../search.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../../../index.html" class="home-link">
     
       <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
@@ -61,12 +62,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -104,12 +108,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -237,29 +244,31 @@
   <h1>Source code for dnachisel.builtin_specifications.EnforcePatternOccurence</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Implement AvoidPattern&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">..Specification</span> <span class="k">import</span> <span class="n">Specification</span>
+<span class="kn">from</span> <span class="nn">dnachisel.MutationSpace</span> <span class="k">import</span> <span class="n">MutationSpace</span>
+<span class="kn">from</span> <span class="nn">dnachisel.SequencePattern</span> <span class="k">import</span> <span class="n">SequencePattern</span><span class="p">,</span> <span class="n">DnaNotationPattern</span>
+<span class="kn">from</span> <span class="nn">dnachisel.Location</span> <span class="k">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">dnachisel.biotools</span> <span class="k">import</span> <span class="n">reverse_complement</span>
+<span class="kn">from</span> <span class="nn">dnachisel.DnaOptimizationProblem.DnaOptimizationProblem</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">DnaOptimizationProblem</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">dnachisel.DnaOptimizationProblem.NoSolutionError</span> <span class="k">import</span> <span class="n">NoSolutionError</span>
+<span class="kn">from</span> <span class="nn">..Specification</span> <span class="k">import</span> <span class="n">Specification</span><span class="p">,</span> <span class="n">SpecEvaluation</span>
 
-
-<span class="c1"># from .VoidSpecification import VoidSpecification</span>
-<span class="kn">from</span> <span class="nn">..SpecEvaluation</span> <span class="k">import</span> <span class="n">SpecEvaluation</span>
 <span class="kn">from</span> <span class="nn">.EnforceSequence</span> <span class="k">import</span> <span class="n">EnforceSequence</span>
-<span class="kn">from</span> <span class="nn">..MutationSpace</span> <span class="k">import</span> <span class="n">MutationSpace</span>
-<span class="kn">from</span> <span class="nn">..SequencePattern</span> <span class="k">import</span> <span class="n">SequencePattern</span><span class="p">,</span> <span class="n">DnaNotationPattern</span>
-<span class="kn">from</span> <span class="nn">..Location</span> <span class="k">import</span> <span class="n">Location</span>
-<span class="kn">from</span> <span class="nn">..biotools</span> <span class="k">import</span> <span class="n">reverse_complement</span>
-<span class="kn">from</span> <span class="nn">..DnaOptimizationProblem</span> <span class="k">import</span> <span class="n">DnaOptimizationProblem</span><span class="p">,</span> <span class="n">NoSolutionError</span>
 
 
 <div class="viewcode-block" id="EnforcePatternOccurence"><a class="viewcode-back" href="../../../ref/builtin_specifications.html#dnachisel.builtin_specifications.EnforcePatternOccurence">[docs]</a><span class="k">class</span> <span class="nc">EnforcePatternOccurence</span><span class="p">(</span><span class="n">Specification</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Enforce a number of occurences of the given pattern in the sequence.</span>
 
+<span class="sd">    Shorthand for annotations: &quot;insert&quot; (although this specification can be</span>
+<span class="sd">    used to both insert new occurences of a pattern, or destroy surnumerary</span>
+<span class="sd">    patterns)</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    pattern</span>
-<span class="sd">      A SequencePattern or DnaNotationPattern</span>
-
-<span class="sd">    enzyme</span>
-<span class="sd">      Enzyme name, can be provided instead of a pattern</span>
+<span class="sd">      A SequencePattern or DnaNotationPattern or a string such as &quot;AATTG&quot;,</span>
+<span class="sd">      &quot;BsmBI_site&quot;, etc.</span>
 
 <span class="sd">    occurences</span>
 <span class="sd">      Desired number of occurences of the pattern.</span>
@@ -276,7 +285,7 @@
 
     <span class="n">best_possible_score</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">priority</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="n">genbank_args</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;pattern&quot;</span><span class="p">,</span> <span class="s2">&quot;occurences&quot;</span><span class="p">)</span>
+    <span class="n">shorthand_name</span> <span class="o">=</span> <span class="s2">&quot;insert&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">occurences</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">boost</span><span class="o">=</span><span class="mf">1.0</span>
@@ -285,10 +294,7 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">pattern</span> <span class="o">=</span> <span class="n">SequencePattern</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="n">pattern</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-            <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_tuple</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">boost</span> <span class="o">=</span> <span class="n">boost</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">occurences</span> <span class="o">=</span> <span class="n">occurences</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">center</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">boost</span> <span class="o">=</span> <span class="n">boost</span>
@@ -298,7 +304,7 @@
 
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Score the difference between expected and observed n_occurences.&quot;&quot;&quot;</span>
-        <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="p">)</span>
         <span class="n">score</span> <span class="o">=</span> <span class="o">-</span><span class="nb">abs</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">occurences</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">score</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -368,7 +374,7 @@
                     <span class="k">return</span>
                 <span class="k">except</span> <span class="n">NoSolutionError</span><span class="p">:</span>
                     <span class="k">pass</span>
-        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">reverse</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">in_both_strands</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">reverse</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">is_palyndromic</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">insert_pattern_in_problem</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">return</span>
         <span class="k">raise</span> <span class="n">NoSolutionError</span><span class="p">(</span>
@@ -394,10 +400,11 @@
                     <span class="n">new_occurence_cst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span>
                         <span class="n">occurences</span><span class="o">=</span><span class="n">n_matches</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
                     <span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">DnaOptimizationProblem</span><span class="p">)</span>
                     <span class="n">new_problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span>
                         <span class="n">sequence</span><span class="o">=</span><span class="n">new_problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span>
                         <span class="n">constraints</span><span class="o">=</span><span class="n">other_constraints</span> <span class="o">+</span> <span class="p">[</span><span class="n">new_occurence_cst</span><span class="p">],</span>
-                        <span class="n">mutation_space</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">mutation_space</span>
+                        <span class="n">mutation_space</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">mutation_space</span><span class="p">,</span>
                     <span class="p">)</span>
                     <span class="n">new_occurence_cst</span><span class="o">.</span><span class="n">insert_pattern_in_problem</span><span class="p">(</span><span class="n">new_problem</span><span class="p">)</span>
                 <span class="n">problem</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">new_problem</span><span class="o">.</span><span class="n">sequence</span>
@@ -426,5 +433,8 @@
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

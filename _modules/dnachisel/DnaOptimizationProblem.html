@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,7 +7,9 @@
     
       <link rel="stylesheet" href="../../_static/pygments.css">
       <link rel="stylesheet" href="../../_static/theme.css">
-      <link rel="stylesheet" href="../../_static/css/custom.css">
+      <link rel="stylesheet" href="../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../_static/css/press_main.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
 
@@ -27,7 +27,8 @@
   <link rel="search" title="Search" href="../../search.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../../index.html" class="home-link">
     
       <img class="logo" src="../../_static/html_logo.png" alt="doit logo"/>
@@ -61,12 +62,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -104,12 +108,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -249,6 +256,7 @@
     <span class="n">find_specification_in_feature</span><span class="p">,</span>
     <span class="n">sequences_differences_array</span><span class="p">,</span>
     <span class="n">sequences_differences_segments</span><span class="p">,</span>
+    <span class="n">load_record</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.Specification</span> <span class="k">import</span> <span class="n">Specification</span><span class="p">,</span> <span class="n">SpecificationsSet</span>
 <span class="kn">from</span> <span class="nn">.SpecEvaluation</span> <span class="k">import</span> <span class="p">(</span>
@@ -332,19 +340,31 @@
 <span class="sd">      mutation space will be left to None and computed at problem</span>
 <span class="sd">      initialization (which can be slightly compute-intensive), however some</span>
 <span class="sd">      core DNA Chisel methods will create optimization problems with a provided</span>
-<span class="sd">      mutation_space to save computing time.  </span>
+<span class="sd">      mutation_space to save computing time.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 
-<span class="sd">    sequence</span>
-<span class="sd">      The sequence</span>
+<span class="sd">    randomization_threshold</span>
+<span class="sd">      The algorithm will use an exhaustive search when the size of the mutation</span>
+<span class="sd">      space (=the number of possible variants) is above this threshold, and</span>
+<span class="sd">      a (guided) random search when it is above.</span>
 
-<span class="sd">    constraints</span>
-<span class="sd">      The list of constraints</span>
+<span class="sd">    max_random_iters</span>
+<span class="sd">      When using a random search, stop after this many iterations</span>
 
-<span class="sd">    objectives</span>
-<span class="sd">      The list of objectives</span>
+<span class="sd">    mutations_per_iteration = 2</span>
+<span class="sd">      When using a random search, produce this many sequence mutations each</span>
+<span class="sd">      iteration.</span>
+
+<span class="sd">    optimization_stagnation_tolerance</span>
+<span class="sd">      When using a random search, stop if the score hasn&#39;t improved in</span>
+<span class="sd">      the last &quot;this many&quot; iterations</span>
+
+<span class="sd">    local_extensions</span>
+<span class="sd">      Try local resolution several times if it fails, increasing the mutable</span>
+<span class="sd">      zone by [N1, N2...] nucleotides on each side, until resolution works.</span>
+<span class="sd">      (by default, an extension of 0bp is tried, then 5bp.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -358,9 +378,22 @@
 <span class="sd">    e.g. for the mutation of a whole codon ``(3,6): [&quot;ATT&quot;, &quot;ACT&quot;, &quot;AGT&quot;]``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="c1"># If a local problem admits more than N variants, use a random search:</span>
     <span class="n">randomization_threshold</span> <span class="o">=</span> <span class="mi">10000</span>
+
+    <span class="c1"># When using a random search, stop after N iterations</span>
     <span class="n">max_random_iters</span> <span class="o">=</span> <span class="mi">1000</span>
-    <span class="n">n_mutations</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="c1"># When using a random search, produce N sequence mutations each iteration</span>
+    <span class="n">mutations_per_iteration</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="c1"># When using a random search for optimization, stop if the score hasn&#39;t</span>
+    <span class="c1"># improved in the last N iterations</span>
+    <span class="n">optimization_stagnation_tolerance</span> <span class="o">=</span> <span class="mi">100</span>
+
+    <span class="c1"># Try local resolution several times if it fails, increasing the mutable zone</span>
+    <span class="c1"># by [N1, N2...] nucleotides on each side, until it works</span>
+    <span class="c1"># (by default, an extension of 0bp is tried, then 5bp.</span>
     <span class="n">local_extensions</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
@@ -391,7 +424,6 @@
 
 <div class="viewcode-block" id="DnaOptimizationProblem.initialize"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Variables initialization before solving.&quot;&quot;&quot;</span>
-
         <span class="c1"># Uncompress SpecificationSets into</span>
         <span class="k">for</span> <span class="n">specs</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constraints</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span><span class="p">):</span>
             <span class="n">specsets</span> <span class="o">=</span> <span class="p">[</span>
@@ -426,6 +458,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">constraints_before</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_constraints_before</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_before</span>
@@ -442,15 +475,21 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">sequence</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objectives_before</span>
 
-<div class="viewcode-block" id="DnaOptimizationProblem.constraints_evaluations"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.constraints_evaluations">[docs]</a>    <span class="k">def</span> <span class="nf">constraints_evaluations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DnaOptimizationProblem.constraints_evaluations"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.constraints_evaluations">[docs]</a>    <span class="k">def</span> <span class="nf">constraints_evaluations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">autopass_constraints</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a list of the evaluations of each constraint of the canvas.</span>
+
+<span class="sd">        The &quot;autopass_constraints&quot; enables to just assume that constraints</span>
+<span class="sd">        enforced by the mutation space are verified.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ProblemConstraintsEvaluations</span><span class="o">.</span><span class="n">from_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">ProblemConstraintsEvaluations</span><span class="o">.</span><span class="n">from_problem</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">autopass_constraints</span><span class="o">=</span><span class="n">autopass_constraints</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="DnaOptimizationProblem.all_constraints_pass"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.all_constraints_pass">[docs]</a>    <span class="k">def</span> <span class="nf">all_constraints_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return True iff the current problem sequence passes all constraints.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">()</span><span class="o">.</span><span class="n">all_evaluations_pass</span><span class="p">()</span></div>
+        <span class="n">evals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">(</span><span class="n">autopass_constraints</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">evals</span><span class="o">.</span><span class="n">all_evaluations_pass</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="nf">constraints_text_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">failed_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">evals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">()</span>
@@ -495,7 +534,7 @@
         <span class="sd">&quot;&quot;&quot;Solve all constraints by successive sets of random mutations.</span>
 
 <span class="sd">        This method modifies the canvas sequence by applying a number</span>
-<span class="sd">        ``n_mutations`` of random mutations. The constraints are then evaluated</span>
+<span class="sd">        ``mutations_per_iteration`` of random mutations. The constraints are then evaluated</span>
 <span class="sd">        on the new sequence. If all constraints pass, the new sequence becomes</span>
 <span class="sd">        the canvas&#39;s new sequence.</span>
 <span class="sd">        If not all constraints pass, the sum of all scores from failing</span>
@@ -518,7 +557,8 @@
                 <span class="k">return</span>
             <span class="n">previous_sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">apply_random_mutations</span><span class="p">(</span>
-                <span class="n">n_mutations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_mutations</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span>
+                <span class="n">n_mutations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mutations_per_iteration</span><span class="p">,</span>
+                <span class="n">sequence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span>
             <span class="p">)</span>
 
             <span class="n">evaluations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">()</span>
@@ -628,7 +668,9 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">randomization_threshold</span>
                 <span class="p">)</span>
                 <span class="n">local_problem</span><span class="o">.</span><span class="n">max_random_iters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_random_iters</span>
-                <span class="n">local_problem</span><span class="o">.</span><span class="n">n_mutations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_mutations</span>
+                <span class="n">local_problem</span><span class="o">.</span><span class="n">mutations_per_iteration</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mutations_per_iteration</span>
+                <span class="p">)</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">constraint</span><span class="p">,</span> <span class="s2">&quot;resolution_heuristic&quot;</span><span class="p">):</span>
                         <span class="n">constraint</span><span class="o">.</span><span class="n">resolution_heuristic</span><span class="p">(</span><span class="n">local_problem</span><span class="p">)</span>
@@ -756,7 +798,6 @@
 <div class="viewcode-block" id="DnaOptimizationProblem.optimize_by_random_mutations"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.optimize_by_random_mutations">[docs]</a>    <span class="k">def</span> <span class="nf">optimize_by_random_mutations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_constraints_pass</span><span class="p">():</span>
             <span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">()</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -777,26 +818,33 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">best_possible_score</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">iters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_random_iters</span>
+        <span class="n">stagnating_iterations</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">iter_bar</span><span class="p">(</span><span class="n">mutation</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">iters</span><span class="p">)):</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">best_possible_score</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
                 <span class="n">score</span> <span class="o">&gt;=</span> <span class="n">best_possible_score</span>
             <span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">mutation__index</span><span class="o">=</span><span class="n">iters</span><span class="p">)</span>
                 <span class="k">break</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimization_stagnation_tolerance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">stagnating_iterations</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimization_stagnation_tolerance</span>
+            <span class="p">):</span>
+                <span class="k">break</span>
 
             <span class="n">previous_sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">apply_random_mutations</span><span class="p">(</span>
-                <span class="n">n_mutations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_mutations</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span>
+                <span class="n">n_mutations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mutations_per_iteration</span><span class="p">,</span>
+                <span class="n">sequence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_constraints_pass</span><span class="p">():</span>
                 <span class="n">new_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective_scores_sum</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">new_score</span> <span class="o">&gt;</span> <span class="n">score</span><span class="p">:</span>
                     <span class="n">score</span> <span class="o">=</span> <span class="n">new_score</span>
+                    <span class="n">stagnating_iterations</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">previous_sequence</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">previous_sequence</span></div>
-        <span class="c1">#  assert self.all_constraints_pass()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">previous_sequence</span>
+            <span class="n">stagnating_iterations</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
     <span class="k">def</span> <span class="nf">optimize_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objective</span><span class="p">):</span>
 
@@ -848,7 +896,12 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">randomization_threshold</span>
             <span class="p">)</span>
             <span class="n">local_problem</span><span class="o">.</span><span class="n">max_random_iters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_random_iters</span>
-            <span class="n">local_problem</span><span class="o">.</span><span class="n">n_mutations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_mutations</span>
+            <span class="n">local_problem</span><span class="o">.</span><span class="n">optimization_stagnation_tolerance</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">optimization_stagnation_tolerance</span>
+            <span class="p">)</span>
+            <span class="n">local_problem</span><span class="o">.</span><span class="n">mutations_per_iteration</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mutations_per_iteration</span>
+            <span class="p">)</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="s2">&quot;optimization_heuristic&quot;</span><span class="p">):</span>
                 <span class="n">objective</span><span class="o">.</span><span class="n">optimization_heuristic</span><span class="p">(</span><span class="n">local_problem</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -874,21 +927,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">optimize_objective</span><span class="p">(</span><span class="n">objective</span><span class="o">=</span><span class="n">objective</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DnaOptimizationProblem.from_record"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.from_record">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_record</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="n">specifications_dict</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">from_record</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="n">specifications_dict</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;TODO: docs&quot;&quot;&quot;</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;.fa&quot;</span><span class="p">,</span> <span class="s2">&quot;.fasta&quot;</span><span class="p">)):</span>
-                <span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">&quot;fasta&quot;</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">record</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;.gb&quot;</span><span class="p">,</span> <span class="s2">&quot;.gbk&quot;</span><span class="p">)):</span>
-                <span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">&quot;genbank&quot;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Record is either a Biopython record or a &quot;</span>
-                    <span class="s2">&quot;file path ending in .gb, .gbk, .fa, .fasta.&quot;</span>
-                <span class="p">)</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="n">record</span>
+            <span class="n">record</span> <span class="o">=</span> <span class="n">load_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">specifications_dict</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
             <span class="n">specifications_dict</span> <span class="o">=</span> <span class="n">DEFAULT_SPECIFICATIONS_DICT</span>
-        <span class="n">parameters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">sequence</span><span class="o">=</span><span class="n">record</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="p">[],</span> <span class="n">objectives</span><span class="o">=</span><span class="p">[])</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">sequence</span><span class="o">=</span><span class="n">record</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="p">[],</span> <span class="n">objectives</span><span class="o">=</span><span class="p">[],</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span>
+        <span class="p">)</span>
         <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">feature</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s2">&quot;misc_feature&quot;</span><span class="p">:</span>
                 <span class="k">continue</span>
@@ -898,7 +947,6 @@
                 <span class="n">feature</span><span class="p">,</span> <span class="n">specifications_dict</span>
             <span class="p">)</span>
             <span class="n">parameters</span><span class="p">[</span><span class="n">role</span> <span class="o">+</span> <span class="s2">&quot;s&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
-
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">parameters</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">to_record</span><span class="p">(</span>
@@ -911,6 +959,7 @@
         <span class="n">with_objectives</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">with_sequence_edits</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">colors_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">use_short_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">record</span> <span class="o">=</span> <span class="n">sequence_to_biopython_record</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
 
@@ -921,6 +970,7 @@
                     <span class="n">role</span><span class="o">=</span><span class="s2">&quot;constraint&quot;</span><span class="p">,</span>
                     <span class="n">feature_type</span><span class="o">=</span><span class="n">features_type</span><span class="p">,</span>
                     <span class="n">colors_dict</span><span class="o">=</span><span class="n">colors_dict</span><span class="p">,</span>
+                    <span class="n">use_short_label</span><span class="o">=</span><span class="n">use_short_labels</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="k">for</span> <span class="n">cst</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraints</span>
                 <span class="k">if</span> <span class="n">cst</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
@@ -931,6 +981,7 @@
                     <span class="n">role</span><span class="o">=</span><span class="s2">&quot;objective&quot;</span><span class="p">,</span>
                     <span class="n">feature_type</span><span class="o">=</span><span class="n">features_type</span><span class="p">,</span>
                     <span class="n">colors_dict</span><span class="o">=</span><span class="n">colors_dict</span><span class="p">,</span>
+                    <span class="n">use_short_label</span><span class="o">=</span><span class="n">use_short_labels</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span>
             <span class="p">]</span>
@@ -952,6 +1003,9 @@
     <span class="k">def</span> <span class="nf">sequence_edits_as_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">sequences_differences_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_before</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">number_of_edits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_edits_as_array</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
     <span class="k">def</span> <span class="nf">sequence_edits_as_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">):</span>
 
         <span class="n">segments</span> <span class="o">=</span> <span class="n">sequences_differences_segments</span><span class="p">(</span>
@@ -959,12 +1013,22 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="n">Location</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span><span class="o">.</span><span class="n">to_biopython_feature</span><span class="p">(</span>
-                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;was &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_before</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">],</span> <span class="n">is_edit</span><span class="o">=</span><span class="s2">&quot;true&quot;</span>
+                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">=&gt;</span><span class="si">%s</span><span class="s2">&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence_before</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]),</span>
+                <span class="n">is_edit</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">,</span>
+                <span class="n">ApEinfo_fwdcolor</span><span class="o">=</span><span class="s2">&quot;#ff0000&quot;</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#ff0000&quot;</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="n">segments</span>
         <span class="p">]</span>
 
-<div class="viewcode-block" id="DnaOptimizationProblem.optimize_with_report"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.optimize_with_report">[docs]</a>    <span class="k">def</span> <span class="nf">optimize_with_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="s2">&quot;My project&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="DnaOptimizationProblem.optimize_with_report"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.DnaOptimizationProblem.optimize_with_report">[docs]</a>    <span class="k">def</span> <span class="nf">optimize_with_report</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">target</span><span class="p">,</span>
+        <span class="n">project_name</span><span class="o">=</span><span class="s2">&quot;My project&quot;</span><span class="p">,</span>
+        <span class="n">file_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">file_content</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Resolve constraints, optimize objectives, write a multi-file report.</span>
 
 <span class="sd">        The report&#39;s content may vary depending on the optimization&#39;s success.</span>
@@ -980,9 +1044,6 @@
 <span class="sd">        project_name</span>
 <span class="sd">          Project name to write on PDF reports</span>
 
-<span class="sd">        **solver_parameters</span>
-<span class="sd">          Extra keyword arguments passed to ``problem.resolve_constraints()``</span>
-
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
@@ -996,7 +1057,13 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">resolve_constraints</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">NoSolutionError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;No solution found: making report&quot;</span><span class="p">)</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">write_no_solution_report</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">write_no_solution_report</span><span class="p">(</span>
+                <span class="n">target</span><span class="p">,</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="n">error</span><span class="p">,</span>
+                <span class="n">file_path</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span>
+                <span class="n">file_content</span><span class="o">=</span><span class="n">file_content</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;No solution found in zone [</span><span class="si">%d</span><span class="s2">, </span><span class="si">%d</span><span class="s2">]: </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span>
                 <span class="n">start</span><span class="p">,</span>
@@ -1008,7 +1075,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Success! Generating report.&quot;</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">write_optimization_report</span><span class="p">(</span>
-            <span class="n">target</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">project_name</span><span class="o">=</span><span class="n">project_name</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">project_name</span><span class="o">=</span><span class="n">project_name</span><span class="p">,</span>
+            <span class="n">file_path</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span>
+            <span class="n">file_content</span><span class="o">=</span><span class="n">file_content</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;Optimization successful.&quot;</span><span class="p">,</span> <span class="n">data</span></div></div>
 </pre></div>
@@ -1024,5 +1095,8 @@
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

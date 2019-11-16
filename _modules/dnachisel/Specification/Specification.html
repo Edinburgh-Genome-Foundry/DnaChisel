@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnachisel.Specification.Specification</title>
+    
+      <link rel="stylesheet" href="../../../_static/pygments.css">
+      <link rel="stylesheet" href="../../../_static/theme.css">
+      <link rel="stylesheet" href="../../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+      
+      <script src="../../../_static/theme-vendors.js"></script>
+      <script src="../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../index.html" class="home-link">
+    
+      <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../ref/core_classes.html" class="reference internal ">Core Classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/constraints_reports.html" class="reference internal ">Constraints reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/cli.html" class="reference internal ">Command Line Interface</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../notes.html" class="reference internal ">Notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Using Genbanks</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../genbank/genbank_api.html" class="reference internal ">Genbank API</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../genbank/genbank_notes.html" class="reference internal ">Genbank usage notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnachisel.Specification.Specification</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for dnachisel.Specification.Specification</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Base class for specification.</span>
+
+<span class="sd">Notable features implemented here:</span>
+
+<span class="sd">- Many empty methods that features subclass will overwrite</span>
+<span class="sd">- Feature import/export from/to Genbank features.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">..Location</span> <span class="k">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">.FeatureRepresentationMixin</span> <span class="k">import</span> <span class="n">FeatureRepresentationMixin</span>
+
+
+<div class="viewcode-block" id="Specification"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.Specification">[docs]</a><span class="k">class</span> <span class="nc">Specification</span><span class="p">(</span><span class="n">FeatureRepresentationMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;General class to define specifications to optimize.</span>
+
+<span class="sd">    Note that all specifications have a ``boost`` attribute that is a</span>
+<span class="sd">    multiplicator that will be used when computing the global specification</span>
+<span class="sd">    score of a problem with ``problem.all_objectives_score()``.</span>
+
+<span class="sd">    New types of specifications are defined by subclassing ``Specification`` and</span>
+<span class="sd">    providing a custom ``evaluate`` and ``localized`` methods.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+<span class="sd">    evaluate</span>
+<span class="sd">      function (sequence) =&gt; SpecEvaluation</span>
+
+<span class="sd">    boost</span>
+<span class="sd">      Relative importance of the Specification&#39;s score in a multi-specification</span>
+<span class="sd">      problem.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    best_possible_score</span>
+<span class="sd">      Best score that the specification can achieve. Used by the optimization</span>
+<span class="sd">      algorithm to understand when no more optimization is required.</span>
+
+<span class="sd">    optimize_passively (boolean)</span>
+<span class="sd">      Indicates that there should not be a pass of the optimization algorithm</span>
+<span class="sd">      to optimize this objective. Instead, this objective is simply taken into</span>
+<span class="sd">      account when optimizing other objectives.</span>
+
+<span class="sd">    enforced_by_nucleotide_restrictions (boolean)</span>
+<span class="sd">      When the spec is used as a constraints, this indicates that the</span>
+<span class="sd">      constraint will initially restrict the mutation space in a way that</span>
+<span class="sd">      ensures that the constraint will always be valid. The constraint does</span>
+<span class="sd">      not need to be evaluated again, which speeds up the resolution algorithm.</span>
+
+<span class="sd">    priority</span>
+<span class="sd">      Value used to sort the specifications and solve/optimize them in order,</span>
+<span class="sd">      with highest priority first.</span>
+
+<span class="sd">    shorthand_name</span>
+<span class="sd">      Shorter name for the specification class that will be recognized when</span>
+<span class="sd">      parsing annotations from genbanks.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">best_possible_score</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">optimize_passively</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">enforced_by_nucleotide_restrictions</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">priority</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">shorthand_name</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">is_focus</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boost</span> <span class="o">=</span> <span class="n">boost</span>
+        <span class="k">if</span> <span class="n">evaluate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span> <span class="o">=</span> <span class="n">evaluate</span>
+
+<div class="viewcode-block" id="Specification.localized"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.Specification.localized">[docs]</a>    <span class="k">def</span> <span class="nf">localized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a modified version of the specification for the case where</span>
+<span class="sd">        sequence modifications are only performed inside the provided location.</span>
+
+<span class="sd">        For instance if an specification concerns local GC content, and we are</span>
+<span class="sd">        only making local mutations to destroy a restriction site, then we only</span>
+<span class="sd">        need to check the local GC content around the restriction site after</span>
+<span class="sd">        each mutation (and not compute it for the whole sequence), so</span>
+<span class="sd">        ``EnforceGCContent.localized(location)`` will return an specification</span>
+<span class="sd">        that only looks for GC content around the provided location.</span>
+
+<span class="sd">        If an specification concerns a DNA segment that is completely disjoint</span>
+<span class="sd">        from the provided location, this must return None.</span>
+
+<span class="sd">        Must return an object of class ``Constraint``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Specification.copy_with_changes"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.Specification.copy_with_changes">[docs]</a>    <span class="k">def</span> <span class="nf">copy_with_changes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a copy of the Specification with modified properties.</span>
+
+<span class="sd">        For instance ``new_spec = spec.copy_with_changes(boost=10)``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_specification</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">new_specification</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_specification</span></div>
+
+<div class="viewcode-block" id="Specification.shifted"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.Specification.shifted">[docs]</a>    <span class="k">def</span> <span class="nf">shifted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shift</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Shift the location of the specification.</span>
+
+<span class="sd">        Some specification classes may have a special method to do side effects</span>
+<span class="sd">        when shifting the location.</span>
+
+<span class="sd">        Location shifting is used in particular when solving circular DNA</span>
+<span class="sd">        optimization problems.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_location</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="n">shift</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">new_location</span><span class="p">,</span> <span class="n">derived_from</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Specification.initialized_on_problem"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.Specification.initialized_on_problem">[docs]</a>    <span class="k">def</span> <span class="nf">initialized_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="s2">&quot;constraint&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Complete specification initialization when the sequence gets known.</span>
+
+<span class="sd">        Some specifications like to know what their role is and on which</span>
+<span class="sd">        sequence they are employed before they complete some values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Specification.label"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.Specification.label">[docs]</a>    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">role</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">with_location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">assignment_symbol</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span>
+        <span class="n">use_short_form</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a string label for this specification.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        role</span>
+<span class="sd">          Either &#39;constraint&#39; or &#39;objective&#39; (for prefixing the label with @</span>
+<span class="sd">          or ~), or None.</span>
+
+<span class="sd">        with_location</span>
+<span class="sd">          If true, the location will appear in the label.</span>
+
+<span class="sd">        assignment_symbol</span>
+<span class="sd">          Indicates whether to use &quot;:&quot; or &quot;=&quot; or anything else when indicating</span>
+<span class="sd">          parameters values.</span>
+
+<span class="sd">        use_short_form</span>
+<span class="sd">          If True, the label will use self.short_label(), so for instance</span>
+<span class="sd">          AvoidPattern(BsmBI_site) will become &quot;no BsmBI&quot;. How this is handled</span>
+<span class="sd">          is dependent on the specification.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;constraint&quot;</span><span class="p">:</span> <span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="s2">&quot;objective&quot;</span><span class="p">:</span> <span class="s2">&quot;~&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}[</span><span class="n">role</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">use_short_form</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_label</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">with_location</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">+=</span> <span class="s2">&quot;, </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span>
+            <span class="k">return</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">label</span>
+        <span class="k">if</span> <span class="n">with_location</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;location&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">:</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="s2">&quot;[</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_parameters</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">params</span> <span class="o">==</span> <span class="p">[]:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="s2">&quot;(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">assignment_symbol</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span>
+                    <span class="k">else</span> <span class="n">p</span>
+                    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">prefix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">params</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Specification.short_label"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.Specification.short_label">[docs]</a>    <span class="k">def</span> <span class="nf">short_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Shorter, less precise label to be used in tables, reports, etc.</span>
+
+<span class="sd">        This is meant for specifications such as EnforceGCContent(0.4, 0.6)</span>
+<span class="sd">        to be represented as &#39;40-60% GC&#39; in reports tables etc..</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span></div>
+
+<div class="viewcode-block" id="Specification.label_parameters"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.Specification.label_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">label_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;In subclasses, returns a list of the creation parameters.</span>
+
+<span class="sd">        For instance [(&#39;pattern&#39;, &#39;ATT&#39;), (&#39;occurences&#39;, 2)]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;By default, represent the Specification using its label()&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;By default, represent the Specification using its label()&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Specification.restrict_nucleotides"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.Specification.restrict_nucleotides">[docs]</a>    <span class="k">def</span> <span class="nf">restrict_nucleotides</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Restrict the mutation space to speed up optimization.</span>
+
+<span class="sd">        This method only kicks in when this specification is used as a</span>
+<span class="sd">        constraint. By default it does nothing, but subclasses such as</span>
+<span class="sd">        EnforceTranslation, AvoidChanges, EnforceSequence, etc. have custom</span>
+<span class="sd">        methods.</span>
+
+<span class="sd">        In the code, this method is run during the initialize() step of</span>
+<span class="sd">        DNAOptimizationProblem, when the MutationSpace is created for each</span>
+<span class="sd">        constraint</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="Specification.as_passive_objective"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.Specification.as_passive_objective">[docs]</a>    <span class="k">def</span> <span class="nf">as_passive_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a copy with optimize_passively set to true.</span>
+
+<span class="sd">        &quot;Optimize passively&quot; means that when the specification is used as an</span>
+<span class="sd">        objective, the solver will not do a specific pass to optimize this</span>
+<span class="sd">        specification, however this specification&#39;s score will be taken into</span>
+<span class="sd">        account in the global score when optimizing other objectives, and</span>
+<span class="sd">        may therefore influence the final sequence.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span><span class="n">optimize_passively</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_copy_with_full_span_if_no_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return either self, or a copy with location &quot;everywhere&quot;.</span>
+
+<span class="sd">        And by &quot;everywhere&quot; we mean Location(0, L) where L is the problem&#39;s</span>
+<span class="sd">        sequence length.</span>
+
+<span class="sd">        Most Specifications use this method in their &quot;initialized_on_problem()&quot;</span>
+<span class="sd">        custom method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">))</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span></div>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>

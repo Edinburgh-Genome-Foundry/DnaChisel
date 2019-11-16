@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnachisel.MutationSpace.MutationSpace</title>
+    
+      <link rel="stylesheet" href="../../../_static/pygments.css">
+      <link rel="stylesheet" href="../../../_static/theme.css">
+      <link rel="stylesheet" href="../../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+      
+      <script src="../../../_static/theme-vendors.js"></script>
+      <script src="../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../index.html" class="home-link">
+    
+      <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../ref/core_classes.html" class="reference internal ">Core Classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/constraints_reports.html" class="reference internal ">Constraints reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/cli.html" class="reference internal ">Command Line Interface</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../notes.html" class="reference internal ">Notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Using Genbanks</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../genbank/genbank_api.html" class="reference internal ">Genbank API</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../genbank/genbank_notes.html" class="reference internal ">Genbank usage notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnachisel.MutationSpace.MutationSpace</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for dnachisel.MutationSpace.MutationSpace</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Define MutationSpace&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">.MutationChoice</span> <span class="k">import</span> <span class="n">MutationChoice</span>
+
+
+<div class="viewcode-block" id="MutationSpace"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.MutationSpace.MutationSpace">[docs]</a><span class="k">class</span> <span class="nc">MutationSpace</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class for mutation space (set of sequence segments and their variants).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    choices_index</span>
+<span class="sd">      A list L such that L[i] gives the MutationChoice governing the mutations</span>
+<span class="sd">      allowed at position i (ansd possibly around i)</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; # BEWARE: below, similar mutation choices are actually the SAME OBJECT</span>
+<span class="sd">    &gt;&gt;&gt; space = MutationSpace([</span>
+<span class="sd">            MutationChoice((0, 2), {&#39;AT&#39;, &#39;TG&#39;}),</span>
+<span class="sd">            MutationChoice((0, 2), {&#39;AT&#39;, &#39;TG&#39;}),</span>
+<span class="sd">            MutationChoice((2, 5), {&#39;TTC&#39;, &#39;TTA&#39;, &#39;TTT&#39;}), # same</span>
+<span class="sd">            MutationChoice((2, 5), {&#39;TTC&#39;, &#39;TTA&#39;, &#39;TTT&#39;}), #</span>
+<span class="sd">            MutationChoice((2, 5), {&#39;TTC&#39;, &#39;TTA&#39;, &#39;TTT&#39;}),</span>
+<span class="sd">        ])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choices_index</span><span class="p">,</span> <span class="n">left_padding</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        choices_index = [MutationChoice(0-2), MutationChoice(0-2),</span>
+<span class="sd">                         MutationChoice(3-5), MutationChoice(3-5),</span>
+<span class="sd">                         MutationChoice(3-5), ... ]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">choices_index</span> <span class="o">=</span> <span class="n">left_padding</span> <span class="o">*</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="n">choices_index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">choices_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unsolvable_segments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">determined_segments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multichoices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">choices_index</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choices_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="n">c</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">choices_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+                <span class="n">nvariants</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">variants</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">nvariants</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">unsolvable_segments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">segment</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">nvariants</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">determined_segments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">segment</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">variants</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">multichoices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">choices_span</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return (start, end), segment where mutiple choices are possible&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">multichoices</span> <span class="o">==</span> <span class="p">[]:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">multichoices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">multichoices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end</span>
+
+<div class="viewcode-block" id="MutationSpace.constrain_sequence"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.MutationSpace.MutationSpace.constrain_sequence">[docs]</a>    <span class="k">def</span> <span class="nf">constrain_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a version of the sequence compatible with the mutation space.</span>
+
+<span class="sd">        All nucleotides of the sequence that are incompatible with the</span>
+<span class="sd">        mutation space are replaced by nucleotides compatible with the space.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_sequence</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">sequence</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices_list</span><span class="p">:</span>
+            <span class="n">variants</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">variants</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">variants</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Cannot constrain a sequence when some &quot;</span>
+                    <span class="s2">&quot;positions are unsolvable, in location &quot;</span>
+                    <span class="s2">&quot;(</span><span class="si">%d</span><span class="s2">-</span><span class="si">%d</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">choice</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">variants</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">variant</span> <span class="o">=</span> <span class="n">variants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">new_sequence</span><span class="p">[</span><span class="n">choice</span><span class="o">.</span><span class="n">start</span> <span class="p">:</span> <span class="n">choice</span><span class="o">.</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">variant</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">sequence</span><span class="p">[</span><span class="n">choice</span><span class="o">.</span><span class="n">start</span> <span class="p">:</span> <span class="n">choice</span><span class="o">.</span><span class="n">end</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">variants</span><span class="p">:</span>
+                <span class="n">variant</span> <span class="o">=</span> <span class="n">variants</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">variants</span><span class="p">))]</span>
+                <span class="n">new_sequence</span><span class="p">[</span><span class="n">choice</span><span class="o">.</span><span class="n">start</span> <span class="p">:</span> <span class="n">choice</span><span class="o">.</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">variant</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">new_sequence</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MutationSpace.localized"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.MutationSpace.MutationSpace.localized">[docs]</a>    <span class="k">def</span> <span class="nf">localized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a new version with only mutations overlaping the location.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">):</span>
+            <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">location</span><span class="o">.</span><span class="n">end</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="k">return</span> <span class="n">MutationSpace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">choices_index</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">],</span> <span class="n">left_padding</span><span class="o">=</span><span class="n">start</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">space_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the number of possible mutations&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multichoices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">variants</span><span class="p">)</span> <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">multichoices</span><span class="p">]</span>
+        <span class="c1"># np.prod(choices) can create overflows and warnings, so instead we use</span>
+        <span class="c1"># the mechanism below with log/exp and a min.</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()))</span>
+
+<div class="viewcode-block" id="MutationSpace.pick_random_mutations"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.MutationSpace.MutationSpace.pick_random_mutations">[docs]</a>    <span class="k">def</span> <span class="nf">pick_random_mutations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_mutations</span><span class="p">,</span> <span class="n">sequence</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Draw N random mutations&quot;&quot;&quot;</span>
+        <span class="n">n_mutations</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multichoices</span><span class="p">),</span> <span class="n">n_mutations</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_mutations</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multichoices</span><span class="p">))</span>
+            <span class="n">choice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multichoices</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="k">return</span> <span class="p">[(</span><span class="n">choice</span><span class="o">.</span><span class="n">segment</span><span class="p">,</span> <span class="n">choice</span><span class="o">.</span><span class="n">random_variant</span><span class="p">(</span><span class="n">sequence</span><span class="o">=</span><span class="n">sequence</span><span class="p">))]</span>
+
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">choice_</span><span class="o">.</span><span class="n">segment</span><span class="p">,</span> <span class="n">choice_</span><span class="o">.</span><span class="n">random_variant</span><span class="p">(</span><span class="n">sequence</span><span class="o">=</span><span class="n">sequence</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">choice_</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">multichoices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multichoices</span><span class="p">),</span> <span class="n">n_mutations</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">]</span></div>
+
+<div class="viewcode-block" id="MutationSpace.apply_random_mutations"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.MutationSpace.MutationSpace.apply_random_mutations">[docs]</a>    <span class="k">def</span> <span class="nf">apply_random_mutations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_mutations</span><span class="p">,</span> <span class="n">sequence</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a sequence with n random mutations applied.&quot;&quot;&quot;</span>
+        <span class="n">new_sequence</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">sequence</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">segment</span><span class="p">,</span> <span class="n">seq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pick_random_mutations</span><span class="p">(</span><span class="n">n_mutations</span><span class="p">,</span> <span class="n">sequence</span><span class="p">):</span>
+            <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">segment</span>
+            <span class="n">new_sequence</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">new_sequence</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MutationSpace.all_variants"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.MutationSpace.MutationSpace.all_variants">[docs]</a>    <span class="k">def</span> <span class="nf">all_variants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Iterate through all sequence variants in this mutation space.&quot;&quot;&quot;</span>
+        <span class="n">new_sequence</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">sequence</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+        <span class="n">choice_start</span><span class="p">,</span> <span class="n">choice_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices_span</span>
+        <span class="n">encoded_segment</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="n">choice_start</span><span class="p">:</span><span class="n">choice_end</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">sort_variants_by_distance_to_current</span><span class="p">(</span><span class="n">choice</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;This function iterates through the variants of a given choice</span>
+<span class="sd">            using not the alphabetical (which would bias AC over GT) but rather</span>
+<span class="sd">            a kind of &#39;least-change&#39; order, which biases towards solutions</span>
+<span class="sd">            close to the current sequence.</span>
+
+<span class="sd">            Impact on overall algorithm speed is &lt; 0.5%&quot;&quot;&quot;</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="n">choice</span><span class="o">.</span><span class="n">segment</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">choice</span><span class="o">.</span><span class="n">segment</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="n">alphasort</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">variants</span><span class="p">))}</span>
+
+            <span class="k">def</span> <span class="nf">sort_key</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+                <span class="k">return</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">alphasort</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">-</span> <span class="n">alphasort</span><span class="p">[</span><span class="n">current</span><span class="p">]),</span> <span class="n">v</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">variants</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">sort_key</span><span class="p">)</span>
+
+        <span class="n">variants_slots</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">[</span>
+                <span class="p">(</span><span class="n">choice_</span><span class="o">.</span><span class="n">segment</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">sort_variants_by_distance_to_current</span><span class="p">(</span><span class="n">choice_</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="k">for</span> <span class="n">choice_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">multichoices</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">variants</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">variants_slots</span><span class="p">):</span>
+            <span class="n">new_sequence</span><span class="p">[</span><span class="n">choice_start</span><span class="p">:</span><span class="n">choice_end</span><span class="p">]</span> <span class="o">=</span> <span class="n">encoded_segment</span>
+            <span class="k">for</span> <span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">),</span> <span class="n">variant</span><span class="p">)</span> <span class="ow">in</span> <span class="n">variants</span><span class="p">:</span>
+                <span class="n">new_sequence</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">variant</span>
+            <span class="k">yield</span> <span class="n">new_sequence</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MutationSpace.from_optimization_problem"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.MutationSpace.MutationSpace.from_optimization_problem">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_optimization_problem</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">new_constraints</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a mutation space from a DNA optimization problem.</span>
+
+<span class="sd">        This can be used either to initialize mutation spaces for new problems,</span>
+<span class="sd">        or to</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">sequence</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">sequence</span>
+
+        <span class="k">if</span> <span class="n">new_constraints</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">variants</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;ATGC&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="s2">&quot;TACG&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="s2">&quot;GCAT&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="s2">&quot;CGTA&quot;</span><span class="p">}</span>
+            <span class="n">choices_index</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">MutationChoice</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">variants</span><span class="o">=</span><span class="n">variants</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">is_any_nucleotide</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="n">constraints</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">choices_index</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">problem</span><span class="o">.</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">choices_index</span><span class="p">]</span>
+            <span class="n">constraints</span> <span class="o">=</span> <span class="n">new_constraints</span>
+        <span class="n">mutation_choices</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">MutationChoice</span><span class="p">(</span><span class="n">segment</span><span class="o">=</span><span class="n">choice</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">variants</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="n">choice</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="k">for</span> <span class="n">cst</span> <span class="ow">in</span> <span class="n">constraints</span>
+                <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">cst</span><span class="o">.</span><span class="n">restrict_nucleotides</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+            <span class="p">],</span>
+            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">choice</span><span class="p">:</span> <span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="n">choice</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">choice</span><span class="o">.</span><span class="n">start</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">mutation_choices</span><span class="p">:</span>
+            <span class="n">underlying_choices</span> <span class="o">=</span> <span class="n">choices_index</span><span class="p">[</span><span class="n">choice</span><span class="o">.</span><span class="n">start</span> <span class="p">:</span> <span class="n">choice</span><span class="o">.</span><span class="n">end</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">underlying_choices</span> <span class="o">==</span> <span class="p">[]:</span>
+                <span class="n">new_choice</span> <span class="o">=</span> <span class="n">choice</span>
+            <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">is_any_nucleotide</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">underlying_choices</span><span class="p">):</span>
+                <span class="n">new_choice</span> <span class="o">=</span> <span class="n">choice</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">new_choice</span> <span class="o">=</span> <span class="n">choice</span><span class="o">.</span><span class="n">merge_with</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">underlying_choices</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">new_choice</span><span class="o">.</span><span class="n">extract_varying_region</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">choice</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">choices_index</span><span class="p">):</span>
+                    <span class="n">choices_index</span> <span class="o">+=</span> <span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">choices_index</span><span class="p">))</span> <span class="o">*</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">choice</span><span class="o">.</span><span class="n">end</span><span class="p">):</span>
+                    <span class="n">choices_index</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">choice</span>
+            <span class="c1"># for i in range(new_choice.start, new_choice.end):</span>
+            <span class="c1">#     choices_index[i] = new_choice</span>
+        <span class="k">return</span> <span class="n">MutationSpace</span><span class="p">(</span><span class="n">choices_index</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>

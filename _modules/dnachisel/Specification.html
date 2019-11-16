@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,7 +7,9 @@
     
       <link rel="stylesheet" href="../../_static/pygments.css">
       <link rel="stylesheet" href="../../_static/theme.css">
-      <link rel="stylesheet" href="../../_static/css/custom.css">
+      <link rel="stylesheet" href="../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../_static/css/press_main.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
 
@@ -27,7 +27,8 @@
   <link rel="search" title="Search" href="../../search.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../../index.html" class="home-link">
     
       <img class="logo" src="../../_static/html_logo.png" alt="doit logo"/>
@@ -61,12 +62,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -104,12 +108,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -407,8 +414,19 @@
 
         <span class="k">return</span> <span class="n">role</span><span class="p">,</span> <span class="n">specification_instance</span></div>
 
-    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">with_location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">assignment</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">role</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">with_location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">assignment</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span>
+        <span class="n">use_short_form</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="n">prefix</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;constraint&quot;</span><span class="p">:</span> <span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="s2">&quot;objective&quot;</span><span class="p">:</span> <span class="s2">&quot;~&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}[</span><span class="n">role</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">use_short_form</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_label</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">with_location</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">+=</span> <span class="s2">&quot;, </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span>
+            <span class="k">return</span> <span class="n">label</span>
         <span class="k">if</span> <span class="n">with_location</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;location&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">:</span>
             <span class="n">location</span> <span class="o">=</span> <span class="s2">&quot;[</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span>
         <span class="k">else</span><span class="p">:</span>
@@ -425,6 +443,14 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">prefix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">params</span><span class="p">])</span>
 
+<div class="viewcode-block" id="Specification.short_label"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.Specification.short_label">[docs]</a>    <span class="k">def</span> <span class="nf">short_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Shorter, less precise label to be used in tables, reports, etc.</span>
+
+<span class="sd">        This is meant for specifications such as EnforceGCContent(0.4, 0.6)</span>
+<span class="sd">        to be represented as &#39;40-60% GC&#39; in reports tables etc..</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span></div>
+
 <div class="viewcode-block" id="Specification.label_parameters"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.Specification.label_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">label_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;In subclasses, returns a list of the creation parameters.</span>
 
@@ -440,19 +466,12 @@
         <span class="sd">&quot;&quot;&quot;By default, represent the Specification using its label()&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Specification.short_label"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.Specification.short_label">[docs]</a>    <span class="k">def</span> <span class="nf">short_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Shorter, less precise label to be used in tables, reports, etc.</span>
-
-<span class="sd">        This is meant for specifications such as EnforceGCContent(0.4, 0.6)</span>
-<span class="sd">        to be represented as &#39;40-60% GC&#39; in reports tables etc..</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">()</span></div>
-
 <div class="viewcode-block" id="Specification.to_biopython_feature"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.Specification.to_biopython_feature">[docs]</a>    <span class="k">def</span> <span class="nf">to_biopython_feature</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span>
         <span class="n">role</span><span class="o">=</span><span class="s2">&quot;constraint&quot;</span><span class="p">,</span>
         <span class="n">colors_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">use_short_label</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="o">**</span><span class="n">qualifiers</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a Biopython feature representing the specification.</span>
@@ -470,10 +489,20 @@
         <span class="n">qualifiers</span><span class="p">[</span><span class="s2">&quot;role&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">role</span>
         <span class="k">if</span> <span class="s2">&quot;label&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">qualifiers</span><span class="p">:</span>
             <span class="n">qualifiers</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">(</span>
-                <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span> <span class="n">with_location</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">assignment</span><span class="o">=</span><span class="s2">&quot;:&quot;</span>
+                <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span>
+                <span class="n">with_location</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">assignment</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span>
+                <span class="n">use_short_form</span><span class="o">=</span><span class="n">use_short_label</span><span class="p">,</span>
             <span class="p">)</span>
+
         <span class="k">if</span> <span class="s2">&quot;color&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">qualifiers</span><span class="p">:</span>
-            <span class="n">qualifiers</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">colors_dict</span><span class="p">[</span><span class="n">role</span><span class="p">]</span>
+            <span class="n">qualifiers</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">colors_dict</span><span class="p">[</span><span class="n">role</span><span class="p">]</span>
+        <span class="n">qualifiers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">ApEinfo_fwdcolor</span><span class="o">=</span><span class="n">qualifiers</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">],</span>
+                <span class="n">ApEinfo_revcolor</span><span class="o">=</span><span class="n">qualifiers</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">SeqFeature</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">to_biopython_location</span><span class="p">(),</span>
             <span class="nb">type</span><span class="o">=</span><span class="n">feature_type</span><span class="p">,</span>
@@ -546,5 +575,8 @@
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

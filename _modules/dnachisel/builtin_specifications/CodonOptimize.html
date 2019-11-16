@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,7 +7,9 @@
     
       <link rel="stylesheet" href="../../../_static/pygments.css">
       <link rel="stylesheet" href="../../../_static/theme.css">
-      <link rel="stylesheet" href="../../../_static/css/custom.css">
+      <link rel="stylesheet" href="../../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
@@ -27,7 +27,8 @@
   <link rel="search" title="Search" href="../../../search.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../../../index.html" class="home-link">
     
       <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
@@ -61,12 +62,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -104,12 +108,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -464,6 +471,7 @@
 
     <span class="k">def</span> <span class="nf">evaluate_best_codon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the evaluation for mode==best_codon.&quot;&quot;&quot;</span>
+        <span class="n">CT</span> <span class="o">=</span> <span class="n">CODONS_TRANSLATIONS</span>
         <span class="n">subsequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">extract_sequence</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
         <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsequence</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">length</span> <span class="o">%</span> <span class="mi">3</span><span class="p">:</span>
@@ -471,10 +479,27 @@
                 <span class="s2">&quot;CodonOptimizationSpecification on a window/sequence&quot;</span>
                 <span class="s2">&quot;with size </span><span class="si">%d</span><span class="s2"> not multiple of 3)&quot;</span> <span class="o">%</span> <span class="n">length</span>
             <span class="p">)</span>
+        <span class="k">if</span> <span class="n">length</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="c1"># We are evaluating a single codon. Easy!</span>
+            <span class="n">codon</span> <span class="o">=</span> <span class="n">subsequence</span>
+            <span class="n">freq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">[</span><span class="s2">&quot;codons_frequencies&quot;</span><span class="p">][</span><span class="n">codon</span><span class="p">]</span>
+            <span class="n">optimal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">[</span><span class="s2">&quot;best_frequencies&quot;</span><span class="p">][</span><span class="n">CT</span><span class="p">[</span><span class="n">codon</span><span class="p">]]</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="n">freq</span> <span class="o">-</span> <span class="n">optimal</span>
+            <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="n">problem</span><span class="p">,</span>
+                <span class="n">score</span><span class="o">=</span><span class="n">freq</span> <span class="o">-</span> <span class="n">optimal</span><span class="p">,</span>
+                <span class="n">locations</span><span class="o">=</span><span class="p">[]</span> <span class="k">if</span> <span class="p">(</span><span class="n">freq</span> <span class="o">==</span> <span class="n">optimal</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">],</span>
+                <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Codon opt. on window </span><span class="si">%s</span><span class="s2"> scored </span><span class="si">%.02E</span><span class="s2">&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        
         <span class="n">codons</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">subsequence</span><span class="p">[</span><span class="mi">3</span> <span class="o">*</span> <span class="n">i</span> <span class="p">:</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">length</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))</span>
         <span class="p">]</span>
-        <span class="n">CT</span> <span class="o">=</span> <span class="n">CODONS_TRANSLATIONS</span>
+        <span class="c1"># print (len(codons))</span>
+        
         <span class="n">current_usage</span><span class="p">,</span> <span class="n">optimal_usage</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
@@ -587,5 +612,8 @@
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,7 +7,9 @@
     
       <link rel="stylesheet" href="../_static/pygments.css">
       <link rel="stylesheet" href="../_static/theme.css">
-      <link rel="stylesheet" href="../_static/css/custom.css">
+      <link rel="stylesheet" href="../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../_static/css/press_main.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
@@ -29,7 +29,8 @@
   <link rel="prev" title="Genbank API" href="genbank_api.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../index.html" class="home-link">
     
       <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
@@ -63,12 +64,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -106,12 +110,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -197,9 +204,11 @@
                 
                   <li class="toctree-l2"><a href="#annotation-type" class="reference internal">Annotation type</a></li>
                 
-                  <li class="toctree-l2"><a href="#adding-new-annotations-to-the-genbank-parser" class="reference internal">Adding new annotations to the Genbank parser</a></li>
-                
                   <li class="toctree-l2"><a href="#weighted-objectives" class="reference internal">Weighted objectives</a></li>
+                
+                  <li class="toctree-l2"><a href="#multiple-specifications-in-a-same-annotation" class="reference internal">Multiple specifications in a same annotation</a></li>
+                
+                  <li class="toctree-l2"><a href="#adding-new-annotations-to-the-genbank-parser" class="reference internal">Adding new annotations to the Genbank parser</a></li>
                 
               </ul>
             
@@ -253,17 +262,33 @@
           <div class="content" role="main">
             
   <div class="section" id="genbank-usage-notes">
-<h1>Genbank usage notes<a class="headerlink" href="#genbank-usage-notes" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>Genbank usage notes<a class="headerlink" href="#genbank-usage-notes" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="annotation-type">
 <h2>Annotation type<a class="headerlink" href="#annotation-type" title="Permalink to this headline">¶</a></h2>
-<p>For a genbank features to be recognized by DNA Chisel, they must be of type
+<p>For a genbank feature to be recognized by DNA Chisel, they must be of type
 <code class="docutils literal notranslate"><span class="pre">misc_feature</span></code> (ask your favorite Genbank editor if you are unsure how to set
 this type).</p>
-<p>The annotation should have the same parameters as the specification it represents
-(so the same parameters as you would write in a Python script, except that
-strings do not require quotes):</p>
+<p>The annotation should have the same parameters as the specification it
+represents (so the same parameters as you would write in a Python script,
+except that strings do not require quotes):</p>
 <img class='annotation-example'
 src='../_static/images/genbank_annotations/myspec.png'></img></div>
+<div class="section" id="weighted-objectives">
+<h2>Weighted objectives<a class="headerlink" href="#weighted-objectives" title="Permalink to this headline">¶</a></h2>
+<p>Like with python scripts, when in presence of multiple competing optimization
+objectives, you can give them a weight multiplicator via the <code class="docutils literal notranslate"><span class="pre">boost</span></code>
+parameter,
+e.g. <code class="docutils literal notranslate"><span class="pre">~MySpec(...,</span> <span class="pre">boost=2)</span></code>.</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/boosting.png'></img></div>
+<div class="section" id="multiple-specifications-in-a-same-annotation">
+<h2>Multiple specifications in a same annotation<a class="headerlink" href="#multiple-specifications-in-a-same-annotation" title="Permalink to this headline">¶</a></h2>
+<p>If you want to write less annotations, you can define several specifications in
+a single feature, separating them with the <code class="docutils literal notranslate"><span class="pre">&amp;</span></code> symbol. For instance, to
+conserve a gene while getting rid of CpG islands and keeping the global GC%
+between 45% and 55%:</p>
+<img class='annotation-example'
+src='../_static/images/genbank_annotations/multiple_specs.png'></img></div>
 <div class="section" id="adding-new-annotations-to-the-genbank-parser">
 <h2>Adding new annotations to the Genbank parser<a class="headerlink" href="#adding-new-annotations-to-the-genbank-parser" title="Permalink to this headline">¶</a></h2>
 <p>New specifications can be supported by the DNA Chisel parser by
@@ -284,12 +309,6 @@ the same parameters as in a Python script (note that strings do not require
 quotes):</p>
 <img class='annotation-example'
 src='../_static/images/genbank_annotations/myspec.png'></img></div>
-<div class="section" id="weighted-objectives">
-<h2>Weighted objectives<a class="headerlink" href="#weighted-objectives" title="Permalink to this headline">¶</a></h2>
-<p>Like with python scripts, when in presence of multiple competing optimization
-objectives, you can give them a weight multiplicator via the <code class="docutils literal notranslate"><span class="pre">boost</span></code> parameter,
-e.g. <code class="docutils literal notranslate"><span class="pre">~MySpec(...,</span> <span class="pre">boost=2)</span></code>.</p>
-</div>
 </div>
 
 
@@ -312,5 +331,8 @@ e.g. <code class="docutils literal notranslate"><span class="pre">~MySpec(...,</
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

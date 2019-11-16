@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,7 +7,9 @@
     
       <link rel="stylesheet" href="../_static/pygments.css">
       <link rel="stylesheet" href="../_static/theme.css">
-      <link rel="stylesheet" href="../_static/css/custom.css">
+      <link rel="stylesheet" href="../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../_static/css/press_main.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
@@ -29,7 +29,8 @@
   <link rel="prev" title="Biotools" href="biotools.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../index.html" class="home-link">
     
       <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
@@ -63,12 +64,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -106,12 +110,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -275,8 +282,8 @@
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidHeterodimerization</span></code></p></td>
 <td><p>Avoid that the (sub)sequence anneals with other primers.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidNonUniqueSegments" title="dnachisel.builtin_specifications.AvoidNonUniqueSegments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidNonUniqueSegments</span></code></a></p></td>
-<td><p>Avoid sub-sequence which have repeats elsewhere in the sequence.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidMatches</span></code></p></td>
+<td><p>Enforce that the given pattern is absent in the sequence.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidPattern" title="dnachisel.builtin_specifications.AvoidPattern"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidPattern</span></code></a></p></td>
 <td><p>Enforce that the given pattern is absent in the sequence.</p></td>
@@ -285,28 +292,40 @@
 <td><p>Do not introduce any new stop codon in that frame.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.CodonOptimize" title="dnachisel.builtin_specifications.CodonOptimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CodonOptimize</span></code></a></p></td>
-<td><p>Codon-optimize a coding sequence for a particular species.</p></td>
+<td><p>Codon-optimize a coding sequence using a user-selected method.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceGCContent" title="dnachisel.builtin_specifications.EnforceGCContent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceGCContent</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.MaximizeCAI" title="dnachisel.builtin_specifications.MaximizeCAI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MaximizeCAI</span></code></a></p></td>
+<td><p>Codon-optimize a coding sequence for a given species.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.MatchTargetCodonUsage" title="dnachisel.builtin_specifications.MatchTargetCodonUsage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MatchTargetCodonUsage</span></code></a></p></td>
+<td><p>Codon-optimize a sequence so it has the same codon usage as a target.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.HarmonizeRCA" title="dnachisel.builtin_specifications.HarmonizeRCA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HarmonizeRCA</span></code></a></p></td>
+<td><p>Codon-Harmonize a native sequence for a new host (Claassens method).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceGCContent" title="dnachisel.builtin_specifications.EnforceGCContent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceGCContent</span></code></a></p></td>
 <td><p>Specification on the local or global proportion of G/C nucleotides.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceMeltingTemperature</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceMeltingTemperature</span></code></p></td>
 <td><p>Ensure that the subsequence’s Tm is in a certain segment/target.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforcePatternOccurence" title="dnachisel.builtin_specifications.EnforcePatternOccurence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforcePatternOccurence</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforcePatternOccurence" title="dnachisel.builtin_specifications.EnforcePatternOccurence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforcePatternOccurence</span></code></a></p></td>
 <td><p>Enforce a number of occurences of the given pattern in the sequence.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceRegionsCompatibility" title="dnachisel.builtin_specifications.EnforceRegionsCompatibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceRegionsCompatibility</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceRegionsCompatibility" title="dnachisel.builtin_specifications.EnforceRegionsCompatibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceRegionsCompatibility</span></code></a></p></td>
 <td><p>Ensure that different subregions satisfy compatibility constraints.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceSequence" title="dnachisel.builtin_specifications.EnforceSequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceSequence</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceSequence" title="dnachisel.builtin_specifications.EnforceSequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceSequence</span></code></a></p></td>
 <td><p>Enforces a (possibly degenerate) sequence at some location.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceTranslation" title="dnachisel.builtin_specifications.EnforceTranslation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceTranslation</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceTranslation" title="dnachisel.builtin_specifications.EnforceTranslation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceTranslation</span></code></a></p></td>
 <td><p>Enforce a specific amino-acid sequence translation.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.SequenceLengthBounds" title="dnachisel.builtin_specifications.SequenceLengthBounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceLengthBounds</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.SequenceLengthBounds" title="dnachisel.builtin_specifications.SequenceLengthBounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceLengthBounds</span></code></a></p></td>
 <td><p>Checks that the sequence length is between bounds.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.UniquifyAllKmers" title="dnachisel.builtin_specifications.UniquifyAllKmers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UniquifyAllKmers</span></code></a></p></td>
+<td><p>Avoid sub-sequence of length k with homologies elsewhere.</p></td>
 </tr>
 </tbody>
 </table>
@@ -322,6 +341,7 @@
 <p>This is useful for making sure that you will be able to conduct a PCR or
 sanger sequencing with a primer annealing at a particular location of
 the sequence.</p>
+<p>Shorthand for annotations: “primer”.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>location</strong></p>
@@ -366,6 +386,7 @@ meaning “avoid K-mers repeated N times in a row”.</p>
 <dt id="dnachisel.builtin_specifications.AvoidBlastMatches">
 <em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidBlastMatches</code><span class="sig-paren">(</span><em class="sig-param">blast_db=None</em>, <em class="sig-param">sequences=None</em>, <em class="sig-param">word_size=4</em>, <em class="sig-param">perc_identity=100</em>, <em class="sig-param">num_alignments=100000</em>, <em class="sig-param">num_threads=3</em>, <em class="sig-param">min_align_length=20</em>, <em class="sig-param">ungapped=True</em>, <em class="sig-param">e_value=1e+80</em>, <em class="sig-param">culling_limit=1</em>, <em class="sig-param">location=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidBlastMatches.html#AvoidBlastMatches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidBlastMatches" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enforce that the given pattern is absent in the sequence.</p>
+<p>WARNING: try using AvoidMatches instead, it is much better!!</p>
 <p>Uses NCBI Blast+. Only local BLAST is supported/tested as for now</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
@@ -404,10 +425,9 @@ perfect matches are considered.</p>
 <h3>AvoidChanges<a class="headerlink" href="#avoidchanges" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.AvoidChanges">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidChanges</code><span class="sig-paren">(</span><em class="sig-param">location=None</em>, <em class="sig-param">indices=None</em>, <em class="sig-param">target_sequence=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidChanges.html#AvoidChanges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidChanges" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidChanges</code><span class="sig-paren">(</span><em class="sig-param">max_edits=0</em>, <em class="sig-param">max_edits_percent=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">indices=None</em>, <em class="sig-param">target_sequence=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidChanges.html#AvoidChanges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidChanges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specify that some locations of the sequence should not be changed.</p>
-<p><code class="docutils literal notranslate"><span class="pre">AvoidChanges</span></code> Specifications are used to constrain the mutations space
-of DNA OptimizationProblem.</p>
+<p>Shorthand for annotations: “change”.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>location</strong></p>
@@ -460,16 +480,16 @@ optimization.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="avoidnonuniquesegments">
-<h3>AvoidNonUniqueSegments<a class="headerlink" href="#avoidnonuniquesegments" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="uniquifyallkmers">
+<h3>UniquifyAllKmers<a class="headerlink" href="#uniquifyallkmers" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
-<dt id="dnachisel.builtin_specifications.AvoidNonUniqueSegments">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidNonUniqueSegments</code><span class="sig-paren">(</span><em class="sig-param">min_length</em>, <em class="sig-param">location=None</em>, <em class="sig-param">extended_location=None</em>, <em class="sig-param">include_reverse_complement=True</em>, <em class="sig-param">boost=1.0</em>, <em class="sig-param">localization_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidNonUniqueSegments.html#AvoidNonUniqueSegments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidNonUniqueSegments" title="Permalink to this definition">¶</a></dt>
-<dd><p>Avoid sub-sequence which have repeats elsewhere in the sequence.</p>
+<dt id="dnachisel.builtin_specifications.UniquifyAllKmers">
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">UniquifyAllKmers</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">reference=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">include_reverse_complement=True</em>, <em class="sig-param">boost=1.0</em>, <em class="sig-param">localization_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/UniquifyAllKmers.html#UniquifyAllKmers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.UniquifyAllKmers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Avoid sub-sequence of length k with homologies elsewhere.</p>
 <p>NOTE: For sequences with subsequences appearing more than 2 times, the
 specification may not work as a problem constraint, but will work as a
 problem optimization objective.</p>
-<p>You can define a location L and an extended location L* (by default they
+<p>You can define a location L and an reference L* (by default they
 are both the full sequence)</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span>         <span class="p">[</span><span class="o">===</span> <span class="n">L</span> <span class="o">===</span><span class="p">]</span>
 <span class="go">&gt;&gt;&gt;</span>
@@ -479,7 +499,7 @@ are both the full sequence)</p>
 </pre></div>
 </div>
 <p>This Specification class specifies that “No sub-sequence in L of length
-above min_length has more than 1 occurence in L*”.</p>
+above k has more than 1 occurence in L*”.</p>
 <p>Some specific cases</p>
 <ul class="simple">
 <li><p>L = L* = Sequence. In this case the full sequence will have only unique
@@ -491,9 +511,17 @@ can be self-homologies elsewhere in the sequence.</p></li>
 </ul>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>min_length</strong></p>
+<dd class="field-odd"><p><strong>k</strong></p>
 <blockquote>
 <div><p>Minimal length of sequences to be considered repeats</p>
+</div></blockquote>
+<p><strong>reference</strong></p>
+<blockquote>
+<div><p>The default None indicates that the specification’s location should have
+no homologies anywhere in the whole sequence. If reference=”here”, then
+the specification’s location should have no homology inside that same
+location. Reference can also be any location of the sequence that the
+specification’s location should have no homologies with.</p>
 </div></blockquote>
 <p><strong>location</strong></p>
 <blockquote>
@@ -510,7 +538,7 @@ complement of the sequence (or sub sequence if <cite>location</cite> is not None
 <p class="rubric">Examples</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dnachisel</span> <span class="k">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sequence</span> <span class="o">=</span> <span class="n">random_dna_sequence</span><span class="p">(</span><span class="mi">50000</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">constraint</span><span class="o">=</span> <span class="n">AvoidNonUniqueSegments</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">include_reverse_complement</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">constraint</span><span class="o">=</span> <span class="n">UniquifyAllKmers</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">include_reverse_complement</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span> <span class="p">[</span><span class="n">contraint</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">constraints_summary</span><span class="p">())</span>
 </pre></div>
@@ -524,6 +552,7 @@ complement of the sequence (or sub sequence if <cite>location</cite> is not None
 <dt id="dnachisel.builtin_specifications.AvoidPattern">
 <em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidPattern</code><span class="sig-paren">(</span><em class="sig-param">pattern=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidPattern.html#AvoidPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidPattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enforce that the given pattern is absent in the sequence.</p>
+<p>Shorthand for annotations: “no”.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>pattern</strong></p>
@@ -544,43 +573,115 @@ complement of the sequence (or sub sequence if <cite>location</cite> is not None
 <h3>AvoidStopCodons<a class="headerlink" href="#avoidstopcodons" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.AvoidStopCodons">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidStopCodons</code><span class="sig-paren">(</span><em class="sig-param">location=None</em>, <em class="sig-param">boost=1.0</em>, <em class="sig-param">translation='legacy'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidStopCodons.html#AvoidStopCodons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidStopCodons" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidStopCodons</code><span class="sig-paren">(</span><em class="sig-param">genetic_table='Standard'</em>, <em class="sig-param">location=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidStopCodons.html#AvoidStopCodons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidStopCodons" title="Permalink to this definition">¶</a></dt>
 <dd><p>Do not introduce any new stop codon in that frame.</p>
 <p>This can be used for research purposes, to avoid breaking a reading frame
 when editing it with quasi-synonymous mutations.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="codonoptimize">
-<h3>CodonOptimize<a class="headerlink" href="#codonoptimize" title="Permalink to this headline">¶</a></h3>
-<dl class="class">
+<div class="section" id="codon-optimization-specifications">
+<h3>Codon Optimization Specifications<a class="headerlink" href="#codon-optimization-specifications" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
 <dt id="dnachisel.builtin_specifications.CodonOptimize">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">CodonOptimize</code><span class="sig-paren">(</span><em class="sig-param">species=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">mode='best_codon'</em>, <em class="sig-param">codon_usage_table=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/CodonOptimize.html#CodonOptimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.CodonOptimize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Codon-optimize a coding sequence for a particular species.</p>
-<p>Several codon-optimization policies exist. At the moment this Specification
-implements a method in which codons are replaced by the most frequent
-codon in the species.</p>
-<p>(as long as this doesn’t break any Specification or lowers the global
-optimization objective)</p>
+<code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">CodonOptimize</code><span class="sig-paren">(</span><em class="sig-param">species=None</em>, <em class="sig-param">method='use_best_codon'</em>, <em class="sig-param">location=None</em>, <em class="sig-param">codon_usage_table=None</em>, <em class="sig-param">original_species=None</em>, <em class="sig-param">original_codon_usage_table=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/codon_optimization/CodonOptimize.html#CodonOptimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.CodonOptimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Codon-optimize a coding sequence using a user-selected method.</p>
+<p>This pseudo-specification is actually a function which returns an instance
+of another specification class depending on the selected “method”:</p>
+<ul class="simple">
+<li><p>For method=”use_best_codon”, every codon will be replaced by the “best”
+(i.e. most frequent) synonymous codon in the target organism. This is
+equivalent to Codon Adaptation Index (CAI) optimization.</p></li>
+<li><p>For method=”match_codon_usage”, the final sequence’s codon usage will
+match as much as possible the codon usage profile of the target species
+(this method is used throughout the literature, see for instance Hale
+and Thomson 1998).</p></li>
+<li><p>For method=”harmonize_rca”, Each codon will be replaced by a synonymous
+codon whose usage in the target organism matches the usage of the
+original codon in its host organism (as per Claassens 2017).</p></li>
+</ul>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>species</strong></p>
 <blockquote>
-<div><p>Either a TaxID (this requires a web connection as the corresponding table
+<div><p>Species for which the sequence will be codon-optimized.
+Either a TaxID (this requires a web connection as the corresponding table
 will be downloaded from the internet) or the name of the species to
 codon-optimize for (the name must be supported by <code class="docutils literal notranslate"><span class="pre">python_codon_tables</span></code>
 e.g. <code class="docutils literal notranslate"><span class="pre">e_coli</span></code>, <code class="docutils literal notranslate"><span class="pre">s_cerevisiae</span></code>, <code class="docutils literal notranslate"><span class="pre">h_sapiens</span></code>, <code class="docutils literal notranslate"><span class="pre">c_elegans</span></code>,
 <code class="docutils literal notranslate"><span class="pre">b_subtilis</span></code>, <code class="docutils literal notranslate"><span class="pre">d_melanogaster</span></code>).
-Note that the species can be omited if a <code class="docutils literal notranslate"><span class="pre">codon_usage_table</span></code> is
-provided instead</p>
+Note that a <code class="docutils literal notranslate"><span class="pre">codon_usage_table</span></code> can be provided instead, or even in
+addition, for species whose codon usage table cannot be auto-imported.</p>
 </div></blockquote>
-<p><strong>mode</strong></p>
+<p><strong>method</strong></p>
 <blockquote>
-<div><p>Either ‘best_codon’ or ‘harmonized_frequencies’. For ‘best_codon’, the
-optimization will always replace a codon with the most-frequent triplet
-possible. For ‘harmonized_frequencies’, the optimization will bring the
-relative frequencies of the different triplets as close as possible to
-the frequencies in the reference species.</p>
+<div><p>Either ‘use_best_codon’, ‘match_codon_usage’, or ‘harmonize_rca’
+(see above for details)</p>
+</div></blockquote>
+<p><strong>location</strong></p>
+<blockquote>
+<div><p>Either a DnaChisel Location or a tuple of the form (start, end, strand)
+or just (start, end), with strand defaulting to +1, indicating the
+position of the gene to codon-optimize. If not provided, the whole
+sequence is considered as the gene. The location should have a length
+that is a multiple of 3. The location strand is either 1 if the gene is
+encoded on the (+) strand, or -1 for antisense.</p>
+</div></blockquote>
+<p><strong>codon_usage_table</strong></p>
+<blockquote>
+<div><p>Optional codon usage table of the species for which the sequence will be
+codon-optimized. A dict of the form <code class="docutils literal notranslate"><span class="pre">{'*':</span> <span class="pre">{&quot;TGA&quot;:</span> <span class="pre">0.112,</span> <span class="pre">&quot;TAA&quot;:</span> <span class="pre">0.68},</span>
+<span class="pre">'K':</span> <span class="pre">...}</span></code> giving the RSCU table (relative usage of each codon). See
+parameter <code class="docutils literal notranslate"><span class="pre">species</span></code> above.</p>
+</div></blockquote>
+<p><strong>original_species</strong></p>
+<blockquote>
+<div><p>When the method is ‘harmonize_rca’, this is the native species of the
+original coding sequene. Same characteristics as parameter <code class="docutils literal notranslate"><span class="pre">species</span></code>
+above.</p>
+</div></blockquote>
+<p><strong>original_codon_usage_table</strong></p>
+<blockquote>
+<div><p>Optional codon usage table of the original sequence’s native species.
+A dict of the form <code class="docutils literal notranslate"><span class="pre">{'*':</span> <span class="pre">{&quot;TGA&quot;:</span> <span class="pre">0.112,</span> <span class="pre">&quot;TAA&quot;:</span> <span class="pre">0.68},</span> <span class="pre">'K':</span> <span class="pre">...}</span></code>
+giving the codon usage table.</p>
+</div></blockquote>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Claassens et. al., Improving heterologous membrane protein
+production in Escherichia coli by combining transcriptional tuning and
+codon usage algorithms. PLOS One, 2017</p>
+<p>Hale and Thompson, Codon Optimization of the Gene Encoding a
+Domain from Human Type 1 Neurofibromin Protein… Protein Expression and
+Purification 1998.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="dnachisel.builtin_specifications.MaximizeCAI">
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">MaximizeCAI</code><span class="sig-paren">(</span><em class="sig-param">species=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">codon_usage_table=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/codon_optimization/MaximizeCAI.html#MaximizeCAI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.MaximizeCAI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Codon-optimize a coding sequence for a given species. Maximizes the CAI.</p>
+<p>To be precise, the score computed by this specification is N*log(CAI) where
+N is the number of codons. Maximizing this score also maximizes the CAI.</p>
+<p>Index (CAI). For a sequence with N codons, the CAI is the geometric mean
+of the Relative Codon Adaptiveness (RCA) of the different codons. The RCA
+of a codon is (f_i/fmax_i) were fi is the frequency of an oligo in the
+codon usage table, and fmax is the maximal frequency of the synonymous
+codons.</p>
+<p>So N*log(CAI) = sum_i ( log(f_i) - log(fmax_i) )</p>
+<p>This score is between -inf. and 0 (0 meaning a perfectly optimal sequence).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>species</strong></p>
+<blockquote>
+<div><p>Species for which the sequence will be codon-optimized.
+Either a TaxID (this requires a web connection as the corresponding table
+will be downloaded from the internet) or the name of the species to
+codon-optimize for (the name must be supported by <code class="docutils literal notranslate"><span class="pre">python_codon_tables</span></code>
+e.g. <code class="docutils literal notranslate"><span class="pre">e_coli</span></code>, <code class="docutils literal notranslate"><span class="pre">s_cerevisiae</span></code>, <code class="docutils literal notranslate"><span class="pre">h_sapiens</span></code>, <code class="docutils literal notranslate"><span class="pre">c_elegans</span></code>,
+<code class="docutils literal notranslate"><span class="pre">b_subtilis</span></code>, <code class="docutils literal notranslate"><span class="pre">d_melanogaster</span></code>).
+Note that a <code class="docutils literal notranslate"><span class="pre">codon_usage_table</span></code> can be provided instead, or even in
+addition, for species whose codon usage table cannot be auto-imported.</p>
 </div></blockquote>
 <p><strong>location</strong></p>
 <blockquote>
@@ -597,16 +698,144 @@ encoded on the (+) strand, or -1 for antisense.</p>
 giving the RSCU table (relative usage of each codon). Only provide if
 no <code class="docutils literal notranslate"><span class="pre">species</span></code> parameter was provided.</p>
 </div></blockquote>
+<p><strong>boost</strong></p>
+<blockquote>
+<div><p>Score multiplicator (=weight) for when the specification is used as an
+optimization objective alongside competing objectives.</p>
+</div></blockquote>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">objective</span> <span class="o">=</span> <span class="n">CodonOptimizationSpecification</span><span class="p">(</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">objective</span> <span class="o">=</span> <span class="n">MaximizeCAI</span><span class="p">(</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">species</span> <span class="o">=</span> <span class="s2">&quot;E. coli&quot;</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span> <span class="c1"># coordinates of a gene</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">strand</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="class">
+<dt id="dnachisel.builtin_specifications.MatchTargetCodonUsage">
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">MatchTargetCodonUsage</code><span class="sig-paren">(</span><em class="sig-param">species=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">codon_usage_table=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/codon_optimization/MatchTargetCodonUsage.html#MatchTargetCodonUsage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.MatchTargetCodonUsage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Codon-optimize a sequence so it has the same codon usage as a target.</p>
+<p>The objective minized here is the sum of the discrepancies, over every
+possible triplet ATG, CCG, etc. between the codon frequency of this triplet
+in the sequence, and its frequency in the target organism.</p>
+<p>This method has had several names through the ages. It may have been first
+proposed by Hale and Thompson, 1998. It is called Individual Codon Usage
+Optimization in Chung 2012, Global CAI Harmonization in Mignon 2018, and
+Codon Harmonization in Jayaral 2005. We didn’t call it “harmonization”
+in DNA Chisel to avoid any confusion with the now more common
+host-to-target codon harmonization. See DnaChisel’s HarmonizeRCA class
+for Codon Harmonization.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>species</strong></p>
+<blockquote>
+<div><p>Species for which the sequence will be codon-optimized.
+Either a TaxID (this requires a web connection as the corresponding table
+will be downloaded from the internet) or the name of the species to
+codon-optimize for (the name must be supported by <code class="docutils literal notranslate"><span class="pre">python_codon_tables</span></code>
+e.g. <code class="docutils literal notranslate"><span class="pre">e_coli</span></code>, <code class="docutils literal notranslate"><span class="pre">s_cerevisiae</span></code>, <code class="docutils literal notranslate"><span class="pre">h_sapiens</span></code>, <code class="docutils literal notranslate"><span class="pre">c_elegans</span></code>,
+<code class="docutils literal notranslate"><span class="pre">b_subtilis</span></code>, <code class="docutils literal notranslate"><span class="pre">d_melanogaster</span></code>).
+Note that a <code class="docutils literal notranslate"><span class="pre">codon_usage_table</span></code> can be provided instead, or even in
+addition, for species whose codon usage table cannot be auto-imported.</p>
+</div></blockquote>
+<p><strong>location</strong></p>
+<blockquote>
+<div><p>Either a DnaChisel Location or a tuple of the form (start, end, strand)
+or just (start, end), with strand defaulting to +1, indicating the
+position of the gene to codon-optimize. If not provided, the whole
+sequence is considered as the gene. The location should have a length
+that is a multiple of 3. The location strand is either 1 if the gene is
+encoded on the (+) strand, or -1 for antisense.</p>
+</div></blockquote>
+<p><strong>codon_usage_table</strong></p>
+<blockquote>
+<div><p>A dict of the form <code class="docutils literal notranslate"><span class="pre">{'*':</span> <span class="pre">{&quot;TGA&quot;:</span> <span class="pre">0.112,</span> <span class="pre">&quot;TAA&quot;:</span> <span class="pre">0.68},</span> <span class="pre">'K':</span> <span class="pre">...}</span></code>
+giving the RSCU table (relative usage of each codon). Only provide if
+no <code class="docutils literal notranslate"><span class="pre">species</span></code> parameter was provided.</p>
+</div></blockquote>
+<p><strong>boost</strong></p>
+<blockquote>
+<div><p>Score multiplicator (=weight) for when the specification is used as an
+optimization objective alongside competing objectives.</p>
+</div></blockquote>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Hale and Thompson, Codon Optimization of the Gene Encoding a
+Domain from Human Type 1 Neurofibromin Protein… Protein Expression and
+Purification 1998.</p>
+<p>Jayaraj et. al. GeMS: an advanced software package for designing synthetic
+genes, Nucleic Acids Research, 2005</p>
+<p>Mignon et. al. Codon harmonization – going beyond the speed limit for
+protein expression. FEBS Lett, 2018</p>
+<p>Chung BK, Lee DY. Computational codon optimization of synthetic gene for
+protein expression. BMC Syst Biol. 2012</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="dnachisel.builtin_specifications.HarmonizeRCA">
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">HarmonizeRCA</code><span class="sig-paren">(</span><em class="sig-param">species=None</em>, <em class="sig-param">codon_usage_table=None</em>, <em class="sig-param">original_species=None</em>, <em class="sig-param">original_codon_usage_table=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">boost=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/codon_optimization/HarmonizeRCA.html#HarmonizeRCA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.HarmonizeRCA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Codon-Harmonize a native sequence for a new host (Claassens method).</p>
+<p>This specification will optimize a Sequence 1 from Host 1 into a Sequence
+2 for target Host 2.</p>
+<p>In simple, rare Host 1 codons will be replaced by rare Host 2 codons, and
+high-frequency Host 1 codons will get replaced by codons that are
+high-frequency in Host 2.</p>
+<p>In more specific, each codon along Sequence 1 gets replaced by the codon
+whose Relative Codon Adaptiveness (RCA) in Host 2 is the closest from the
+RCA of the original codon in Host 1. A codon’s RCA in a given organism is
+defined by f/fmax where f is the codon’s frequency in the organism and fmax
+is the highest frequency of all synonymous codons.</p>
+<p>The minimized quantity is sum_i abs(RCA(c_i, H1) - RCA(c’_i, H2))
+where c_i, c’_i represent the i-th codon before and after optimization</p>
+<p>This method is taken from Claassens 2017, where they simplify a previous
+algorithm (Angov 2008), which was much more complicated as it involved
+predicting “ribosome pausing” sites in the sequence.</p>
+<p>Warning: always use with an EnforceTranslation constraint.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>species</strong></p>
+<blockquote>
+<div><p>Name or TaxID of the species for which to optimize the sequence. A custom
+codon_usage_table can be provided instead (or in addition, for species
+names whose codon usage table cannot be imported).</p>
+</div></blockquote>
+<p><strong>codon_usage_table</strong></p>
+<blockquote>
+<div><p>A dict of the form <code class="docutils literal notranslate"><span class="pre">{'*':</span> <span class="pre">{&quot;TGA&quot;:</span> <span class="pre">0.112,</span> <span class="pre">&quot;TAA&quot;:</span> <span class="pre">0.68},</span> <span class="pre">'K':</span> <span class="pre">...}</span></code>
+giving the RSCU table (relative usage of each codon).</p>
+</div></blockquote>
+<p><strong>original_species</strong></p>
+<blockquote>
+<div><p>Name or TaxID of the species the original sequence was taken from. This
+information will be used to spot codons which are supposed to be rare
+or common. A codon_usage_table can be provided instead (or in addition,
+for species names whose codon usage table cannot be imported).</p>
+</div></blockquote>
+<p><strong>original_codon_usage_table</strong></p>
+<blockquote>
+<div><p>A dict of the form <code class="docutils literal notranslate"><span class="pre">{'*':</span> <span class="pre">{&quot;TGA&quot;:</span> <span class="pre">0.112,</span> <span class="pre">&quot;TAA&quot;:</span> <span class="pre">0.68},</span> <span class="pre">'K':</span> <span class="pre">...}</span></code>
+giving the RSCU table (relative usage of each codon).</p>
+</div></blockquote>
+<p><strong>location</strong></p>
+<blockquote>
+<div><p>Location on which the specification applies</p>
+</div></blockquote>
+<p><strong>boost</strong></p>
+<blockquote>
+<div><p>Score multiplicator (=weight) for when the specification is used as an
+optimization objective alongside competing objectives.</p>
+</div></blockquote>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Claassens et. al., Improving heterologous membrane protein
+production in Escherichia coli by combining transcriptional tuning and
+codon usage algorithms. PLOS One, 2017</p>
 </dd></dl>
 
 </div>
@@ -616,6 +845,7 @@ no <code class="docutils literal notranslate"><span class="pre">species</span></
 <dt id="dnachisel.builtin_specifications.EnforceGCContent">
 <em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">EnforceGCContent</code><span class="sig-paren">(</span><em class="sig-param">mini=0</em>, <em class="sig-param">maxi=1.0</em>, <em class="sig-param">target=None</em>, <em class="sig-param">window=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforceGCContent.html#EnforceGCContent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforceGCContent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specification on the local or global proportion of G/C nucleotides.</p>
+<p>Shorthand for annotations: “gc”.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>mini</strong></p>
@@ -662,15 +892,15 @@ if both parameters are provided</p>
 <dt id="dnachisel.builtin_specifications.EnforcePatternOccurence">
 <em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">EnforcePatternOccurence</code><span class="sig-paren">(</span><em class="sig-param">pattern=None</em>, <em class="sig-param">occurences=1</em>, <em class="sig-param">location=None</em>, <em class="sig-param">center=True</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforcePatternOccurence.html#EnforcePatternOccurence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforcePatternOccurence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enforce a number of occurences of the given pattern in the sequence.</p>
+<p>Shorthand for annotations: “insert” (although this specification can be
+used to both insert new occurences of a pattern, or destroy surnumerary
+patterns)</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>pattern</strong></p>
 <blockquote>
-<div><p>A SequencePattern or DnaNotationPattern</p>
-</div></blockquote>
-<p><strong>enzyme</strong></p>
-<blockquote>
-<div><p>Enzyme name, can be provided instead of a pattern</p>
+<div><p>A SequencePattern or DnaNotationPattern or a string such as “AATTG”,
+“BsmBI_site”, etc.</p>
 </div></blockquote>
 <p><strong>occurences</strong></p>
 <blockquote>
@@ -707,6 +937,7 @@ the beginning of the location.</p>
 <dt id="dnachisel.builtin_specifications.EnforceSequence">
 <em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">EnforceSequence</code><span class="sig-paren">(</span><em class="sig-param">sequence=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforceSequence.html#EnforceSequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforceSequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enforces a (possibly degenerate) sequence at some location.</p>
+<p>Shorthand for annotations: “sequence”.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>sequence</strong></p>
@@ -728,11 +959,12 @@ for instance ATTCGCGTYTTKWNAA</p>
 <h3>EnforceTranslation<a class="headerlink" href="#enforcetranslation" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.EnforceTranslation">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">EnforceTranslation</code><span class="sig-paren">(</span><em class="sig-param">location=None</em>, <em class="sig-param">translation=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforceTranslation.html#EnforceTranslation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforceTranslation" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">EnforceTranslation</code><span class="sig-paren">(</span><em class="sig-param">genetic_table='default'</em>, <em class="sig-param">start_codon=None</em>, <em class="sig-param">translation=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforceTranslation.html#EnforceTranslation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforceTranslation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enforce a specific amino-acid sequence translation.</p>
 <p>This class enforces the standard translation, but it is also possible to
 change the class’ <cite>codons_sequences</cite> and <cite>codons_translations</cite>
 dictionnaries for more exotic kind of translations</p>
+<p>Shorthand for annotations: “cds”.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>location</strong></p>
@@ -744,11 +976,33 @@ sequence is considered as the gene. The location should have a length
 that is a multiple of 3. The location strand is either 1 if the gene is
 encoded on the (+) strand, or -1 for antisense.</p>
 </div></blockquote>
+<p><strong>genetic_table</strong></p>
+<blockquote>
+<div><p>Either “Standard”, “Bacterial”, or any other Biopython genetic table name
+(see dnachisel.biotools.CODON_TABLES_NAMES for a list of accepted names).</p>
+</div></blockquote>
+<p><strong>start_codon</strong></p>
+<blockquote>
+<div><p>Signals that the first codon is a start codon and provides a policy for
+changing it. It is very important that this parameter be set when dealing
+with full coding sequences in organisms with different start codons, e.g.
+GTG in bacteria. If it is not set, then a GTG (start codon or Valine)
+could be changed into GTA (also valine but NOT a start codon).
+Can be False (the first codon is not considered a start codon, but can
+still naturally code for methionine), <code class="docutils literal notranslate"><span class="pre">keep</span></code> (freezes the original
+sub-sequence at this location, or a codon e.g. <code class="docutils literal notranslate"><span class="pre">ATG</span></code> or <code class="docutils literal notranslate"><span class="pre">GTG</span></code> or
+<code class="docutils literal notranslate"><span class="pre">[&quot;ATG&quot;,</span> <span class="pre">&quot;GTG&quot;]</span></code>.</p>
+</div></blockquote>
 <p><strong>translation</strong></p>
 <blockquote>
 <div><p>String representing the protein sequence that the DNA segment should
 translate to, eg. “MKY…LL*” (“*” stands for stop codon).
 Can be omitted if the sequence initially encodes the right sequence.</p>
+</div></blockquote>
+<p><strong>boost</strong></p>
+<blockquote>
+<div><p>Score multiplicator (=weight) for when the specification is used as an
+optimization objective alongside competing objectives.</p>
 </div></blockquote>
 </dd>
 </dl>
@@ -801,5 +1055,8 @@ But practical as part of a list of constraints to verify.</p>
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnachisel.builtin_specifications.UniquifyAllKmers</title>
+    
+      <link rel="stylesheet" href="../../../_static/pygments.css">
+      <link rel="stylesheet" href="../../../_static/theme.css">
+      <link rel="stylesheet" href="../../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../../_static/css/press_main.css" type="text/css" />
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+      
+      <script src="../../../_static/theme-vendors.js"></script>
+      <script src="../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../index.html" class="home-link">
+    
+      <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../ref/core_classes.html" class="reference internal ">Core Classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/constraints_reports.html" class="reference internal ">Constraints reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/cli.html" class="reference internal ">Command Line Interface</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../notes.html" class="reference internal ">Notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Using Genbanks</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../genbank/genbank_api.html" class="reference internal ">Genbank API</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../genbank/genbank_notes.html" class="reference internal ">Genbank usage notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnachisel.builtin_specifications.UniquifyAllKmers</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for dnachisel.builtin_specifications.UniquifyAllKmers</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Implement UniquifyAllKmers(Specification)&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
+
+<span class="kn">from</span> <span class="nn">..Specification</span> <span class="k">import</span> <span class="n">Specification</span>
+
+<span class="c1"># from .VoidSpecification import VoidSpecification</span>
+<span class="kn">from</span> <span class="nn">..Specification.SpecEvaluation</span> <span class="k">import</span> <span class="n">SpecEvaluation</span>
+<span class="kn">from</span> <span class="nn">dnachisel.biotools</span> <span class="k">import</span> <span class="n">reverse_complement</span>
+<span class="kn">from</span> <span class="nn">dnachisel.Location</span> <span class="k">import</span> <span class="n">Location</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">lru_cache</span>
+
+
+<span class="k">def</span> <span class="nf">get_kmer_extractor</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">include_reverse_complement</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a function (i =&gt; standardized_kmer_string).&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">include_reverse_complement</span><span class="p">:</span>
+        <span class="n">rev_comp_sequence</span> <span class="o">=</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">extract_kmer</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+            <span class="n">subsequence</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span>
+            <span class="n">rev_comp</span> <span class="o">=</span> <span class="n">rev_comp_sequence</span><span class="p">[</span><span class="n">L</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="n">k</span> <span class="p">:</span> <span class="n">L</span> <span class="o">-</span> <span class="n">i</span><span class="p">]</span>
+            <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">subsequence</span><span class="p">,</span> <span class="n">rev_comp</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="k">def</span> <span class="nf">extract_kmer</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">sequence</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">extract_kmer</span>
+
+
+<span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_kmer_extractor_cached</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">include_reverse_complement</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Kmer extractor with memoization.</span>
+<span class="sd">    </span>
+<span class="sd">    This globally cached method enables much faster computations when</span>
+<span class="sd">    several UniquifyAllKmers functions with equal k are used. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">include_reverse_complement</span><span class="p">:</span>
+        <span class="n">rev_comp_sequence</span> <span class="o">=</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+
+        <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">L</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">extract_kmer</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+            <span class="n">subsequence</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span>
+            <span class="n">rev_comp</span> <span class="o">=</span> <span class="n">rev_comp_sequence</span><span class="p">[</span><span class="n">L</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="n">k</span> <span class="p">:</span> <span class="n">L</span> <span class="o">-</span> <span class="n">i</span><span class="p">]</span>
+            <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">subsequence</span><span class="p">,</span> <span class="n">rev_comp</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">L</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">extract_kmer</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">sequence</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">extract_kmer</span>
+
+
+<div class="viewcode-block" id="UniquifyAllKmers"><a class="viewcode-back" href="../../../ref/builtin_specifications.html#dnachisel.builtin_specifications.UniquifyAllKmers">[docs]</a><span class="k">class</span> <span class="nc">UniquifyAllKmers</span><span class="p">(</span><span class="n">Specification</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Avoid sub-sequence of length k with homologies elsewhere.</span>
+
+<span class="sd">    NOTE: For sequences with subsequences appearing more than 2 times, the</span>
+<span class="sd">    specification may not work as a problem constraint, but will work as a</span>
+<span class="sd">    problem optimization objective.</span>
+
+<span class="sd">    You can define a location L and an reference L* (by default they</span>
+<span class="sd">    are both the full sequence)</span>
+
+<span class="sd">    &gt;&gt;&gt;          [=== L ===]</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt;       [=========== L* ==========]</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; --------- Sequence --------------------------</span>
+
+<span class="sd">    This Specification class specifies that &quot;No sub-sequence in L of length</span>
+<span class="sd">    above k has more than 1 occurence in L*&quot;.</span>
+
+<span class="sd">    Some specific cases</span>
+
+<span class="sd">    - L = L* = Sequence. In this case the full sequence will have only unique</span>
+<span class="sd">      kmers above a certain size (no self-homology).</span>
+<span class="sd">    - L &lt; L*, L* = Sequence. The segment L will have no self-homology and no</span>
+<span class="sd">      homology to the rest of the sequence above a certain size. But there</span>
+<span class="sd">      can be self-homologies elsewhere in the sequence.</span>
+<span class="sd">    - L = L*. segment L will have no self-homology.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    k</span>
+<span class="sd">      Minimal length of sequences to be considered repeats</span>
+<span class="sd">    </span>
+<span class="sd">    reference</span>
+<span class="sd">      The default None indicates that the specification&#39;s location should have</span>
+<span class="sd">      no homologies anywhere in the whole sequence. If reference=&quot;here&quot;, then</span>
+<span class="sd">      the specification&#39;s location should have no homology inside that same</span>
+<span class="sd">      location. Reference can also be any location of the sequence that the</span>
+<span class="sd">      specification&#39;s location should have no homologies with.</span>
+
+<span class="sd">    location</span>
+<span class="sd">      Segment of the sequence in which to look for repeats. If None, repeats</span>
+<span class="sd">      are searched in the full sequence.</span>
+
+<span class="sd">    include_reverse_complement</span>
+<span class="sd">      If True, the sequence repeats are also searched for in the reverse</span>
+<span class="sd">      complement of the sequence (or sub sequence if `location` is not None).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; from dnachisel import *</span>
+<span class="sd">    &gt;&gt;&gt; sequence = random_dna_sequence(50000)</span>
+<span class="sd">    &gt;&gt;&gt; constraint= UniquifyAllKmers(10, include_reverse_complement=True)</span>
+<span class="sd">    &gt;&gt;&gt; problem = DnaOptimizationProblem(sequence, constraints= [contraint])</span>
+<span class="sd">    &gt;&gt;&gt; print (problem.constraints_summary())</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">best_possible_score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">use_cache</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">shorthand_name</span> <span class="o">=</span> <span class="s1">&#39;all_unique_kmers&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">k</span><span class="p">,</span>
+        <span class="n">reference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_reverse_complement</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">boost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">localization_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">reference</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;here&quot;</span><span class="p">,</span> <span class="s2">&quot;same&quot;</span><span class="p">]:</span>
+            <span class="n">reference</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">reference</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_tuple</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference</span> <span class="o">=</span> <span class="n">reference</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_reverse_complement</span> <span class="o">=</span> <span class="n">include_reverse_complement</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boost</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">localization_data</span> <span class="o">=</span> <span class="n">localization_data</span>
+
+    <span class="k">def</span> <span class="nf">initialized_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="s2">&quot;constraint&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Location is the full sequence by default.&quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">location_or_default</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+            <span class="n">default</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">default</span> <span class="k">if</span> <span class="n">location</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">location</span>
+
+        <span class="n">location</span> <span class="o">=</span> <span class="n">location_or_default</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="n">location_or_default</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">reference</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return 0 if the sequence has no repeats, else -number_of_repeats.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">localization_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_evaluation</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_evaluation</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">local_evaluation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
+        <span class="n">extract_kmer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kmer_extractor</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
+        <span class="n">variable_kmers</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="s2">&quot;extended&quot;</span><span class="p">):</span>
+            <span class="n">variable_kmers</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">localization_data</span><span class="p">[</span><span class="n">label</span><span class="p">][</span><span class="s2">&quot;changing_indices&quot;</span><span class="p">]:</span>
+                <span class="n">kmer</span> <span class="o">=</span> <span class="n">extract_kmer</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">kmer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+                    <span class="n">d</span><span class="p">[</span><span class="n">kmer</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">d</span><span class="p">[</span><span class="n">kmer</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+        <span class="n">nonunique_locations</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">kmer</span><span class="p">,</span> <span class="n">indices</span> <span class="ow">in</span> <span class="n">variable_kmers</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">nonunique_locations</span> <span class="o">+=</span> <span class="n">indices</span>
+        <span class="n">location_variable_kmers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">variable_kmers</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">extended_variable_kmers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">variable_kmers</span><span class="p">[</span><span class="s2">&quot;extended&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">fixed_location_kmers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">localization_data</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">][</span>
+            <span class="s2">&quot;fixed_kmers&quot;</span>
+        <span class="p">]</span>
+        <span class="n">extended_fixed_kmers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">localization_data</span><span class="p">[</span><span class="s2">&quot;extended&quot;</span><span class="p">][</span>
+            <span class="s2">&quot;fixed_kmers&quot;</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="n">extended_variable_kmers</span><span class="p">,</span>
+            <span class="n">fixed_location_kmers</span><span class="p">,</span>
+            <span class="n">extended_fixed_kmers</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="n">nonunique_locations</span> <span class="o">+=</span> <span class="p">[</span>
+                <span class="n">i</span>
+                <span class="k">for</span> <span class="n">kmer</span> <span class="ow">in</span> <span class="n">location_variable_kmers</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">variable_kmers</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">][</span><span class="n">kmer</span><span class="p">]</span>
+            <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">[</span><span class="n">location_variable_kmers</span><span class="p">,</span> <span class="n">fixed_location_kmers</span><span class="p">]:</span>
+            <span class="n">nonunique_locations</span> <span class="o">+=</span> <span class="p">[</span>
+                <span class="n">i</span>
+                <span class="k">for</span> <span class="n">kmer</span> <span class="ow">in</span> <span class="n">extended_variable_kmers</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">variable_kmers</span><span class="p">[</span><span class="s2">&quot;extended&quot;</span><span class="p">][</span><span class="n">kmer</span><span class="p">]</span>
+            <span class="p">]</span>
+        <span class="n">nonunique_locations</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">Location</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nonunique_locations</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">problem</span><span class="p">,</span>
+            <span class="n">score</span><span class="o">=-</span><span class="nb">len</span><span class="p">(</span><span class="n">nonunique_locations</span><span class="p">),</span>
+            <span class="n">locations</span><span class="o">=</span><span class="n">nonunique_locations</span><span class="p">,</span>
+            <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Failed, the following positions are the first occurences&quot;</span>
+            <span class="s2">&quot;of local non-unique segments </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">nonunique_locations</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_kmer_extractor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_cache</span><span class="p">:</span>
+            <span class="n">getter</span> <span class="o">=</span> <span class="n">get_kmer_extractor_cached</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">getter</span> <span class="o">=</span> <span class="n">get_kmer_extractor</span>
+        <span class="k">return</span> <span class="n">getter</span><span class="p">(</span>
+            <span class="n">sequence</span><span class="p">,</span>
+            <span class="n">k</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span>
+            <span class="n">include_reverse_complement</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">include_reverse_complement</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">global_evaluation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
+        <span class="n">extract_kmer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kmer_extractor</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
+        <span class="n">kmers_locations</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[])</span>
+        <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">end</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">):</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
+            <span class="n">kmer_sequence</span> <span class="o">=</span> <span class="n">extract_kmer</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">kmers_locations</span><span class="p">[</span><span class="n">kmer_sequence</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+
+        <span class="n">locations</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">Location</span><span class="p">(</span><span class="n">start_</span><span class="p">,</span> <span class="n">end_</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">locations_list</span> <span class="ow">in</span> <span class="n">kmers_locations</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">start_</span><span class="p">,</span> <span class="n">end_</span> <span class="ow">in</span> <span class="n">locations_list</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">locations_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+                <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="n">start_</span> <span class="o">&lt;</span> <span class="n">end_</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+            <span class="p">],</span>
+            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">l</span><span class="o">.</span><span class="n">start</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">locations</span> <span class="o">==</span> <span class="p">[]:</span>
+            <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="n">problem</span><span class="p">,</span>
+                <span class="n">score</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">locations</span><span class="o">=</span><span class="p">[],</span>
+                <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Passed: no nonunique </span><span class="si">%d</span><span class="s2">-mer found.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">problem</span><span class="p">,</span>
+            <span class="n">score</span><span class="o">=-</span><span class="nb">len</span><span class="p">(</span><span class="n">locations</span><span class="p">),</span>
+            <span class="n">locations</span><span class="o">=</span><span class="n">locations</span><span class="p">,</span>
+            <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Failed, the following positions are the first occurences &quot;</span>
+            <span class="s2">&quot;of non-unique segments </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">locations</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">localized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">with_righthand</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Localize the evaluation.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">location</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">problem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="n">extract_kmer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kmer_extractor</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">extended</span><span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">with_righthand</span><span class="p">)</span>
+        <span class="n">changing_kmers_zone</span> <span class="o">=</span> <span class="n">reference</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span>
+        <span class="n">changing_kmer_indices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">changing_kmers_zone</span><span class="o">.</span><span class="n">indices</span><span class="p">[:</span> <span class="o">-</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">localization_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">loc</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="s2">&quot;location&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="p">,</span> <span class="s2">&quot;extended&quot;</span><span class="p">),</span>
+        <span class="p">]:</span>
+            <span class="n">kmer_indices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">loc</span><span class="o">.</span><span class="n">indices</span><span class="p">[:</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">])</span>
+            <span class="n">fixed_kmer_indices</span> <span class="o">=</span> <span class="n">kmer_indices</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">changing_kmer_indices</span><span class="p">)</span>
+            <span class="n">fixed_kmers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">extract_kmer</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">fixed_kmer_indices</span><span class="p">])</span>
+            <span class="n">changing_inds</span> <span class="o">=</span> <span class="n">kmer_indices</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">changing_kmer_indices</span><span class="p">)</span>
+            <span class="n">localization_data</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;fixed_kmers&quot;</span><span class="p">:</span> <span class="n">fixed_kmers</span><span class="p">,</span>
+                <span class="s2">&quot;changing_indices&quot;</span><span class="p">:</span> <span class="n">changing_inds</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="n">localization_data</span><span class="p">[</span><span class="s2">&quot;extended&quot;</span><span class="p">][</span><span class="s2">&quot;changing_indices&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span>
+            <span class="n">localization_data</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">][</span><span class="s2">&quot;changing_indices&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span>
+            <span class="n">localization_data</span><span class="o">=</span><span class="n">localization_data</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">changing_kmers_zone</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">shifted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shift</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Shift the location of the specification.</span>
+<span class="sd">        This will also shift the reference.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_location</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="n">shift</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span> <span class="o">+</span> <span class="n">shift</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span>
+            <span class="n">location</span><span class="o">=</span><span class="n">new_location</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">reference</span><span class="p">,</span> <span class="n">derived_from</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">label_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">))]</span>
+
+    <span class="k">def</span> <span class="nf">short_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;All </span><span class="si">%d</span><span class="s2">bp unique&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span></div>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>

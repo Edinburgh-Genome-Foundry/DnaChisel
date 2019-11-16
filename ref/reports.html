@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,7 +7,9 @@
     
       <link rel="stylesheet" href="../_static/pygments.css">
       <link rel="stylesheet" href="../_static/theme.css">
-      <link rel="stylesheet" href="../_static/css/custom.css">
+      <link rel="stylesheet" href="../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../_static/css/press_main.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
@@ -29,7 +29,8 @@
   <link rel="prev" title="Core Classes" href="core_classes.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="../index.html" class="home-link">
     
       <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
@@ -63,12 +64,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -106,12 +110,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -251,43 +258,9 @@
   <div class="section" id="module-dnachisel.reports.optimization_reports">
 <span id="reports"></span><h1>Reports<a class="headerlink" href="#module-dnachisel.reports.optimization_reports" title="Permalink to this headline">¶</a></h1>
 <p>Methods to generate optimization reports.</p>
-<dl class="class">
-<dt id="dnachisel.reports.optimization_reports.SpecAnnotationsTranslator">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.reports.optimization_reports.</code><code class="sig-name descname">SpecAnnotationsTranslator</code><span class="sig-paren">(</span><em class="sig-param">features_filters=()</em>, <em class="sig-param">features_properties=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#SpecAnnotationsTranslator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Translator of DnaChisel feature-constraints for DNA Features Viewer</p>
-<dl class="method">
-<dt id="dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_feature_color">
-<code class="sig-name descname">compute_feature_color</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#SpecAnnotationsTranslator.compute_feature_color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_feature_color" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute a color for this feature.</p>
-<p>If the feature has a <code class="docutils literal notranslate"><span class="pre">color</span></code> qualifier it will be used. Otherwise,
-the classe’s <code class="docutils literal notranslate"><span class="pre">default_feature_color</span></code> is used.</p>
-<p>To change the behaviour, create a subclass of <code class="docutils literal notranslate"><span class="pre">BiopythonTranslator</span></code>
-and overwrite this method.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_feature_label">
-<code class="sig-name descname">compute_feature_label</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#SpecAnnotationsTranslator.compute_feature_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_feature_label" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the ‘label’ of the feature.</p>
-<p>This method looks for the first non-empty qualifier of the feature
-in this order <code class="docutils literal notranslate"><span class="pre">label</span></code>, <code class="docutils literal notranslate"><span class="pre">source</span></code>, <code class="docutils literal notranslate"><span class="pre">locus_tag</span></code>, <code class="docutils literal notranslate"><span class="pre">note</span></code>, which
-means that you can provide a label with, for instance
-<code class="docutils literal notranslate"><span class="pre">feature.qualifiers['note']</span> <span class="pre">=</span> <span class="pre">'some</span> <span class="pre">note'</span></code>.</p>
-<p>To change the behaviour, create a subclass of <code class="docutils literal notranslate"><span class="pre">BiopythonTranslator</span></code>
-and overwrite this method.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_filtered_features">
-<code class="sig-name descname">compute_filtered_features</code><span class="sig-paren">(</span><em class="sig-param">features</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#SpecAnnotationsTranslator.compute_filtered_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_filtered_features" title="Permalink to this definition">¶</a></dt>
-<dd><p>Do not display edits.</p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="function">
 <dt id="dnachisel.reports.optimization_reports.write_no_solution_report">
-<code class="sig-prename descclassname">dnachisel.reports.optimization_reports.</code><code class="sig-name descname">write_no_solution_report</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">problem</em>, <em class="sig-param">error</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#write_no_solution_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.write_no_solution_report" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.reports.optimization_reports.</code><code class="sig-name descname">write_no_solution_report</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">problem</em>, <em class="sig-param">error</em>, <em class="sig-param">file_content=None</em>, <em class="sig-param">file_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#write_no_solution_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.write_no_solution_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a report on incompatibility found in the problem’s constraints.</p>
 <p>The report comprises a PDF of plots of the sequence (global constraints,
 local constraints around the problem) and an annotated genbank.</p>
@@ -312,7 +285,7 @@ return raw data of a zip archive containing the report.</p>
 
 <dl class="function">
 <dt id="dnachisel.reports.optimization_reports.write_optimization_report">
-<code class="sig-prename descclassname">dnachisel.reports.optimization_reports.</code><code class="sig-name descname">write_optimization_report</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">problem</em>, <em class="sig-param">project_name='unnammed'</em>, <em class="sig-param">constraints_evaluations=None</em>, <em class="sig-param">objectives_evaluations=None</em>, <em class="sig-param">figure_width=20</em>, <em class="sig-param">max_features_in_plots=300</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#write_optimization_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.write_optimization_report" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.reports.optimization_reports.</code><code class="sig-name descname">write_optimization_report</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">problem</em>, <em class="sig-param">project_name='unnammed'</em>, <em class="sig-param">plot_figure=True</em>, <em class="sig-param">constraints_evaluations=None</em>, <em class="sig-param">objectives_evaluations=None</em>, <em class="sig-param">figure_width=20</em>, <em class="sig-param">max_features_in_plots=300</em>, <em class="sig-param">file_path=None</em>, <em class="sig-param">file_content=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#write_optimization_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.write_optimization_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write an optimization report with a PDF summary, plots, and genbanks.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
@@ -350,6 +323,10 @@ most cases.</p>
 <div><p>Limit to the number of features to plot (plots with thousands of features
 may take ages to plot)</p>
 </div></blockquote>
+<p><strong>file_path</strong></p>
+<blockquote>
+<div><p>Path to the file from which the problem was created</p>
+</div></blockquote>
 </dd>
 </dl>
 </dd></dl>
@@ -376,5 +353,8 @@ may take ages to plot)</p>
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

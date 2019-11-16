@@ -1,6 +1,4 @@
 
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -10,7 +8,9 @@
     
       <link rel="stylesheet" href="_static/pygments.css">
       <link rel="stylesheet" href="_static/theme.css">
-      <link rel="stylesheet" href="_static/css/custom.css">
+      <link rel="stylesheet" href="_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="_static/css/press_main.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
 
@@ -28,7 +28,8 @@
   <link rel="search" title="Search" href="search.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="index.html" class="home-link">
     
       <img class="logo" src="_static/html_logo.png" alt="doit logo"/>
@@ -62,12 +63,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -105,12 +109,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -248,25 +255,25 @@
  | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
  | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
  | <a href="#W"><strong>W</strong></a>
  
 </div>
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref/core_classes.html#dnachisel.DnaOptimizationProblem.all_constraints_pass">all_constraints_pass() (dnachisel.DnaOptimizationProblem method)</a>
+      <li><a href="ref/core_classes.html#dnachisel.CircularDnaOptimizationProblem.all_constraints_pass">all_constraints_pass() (dnachisel.CircularDnaOptimizationProblem method)</a>
 </li>
-      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluations.all_evaluations_pass">all_evaluations_pass() (dnachisel.SpecEvaluation.SpecEvaluations method)</a>
-</li>
-      <li><a href="ref/core_classes.html#dnachisel.MutationSpace.MutationSpace.all_variants">all_variants() (dnachisel.MutationSpace.MutationSpace method)</a>
+      <li><a href="ref/core_classes.html#dnachisel.DnaNotationPattern.all_variants">all_variants() (dnachisel.DnaNotationPattern method)</a>
 
       <ul>
-        <li><a href="ref/core_classes.html#dnachisel.SequencePattern.DnaNotationPattern.all_variants">(dnachisel.SequencePattern.DnaNotationPattern method)</a>
+        <li><a href="ref/core_classes.html#dnachisel.MutationSpace.MutationSpace.all_variants">(dnachisel.MutationSpace.MutationSpace method)</a>
 </li>
       </ul></li>
       <li><a href="ref/builtin_specifications.html#dnachisel.builtin_specifications.AllowPrimer">AllowPrimer (class in dnachisel.builtin_specifications)</a>
@@ -279,6 +286,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/core_classes.html#dnachisel.MotifPssmPattern.apply_pseudocounts">apply_pseudocounts() (dnachisel.MotifPssmPattern class method)</a>
+</li>
       <li><a href="ref/core_classes.html#dnachisel.MutationSpace.MutationSpace.apply_random_mutations">apply_random_mutations() (dnachisel.MutationSpace.MutationSpace method)</a>
 </li>
       <li><a href="ref/core_classes.html#dnachisel.Specification.as_passive_objective">as_passive_objective() (dnachisel.Specification method)</a>
@@ -288,8 +297,6 @@
       <li><a href="ref/builtin_specifications.html#dnachisel.builtin_specifications.AvoidChanges">AvoidChanges (class in dnachisel.builtin_specifications)</a>
 </li>
       <li><a href="ref/builtin_specifications.html#dnachisel.builtin_specifications.AvoidHairpins">AvoidHairpins (class in dnachisel.builtin_specifications)</a>
-</li>
-      <li><a href="ref/builtin_specifications.html#dnachisel.builtin_specifications.AvoidNonUniqueSegments">AvoidNonUniqueSegments (class in dnachisel.builtin_specifications)</a>
 </li>
       <li><a href="ref/builtin_specifications.html#dnachisel.builtin_specifications.AvoidPattern">AvoidPattern (class in dnachisel.builtin_specifications)</a>
 </li>
@@ -319,28 +326,18 @@
 </li>
       <li><a href="ref/core_classes.html#dnachisel.CircularDnaOptimizationProblem">CircularDnaOptimizationProblem (class in dnachisel)</a>
 </li>
-      <li><a href="ref/builtin_specifications.html#dnachisel.builtin_specifications.CodonOptimize">CodonOptimize (class in dnachisel.builtin_specifications)</a>
-</li>
-      <li><a href="ref/biotools.html#dnachisel.biotools.complement">complement() (in module dnachisel.biotools)</a>
-</li>
-      <li><a href="ref/reports.html#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_feature_color">compute_feature_color() (dnachisel.reports.optimization_reports.SpecAnnotationsTranslator method)</a>
+      <li><a href="ref/builtin_specifications.html#dnachisel.builtin_specifications.CodonOptimize">CodonOptimize() (in module dnachisel.builtin_specifications)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref/reports.html#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_feature_label">compute_feature_label() (dnachisel.reports.optimization_reports.SpecAnnotationsTranslator method)</a>
-</li>
-      <li><a href="ref/reports.html#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator.compute_filtered_features">compute_filtered_features() (dnachisel.reports.optimization_reports.SpecAnnotationsTranslator method)</a>
+      <li><a href="ref/biotools.html#dnachisel.biotools.complement">complement() (in module dnachisel.biotools)</a>
 </li>
       <li><a href="ref/core_classes.html#dnachisel.MutationSpace.MutationSpace.constrain_sequence">constrain_sequence() (dnachisel.MutationSpace.MutationSpace method)</a>
 </li>
       <li><a href="ref/constraints_reports.html#dnachisel.reports.constraints_reports.constraints_breaches_dataframe">constraints_breaches_dataframe() (in module dnachisel.reports.constraints_reports)</a>
 </li>
       <li><a href="ref/core_classes.html#dnachisel.CircularDnaOptimizationProblem.constraints_evaluations">constraints_evaluations() (dnachisel.CircularDnaOptimizationProblem method)</a>
-
-      <ul>
-        <li><a href="ref/core_classes.html#dnachisel.DnaOptimizationProblem.constraints_evaluations">(dnachisel.DnaOptimizationProblem method)</a>
 </li>
-      </ul></li>
       <li><a href="ref/core_classes.html#dnachisel.Specification.copy_with_changes">copy_with_changes() (dnachisel.Specification method)</a>
 </li>
   </ul></td>
@@ -349,13 +346,13 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluation.default_message">default_message() (dnachisel.SpecEvaluation.SpecEvaluation property)</a>
+      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.default_message">default_message (in module dnachisel.SpecEvaluation)</a>
 </li>
       <li><a href="ref/biotools.html#dnachisel.biotools.dict_to_pretty_string">dict_to_pretty_string() (in module dnachisel.biotools)</a>
 </li>
       <li><a href="ref/biotools.html#dnachisel.biotools.dna_pattern_to_regexpr">dna_pattern_to_regexpr() (in module dnachisel.biotools)</a>
 </li>
-      <li><a href="ref/core_classes.html#dnachisel.SequencePattern.DnaNotationPattern.dna_sequence_to_regexpr">dna_sequence_to_regexpr() (dnachisel.SequencePattern.DnaNotationPattern static method)</a>
+      <li><a href="ref/core_classes.html#dnachisel.DnaNotationPattern.dna_sequence_to_regexpr">dna_sequence_to_regexpr() (dnachisel.DnaNotationPattern static method)</a>
 </li>
       <li><a href="ref/biotools.html#module-dnachisel.biotools">dnachisel.biotools (module)</a>
 </li>
@@ -369,11 +366,9 @@
 </li>
       <li><a href="ref/reports.html#module-dnachisel.reports.optimization_reports">dnachisel.reports.optimization_reports (module)</a>
 </li>
-      <li><a href="ref/core_classes.html#module-dnachisel.SequencePattern">dnachisel.SequencePattern (module)</a>
-</li>
       <li><a href="ref/core_classes.html#module-dnachisel.SpecEvaluation">dnachisel.SpecEvaluation (module)</a>
 </li>
-      <li><a href="ref/core_classes.html#dnachisel.SequencePattern.DnaNotationPattern">DnaNotationPattern (class in dnachisel.SequencePattern)</a>
+      <li><a href="ref/core_classes.html#dnachisel.DnaNotationPattern">DnaNotationPattern (class in dnachisel)</a>
 </li>
       <li><a href="ref/core_classes.html#dnachisel.DnaOptimizationProblem">DnaOptimizationProblem (class in dnachisel)</a>
 </li>
@@ -391,13 +386,11 @@
 </li>
       <li><a href="ref/builtin_specifications.html#dnachisel.builtin_specifications.EnforceSequence">EnforceSequence (class in dnachisel.builtin_specifications)</a>
 </li>
-      <li><a href="ref/builtin_specifications.html#dnachisel.builtin_specifications.EnforceTranslation">EnforceTranslation (class in dnachisel.builtin_specifications)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref/core_classes.html#dnachisel.SequencePattern.EnzymeSitePattern">EnzymeSitePattern (class in dnachisel.SequencePattern)</a>
+      <li><a href="ref/builtin_specifications.html#dnachisel.builtin_specifications.EnforceTranslation">EnforceTranslation (class in dnachisel.builtin_specifications)</a>
 </li>
-      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluations.evaluations_with_locations">evaluations_with_locations() (dnachisel.SpecEvaluation.SpecEvaluations method)</a>
+      <li><a href="ref/core_classes.html#dnachisel.EnzymeSitePattern">EnzymeSitePattern (class in dnachisel)</a>
 </li>
       <li><a href="ref/core_classes.html#dnachisel.Location.Location.extended">extended() (dnachisel.Location.Location method)</a>
 </li>
@@ -411,29 +404,25 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluations.filter">filter() (dnachisel.SpecEvaluation.SpecEvaluations method)</a>
+      <li><a href="ref/biotools.html#dnachisel.biotools.find_all_bowtie_matches">find_all_bowtie_matches() (in module dnachisel.biotools)</a>
 </li>
-      <li><a href="ref/core_classes.html#dnachisel.SequencePattern.SequencePattern.find_matches">find_matches() (dnachisel.SequencePattern.SequencePattern method)</a>
+      <li><a href="ref/core_classes.html#dnachisel.SequencePattern.find_matches">find_matches() (dnachisel.SequencePattern method)</a>
 </li>
-      <li><a href="ref/biotools.html#dnachisel.biotools.find_specification_in_feature">find_specification_in_feature() (in module dnachisel.biotools)</a>
+      <li><a href="ref/core_classes.html#dnachisel.MotifPssmPattern.find_matches_in_string">find_matches_in_string() (dnachisel.MotifPssmPattern method)</a>
 </li>
-      <li><a href="ref/core_classes.html#dnachisel.Specification.from_biopython_feature">from_biopython_feature() (dnachisel.Specification static method)</a>
-</li>
-      <li><a href="ref/core_classes.html#dnachisel.Location.Location.from_biopython_location">from_biopython_location() (dnachisel.Location.Location static method)</a>
+      <li><a href="ref/biotools.html#dnachisel.biotools.find_specification_label_in_feature">find_specification_label_in_feature() (in module dnachisel.biotools)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/core_classes.html#dnachisel.Location.Location.from_biopython_location">from_biopython_location() (dnachisel.Location.Location static method)</a>
+</li>
+      <li><a href="ref/core_classes.html#dnachisel.Location.Location.from_data">from_data() (dnachisel.Location.Location static method)</a>
+</li>
       <li><a href="ref/core_classes.html#dnachisel.MutationSpace.MutationSpace.from_optimization_problem">from_optimization_problem() (dnachisel.MutationSpace.MutationSpace static method)</a>
 </li>
-      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.ProblemConstraintsEvaluations.from_problem">from_problem() (dnachisel.SpecEvaluation.ProblemConstraintsEvaluations static method)</a>
-
-      <ul>
-        <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.ProblemObjectivesEvaluations.from_problem">(dnachisel.SpecEvaluation.ProblemObjectivesEvaluations static method)</a>
+      <li><a href="ref/core_classes.html#dnachisel.MotifPssmPattern.from_sequences">from_sequences() (dnachisel.MotifPssmPattern class method)</a>
 </li>
-      </ul></li>
-      <li><a href="ref/core_classes.html#dnachisel.DnaOptimizationProblem.from_record">from_record() (dnachisel.DnaOptimizationProblem class method)</a>
-</li>
-      <li><a href="ref/core_classes.html#dnachisel.SequencePattern.EnzymeSitePattern.from_string">from_string() (dnachisel.SequencePattern.EnzymeSitePattern static method)</a>
+      <li><a href="ref/core_classes.html#dnachisel.EnzymeSitePattern.from_string">from_string() (dnachisel.EnzymeSitePattern static method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -455,7 +444,11 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref/core_classes.html#dnachisel.SequencePattern.HomopolymerPattern">HomopolymerPattern (class in dnachisel.SequencePattern)</a>
+      <li><a href="ref/builtin_specifications.html#dnachisel.builtin_specifications.HarmonizeRCA">HarmonizeRCA (class in dnachisel.builtin_specifications)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/core_classes.html#dnachisel.HomopolymerPattern">HomopolymerPattern (class in dnachisel)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -475,10 +468,16 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/core_classes.html#dnachisel.Specification.label">label() (dnachisel.Specification method)</a>
+</li>
       <li><a href="ref/core_classes.html#dnachisel.Specification.label_parameters">label_parameters() (dnachisel.Specification method)</a>
 </li>
       <li><a href="ref/biotools.html#dnachisel.biotools.list_common_enzymes">list_common_enzymes() (in module dnachisel.biotools)</a>
 </li>
+      <li><a href="ref/core_classes.html#dnachisel.MotifPssmPattern.list_from_file">list_from_file() (dnachisel.MotifPssmPattern class method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ref/biotools.html#dnachisel.biotools.load_record">load_record() (in module dnachisel.biotools)</a>
 </li>
       <li><a href="ref/core_classes.html#dnachisel.MutationSpace.MutationSpace.localized">localized() (dnachisel.MutationSpace.MutationSpace method)</a>
@@ -487,13 +486,7 @@
         <li><a href="ref/core_classes.html#dnachisel.Specification.localized">(dnachisel.Specification method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ref/core_classes.html#dnachisel.Location.Location">Location (class in dnachisel.Location)</a>
-</li>
-      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluations.locations_as_features">locations_as_features() (dnachisel.SpecEvaluation.SpecEvaluations method)</a>
-</li>
-      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluation.locations_to_biopython_features">locations_to_biopython_features() (dnachisel.SpecEvaluation.SpecEvaluation method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -501,13 +494,17 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref/core_classes.html#dnachisel.Location.Location.merge_overlapping_locations">merge_overlapping_locations() (dnachisel.Location.Location static method)</a>
+      <li><a href="ref/builtin_specifications.html#dnachisel.builtin_specifications.MatchTargetCodonUsage">MatchTargetCodonUsage (class in dnachisel.builtin_specifications)</a>
 </li>
-      <li><a href="ref/core_classes.html#dnachisel.MutationSpace.MutationChoice.merge_with">merge_with() (dnachisel.MutationSpace.MutationChoice method)</a>
+      <li><a href="ref/builtin_specifications.html#dnachisel.builtin_specifications.MaximizeCAI">MaximizeCAI (class in dnachisel.builtin_specifications)</a>
+</li>
+      <li><a href="ref/core_classes.html#dnachisel.Location.Location.merge_overlapping_locations">merge_overlapping_locations() (dnachisel.Location.Location static method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref/core_classes.html#dnachisel.Location.MultiLocation">MultiLocation (class in dnachisel.Location)</a>
+      <li><a href="ref/core_classes.html#dnachisel.MutationSpace.MutationChoice.merge_with">merge_with() (dnachisel.MutationSpace.MutationChoice method)</a>
+</li>
+      <li><a href="ref/core_classes.html#dnachisel.MotifPssmPattern">MotifPssmPattern (class in dnachisel)</a>
 </li>
       <li><a href="ref/core_classes.html#dnachisel.MutationSpace.MutationChoice">MutationChoice (class in dnachisel.MutationSpace)</a>
 </li>
@@ -516,27 +513,23 @@
   </ul></td>
 </tr></table>
 
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/core_classes.html#dnachisel.DnaOptimizationProblem.number_of_edits">number_of_edits() (dnachisel.DnaOptimizationProblem method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ref/core_classes.html#dnachisel.CircularDnaOptimizationProblem.objectives_evaluations">objectives_evaluations() (dnachisel.CircularDnaOptimizationProblem method)</a>
-
-      <ul>
-        <li><a href="ref/core_classes.html#dnachisel.DnaOptimizationProblem.objectives_evaluations">(dnachisel.DnaOptimizationProblem method)</a>
 </li>
-      </ul></li>
       <li><a href="ref/core_classes.html#dnachisel.CircularDnaOptimizationProblem.optimize">optimize() (dnachisel.CircularDnaOptimizationProblem method)</a>
-
-      <ul>
-        <li><a href="ref/core_classes.html#dnachisel.DnaOptimizationProblem.optimize">(dnachisel.DnaOptimizationProblem method)</a>
 </li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref/core_classes.html#dnachisel.DnaOptimizationProblem.optimize_by_exhaustive_search">optimize_by_exhaustive_search() (dnachisel.DnaOptimizationProblem method)</a>
-</li>
-      <li><a href="ref/core_classes.html#dnachisel.DnaOptimizationProblem.optimize_by_random_mutations">optimize_by_random_mutations() (dnachisel.DnaOptimizationProblem method)</a>
-</li>
       <li><a href="ref/core_classes.html#dnachisel.CircularDnaOptimizationProblem.optimize_with_report">optimize_with_report() (dnachisel.CircularDnaOptimizationProblem method)</a>
 
       <ul>
@@ -554,12 +547,6 @@
       <li><a href="ref/core_classes.html#dnachisel.MutationSpace.MutationSpace.pick_random_mutations">pick_random_mutations() (dnachisel.MutationSpace.MutationSpace method)</a>
 </li>
   </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.ProblemConstraintsEvaluations">ProblemConstraintsEvaluations (class in dnachisel.SpecEvaluation)</a>
-</li>
-      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.ProblemObjectivesEvaluations">ProblemObjectivesEvaluations (class in dnachisel.SpecEvaluation)</a>
-</li>
-  </ul></td>
 </tr></table>
 
 <h2 id="R">R</h2>
@@ -573,23 +560,11 @@
 </li>
       <li><a href="ref/constraints_reports.html#dnachisel.reports.constraints_reports.records_from_breaches_dataframe">records_from_breaches_dataframe() (in module dnachisel.reports.constraints_reports)</a>
 </li>
-      <li><a href="ref/core_classes.html#dnachisel.SequencePattern.RepeatedKmerPattern">RepeatedKmerPattern (class in dnachisel.SequencePattern)</a>
+      <li><a href="ref/core_classes.html#dnachisel.RepeatedKmerPattern">RepeatedKmerPattern (class in dnachisel)</a>
 </li>
-      <li><a href="ref/core_classes.html#dnachisel.DnaOptimizationProblem.resolve_constraint">resolve_constraint() (dnachisel.DnaOptimizationProblem method)</a>
-</li>
-      <li><a href="ref/core_classes.html#dnachisel.CircularDnaOptimizationProblem.resolve_constraints">resolve_constraints() (dnachisel.CircularDnaOptimizationProblem method)</a>
-
-      <ul>
-        <li><a href="ref/core_classes.html#dnachisel.DnaOptimizationProblem.resolve_constraints">(dnachisel.DnaOptimizationProblem method)</a>
-</li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref/core_classes.html#dnachisel.DnaOptimizationProblem.resolve_constraints_by_exhaustive_search">resolve_constraints_by_exhaustive_search() (dnachisel.DnaOptimizationProblem method)</a>
-</li>
-      <li><a href="ref/core_classes.html#dnachisel.DnaOptimizationProblem.resolve_constraints_by_random_mutations">resolve_constraints_by_random_mutations() (dnachisel.DnaOptimizationProblem method)</a>
-</li>
-      <li><a href="ref/core_classes.html#dnachisel.DnaOptimizationProblem.resolve_constraints_locally">resolve_constraints_locally() (dnachisel.DnaOptimizationProblem method)</a>
+      <li><a href="ref/core_classes.html#dnachisel.CircularDnaOptimizationProblem.resolve_constraints">resolve_constraints() (dnachisel.CircularDnaOptimizationProblem method)</a>
 </li>
       <li><a href="ref/core_classes.html#dnachisel.Specification.restrict_nucleotides">restrict_nucleotides() (dnachisel.Specification method)</a>
 </li>
@@ -607,77 +582,55 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ref/biotools.html#dnachisel.biotools.score_to_formatted_string">score_to_formatted_string() (in module dnachisel.biotools)</a>
 </li>
-      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluations.scores_sum">scores_sum() (dnachisel.SpecEvaluation.SpecEvaluations method)</a>
+      <li><a href="ref/core_classes.html#dnachisel.DnaOptimizationProblem.sequence_edits_as_array">sequence_edits_as_array() (dnachisel.DnaOptimizationProblem method)</a>
 </li>
       <li><a href="ref/biotools.html#dnachisel.biotools.sequence_to_biopython_record">sequence_to_biopython_record() (in module dnachisel.biotools)</a>
 </li>
       <li><a href="ref/builtin_specifications.html#dnachisel.builtin_specifications.SequenceLengthBounds">SequenceLengthBounds (class in dnachisel.builtin_specifications)</a>
 </li>
-      <li><a href="ref/core_classes.html#dnachisel.SequencePattern.SequencePattern">SequencePattern (class in dnachisel.SequencePattern)</a>
+      <li><a href="ref/core_classes.html#dnachisel.SequencePattern">SequencePattern (class in dnachisel)</a>
 </li>
       <li><a href="ref/biotools.html#dnachisel.biotools.sequences_differences">sequences_differences() (in module dnachisel.biotools)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ref/biotools.html#dnachisel.biotools.sequences_differences_array">sequences_differences_array() (in module dnachisel.biotools)</a>
 </li>
       <li><a href="ref/biotools.html#dnachisel.biotools.sequences_differences_segments">sequences_differences_segments() (in module dnachisel.biotools)</a>
 </li>
       <li><a href="ref/core_classes.html#dnachisel.Specification.shifted">shifted() (dnachisel.Specification method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ref/core_classes.html#dnachisel.Specification.short_label">short_label() (dnachisel.Specification method)</a>
 </li>
       <li><a href="ref/core_classes.html#dnachisel.MutationSpace.MutationSpace.space_size">space_size() (dnachisel.MutationSpace.MutationSpace property)</a>
-</li>
-      <li><a href="ref/reports.html#dnachisel.reports.optimization_reports.SpecAnnotationsTranslator">SpecAnnotationsTranslator (class in dnachisel.reports.optimization_reports)</a>
-</li>
-      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluation">SpecEvaluation (class in dnachisel.SpecEvaluation)</a>
-</li>
-      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluations">SpecEvaluations (class in dnachisel.SpecEvaluation)</a>
 </li>
       <li><a href="ref/core_classes.html#dnachisel.Specification">Specification (class in dnachisel)</a>
 </li>
       <li><a href="ref/biotools.html#dnachisel.biotools.subdivide_window">subdivide_window() (in module dnachisel.biotools)</a>
 </li>
-      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluations.success_and_failures_as_features">success_and_failures_as_features() (dnachisel.SpecEvaluation.SpecEvaluations method)</a>
-</li>
-      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.ProblemConstraintsEvaluations.success_failure_color">success_failure_color() (dnachisel.SpecEvaluation.ProblemConstraintsEvaluations method)</a>
-
-      <ul>
-        <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.ProblemObjectivesEvaluations.success_failure_color">(dnachisel.SpecEvaluation.ProblemObjectivesEvaluations method)</a>
-</li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.ProblemConstraintsEvaluations.text_summary_message">text_summary_message() (dnachisel.SpecEvaluation.ProblemConstraintsEvaluations method)</a>
-
-      <ul>
-        <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.ProblemObjectivesEvaluations.text_summary_message">(dnachisel.SpecEvaluation.ProblemObjectivesEvaluations method)</a>
-</li>
-      </ul></li>
       <li><a href="ref/core_classes.html#dnachisel.Location.Location.to_biopython_feature">to_biopython_feature() (dnachisel.Location.Location method)</a>
-
-      <ul>
-        <li><a href="ref/core_classes.html#dnachisel.Specification.to_biopython_feature">(dnachisel.Specification method)</a>
 </li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ref/core_classes.html#dnachisel.Location.Location.to_biopython_location">to_biopython_location() (dnachisel.Location.Location method)</a>
 </li>
-      <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluation.to_text">to_text() (dnachisel.SpecEvaluation.SpecEvaluation method)</a>
-
-      <ul>
-        <li><a href="ref/core_classes.html#dnachisel.SpecEvaluation.SpecEvaluations.to_text">(dnachisel.SpecEvaluation.SpecEvaluations method)</a>
-</li>
-      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ref/core_classes.html#dnachisel.Location.Location.to_tuple">to_tuple() (dnachisel.Location.Location method)</a>
 </li>
       <li><a href="ref/biotools.html#dnachisel.biotools.translate">translate() (in module dnachisel.biotools)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/builtin_specifications.html#dnachisel.builtin_specifications.UniquifyAllKmers">UniquifyAllKmers (class in dnachisel.builtin_specifications)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -687,11 +640,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ref/biotools.html#dnachisel.biotools.windows_overlap">windows_overlap() (in module dnachisel.biotools)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ref/reports.html#dnachisel.reports.optimization_reports.write_no_solution_report">write_no_solution_report() (in module dnachisel.reports.optimization_reports)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ref/reports.html#dnachisel.reports.optimization_reports.write_optimization_report">write_optimization_report() (in module dnachisel.reports.optimization_reports)</a>
+</li>
+      <li><a href="ref/biotools.html#dnachisel.biotools.write_record">write_record() (in module dnachisel.biotools)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -709,5 +664,8 @@
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html >
   <head>
@@ -9,7 +7,9 @@
     
       <link rel="stylesheet" href="_static/pygments.css">
       <link rel="stylesheet" href="_static/theme.css">
-      <link rel="stylesheet" href="_static/css/custom.css">
+      <link rel="stylesheet" href="_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="_static/css/press_main.css" type="text/css" />
       
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
 
@@ -28,7 +28,8 @@
   <link rel="prev" title="Genbank usage notes" href="genbank/genbank_notes.html" /> 
   </head>
 
-  <body><div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="index.html" class="home-link">
     
       <img class="logo" src="_static/html_logo.png" alt="doit logo"/>
@@ -62,12 +63,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
     </navlinks>
   </div>
@@ -105,12 +109,15 @@
   
 
 
-<div class="nav-item">
-  <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
-     class="nav-link external">
-       Github <outboundlink/>
-  </a>
-</div>
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
             
           </navlinks><div id="searchbox" class="searchbox" role="search">
@@ -322,9 +329,7 @@ code repository</p>
 <span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">dc</span><span class="o">.</span><span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;BsmBI_site&quot;</span><span class="p">),</span>
     <span class="n">dc</span><span class="o">.</span><span class="n">EnforceGCContent</span><span class="p">(</span><span class="n">mini</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">1500</span><span class="p">,</span> <span class="mi">2500</span><span class="p">),</span> <span class="n">window</span><span class="o">=</span><span class="mi">50</span><span class="p">),</span>
-    <span class="n">dc</span><span class="o">.</span><span class="n">AvoidNonUniqueSegments</span><span class="p">(</span>
-        <span class="n">min_length</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="n">extended_location</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
-    <span class="p">),</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">UniquifyAllKmers</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)),</span>
 <span class="p">]</span>
 
 <span class="n">problem</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">CircularDnaOptimizationProblem</span><span class="p">(</span>
@@ -334,7 +339,6 @@ code repository</p>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;BEFORE OPTIMIZATION:</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">())</span>
 <span class="n">problem</span><span class="o">.</span><span class="n">resolve_constraints</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;AFTER OPTIMIZATION:</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints_text_summary</span><span class="p">())</span>
-
 </pre></div>
 </div>
 </div>
@@ -400,7 +404,7 @@ code repository</p>
     <span class="o">+</span> <span class="s2">&quot;db=nucleotide&amp;id=48994873&amp;rettype=gb&amp;retmode=txt&quot;</span>
 <span class="p">)</span>
 <span class="n">genbank_data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-<span class="n">genbank_record</span> <span class="o">=</span> <span class="n">load_record</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">genbank_data</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;genbank&quot;</span><span class="p">)</span>
+<span class="n">genbank_record</span> <span class="o">=</span> <span class="n">load_record</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">genbank_data</span><span class="p">),</span> <span class="n">file_format</span><span class="o">=</span><span class="s2">&quot;genbank&quot;</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;INITIALIZING THE PROBLEM WITH CONSTRAINTS FOR EACH GENE...&quot;</span><span class="p">)</span>
 
@@ -410,7 +414,7 @@ code repository</p>
         <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_biopython_location</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
             <span class="n">gene_constraints</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">EnforceTranslation</span><span class="p">(</span><span class="n">location</span><span class="p">),</span>
+                <span class="n">EnforceTranslation</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span><span class="p">),</span>
                 <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;BsmBI_site&quot;</span><span class="p">,</span> <span class="n">location</span><span class="p">),</span>
                 <span class="n">EnforceGCContent</span><span class="p">(</span>
                     <span class="n">mini</span><span class="o">=</span><span class="mf">0.40</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="mf">0.60</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">location</span>
@@ -643,5 +647,8 @@ code repository</p>
             </div>
           </div>
       </page>
-  </div></body>
+    </div>
+    
+    
+  </body>
 </html>

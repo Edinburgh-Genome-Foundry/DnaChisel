@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnachisel.builtin_specifications.codon_optimization.HarmonizeRCA</title>
+    
+      <link rel="stylesheet" href="../../../../_static/pygments.css">
+      <link rel="stylesheet" href="../../../../_static/theme.css">
+      <link rel="stylesheet" href="../../../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../../../_static/css/press_main.css" type="text/css" />
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+
+      
+      <script src="../../../../_static/theme-vendors.js"></script>
+      <script src="../../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../../index.html" class="home-link">
+    
+      <img class="logo" src="../../../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#more-biology-software"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#more-biology-software"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../../index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../../ref/core_classes.html" class="reference internal ">Core Classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/constraints_reports.html" class="reference internal ">Constraints reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/cli.html" class="reference internal ">Command Line Interface</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../notes.html" class="reference internal ">Notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../../index.html#more-biology-software">Using Genbanks</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../../genbank/genbank_api.html" class="reference internal ">Genbank API</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../genbank/genbank_notes.html" class="reference internal ">Genbank usage notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../../../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnachisel.builtin_specifications.codon_optimization.HarmonizeRCA</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for dnachisel.builtin_specifications.codon_optimization.HarmonizeRCA</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">dnachisel.Specification.SpecEvaluation</span> <span class="k">import</span> <span class="n">SpecEvaluation</span>
+<span class="kn">from</span> <span class="nn">.BaseCodonOptimizationClass</span> <span class="k">import</span> <span class="n">BaseCodonOptimizationClass</span>
+
+
+<div class="viewcode-block" id="HarmonizeRCA"><a class="viewcode-back" href="../../../../ref/builtin_specifications.html#dnachisel.builtin_specifications.HarmonizeRCA">[docs]</a><span class="k">class</span> <span class="nc">HarmonizeRCA</span><span class="p">(</span><span class="n">BaseCodonOptimizationClass</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Codon-Harmonize a native sequence for a new host (Claassens method).</span>
+
+<span class="sd">    This specification will optimize a Sequence 1 from Host 1 into a Sequence</span>
+<span class="sd">    2 for target Host 2.</span>
+
+<span class="sd">    In simple, rare Host 1 codons will be replaced by rare Host 2 codons, and</span>
+<span class="sd">    high-frequency Host 1 codons will get replaced by codons that are</span>
+<span class="sd">    high-frequency in Host 2.</span>
+
+<span class="sd">    In more specific, each codon along Sequence 1 gets replaced by the codon</span>
+<span class="sd">    whose Relative Codon Adaptiveness (RCA) in Host 2 is the closest from the</span>
+<span class="sd">    RCA of the original codon in Host 1. A codon&#39;s RCA in a given organism is</span>
+<span class="sd">    defined by f/fmax where f is the codon&#39;s frequency in the organism and fmax</span>
+<span class="sd">    is the highest frequency of all synonymous codons.</span>
+
+<span class="sd">    The minimized quantity is sum_i abs(RCA(c_i, H1) - RCA(c&#39;_i, H2))</span>
+<span class="sd">    where c_i, c&#39;_i represent the i-th codon before and after optimization</span>
+
+<span class="sd">    This method is taken from Claassens 2017, where they simplify a previous</span>
+<span class="sd">    algorithm (Angov 2008), which was much more complicated as it involved</span>
+<span class="sd">    predicting &quot;ribosome pausing&quot; sites in the sequence.</span>
+
+<span class="sd">    Warning: always use with an EnforceTranslation constraint.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    species</span>
+<span class="sd">      Name or TaxID of the species for which to optimize the sequence. A custom</span>
+<span class="sd">      codon_usage_table can be provided instead (or in addition, for species</span>
+<span class="sd">      names whose codon usage table cannot be imported).</span>
+
+<span class="sd">    codon_usage_table</span>
+<span class="sd">      A dict of the form ``{&#39;*&#39;: {&quot;TGA&quot;: 0.112, &quot;TAA&quot;: 0.68}, &#39;K&#39;: ...}``</span>
+<span class="sd">      giving the RSCU table (relative usage of each codon).</span>
+
+<span class="sd">    original_species</span>
+<span class="sd">      Name or TaxID of the species the original sequence was taken from. This</span>
+<span class="sd">      information will be used to spot codons which are supposed to be rare</span>
+<span class="sd">      or common. A codon_usage_table can be provided instead (or in addition,</span>
+<span class="sd">      for species names whose codon usage table cannot be imported).</span>
+
+<span class="sd">    original_codon_usage_table</span>
+<span class="sd">      A dict of the form ``{&#39;*&#39;: {&quot;TGA&quot;: 0.112, &quot;TAA&quot;: 0.68}, &#39;K&#39;: ...}``</span>
+<span class="sd">      giving the RSCU table (relative usage of each codon).</span>
+
+<span class="sd">    location</span>
+<span class="sd">      Location on which the specification applies</span>
+
+<span class="sd">    boost</span>
+<span class="sd">      Score multiplicator (=weight) for when the specification is used as an</span>
+<span class="sd">      optimization objective alongside competing objectives.</span>
+
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Claassens et. al., Improving heterologous membrane protein</span>
+<span class="sd">    production in Escherichia coli by combining transcriptional tuning and</span>
+<span class="sd">    codon usage algorithms. PLOS One, 2017</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">best_possible_score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">localization_group_spread</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">shorthand_name</span> <span class="o">=</span> <span class="s2">&quot;harmonize_rca&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">species</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">codon_usage_table</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">original_species</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">original_codon_usage_table</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">boost</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">BaseCodonOptimizationClass</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">species</span><span class="o">=</span><span class="n">species</span><span class="p">,</span>
+            <span class="n">codon_usage_table</span><span class="o">=</span><span class="n">codon_usage_table</span><span class="p">,</span>
+            <span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span>
+            <span class="n">boost</span><span class="o">=</span><span class="n">boost</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">codons_synonyms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_codons_synonyms</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_species</span> <span class="o">=</span> <span class="n">original_species</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_codon_usage_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_codons_table</span><span class="p">(</span>
+            <span class="n">original_species</span><span class="p">,</span> <span class="n">original_codon_usage_table</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_codon_usage_table</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="s2">&quot;RCA&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
+                <span class="n">table</span><span class="p">[</span><span class="s2">&quot;RCA&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">codon</span><span class="p">:</span> <span class="n">frequency</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">codons_frequencies</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+                    <span class="k">for</span> <span class="n">aa</span><span class="p">,</span> <span class="n">codons_frequencies</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="k">for</span> <span class="n">codon</span><span class="p">,</span> <span class="n">frequency</span> <span class="ow">in</span> <span class="n">codons_frequencies</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">aa</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+                <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">initialized_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
+        <span class="n">new_spec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_with_full_span_if_no_location</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+        <span class="n">new_spec</span><span class="o">.</span><span class="n">original_codons</span> <span class="o">=</span> <span class="n">new_spec</span><span class="o">.</span><span class="n">get_codons</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+        <span class="n">rca</span> <span class="o">=</span> <span class="n">new_spec</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">[</span><span class="s2">&quot;RCA&quot;</span><span class="p">]</span>
+        <span class="n">rca_o</span> <span class="o">=</span> <span class="n">new_spec</span><span class="o">.</span><span class="n">original_codon_usage_table</span><span class="p">[</span><span class="s2">&quot;RCA&quot;</span><span class="p">]</span>
+        <span class="n">new_spec</span><span class="o">.</span><span class="n">smallest_possible_discrepancies</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">min</span><span class="p">([</span><span class="nb">abs</span><span class="p">(</span><span class="n">rca</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">-</span> <span class="n">rca_o</span><span class="p">[</span><span class="n">c</span><span class="p">])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">codons_synonyms</span><span class="p">[</span><span class="n">codon</span><span class="p">]])</span>
+            <span class="k">for</span> <span class="n">codon</span> <span class="ow">in</span> <span class="n">new_spec</span><span class="o">.</span><span class="n">original_codons</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">new_spec</span>
+
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the evaluation for mode==best_codon.&quot;&quot;&quot;</span>
+        <span class="n">codons</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_codons</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">codons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># We are evaluating a single codon. Easy!</span>
+            <span class="n">codon</span> <span class="o">=</span> <span class="n">codons</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">original</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_codons</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">rca_codon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">[</span><span class="s2">&quot;RCA&quot;</span><span class="p">][</span><span class="n">codon</span><span class="p">]</span>
+            <span class="n">rca_original</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_codon_usage_table</span><span class="p">[</span><span class="s2">&quot;RCA&quot;</span><span class="p">][</span><span class="n">original</span><span class="p">]</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="o">-</span><span class="nb">abs</span><span class="p">(</span><span class="n">rca_codon</span> <span class="o">-</span> <span class="n">rca_original</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="n">problem</span><span class="p">,</span>
+                <span class="n">score</span><span class="o">=</span><span class="n">score</span><span class="p">,</span>
+                <span class="n">locations</span><span class="o">=</span><span class="p">[]</span> <span class="k">if</span> <span class="p">(</span><span class="n">score</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">],</span>
+                <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Codon harmonization on window </span><span class="si">%s</span><span class="s2"> scored </span><span class="si">%.02E</span><span class="s2">&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">score</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="c1"># print (len(codons))</span>
+        <span class="n">rca_in_original_species</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">original_codon_usage_table</span><span class="p">[</span><span class="s2">&quot;RCA&quot;</span><span class="p">][</span><span class="n">original_codon</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">original_codon</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_codons</span>
+        <span class="p">]</span>
+        <span class="n">rca_in_target_species</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">codon_usage_table</span><span class="p">[</span><span class="s2">&quot;RCA&quot;</span><span class="p">][</span><span class="n">codon</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">codon</span> <span class="ow">in</span> <span class="n">codons</span>
+        <span class="p">]</span>
+        <span class="n">discrepancies</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rca_in_original_species</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rca_in_target_species</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">non_optimality</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallest_possible_discrepancies</span> <span class="o">-</span> <span class="n">discrepancies</span>
+        <span class="n">nonoptimal_indices</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">non_optimality</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">locations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codons_indices_to_locations</span><span class="p">(</span><span class="n">nonoptimal_indices</span><span class="p">)</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="o">-</span><span class="n">discrepancies</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">problem</span><span class="p">,</span>
+            <span class="n">score</span><span class="o">=</span><span class="n">score</span><span class="p">,</span>
+            <span class="n">locations</span><span class="o">=</span><span class="n">locations</span><span class="p">,</span>
+            <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Codon harmonization on </span><span class="si">%s</span><span class="s2"> scored </span><span class="si">%.02E</span><span class="s2">&quot;</span>
+            <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">score</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">localized_on_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_location</span><span class="p">,</span> <span class="n">start_codon</span><span class="p">,</span> <span class="n">end_codon</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Relocate without changing much.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">new_location</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">label_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;(custom table)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">short_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;best-codon-optimize&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="s2">&quot; (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>
