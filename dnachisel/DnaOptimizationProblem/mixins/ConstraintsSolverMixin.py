@@ -27,7 +27,7 @@ class ConstraintsSolverMixin:
         )
 
     def all_constraints_pass(self, autopass=True):
-        """Return True iff the current problem sequence passes all constraints.
+        """Return whether the current problem sequence passes all constraints.
         """
         if len(self.constraints) == 0:
             return True

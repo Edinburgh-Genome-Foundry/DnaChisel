@@ -120,7 +120,7 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
         return self._recentered_evaluations(evals)
     
     def all_constraints_pass(self, autopass=True):
-        """Return True iff the current problem sequence passes all constraints.
+        """Return whether the current problem sequence passes all constraints.
         """
         evals = self.constraints_evaluations(autopass=autopass)
         return evals.all_evaluations_pass()
