@@ -55,7 +55,6 @@ class MotifPssmPattern(SequencePattern):
         """
         if pseudocounts is not None:
             if pseudocounts == "jaspar":
-                motif.alphabet = IUPAC.IUPACUnambiguousDNA()
                 pseudocounts = motifs.jaspar.calculate_pseudocounts(motif)
             motif.pseudocounts = pseudocounts
 
