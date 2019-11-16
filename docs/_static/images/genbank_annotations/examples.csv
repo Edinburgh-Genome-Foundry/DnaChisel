@@ -8,17 +8,16 @@ avoid_pattern_enzyme,@no(BsmBI_site),2-24,ATGCACACGCATCGTCTCATCACTCAT,13-18
 keep,@keep,"1-8, 16-22",ATGCACACGCATCGTCTCATCACTCAT,none
 keep_obj,~keep,2-24,ATGCACACGCATCGTCTCATCACTCAT,none
 change,~change,10-20,ATGCACACGCATCGTCTCATCACTCAT,10-20
-insert,@insert(BsmBI_site),2-24,ATGCACACGCATCGATTCATCACTCAT,none
+insert,@insert(BsmBI_site),2-24+,ATGCACACGCATCGATTCATCACTCAT,none
 insert_several,"@insert(CG, occurences=3)",2-24,ATGCACACACATCGATTCATCACTCAT,none
 gc_range,@gc(45-55%),2-24,ATGCACACACATCGATTCATCACTCAT,none
 gc_target,~gc(60%/100bp),2-24,CAATGCACACATCGATTCATCACTCAT,none
-cds,@cds,2-23,CAATGCACACATCGATTCATCACTCAT,none
-cds_enforce,@EnforceTranslation,2-23,CAATGCACACATCGATTCATCACTCAT,none
+cds,@cds,2-23+,CAATGCACACATCGATTCATCACTCAT,none
 change_objective,~change,8-15,CAATGCACACATCGATTCATCACTCAT,8-15
-codon_optimize,~CodonOptimize(e_coli),2-23,CAATGCACACATCGATTCATCACTCAT,none
-use_best_codon,~use_best_codon(e_coli),2-23,CAATGCACACATCGATTCATCACTCAT,none
-match_codon_usage,~match_codon_usage,2-23,CAATGCACACATCGATTCATCACTCAT,none
-harmonize_rca,~harmonize_rca(e_coli => h_sapiens),2-23,CAATGCACACATCGATTCATCACTCAT,none
+codon_optimize,~CodonOptimize(e_coli),2-23+,CAATGCACACATCGATTCATCACTCAT,none
+use_best_codon,~use_best_codon(e_coli),2-23+,CAATGCACACATCGATTCATCACTCAT,none
+match_codon_usage,~match_codon_usage,2-23+,CAATGCACACATCGATTCATCACTCAT,none
+harmonize_rca,~harmonize_rca(e_coli => h_sapiens),2-23+,CAATGCACACATCGATTCATCACTCAT,none
 allow_primer,"@primer(tmin=50, tmax=70)",2-24,CAATGCACACATCGATTCATCACTCAT,none
 all_unique_kmers,@all_unique_kmers(k=15),2-24,CAATGCACACATCGATTCATGCACATT,"3-8, 19-24"
 all_unique_kmers_here,"@all_unique_kmers(k=15, here)",2-24,CAATGCACACATCGATTCATGCACATT,"3-8, 19-24"
@@ -26,8 +25,9 @@ choice,@choice(ATG|TTA|CGT),1-4,CCATT,none
 enforce_melting,@tm(50-70C),2-24,CAATGCACACATCGATTCATGCACATT,none
 enforce_melting_obj,~tm(55C),2-24,CAATGCACACATCGATTCATGCACATT,none
 enforce_melting_and_kmers,@tm(50-70C) & @all_unique_kmers(k=15),2-24,CAATGCACACATCGATTCATGCACATT,none
-avoid_blast,"@AvoidBlastMatches(e_coli, min_align_length=20)",1-26,CAATGCACACATCGATTCATGCACATT,none
-enforce_sequence,@sequence(KGTCTCNATGC),2-13,CATCGATTCATGCACATT,none
+avoid_matches,"@avoid_matches(e_coli, 20)",1-26,CAATGCACACATCGATTCATGCACATT,none
+avoid_matches_mismatches,"@avoid_matches(e_coli, 20, mismatches=2)",1-26,CAATGCACACATCGATTCATGCACATT,none
+enforce_sequence,@sequence(KGTCTCNATGC),2-13+,CATCGATTCATGCACATT,none
 myspec,"@MySpecification(ATG, param2=65)",2-24,CAATGCACACATCGATTCATGCACATT,none
-multiple_specs,@cds & @no(CG) & @gc(45-55%),2-24,ATGCACACGCATCGTCTCATCACTCAT,none
+multiple_specs,@cds & @no(CG) & @gc(45-55%),2-24+,ATGCACACGCATCGTCTCATCACTCAT,none
 boosting,"~gc(60%, boost=20)",2-24,ATGCACACGCATCGTCTCATCACTCAT,none

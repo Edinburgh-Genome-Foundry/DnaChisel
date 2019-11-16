@@ -41,7 +41,7 @@ from .SequencePattern import (
     HomopolymerPattern,
     RepeatedKmerPattern,
     EnzymeSitePattern,
-    PSSMPattern
+    MotifPssmPattern
 )
 
 from .biotools import (
@@ -103,7 +103,7 @@ __all__ = [
     "HomopolymerPattern",
     "RepeatedKmerPattern",
     "EnzymeSitePattern",
-    "PSSMPattern",
+    "MotifPssmPattern",
     "blast_sequence",
     "complement",
     "list_common_enzymes",

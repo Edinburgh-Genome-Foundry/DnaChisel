@@ -14,7 +14,7 @@ Summary
     AvoidChanges
     AvoidHairpins
     AvoidHeterodimerization
-    UniquifyAllKmers
+    AvoidMatches
     AvoidPattern
     AvoidStopCodons
     CodonOptimize
@@ -28,6 +28,7 @@ Summary
     EnforceSequence
     EnforceTranslation
     SequenceLengthBounds
+    UniquifyAllKmers
 
 API Details
 ~~~~~~~~~~~

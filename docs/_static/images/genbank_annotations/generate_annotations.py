@@ -11,7 +11,14 @@ import tqdm
 
 
 def parse_locations(s):
-    return [tuple(map(int, sub.strip().split("-"))) for sub in s.split(",")]
+    if "," not in s:
+        start, end = map(int, s.strip().strip("+").split("-"))
+        return [(start, end, 1 if s.endswith("+") else 0)]
+    return [
+        location
+        for sub in s.split(",")
+        for location in parse_locations(sub)
+    ]
 
 
 def graphic_features_from_row(row):
@@ -21,19 +28,20 @@ def graphic_features_from_row(row):
     else:
         color = "#ededa7"
         fontdict = dict(size=14, color="black", family="Ubuntu")
+    
 
     return [
         dfv.GraphicFeature(
             start=start,
             end=end,
-            strand=1,
+            strand=strand,
             label=row.spec,
             thickness=23,
             box_color=None,
             color=color,
             fontdict=fontdict,
         )
-        for start, end in parse_locations(row.location)
+        for start, end, strand in parse_locations(row.location)
     ]
 
 
@@ -49,7 +57,7 @@ def plot_row_feature(row):
     grecord.plot_sequence(ax, background=None)
 
     if row.highlights != "none":
-        for (start, end) in parse_locations(row.highlights):
+        for (start, end, _) in parse_locations(row.highlights):
             ax.fill_between(
                 [start - 1.5, end - 0.5], -0.9, -0.5, facecolor="r", alpha=0.15
             )
@@ -62,6 +70,6 @@ data = pandas.read_csv("./examples.csv")
 for i, row in tqdm.tqdm(list(data.iterrows())):
     ax = plot_row_feature(row)
     ax.figure.savefig(
-        "./%s.png" % row.filename, bbox_inches="tight", dpi=200
+        "./%s.png" % row.filename, bbox_inches="tight", dpi=120
     )
     plt.close(ax.figure)

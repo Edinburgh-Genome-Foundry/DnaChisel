@@ -9,6 +9,15 @@ DNA chisel. See also the :ref:`genbank-usage-notes` section for tips.
 Pattern removal
 ---------------
 
+.. caution:: The annotation's direction matters!
+
+    Since v3.0, the orientation of the annotation of pattern-based
+    specifications such as ``no()`` or ``insert()`` indicates where to look for
+    the pattern. Annotations in the +1 sense indicate that the
+    pattern should only be looked for in the +1 (5'3') strand. Patterns in the -1
+    strand are only looked at in the -1 (3'5') sense. Annotations with no
+    orientation indicate that the pattern should be looked for in both strands.
+
 To remove a pattern in a given region, use the ``@no()`` label
 (alias for ``@AvoidPattern()``). For instance to remove any GC pattern:
 
@@ -26,16 +35,16 @@ together as ATH):
     <img class='annotation-example'
     src='../_static/images/genbank_annotations/avoid_pattern_noisoleucine.png'></img>
 
-It is also possible to provide an enzyme restriction site by suffixing the enzyme
-name with ``_site``:
+It is also possible to provide an enzyme restriction site by suffixing the
+enzyme name with ``_site``:
 
 .. raw:: html
 
     <img class='annotation-example'
     src='../_static/images/genbank_annotations/avoid_pattern_enzyme.png'></img>
 
-Other pattern shorthands can be used for instance to find sequence repeats (here
-we look for dimers repeated four times in a row):
+Other pattern shorthands can be used for instance to find sequence repeats
+(here we look for dimers repeated four times in a row):
 
 .. raw:: html
 

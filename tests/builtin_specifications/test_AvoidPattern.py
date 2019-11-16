@@ -1,11 +1,12 @@
 """Example of use of the AvoidPAttern specification"""
-
+from io import StringIO
 from dnachisel import (
     DnaOptimizationProblem,
     random_dna_sequence,
     AvoidPattern,
     RepeatedKmerPattern,
     AvoidChanges,
+    MotifPssmPattern,
 )
 import numpy
 
@@ -61,15 +62,8 @@ def test_pattern_and_reverse():
 
 
 def test_AvoidPattern_on_strands():
-    sequence = "ATGCATGC"
-    problem = DnaOptimizationProblem(
-        sequence,
-        constraints=[AvoidPattern("ATG", location=(0, 10, -1))],
-        logger=None,
-    )
-    problem.resolve_constraints()
-    assert "ATG" in problem.sequence
 
+    # Negative strand only
     sequence = "CATGCTATGC"
     problem = DnaOptimizationProblem(
         sequence,
@@ -80,6 +74,18 @@ def test_AvoidPattern_on_strands():
     assert "CAT" in problem.sequence
     assert "ATG" not in problem.sequence
 
+    # Negative strand only
+    sequence = "CATGCTATGC"
+    problem = DnaOptimizationProblem(
+        sequence,
+        constraints=[AvoidPattern("CAT", location=(0, 10, -1))],
+        logger=None,
+    )
+    problem.resolve_constraints()
+    assert "CAT" in problem.sequence
+    assert "ATG" not in problem.sequence
+
+    # Both strands
     sequence = "CATGCTATGC"
     problem = DnaOptimizationProblem(
         sequence, constraints=[AvoidPattern("CAT")], logger=None,
@@ -87,3 +93,31 @@ def test_AvoidPattern_on_strands():
     problem.resolve_constraints()
     assert "CAT" not in problem.sequence
     assert "ATG" not in problem.sequence
+
+
+JASPAR_CONTENT = """
+>MA0006.1	Ahr::Arnt
+A  [     3      0      0      0      0      0 ]
+C  [     8      0     23      0      0      0 ]
+G  [     2     23      0     23      0     24 ]
+T  [    11      1      1      1     24      0 ]
+>MA0151.1	Arid3a
+A  [    27      0      1     27     27     20 ]
+C  [     0      0      9      0      0      0 ]
+G  [     0      0      0      0      0      1 ]
+T  [     0     27     17      0      0      6 ]
+"""
+
+
+def test_AvoidPattern_with_jaspar_motifs():
+    stringio = StringIO(JASPAR_CONTENT)
+    motif_patterns = MotifPssmPattern.list_from_file(
+        stringio, file_format="jaspar", relative_threshold=0.9
+    )
+    problem = DnaOptimizationProblem(
+        sequence="GGGGGGGGGGTGCGTGATTAAAGGGGG",
+        constraints=[AvoidPattern(p) for p in motif_patterns],
+    )
+    assert 2 == len(problem.constraints_evaluations().all_locations())
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()

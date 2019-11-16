@@ -3,7 +3,7 @@ from .DnaNotationPattern import DnaNotationPattern
 from .EnzymeSitePattern import EnzymeSitePattern
 from .HomopolymerPattern import HomopolymerPattern
 from .RepeatedKmerPattern import RepeatedKmerPattern
-from .PSSMPattern import PSSMPattern
+from .MotifPssmPattern import MotifPssmPattern
 
 SequencePattern.registered_string_pattern_classes = [
     HomopolymerPattern,
@@ -18,5 +18,5 @@ __all__ = [
     'EnzymeSitePattern',
     'HomopolymerPattern',
     'RepeatedKmerPattern',
-    'PSSMPattern'
+    'MotifPssmPattern'
 ]
