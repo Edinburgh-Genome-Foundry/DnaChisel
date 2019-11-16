@@ -29,10 +29,10 @@ Here we explain the relationship between the main classes in DNA Chisel. The nex
 
 - **biotools/** contains many methods and data tables related to biology and sequence manipulation, either used in the core DNA Chisel classes, or very helpful when writing DNA Chisel scripts (see this folder's README for more).  
 - **builtin specifications/** contains all the built-in _Specification_ subclasses, one per file. While most files define a directlyusable *Specification* subclass (CodonOptimize, EnforceGCContent, etc.), some files encode generic subclasses meant to be in turn subclassed (*CodonSpecification*, *TerminalSpecification*)
-   **DnaOptimizationProblem** contains the code for the *DnaOptimizationProblem* and *CircularDnaOptimizationProblem* classes. As *DnaOptimizationProblem* implements the solver and is very big, the methods in this class have been regrouped into "mixins" in other files (see this folder's README for more).
+- **DnaOptimizationProblem/** contains the code for the *DnaOptimizationProblem* and *CircularDnaOptimizationProblem* classes. As *DnaOptimizationProblem* implements the solver and is very big, the methods in this class have been regrouped into "mixins" in other files (see this folder's README for more).
 - **MutationSpace/** contains the implementation of the *MutationSpace* and *MutationChoice* classes.
 - **reports/** contains methods to generate plots, PDF reports, etc. from a _DnaOptimizationProblem_ (before and after its optimization). It also contains assets (logo, stylesheet, template) for the PDF report.
-- **SpecEvaluation/** contains the implementations of *SpecEvaluation*, *SpecEvaluations*, *ProblemConstraintEvaluations*, *ProblemObjectiveEvaluations*.
+- **Specification/** contains the implementation of the *Specification* class (some methods for this class are regrouped in file *FeatureRepresentationMixin.py* to make smaller files). The *SpecEvaluation/* subfolder contains the implementations of *SpecEvaluation*, *SpecEvaluations*, *ProblemConstraintEvaluations*, *ProblemObjectiveEvaluations*.
 - **utils/** contains generic methods built on top of DNA Chisel that can be useful in other libraries/applications. For instance `random_compatible_dna_sequence()` which returns a random sequence verifying the given constraints.
 - **Location_py** implements the *Location* class which is used everywhere to define sequence segments.
 - **SequencePattern_py**  implements the *SequencePattern* class.
