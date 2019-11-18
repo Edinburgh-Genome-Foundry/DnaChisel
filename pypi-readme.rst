@@ -1,10 +1,14 @@
 DNA Chisel
 ==========
 
-DNA Chisel is a Python library to optimize the nucleotides of DNA sequences with respect to a set of constraints and optimization objectives. It can be used for codon-optimizing the genes of a sequence for a particular organism, modifying a sequence to meet the constraints of a DNA provider while preserving genes, and much more.
-
-
-DNA Chisel comes with more than 15 types of optimizations and constraints and allows users to define new specifications in Python, making the library suitable for a large range of automated sequence design applications, or complex custom design projects.
+DNA Chisel is a Python library to optimize the nucleotides of DNA sequences
+with respect to a set of constraints and optimization objectives. It can be
+used for codon-optimizing (and harmonizing), for removing unwanted patterns,
+inserting new ones, avoiding sequence homologies, tuning GC content, and much
+more! The library comes with 15 types of optimizations and constraints, and
+allows users to define new specifications in Python, making the library
+suitable for a large range of automated sequence design applications, or
+complex custom design projects.
 
 Example of use
 ---------------
@@ -35,6 +39,14 @@ Example of use
 
     print(problem.constraints_text_summary())
     print(problem.objectives_text_summary())
+
+Alternatively, DNA Chisel lets you define problems by annotating a Genbank file.
+You can also define a problem by annotating directly a Genbank as follows:
+
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/example_sequence_map.png
+   :alt: [logo]
+   :align: center
+   :width: 450px
 
 See `this page <https://edinburgh-genome-foundry.github.io/DnaChisel/ref/builtin_specifications.html>`_
 for an overview of available specifications.
