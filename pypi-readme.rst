@@ -15,12 +15,15 @@ Example of use
 
     # DEFINE THE OPTIMIZATION PROBLEM
 
-    random_sequence = random_dna_sequence(10000)
+    some_sequence = random_dna_sequence(10000)
     problem = DnaOptimizationProblem(
-        sequence=random_sequence,
-        constraints=[AvoidPattern("BsaI_site"),
-                     EnforceGCContent(mini=0.3, maxi=0.7, window=50)],
-        objectives=[CodonOptimize(species='e_coli', location=(500, 1300))]
+        sequence=some_sequence,
+        constraints=[
+            AvoidPattern("BsaI_site"),
+            EnforceGCContent(mini=0.3, maxi=0.7, window=50),
+            EnforceTranslation(location=(500, 1400))
+        ],
+        objectives=[CodonOptimize(species='e_coli', location=(500, 1400))]
     )
 
     # SOLVE THE CONSTRAINTS, OPTIMIZE WITH RESPECT TO THE OBJECTIVE
