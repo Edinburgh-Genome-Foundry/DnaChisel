@@ -10,14 +10,14 @@ from genome_collector import GenomeCollection
 # THIS CREATES THE ECOLI BLAST DATABASE ON YOUR MACHINE IF NOT ALREADY HERE
 
 collection = GenomeCollection()
-ecoli_blastdb = collection.get_taxid_bowtie_index_path(511145, version="1")
+ecoli_index = collection.get_taxid_bowtie_index_path(511145, version="1")
 
 # DEFINE AND SOLVE THE PROBLEM
 
 problem = DnaOptimizationProblem(
     sequence=random_dna_sequence(500, seed=123),
     constraints=[
-        AvoidMatches(bowtie_index=ecoli_blastdb, match_length=15, mismatches=1)
+        AvoidMatches(bowtie_index=ecoli_index, match_length=15, mismatches=1)
     ],
 )
 

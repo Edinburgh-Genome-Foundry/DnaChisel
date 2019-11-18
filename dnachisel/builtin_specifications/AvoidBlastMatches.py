@@ -8,7 +8,7 @@ from ..Location import Location
 
 
 class AvoidBlastMatches(Specification):
-    """Enforce that the given pattern is absent in the sequence.
+    """Enforce that the sequence has no BLAST matches with a given database.
 
     WARNING: try using AvoidMatches instead, it is much better!!
 

@@ -11,9 +11,33 @@ import shutil
 
 
 class AvoidMatches(Specification):
-    """Enforce that the given pattern is absent in the sequence.
+    """Enforce that the sequence has no matches longer than N in a given index.
 
-    Uses Bowtie.
+    This specification can be used to ensure that a sequence has no matches
+    with a given organism, or a set of sequences, which can be useful to
+    create orthogonal sequences or primer-friendly regions.
+    
+    This specification uses Bowtie in the background and requires Bowtie
+    installed on your machine (it can be as simple as ``apt install bowtie``
+    on Ubuntu).
+
+    It allows you to specify the ``match_length`` such that no subsegment of
+    size match_length or more has any homology in the given bowtie index (which
+    can be built from genomes using e.g. the genome_collector library). An
+    homology can mean either perfect similarity, or up to 3 mismatches.
+
+
+    Examples
+    --------
+
+    Here is how you automatically get a Bowtie index link with Genome Collector
+    (it will build the index if it is not yet on your machine), and use the
+    result to create an ``AvoidMatches`` specification:
+
+    >>> from genome_collector import GenomeCollection
+    >>> collection = GenomeCollection()
+    >>> e_coli = collection.get_taxid_bowtie_index_path(511145, version="1")
+    >>> spec = AvoidMatches(bowtie_index=e_coli, match_length=15, mismatches=1)
 
     Parameters
     ----------
