@@ -271,7 +271,7 @@
 <td><p>Enforce various specifications for enabling primers at the location.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidBlastMatches" title="dnachisel.builtin_specifications.AvoidBlastMatches"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidBlastMatches</span></code></a></p></td>
-<td><p>Enforce that the given pattern is absent in the sequence.</p></td>
+<td><p>Enforce that the sequence has no BLAST matches with a given database.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidChanges" title="dnachisel.builtin_specifications.AvoidChanges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidChanges</span></code></a></p></td>
 <td><p>Specify that some locations of the sequence should not be changed.</p></td>
@@ -283,7 +283,7 @@
 <td><p>Avoid that the (sub)sequence anneals with other primers.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidMatches</span></code></p></td>
-<td><p>Enforce that the given pattern is absent in the sequence.</p></td>
+<td><p>Enforce that the sequence has no matches longer than N in a given index.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidPattern" title="dnachisel.builtin_specifications.AvoidPattern"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidPattern</span></code></a></p></td>
 <td><p>Enforce that the given pattern is absent in the sequence.</p></td>
@@ -385,7 +385,7 @@ meaning “avoid K-mers repeated N times in a row”.</p>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.AvoidBlastMatches">
 <em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidBlastMatches</code><span class="sig-paren">(</span><em class="sig-param">blast_db=None</em>, <em class="sig-param">sequences=None</em>, <em class="sig-param">word_size=4</em>, <em class="sig-param">perc_identity=100</em>, <em class="sig-param">num_alignments=100000</em>, <em class="sig-param">num_threads=3</em>, <em class="sig-param">min_align_length=20</em>, <em class="sig-param">ungapped=True</em>, <em class="sig-param">e_value=1e+80</em>, <em class="sig-param">culling_limit=1</em>, <em class="sig-param">location=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidBlastMatches.html#AvoidBlastMatches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidBlastMatches" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enforce that the given pattern is absent in the sequence.</p>
+<dd><p>Enforce that the sequence has no BLAST matches with a given database.</p>
 <p>WARNING: try using AvoidMatches instead, it is much better!!</p>
 <p>Uses NCBI Blast+. Only local BLAST is supported/tested as for now</p>
 <dl class="field-list">

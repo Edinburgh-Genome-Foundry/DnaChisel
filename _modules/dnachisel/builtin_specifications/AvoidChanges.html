@@ -282,6 +282,7 @@
     <span class="n">best_possible_score</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">enforced_by_nucleotide_restrictions</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">shorthand_name</span> <span class="o">=</span> <span class="s2">&quot;keep&quot;</span>
+    <span class="n">priority</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1000</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -325,7 +326,7 @@
         <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">max_edits_percent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">result</span><span class="o">.</span><span class="n">max_edits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">max_edits_percent</span> <span class="o">*</span> <span class="n">L</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span>
 
-        <span class="n">result</span><span class="o">.</span><span class="n">enforced_by_nucleotide_restrictions</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">max_edits</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">enforced_by_nucleotide_restrictions</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">max_edits</span> <span class="o">==</span> <span class="mi">0</span>
 
         <span class="c1"># Initialize the &quot;target_sequence&quot; in two cases:</span>
         <span class="c1"># - Always at the very beginning</span>
@@ -369,7 +370,7 @@
         <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_edits</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">differing_indices</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="n">score</span><span class="p">,</span> <span class="n">locations</span><span class="o">=</span><span class="n">locations</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">localized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">localized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">with_righthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Localize the spec to the overlap of its location and the new.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 

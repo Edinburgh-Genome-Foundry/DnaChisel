@@ -251,7 +251,12 @@
 <h1>DNA Chisel - a versatile sequence optimizer<a class="headerlink" href="#dna-chisel-a-versatile-sequence-optimizer" title="Permalink to this headline">¶</a></h1>
 <a class="reference external image-reference" href="https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel"><img alt="Travis CI build status" src="https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel.svg?branch=master" /></a>
 <a class="reference external image-reference" href="https://coveralls.io/github/Edinburgh-Genome-Foundry/DnaChisel?branch=master"><img alt="https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/DnaChisel/badge.svg?branch=master" src="https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/DnaChisel/badge.svg?branch=master" /></a>
-<p>DNA Chisel (complete documentation <a class="reference external" href="https://edinburgh-genome-foundry.github.io/DnaChisel/">here</a>) is a Python library for optimizing DNA sequences with respect to a set of constraints and optimization objectives. It comes with over 15 classes of sequence specifications which can be composed to codon-optimize genes, meet the constraints of a commercial DNA provider, avoid homologies between sequences, or all of this at once!</p>
+<p>DNA Chisel (complete documentation <a class="reference external" href="https://edinburgh-genome-foundry.github.io/DnaChisel/">here</a>)
+is a Python library for optimizing DNA sequences with respect to a set of
+constraints and optimization objectives. It comes with over 15 classes of
+sequence specifications which can be composed to, for instance, codon-optimize
+genes, meet the  constraints of a commercial DNA provider, avoid homologies
+between sequences, tune GC content, or all of this at once!</p>
 <p>DNA Chisel also allows users to define their own specifications in Python, making the library suitable for a large range of automated sequence design applications, and complex custom design projects. It can be used as a Python library, a command-line interface, or a <a class="reference external" href="https://cuba.genomefoundry.org/sculpt_a_sequence">web application</a>.</p>
 <div class="section" id="example-of-use">
 <h2>Example of use<a class="headerlink" href="#example-of-use" title="Permalink to this headline">¶</a></h2>
@@ -273,7 +278,7 @@
     <span class="n">constraints</span><span class="o">=</span><span class="p">[</span>
         <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;BsaI_site&quot;</span><span class="p">),</span>
         <span class="n">EnforceGCContent</span><span class="p">(</span><span class="n">mini</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">50</span><span class="p">),</span>
-        <span class="n">EnforceTranslation</span><span class="p">((</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1400</span><span class="p">))</span>
+        <span class="n">EnforceTranslation</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1400</span><span class="p">))</span>
     <span class="p">],</span>
     <span class="n">objectives</span><span class="o">=</span><span class="p">[</span><span class="n">CodonOptimize</span><span class="p">(</span><span class="n">species</span><span class="o">=</span><span class="s1">&#39;e_coli&#39;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1400</span><span class="p">))]</span>
 <span class="p">)</span>

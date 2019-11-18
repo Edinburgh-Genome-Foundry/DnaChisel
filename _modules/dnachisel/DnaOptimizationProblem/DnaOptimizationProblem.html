@@ -269,7 +269,7 @@
     <span class="sd">&quot;&quot;&quot;Problem specifications: sequence, constraints, optimization objectives.</span>
 
 <span class="sd">    The original constraints, objectives, and original sequence of the problem</span>
-<span class="sd">    are stored in the DNA Canvas. This class also has methods to display</span>
+<span class="sd">    are stored in the DNA problem. This class also has methods to display</span>
 <span class="sd">    reports on the constraints and objectives, as well as solving the</span>
 <span class="sd">    constraints and objectives.</span>
 
@@ -284,8 +284,8 @@
 <span class="sd">    &gt;&gt;&gt; )</span>
 <span class="sd">    &gt;&gt;&gt; problem.resolve_constraints()</span>
 <span class="sd">    &gt;&gt;&gt; problem.optimize()</span>
-<span class="sd">    &gt;&gt;&gt; print(canvas.constraints_text_summary())</span>
-<span class="sd">    &gt;&gt;&gt; print(canvas.objectives_text_summary())</span>
+<span class="sd">    &gt;&gt;&gt; print(problem.constraints_text_summary())</span>
+<span class="sd">    &gt;&gt;&gt; print(problem.objectives_text_summary())</span>
 
 
 <span class="sd">    Parameters</span>
