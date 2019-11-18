@@ -45,7 +45,7 @@ Here is the code to achieve that:
         constraints=[
             AvoidPattern("BsaI_site"),
             EnforceGCContent(mini=0.3, maxi=0.7, window=50),
-            EnforceTranslation((500, 1400))
+            EnforceTranslation(location=(500, 1400))
         ],
         objectives=[CodonOptimize(species='e_coli', location=(500, 1400))]
     )
