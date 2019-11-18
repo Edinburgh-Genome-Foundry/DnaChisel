@@ -23,7 +23,10 @@ sequence specifications which can be composed to, for instance, codon-optimize
 genes, meet the  constraints of a commercial DNA provider, avoid homologies
 between sequences, tune GC content, or all of this at once!
 
-DNA Chisel also allows users to define their own specifications in Python, making the library suitable for a large range of automated sequence design applications, and complex custom design projects. It can be used as a Python library, a command-line interface, or a `web application <https://cuba.genomefoundry.org/sculpt_a_sequence>`_.
+DNA Chisel also allows users to define their own specifications in Python,
+making the library suitable for a large range of automated sequence design
+applications, and complex custom design projects. It can be used as a Python
+library, a command-line interface, or a `web application <https://cuba.genomefoundry.org/sculpt_a_sequence>`_.
 
 Example of use
 ---------------
