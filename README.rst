@@ -16,7 +16,12 @@ DNA Chisel - a versatile sequence optimizer
    :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/DnaChisel?branch=master
 
 
-DNA Chisel (complete documentation `here <https://edinburgh-genome-foundry.github.io/DnaChisel/>`_) is a Python library for optimizing DNA sequences with respect to a set of constraints and optimization objectives. It comes with over 15 classes of sequence specifications which can be composed to codon-optimize genes, meet the constraints of a commercial DNA provider, avoid homologies between sequences, or all of this at once!
+DNA Chisel (complete documentation `here <https://edinburgh-genome-foundry.github.io/DnaChisel/>`_)
+is a Python library for optimizing DNA sequences with respect to a set of
+constraints and optimization objectives. It comes with over 15 classes of
+sequence specifications which can be composed to, for instance, codon-optimize
+genes, meet the  constraints of a commercial DNA provider, avoid homologies
+between sequences, tune GC content, or all of this at once!
 
 DNA Chisel also allows users to define their own specifications in Python, making the library suitable for a large range of automated sequence design applications, and complex custom design projects. It can be used as a Python library, a command-line interface, or a `web application <https://cuba.genomefoundry.org/sculpt_a_sequence>`_.
 
