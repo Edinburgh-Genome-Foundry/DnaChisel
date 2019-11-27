@@ -3,11 +3,13 @@ from python_codon_tables import get_codons_table
 import numpy as np
 from dnachisel.Location import Location
 from dnachisel.biotools import group_nearby_indices
+from copy import deepcopy
 
 
 class BaseCodonOptimizationClass(CodonSpecification):
     def __init__(
-        self, species=None, location=None, codon_usage_table=None, boost=1.0
+        self, species=None, location=None, codon_usage_table=None, boost=1.0,
+        codons_usage_threshold = 0,
     ):
         self.boost = boost
         self.location = Location.from_data(location)
@@ -15,6 +17,8 @@ class BaseCodonOptimizationClass(CodonSpecification):
         self.codon_usage_table = self.get_codons_table(
             species, codon_usage_table
         )
+        if codons_usage_threshold > 0:
+            self.remove_codons_below_threshold(codons_usage_threshold)
 
     def get_codons(self, problem):
         subsequence = self.location.extract_sequence(problem.sequence)
@@ -38,6 +42,25 @@ class BaseCodonOptimizationClass(CodonSpecification):
             else:
                 codon_usage_table = get_codons_table(species)
         return codon_usage_table
+
+    def remove_codons_below_threshold(self,codons_usage_threshold):
+        result_table = deepcopy(self.codon_usage_table)
+
+        for aa in 'ACDEFGHIKLMNPQRSTVWY*':
+            threshold = codons_usage_threshold
+            
+            # ensure every aa has a codon which frequency above threshold
+            if max(result_table[aa].values()) < threshold:
+                threshold = max(result_table[aa].values())
+
+            for codon in result_table[aa]:
+                if result_table[aa][codon] < threshold:
+                    result_table[aa][codon] = 0
+            freq_sum = sum(result_table[aa].values())
+            if freq_sum != 1 :
+                for codon in result_table[aa]:
+                    result_table[aa][codon] =  result_table[aa][codon] /freq_sum
+        self.codon_usage_table =  result_table
 
     def initialized_on_problem(self, problem, role):
         """Get location from sequence if no location provided."""

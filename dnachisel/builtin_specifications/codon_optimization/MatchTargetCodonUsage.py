@@ -73,7 +73,8 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
     shorthand_name = "match_codon_usage"
 
     def __init__(
-        self, species=None, location=None, codon_usage_table=None, boost=1.0
+        self, species=None, location=None, codon_usage_table=None, boost=1.0,
+        codons_usage_threshold = 0,
     ):
         BaseCodonOptimizationClass.__init__(
             self,
@@ -81,6 +82,7 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
             location=location,
             codon_usage_table=codon_usage_table,
             boost=boost,
+            codons_usage_threshold=codons_usage_threshold,
         )
         self.codons_translations = self.get_codons_translations()
 

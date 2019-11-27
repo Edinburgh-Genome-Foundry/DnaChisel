@@ -10,7 +10,8 @@ def CodonOptimize(
     codon_usage_table=None,
     original_species=None,
     original_codon_usage_table=None,
-    boost=1.0
+    boost=1.0,
+    codons_usage_threshold = 0,
 ):
     """Codon-optimize a coding sequence using a user-selected method.
 
@@ -94,6 +95,7 @@ def CodonOptimize(
             location=location,
             codon_usage_table=codon_usage_table,
             boost=boost,
+            codons_usage_threshold=codons_usage_threshold,
         )
     elif method == "harmonize_rca":
         return HarmonizeRCA(
