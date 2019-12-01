@@ -33,6 +33,8 @@ class EnforceChoice(Specification):
 
     def __init__(self, choices=None, location=None, boost=1.0):
         """Initialize."""
+        if isinstance(choices, str) and "|" in choices:
+            choices = choices.split("|")
         choices = [
             SequencePattern.from_string(c) if isinstance(c, str) else c
             for c in choices

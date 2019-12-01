@@ -68,8 +68,6 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
 
     """
 
-    best_possible_score = 0
-    localization_group_spread = 3
     shorthand_name = "match_codon_usage"
 
     def __init__(

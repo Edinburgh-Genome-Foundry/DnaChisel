@@ -62,8 +62,6 @@ class MaximizeCAI(BaseCodonOptimizationClass):
 
     """
 
-    best_possible_score = 0
-    localization_group_spread = 3
     shorthand_name = "use_best_codon"
 
     def __init__(
@@ -118,7 +116,7 @@ class MaximizeCAI(BaseCodonOptimizationClass):
             for codon in codons
         ]
         non_optimality = np.array(optimal_usage) - np.array(current_usage)
-        nonoptimal_indices = 3 * np.nonzero(non_optimality)[0]
+        nonoptimal_indices = np.nonzero(non_optimality)[0]
         locations = self.codons_indices_to_locations(nonoptimal_indices)
         score = -non_optimality.sum()
         return SpecEvaluation(
@@ -129,10 +127,6 @@ class MaximizeCAI(BaseCodonOptimizationClass):
             message="Codon opt. on window %s scored %.02E"
             % (self.location, score),
         )
-
-    def localized_on_window(self, new_location, start_codon, end_codon):
-        """Relocate without changing much."""
-        return self.copy_with_changes(location=new_location)
 
     def label_parameters(self):
         return ["(custom table)" if self.species is None else self.species]

@@ -84,6 +84,7 @@ class RecordRepresentationMixin:
         with_sequence_edits=False,
         colors_dict=None,
         use_short_labels=True,
+        record_id = None
     ):
         """Return/write record representing the final sequence and problem.
 
@@ -150,6 +151,8 @@ class RecordRepresentationMixin:
 
         """
         record = sequence_to_biopython_record(self.sequence)
+        if record_id is not None:
+            record.id = record_id
 
         record.features = []
         if with_constraints:

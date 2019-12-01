@@ -38,8 +38,9 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
       names whose codon usage table cannot be imported).
 
     codon_usage_table
-      A dict of the form ``{'*': {"TGA": 0.112, "TAA": 0.68}, 'K': ...}``
-      giving the RSCU table (relative usage of each codon).
+      Optional - can be provided instead of ``species``. A dict of the form
+      ``{'*': {"TGA": 0.112, "TAA": 0.68}, 'K': ...}`` giving the RSCU table
+      (relative usage of each codon). 
 
     original_species
       Name or TaxID of the species the original sequence was taken from. This
@@ -66,9 +67,7 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
     codon usage algorithms. PLOS One, 2017
 
     """
-
-    best_possible_score = 0
-    localization_group_spread = 3
+    
     shorthand_name = "harmonize_rca"
 
     def __init__(
@@ -80,6 +79,10 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
         location=None,
         boost=1,
     ):
+        if isinstance(species, str) and "=>" in species:
+            species, original_species = species.split('=>')
+            species = species.strip()
+            original_species = original_species.strip()
         BaseCodonOptimizationClass.__init__(
             self,
             species=species,
@@ -144,7 +147,7 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
             np.array(rca_in_original_species) - np.array(rca_in_target_species)
         )
         non_optimality = self.smallest_possible_discrepancies - discrepancies
-        nonoptimal_indices = 3 * np.nonzero(non_optimality)[0]
+        nonoptimal_indices = np.nonzero(non_optimality)[0]
         locations = self.codons_indices_to_locations(nonoptimal_indices)
         score = -discrepancies.sum()
         return SpecEvaluation(
@@ -155,10 +158,6 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
             message="Codon harmonization on %s scored %.02E"
             % (self.location, score),
         )
-
-    def localized_on_window(self, new_location, start_codon, end_codon):
-        """Relocate without changing much."""
-        return self.copy_with_changes(location=new_location)
 
     def label_parameters(self):
         return ["(custom table)" if self.species is None else self.species]

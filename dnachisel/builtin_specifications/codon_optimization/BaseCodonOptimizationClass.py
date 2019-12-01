@@ -6,6 +6,10 @@ from dnachisel.biotools import group_nearby_indices
 
 
 class BaseCodonOptimizationClass(CodonSpecification):
+
+    best_possible_score = 0  # Don't forget to change in subclasses if needed
+    localization_group_spread = 3
+
     def __init__(
         self, species=None, location=None, codon_usage_table=None, boost=1.0
     ):
@@ -47,7 +51,7 @@ class BaseCodonOptimizationClass(CodonSpecification):
         """Convert a list of codon positions to a list of Locations"""
         indices = np.array(indices)
         if self.location.strand == -1:
-            indices = sorted(self.location.end - indices)
+            indices = sorted(self.location.end - 3 * indices)
             return [
                 Location(group[0] - 3, group[-1], strand=-1)
                 for group in group_nearby_indices(
@@ -55,7 +59,7 @@ class BaseCodonOptimizationClass(CodonSpecification):
                 )
             ]
         else:
-            indices += self.location.start
+            indices = self.location.start + 3 * indices
             return [
                 Location(group[0], group[-1] + 3)
                 for group in group_nearby_indices(
@@ -80,3 +84,9 @@ class BaseCodonOptimizationClass(CodonSpecification):
             if len(aa) == 1
             for codon in aa_codons.keys()
         }
+
+    def localized_on_window(self, new_location, start_codon, end_codon):
+        """Relocate without changing much."""
+        # The "new_location" already has exactly the right span and strand
+        # thanks to superclass CodonSpecification
+        return self.copy_with_changes(location=new_location)

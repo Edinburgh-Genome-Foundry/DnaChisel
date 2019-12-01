@@ -21,6 +21,7 @@ from .EnforceTerminalGCContent import EnforceTerminalGCContent
 from .SequenceLengthBounds import SequenceLengthBounds
 
 from .codon_optimization import (
+    AvoidRareCodons,
     CodonOptimize,
     HarmonizeRCA,
     MaximizeCAI,
@@ -29,6 +30,7 @@ from .codon_optimization import (
 
 
 DEFAULT_SPECIFICATIONS_DICT = {
+    "AvoidRareCodons": AvoidRareCodons,
     "AllowPrimer": AllowPrimer,
     "AvoidBlastMatches": AvoidBlastMatches,
     "AvoidChanges": AvoidChanges,

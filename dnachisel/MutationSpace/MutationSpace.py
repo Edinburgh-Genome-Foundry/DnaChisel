@@ -83,7 +83,7 @@ class MutationSpace:
                 variant = variants[0]
                 new_sequence[choice.start : choice.end] = variant.encode()
             elif sequence[choice.start : choice.end] not in variants:
-                variant = variants[np.random.randint(0, len(variants))]
+                variant = sorted(variants)[np.random.randint(0, len(variants))]
                 new_sequence[choice.start : choice.end] = variant.encode()
         return new_sequence.decode()
 
@@ -212,3 +212,58 @@ class MutationSpace:
             # for i in range(new_choice.start, new_choice.end):
             #     choices_index[i] = new_choice
         return MutationSpace(choices_index)
+
+    def string_representation(self, separator="|"):
+        """Generates a string of the mutation space
+
+        Examples
+        --------
+        >>> print (mutation_space.string_representation())
+        >>> A|G|ATG|CA|A|CA|T|GTC|AC|T|A|C|T|T|T
+        >>> T|C|   |  |G|  |C|   |  |C|T|A|C|A|C
+        >>> G|A|   |  | |  | |   |  |G|G|G|G|G|G
+        """
+        depth = max([len(c.variants) for c in self.choices_list])
+        sequences = ["" for i in range(depth)]
+        for choice in self.choices_list:
+            variants = list(choice.variants)
+            start, end = choice.segment
+            length = end - start
+            if len(variants) < depth:
+                variants += (depth - len(variants)) * [length * " "]
+            for i, variant in enumerate(variants):
+                if len(sequences[i]):
+                    sequences[i] += separator
+                sequences[i] += variant
+        return "\n".join(sequences)
+
+    def plot(self, ax, color="red", y_offset=-2):
+        for choice in self.choices_list:
+            start, end = choice.segment
+            N = len(choice.variants)
+            delta = 0.2
+            for x, sign in [(start, +1), (end, -1)]:
+                _x = x - 0.5 + sign * delta
+                _y = y_offset + 0.5
+                ax.plot(
+                    [_x, _x], [_y, _y - N], linewidth=0.5, color=color,
+                )
+            for y, variant in enumerate(choice.variants):
+                for x, nucleotide in enumerate(variant):
+                    ax.plot(
+                        [start - 0.5 + delta, end - 0.5 - delta],
+                        [y_offset - y - 0.5, y_offset - y - 0.5],
+                        color=color,
+                        linewidth=0.5,
+                    )
+                    ax.text(
+                        x + start,
+                        -y + y_offset,
+                        nucleotide,
+                        horizontalalignment="center",
+                        verticalalignment="center",
+                        color=color,
+                    )
+        max_variants = max([len(c.variants) for c in self.choices_list])
+        ax.set_ylim(bottom=min(-max_variants - 2, ax.get_ylim()[0]))
+

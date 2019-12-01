@@ -62,7 +62,8 @@ def test_codon_optimize_match_usage_short_sequence():
     assert problem.objective_scores_sum() < -5.5
     problem.optimize()
     assert -0.6 < problem.objective_scores_sum()
-    assert problem.sequence == "GATGATGACAAGAAAAAGAAAAAAAAA"
+    print (problem.objective_scores_sum())
+    assert problem.sequence == "GACGATGATAAGAAAAAAAAGAAAAAA"
 
 
 def test_codon_optimize_harmonize_rca_short_sequence():
