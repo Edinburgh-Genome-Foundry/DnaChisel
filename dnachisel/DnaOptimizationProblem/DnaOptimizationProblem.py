@@ -6,7 +6,7 @@ constraints, objectives.
 
 from Bio.SeqRecord import SeqRecord
 from proglog import default_bar_logger
-from dnachisel.Specification.SpecificationSet import SpecificationSet
+from ..Specification.SpecificationSet import SpecificationSet
 from ..biotools import sequences_differences_array
 from ..MutationSpace import MutationSpace
 from ..reports.optimization_reports import (

@@ -131,7 +131,7 @@ class AvoidMatches(Specification):
         return self.copy_with_changes(location=new_location, is_localized=True)
 
     def feature_label_parameters(self):
-        return [self.blast_db]
+        return [self.bowtie_index]
     
     def remove_temp_directory(self):
         if self._tmp_data_dir is not None:
