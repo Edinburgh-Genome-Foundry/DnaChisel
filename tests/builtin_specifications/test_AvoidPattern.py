@@ -2,6 +2,7 @@
 from io import StringIO
 from dnachisel import (
     DnaOptimizationProblem,
+    EnforceTranslation,
     random_dna_sequence,
     AvoidPattern,
     RepeatedKmerPattern,
@@ -119,5 +120,21 @@ def test_AvoidPattern_with_jaspar_motifs():
         constraints=[AvoidPattern(p) for p in motif_patterns],
     )
     assert 2 == len(problem.constraints_evaluations().all_locations())
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+
+
+def test_AvoidPattern_with_regular_expression():
+    sequence = (
+        "ATGGTGAGCAAGGGCGAGGAGCTGTTCACCGGGGTGGTGCCCATCCTG"
+        "GTCGAGCTGGACGGCGACGTAAACGGCCACAAGTTCAGCGTGCGCGGC"
+        "GAGGGCGAGGGCGATGCCACCAACGGCAAGCTGACCCTGAAGTTCATC"
+    )
+    problem = DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[EnforceTranslation(), AvoidPattern(r"GGT(.*)GAT")],
+        logger=None,
+    )
+    assert not problem.all_constraints_pass()
     problem.resolve_constraints()
     assert problem.all_constraints_pass()

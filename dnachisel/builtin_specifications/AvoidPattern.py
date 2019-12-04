@@ -25,9 +25,8 @@ class AvoidPattern(Specification):
     """
 
     best_possible_score = 0
-    shrink_when_localized = True
     priority = 1
-    shorthand_name = "no"
+    shorthand_name = "no"  # will appear as, for instance, @no(BsmBI_site)
 
     def __init__(self, pattern=None, location=None, boost=1.0):
         """Initialize."""
@@ -61,17 +60,14 @@ class AvoidPattern(Specification):
     def localized(self, location, problem=None, with_righthand=True):
         """Localize the pattern to the given location. Taking into account the
         specification's own location, and the size of the pattern."""
-        pattern_size = self.pattern.size
         if self.location.overlap_region(location) is None:
             return None
-        else:
-            if not self.shrink_when_localized:
-                return self
-            extended_location = location.extended(
-                pattern_size - 1, right=with_righthand
-            )
-            new_location = self.location.overlap_region(extended_location)
-
+        if self.pattern.size is None:
+            return self
+        extended_location = location.extended(
+            self.pattern.size - 1, right=with_righthand
+        )
+        new_location = self.location.overlap_region(extended_location)
         return self.copy_with_changes(location=new_location)
 
     def label_parameters(self):

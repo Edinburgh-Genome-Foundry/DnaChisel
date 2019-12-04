@@ -60,8 +60,9 @@ class SequencePattern:
         lookahead="loop",
         is_palyndromic=False,
     ):
-        if size is None:
-            size = len(expression)
+        # if size is None:
+        #     self.shrink_when_localized = False
+        #     # size = len(expression)
         self.expression = expression
         self.lookahead = lookahead
         if lookahead == "re":
