@@ -32,4 +32,4 @@ def test_constraints_reports():
     assert sum([len(r.features) for r in records]) == 157
     pdf_data = cr.breaches_records_to_pdf(records)
     
-    assert 70000 < len(pdf_data) < 72000
+    assert 70000 < len(pdf_data) < 80000

@@ -117,7 +117,7 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
                 score -= total * abs(frequency_diff)
                 if codon_freq["sequence"] > codon_freq["table"]:
                     nonoptimal_aa_indices += codons_positions[codon]
-        return score, [3 * i for i in nonoptimal_aa_indices]
+        return score, nonoptimal_aa_indices
 
     def evaluate(self, problem):
         """Evaluate on a problem"""

@@ -29,7 +29,7 @@ def test_codon_optimize_bestcodon():
     assert problem.objective_scores_sum() == 0
 
 
-def test_codon_optimize_match_usage():
+def test_codon_optimize_match_usage_random_sequence():
     numpy.random.seed(123)
     protein = random_protein_sequence(500, seed=123)
     sequence = reverse_translate(protein)
@@ -43,7 +43,26 @@ def test_codon_optimize_match_usage():
     )
     assert -600 < problem.objective_scores_sum() < -550
     problem.optimize()
-    assert -350 < problem.objective_scores_sum()
+    print (problem.objective_scores_sum())
+    assert -17 < problem.objective_scores_sum()
+
+
+def test_codon_optimize_match_usage_gfp_sequence():
+    sequence = (
+        "ATGGTGAGCAAGGGCGAGGAGCTGTTCACCGGGGTGGTGCCCATCCTG"
+        "GTCGAGCTGGACGGCGACGTAAACGGCCACAAGTTCAGCGTGCGCGGC"
+        "GAGGGCGAGGGCGATGCCACCAACGGCAAGCTGACCCTGAAGTTCATC"
+    )
+    spec = CodonOptimize(species="s_cerevisiae", method="match_codon_usage")
+    problem = DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[EnforceTranslation()],
+        objectives=[spec],
+        logger=None,
+    )
+    assert problem.objective_scores_sum() < -61
+    problem.optimize()
+    assert problem.objective_scores_sum() > -16
 
 
 def test_codon_optimize_match_usage_short_sequence():
@@ -62,8 +81,8 @@ def test_codon_optimize_match_usage_short_sequence():
     assert problem.objective_scores_sum() < -5.5
     problem.optimize()
     assert -0.6 < problem.objective_scores_sum()
-    print (problem.objective_scores_sum())
-    assert problem.sequence == "GACGATGATAAGAAAAAAAAGAAAAAA"
+    print(problem.objective_scores_sum())
+    assert problem.sequence == "GATGATGACAAGAAAAAGAAAAAAAAA"
 
 
 def test_codon_optimize_harmonize_rca_short_sequence():
