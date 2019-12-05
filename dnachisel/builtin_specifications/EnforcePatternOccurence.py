@@ -37,6 +37,14 @@ class EnforcePatternOccurence(Specification):
       If true, new inserted patterns will prioritize locations at the center
       of the specification's location. Else the insertion will happen at
       the beginning of the location.
+
+    strand
+      Alternative way to set the strand, meant to be used in two cases only:
+      (1) in a Genbank annotation by setting ``strand=both`` to indicate that
+      the pattern could be on both strands (otherwise, only the
+      feature's strand will be considered).
+      (2) if you want to create a specification without preset location, but
+      with a set strand: ``EnforcePatternOccurence('BsmBI_site', strand=1)``
     """
 
     best_possible_score = 0
@@ -44,13 +52,26 @@ class EnforcePatternOccurence(Specification):
     shorthand_name = "insert"
 
     def __init__(
-        self, pattern=None, occurences=1, location=None, center=True, boost=1.0
+        self,
+        pattern=None,
+        occurences=1,
+        location=None,
+        strand="from_location",
+        center=True,
+        boost=1.0,
     ):
         """Initialize."""
         if isinstance(pattern, str):
             pattern = SequencePattern.from_string(pattern)
         self.pattern = pattern
         self.location = Location.from_data(location)
+        if strand != "from_location":
+            if strand == "both":
+                strand = 0
+            if strand not in [-1, 0, 1]:
+                raise ValueError("unknown strand: %s" % strand)
+            self.location.strand = strand
+        self.strand = strand
         self.occurences = occurences
         self.center = center
         self.boost = boost
@@ -60,7 +81,7 @@ class EnforcePatternOccurence(Specification):
 
     def evaluate(self, problem):
         """Score the difference between expected and observed n_occurences."""
-        matches = self.pattern.find_matches(problem.sequence, self.location, )
+        matches = self.pattern.find_matches(problem.sequence, self.location,)
         score = -abs(len(matches) - self.occurences)
 
         if score == 0:

@@ -6,7 +6,6 @@ from ..Specification.Specification import Specification
 from ..Specification.SpecEvaluation import SpecEvaluation
 
 
-
 class AvoidPattern(Specification):
     """Enforce that the given pattern is absent in the sequence.
 
@@ -20,7 +19,18 @@ class AvoidPattern(Specification):
 
     location
       Location of the DNA segment on which to enforce the pattern e.g.
-      ``Location(10, 45, 1)``
+      ``Location(10, 45, 1)``. For patterns which are not palyndromic,
+      the strand matters! use +1 for eliminating the pattern on the +1 strand
+      only, -1 for eliminating the pattern on the -1 strand, and 0 for
+      eliminating the pattern on both strands.
+
+    strand
+      Alternative way to set the strand, meant to be used in two cases only:
+      (1) in a Genbank annotation by setting ``strand=both`` to indicate that
+      the pattern should be avoided on both strands (otherwise, only the
+      feature's strand will be considered).
+      (2) if you want to create a specification without preset location, but
+      with a set strand: ``AvoidPattern('BsmBI_site', strand=1)``
 
     """
 
@@ -28,12 +38,21 @@ class AvoidPattern(Specification):
     priority = 1
     shorthand_name = "no"  # will appear as, for instance, @no(BsmBI_site)
 
-    def __init__(self, pattern=None, location=None, boost=1.0):
+    def __init__(
+        self, pattern=None, location=None, strand="from_location", boost=1.0
+    ):
         """Initialize."""
         if isinstance(pattern, str):
             pattern = SequencePattern.from_string(pattern)
         self.pattern = pattern
         self.location = Location.from_data(location)
+        if strand != "from_location":
+            if strand == "both":
+                strand = 0
+            if strand not in [-1, 0, 1]:
+                raise ValueError("unknown strand: %s" % strand)
+            self.location.strand = strand
+        self.strand = strand
         self.boost = boost
 
     def evaluate(self, problem):

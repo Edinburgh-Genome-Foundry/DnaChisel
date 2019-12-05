@@ -59,7 +59,7 @@ def plot_row_feature(row):
     if row.highlights != "none":
         for (start, end, _) in parse_locations(row.highlights):
             ax.fill_between(
-                [start - 1.5, end - 0.5], -0.9, -0.5, facecolor="r", alpha=0.15
+                [start - 0.5, end - 0.5], -0.9, -0.5, facecolor="r", alpha=0.15
             )
     ax.set_ylim(top=0.7)
     ax.figure.set_figheight(1)

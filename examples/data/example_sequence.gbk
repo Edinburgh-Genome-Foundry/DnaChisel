@@ -1,4 +1,4 @@
-LOCUS       Exported                4720 bp ds-DNA     circular UNK 15-OCT-2019
+LOCUS       Exported                4720 bp ds-DNA     circular UNK 05-DEC-2019
 DEFINITION  .
 ACCESSION   Example
 VERSION     .
@@ -8,7 +8,7 @@ SOURCE      natural DNA sequence
 REFERENCE   1  (bases 1 to 4720)
   AUTHORS   .
   TITLE     Direct Submission
-  JOURNAL   Exported Tuesday, Oct 15, 2019 from SnapGene Viewer 4.3.11
+  JOURNAL   Exported Thursday, Dec 5, 2019 from SnapGene Viewer 5.0.6
             https://www.snapgene.com
 FEATURES             Location/Qualifiers
      source          1..4720
@@ -35,6 +35,7 @@ FEATURES             Location/Qualifiers
                      /note="Gene barK"
                      /note="color: #c0c0c0; direction: RIGHT"
      misc_feature    1805..1834
+                     /label=@keep
                      /label=@AvoidChanges
                      /note="color: #000080"
      promoter        1805..1834
@@ -53,6 +54,7 @@ FEATURES             Location/Qualifiers
                      /note="Gene kanR Kanamycin resistance marker"
                      /note="color: #c0c0c0; direction: RIGHT"
      misc_feature    2149..4201
+                     /label=@no(BsrBI_site strand=both)
                      /label=@no(BsrBI_site)
                      /label=@AvoidPattern(BsrBI_site)
                      /note="color: #000080"

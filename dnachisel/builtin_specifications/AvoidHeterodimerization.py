@@ -43,7 +43,6 @@ class AvoidHeterodimerization(Specification):
     def localize(self, location, problem=None):
         if self.location.overlap_region(location) is None:
             return None
-        # VoidSpecification(parent_specification=self)
         else:
             return self
 
