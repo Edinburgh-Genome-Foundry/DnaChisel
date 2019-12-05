@@ -273,17 +273,17 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidBlastMatches" title="dnachisel.builtin_specifications.AvoidBlastMatches"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidBlastMatches</span></code></a></p></td>
 <td><p>Enforce that the sequence has no BLAST matches with a given database.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidChanges" title="dnachisel.builtin_specifications.AvoidChanges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidChanges</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidMatches" title="dnachisel.builtin_specifications.AvoidMatches"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidMatches</span></code></a></p></td>
+<td><p>Enforce that the sequence has no matches longer than N in a given index.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidChanges" title="dnachisel.builtin_specifications.AvoidChanges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidChanges</span></code></a></p></td>
 <td><p>Specify that some locations of the sequence should not be changed.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidHairpins" title="dnachisel.builtin_specifications.AvoidHairpins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidHairpins</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidHairpins" title="dnachisel.builtin_specifications.AvoidHairpins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidHairpins</span></code></a></p></td>
 <td><p>Avoid Hairpin patterns as defined by the IDT guidelines.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidHeterodimerization</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidHeterodimerization</span></code></p></td>
 <td><p>Avoid that the (sub)sequence anneals with other primers.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidMatches</span></code></p></td>
-<td><p>Enforce that the sequence has no matches longer than N in a given index.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidPattern" title="dnachisel.builtin_specifications.AvoidPattern"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidPattern</span></code></a></p></td>
 <td><p>Enforce that the given pattern is absent in the sequence.</p></td>
@@ -291,40 +291,43 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidStopCodons" title="dnachisel.builtin_specifications.AvoidStopCodons"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidStopCodons</span></code></a></p></td>
 <td><p>Do not introduce any new stop codon in that frame.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.CodonOptimize" title="dnachisel.builtin_specifications.CodonOptimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CodonOptimize</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.AvoidRareCodons" title="dnachisel.builtin_specifications.AvoidRareCodons"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AvoidRareCodons</span></code></a></p></td>
+<td><p>Avoid the use of codons with low frequency.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.CodonOptimize" title="dnachisel.builtin_specifications.CodonOptimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CodonOptimize</span></code></a></p></td>
 <td><p>Codon-optimize a coding sequence using a user-selected method.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.MaximizeCAI" title="dnachisel.builtin_specifications.MaximizeCAI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MaximizeCAI</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.MaximizeCAI" title="dnachisel.builtin_specifications.MaximizeCAI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MaximizeCAI</span></code></a></p></td>
 <td><p>Codon-optimize a coding sequence for a given species.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.MatchTargetCodonUsage" title="dnachisel.builtin_specifications.MatchTargetCodonUsage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MatchTargetCodonUsage</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.MatchTargetCodonUsage" title="dnachisel.builtin_specifications.MatchTargetCodonUsage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MatchTargetCodonUsage</span></code></a></p></td>
 <td><p>Codon-optimize a sequence so it has the same codon usage as a target.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.HarmonizeRCA" title="dnachisel.builtin_specifications.HarmonizeRCA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HarmonizeRCA</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.HarmonizeRCA" title="dnachisel.builtin_specifications.HarmonizeRCA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HarmonizeRCA</span></code></a></p></td>
 <td><p>Codon-Harmonize a native sequence for a new host (Claassens method).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceGCContent" title="dnachisel.builtin_specifications.EnforceGCContent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceGCContent</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceGCContent" title="dnachisel.builtin_specifications.EnforceGCContent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceGCContent</span></code></a></p></td>
 <td><p>Specification on the local or global proportion of G/C nucleotides.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceMeltingTemperature</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceMeltingTemperature" title="dnachisel.builtin_specifications.EnforceMeltingTemperature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceMeltingTemperature</span></code></a></p></td>
 <td><p>Ensure that the subsequence’s Tm is in a certain segment/target.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforcePatternOccurence" title="dnachisel.builtin_specifications.EnforcePatternOccurence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforcePatternOccurence</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforcePatternOccurence" title="dnachisel.builtin_specifications.EnforcePatternOccurence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforcePatternOccurence</span></code></a></p></td>
 <td><p>Enforce a number of occurences of the given pattern in the sequence.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceRegionsCompatibility" title="dnachisel.builtin_specifications.EnforceRegionsCompatibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceRegionsCompatibility</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceRegionsCompatibility" title="dnachisel.builtin_specifications.EnforceRegionsCompatibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceRegionsCompatibility</span></code></a></p></td>
 <td><p>Ensure that different subregions satisfy compatibility constraints.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceSequence" title="dnachisel.builtin_specifications.EnforceSequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceSequence</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceSequence" title="dnachisel.builtin_specifications.EnforceSequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceSequence</span></code></a></p></td>
 <td><p>Enforces a (possibly degenerate) sequence at some location.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceTranslation" title="dnachisel.builtin_specifications.EnforceTranslation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceTranslation</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.EnforceTranslation" title="dnachisel.builtin_specifications.EnforceTranslation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceTranslation</span></code></a></p></td>
 <td><p>Enforce a specific amino-acid sequence translation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.SequenceLengthBounds" title="dnachisel.builtin_specifications.SequenceLengthBounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceLengthBounds</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.SequenceLengthBounds" title="dnachisel.builtin_specifications.SequenceLengthBounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceLengthBounds</span></code></a></p></td>
 <td><p>Checks that the sequence length is between bounds.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.UniquifyAllKmers" title="dnachisel.builtin_specifications.UniquifyAllKmers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UniquifyAllKmers</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dnachisel.builtin_specifications.UniquifyAllKmers" title="dnachisel.builtin_specifications.UniquifyAllKmers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UniquifyAllKmers</span></code></a></p></td>
 <td><p>Avoid sub-sequence of length k with homologies elsewhere.</p></td>
 </tr>
 </tbody>
@@ -377,6 +380,92 @@ meaning “avoid K-mers repeated N times in a row”.</p>
 </div></blockquote>
 </dd>
 </dl>
+</dd></dl>
+
+</div>
+<div class="section" id="enforcemeltingtemperature">
+<h3>EnforceMeltingTemperature<a class="headerlink" href="#enforcemeltingtemperature" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="dnachisel.builtin_specifications.EnforceMeltingTemperature">
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">EnforceMeltingTemperature</code><span class="sig-paren">(</span><em class="sig-param">mini=None</em>, <em class="sig-param">maxi=None</em>, <em class="sig-param">target=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforceMeltingTemperature.html#EnforceMeltingTemperature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforceMeltingTemperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure that the subsequence’s Tm is in a certain segment/target.</p>
+<p>Shorthand for annotations: “tm”.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mini, maxi</strong></p>
+<blockquote>
+<div><p>Minimum and maximum acceptable melting temperatures in Celcius, for
+instance 55 and 70. A “target” can be provided instead when using this
+specification as an optimization objective.</p>
+</div></blockquote>
+<p><strong>target</strong></p>
+<blockquote>
+<div><p>Target melting temperature. Will be overriden by (mini+maxi)/2 if these
+are provided. The “target” parametr is only practical when the spec is
+used as an optimization objective.</p>
+</div></blockquote>
+<p><strong>location</strong></p>
+<blockquote>
+<div><p>Location of the subsequence whose melting temperature is considered.
+Can be None if the whole sequence is to be considered.</p>
+</div></blockquote>
+<p><strong>boost</strong></p>
+<blockquote>
+<div><p>Multiplicator for this specification’s score when used in a
+multi-objective optimization.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="avoidmatches">
+<h3>AvoidMatches<a class="headerlink" href="#avoidmatches" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="dnachisel.builtin_specifications.AvoidMatches">
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidMatches</code><span class="sig-paren">(</span><em class="sig-param">match_length</em>, <em class="sig-param">bowtie_index=None</em>, <em class="sig-param">sequences=None</em>, <em class="sig-param">mismatches=0</em>, <em class="sig-param">location=None</em>, <em class="sig-param">boost=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidMatches.html#AvoidMatches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidMatches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enforce that the sequence has no matches longer than N in a given index.</p>
+<p>This specification can be used to ensure that a sequence has no matches
+with a given organism, or a set of sequences, which can be useful to
+create orthogonal sequences or primer-friendly regions.</p>
+<p>This specification uses Bowtie in the background and requires Bowtie
+installed on your machine (it can be as simple as <code class="docutils literal notranslate"><span class="pre">apt</span> <span class="pre">install</span> <span class="pre">bowtie</span></code>
+on Ubuntu).</p>
+<p>It allows you to specify the <code class="docutils literal notranslate"><span class="pre">match_length</span></code> such that no subsegment of
+size match_length or more has any homology in the given bowtie index (which
+can be built from genomes using e.g. the genome_collector library). An
+homology can mean either perfect similarity, or up to 3 mismatches.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bowtie_index</strong></p>
+<blockquote>
+<div><p>Path to a local bowtie2 index.</p>
+</div></blockquote>
+<p><strong>match_length</strong></p>
+<blockquote>
+<div><p>Length of the matches to avoid</p>
+</div></blockquote>
+<p><strong>mismatches</strong></p>
+<blockquote>
+<div><p>Number of single-nucleotide mismatches allowed inside each match. Only
+0-3 mismatches is supported (this is what Bowtie supports.)</p>
+</div></blockquote>
+<p><strong>location</strong></p>
+<blockquote>
+<div><p>Location of the sequence on which the specification applies</p>
+</div></blockquote>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Here is how you automatically get a Bowtie index link with Genome Collector
+(it will build the index if it is not yet on your machine), and use the
+result to create an <code class="docutils literal notranslate"><span class="pre">AvoidMatches</span></code> specification:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">genome_collector</span> <span class="k">import</span> <span class="n">GenomeCollection</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">collection</span> <span class="o">=</span> <span class="n">GenomeCollection</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e_coli</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">get_taxid_bowtie_index_path</span><span class="p">(</span><span class="mi">511145</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span> <span class="o">=</span> <span class="n">AvoidMatches</span><span class="p">(</span><span class="n">bowtie_index</span><span class="o">=</span><span class="n">e_coli</span><span class="p">,</span> <span class="n">match_length</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">mismatches</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </div>
@@ -580,6 +669,55 @@ when editing it with quasi-synonymous mutations.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="avoidrarecodons">
+<h3>AvoidRareCodons<a class="headerlink" href="#avoidrarecodons" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="dnachisel.builtin_specifications.AvoidRareCodons">
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidRareCodons</code><span class="sig-paren">(</span><em class="sig-param">min_frequency</em>, <em class="sig-param">species=None</em>, <em class="sig-param">codon_usage_table=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/codon_optimization/AvoidRareCodons.html#AvoidRareCodons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidRareCodons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Avoid the use of codons with low frequency.</p>
+<p>This can be seen as a “mild” form of codon optimization where only rare
+codons (which slow down protein synthesis) are considered.</p>
+<p>WARNING: Make sure to always use this specification with EnforceTranslation
+to preserve the amino-acid sequence.</p>
+<p>Shorthand for annotations: “no_rare_codons”.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>min_frequency</strong></p>
+<blockquote>
+<div><p>Minimal frequency accepted for a given codon.</p>
+</div></blockquote>
+<p><strong>species</strong></p>
+<blockquote>
+<div><p>Name or TaxID of the species for which to optimize the sequence. A custom
+codon_usage_table can be provided instead (or in addition, for species
+names whose codon usage table cannot be imported).</p>
+</div></blockquote>
+<p><strong>codon_usage_table</strong></p>
+<blockquote>
+<div><p>Optional codon usage table of the species for which the sequence will be
+codon-optimized, which can be provided instead of <code class="docutils literal notranslate"><span class="pre">species</span></code>. A dict of
+the form <code class="docutils literal notranslate"><span class="pre">{'*':</span> <span class="pre">{&quot;TGA&quot;:</span> <span class="pre">0.112,</span> <span class="pre">&quot;TAA&quot;:</span> <span class="pre">0.68},</span> <span class="pre">'K':</span> <span class="pre">...}</span></code> giving the RSCU
+table (relative usage of each codon). See parameter <code class="docutils literal notranslate"><span class="pre">species</span></code> above.</p>
+</div></blockquote>
+<p><strong>location</strong></p>
+<blockquote>
+<div><p>Either a DnaChisel Location or a tuple of the form (start, end, strand)
+or just (start, end), with strand defaulting to +1, indicating the
+position of the gene to codon-optimize. If not provided, the whole
+sequence is considered as the gene. The location should have a length
+that is a multiple of 3. The location strand is either 1 if the gene is
+encoded on the (+) strand, or -1 for antisense.</p>
+</div></blockquote>
+<p><strong>boost</strong></p>
+<blockquote>
+<div><p>Score multiplicator (=weight) for when the specification is used as an
+optimization objective alongside competing objectives.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="codon-optimization-specifications">
 <h3>Codon Optimization Specifications<a class="headerlink" href="#codon-optimization-specifications" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
@@ -630,9 +768,9 @@ encoded on the (+) strand, or -1 for antisense.</p>
 <p><strong>codon_usage_table</strong></p>
 <blockquote>
 <div><p>Optional codon usage table of the species for which the sequence will be
-codon-optimized. A dict of the form <code class="docutils literal notranslate"><span class="pre">{'*':</span> <span class="pre">{&quot;TGA&quot;:</span> <span class="pre">0.112,</span> <span class="pre">&quot;TAA&quot;:</span> <span class="pre">0.68},</span>
-<span class="pre">'K':</span> <span class="pre">...}</span></code> giving the RSCU table (relative usage of each codon). See
-parameter <code class="docutils literal notranslate"><span class="pre">species</span></code> above.</p>
+codon-optimized, which can be provided instead of <code class="docutils literal notranslate"><span class="pre">species</span></code>. A dict of
+the form <code class="docutils literal notranslate"><span class="pre">{'*':</span> <span class="pre">{&quot;TGA&quot;:</span> <span class="pre">0.112,</span> <span class="pre">&quot;TAA&quot;:</span> <span class="pre">0.68},</span> <span class="pre">'K':</span> <span class="pre">...}</span></code> giving the RSCU
+table (relative usage of each codon). See parameter <code class="docutils literal notranslate"><span class="pre">species</span></code> above.</p>
 </div></blockquote>
 <p><strong>original_species</strong></p>
 <blockquote>
@@ -806,8 +944,9 @@ names whose codon usage table cannot be imported).</p>
 </div></blockquote>
 <p><strong>codon_usage_table</strong></p>
 <blockquote>
-<div><p>A dict of the form <code class="docutils literal notranslate"><span class="pre">{'*':</span> <span class="pre">{&quot;TGA&quot;:</span> <span class="pre">0.112,</span> <span class="pre">&quot;TAA&quot;:</span> <span class="pre">0.68},</span> <span class="pre">'K':</span> <span class="pre">...}</span></code>
-giving the RSCU table (relative usage of each codon).</p>
+<div><p>Optional - can be provided instead of <code class="docutils literal notranslate"><span class="pre">species</span></code>. A dict of the form
+<code class="docutils literal notranslate"><span class="pre">{'*':</span> <span class="pre">{&quot;TGA&quot;:</span> <span class="pre">0.112,</span> <span class="pre">&quot;TAA&quot;:</span> <span class="pre">0.68},</span> <span class="pre">'K':</span> <span class="pre">...}</span></code> giving the RSCU table
+(relative usage of each codon).</p>
 </div></blockquote>
 <p><strong>original_species</strong></p>
 <blockquote>

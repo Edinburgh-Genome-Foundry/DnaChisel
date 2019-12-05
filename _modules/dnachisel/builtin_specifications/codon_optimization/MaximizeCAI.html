@@ -306,8 +306,6 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">best_possible_score</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">localization_group_spread</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="n">shorthand_name</span> <span class="o">=</span> <span class="s2">&quot;use_best_codon&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
@@ -362,7 +360,7 @@
             <span class="k">for</span> <span class="n">codon</span> <span class="ow">in</span> <span class="n">codons</span>
         <span class="p">]</span>
         <span class="n">non_optimality</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">optimal_usage</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">current_usage</span><span class="p">)</span>
-        <span class="n">nonoptimal_indices</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">non_optimality</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">nonoptimal_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">non_optimality</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">locations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codons_indices_to_locations</span><span class="p">(</span><span class="n">nonoptimal_indices</span><span class="p">)</span>
         <span class="n">score</span> <span class="o">=</span> <span class="o">-</span><span class="n">non_optimality</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span>
@@ -373,10 +371,6 @@
             <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Codon opt. on window </span><span class="si">%s</span><span class="s2"> scored </span><span class="si">%.02E</span><span class="s2">&quot;</span>
             <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">score</span><span class="p">),</span>
         <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">localized_on_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_location</span><span class="p">,</span> <span class="n">start_codon</span><span class="p">,</span> <span class="n">end_codon</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Relocate without changing much.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">new_location</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">label_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;(custom table)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">]</span>

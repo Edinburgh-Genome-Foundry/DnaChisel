@@ -282,8 +282,9 @@
 <span class="sd">      names whose codon usage table cannot be imported).</span>
 
 <span class="sd">    codon_usage_table</span>
-<span class="sd">      A dict of the form ``{&#39;*&#39;: {&quot;TGA&quot;: 0.112, &quot;TAA&quot;: 0.68}, &#39;K&#39;: ...}``</span>
-<span class="sd">      giving the RSCU table (relative usage of each codon).</span>
+<span class="sd">      Optional - can be provided instead of ``species``. A dict of the form</span>
+<span class="sd">      ``{&#39;*&#39;: {&quot;TGA&quot;: 0.112, &quot;TAA&quot;: 0.68}, &#39;K&#39;: ...}`` giving the RSCU table</span>
+<span class="sd">      (relative usage of each codon). </span>
 
 <span class="sd">    original_species</span>
 <span class="sd">      Name or TaxID of the species the original sequence was taken from. This</span>
@@ -310,9 +311,7 @@
 <span class="sd">    codon usage algorithms. PLOS One, 2017</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">best_possible_score</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">localization_group_spread</span> <span class="o">=</span> <span class="mi">3</span>
+    
     <span class="n">shorthand_name</span> <span class="o">=</span> <span class="s2">&quot;harmonize_rca&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
@@ -324,6 +323,10 @@
         <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">boost</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;=&gt;&quot;</span> <span class="ow">in</span> <span class="n">species</span><span class="p">:</span>
+            <span class="n">species</span><span class="p">,</span> <span class="n">original_species</span> <span class="o">=</span> <span class="n">species</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&gt;&#39;</span><span class="p">)</span>
+            <span class="n">species</span> <span class="o">=</span> <span class="n">species</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">original_species</span> <span class="o">=</span> <span class="n">original_species</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="n">BaseCodonOptimizationClass</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">species</span><span class="o">=</span><span class="n">species</span><span class="p">,</span>
@@ -388,7 +391,7 @@
             <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rca_in_original_species</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rca_in_target_species</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="n">non_optimality</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallest_possible_discrepancies</span> <span class="o">-</span> <span class="n">discrepancies</span>
-        <span class="n">nonoptimal_indices</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">non_optimality</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">nonoptimal_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">non_optimality</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">locations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codons_indices_to_locations</span><span class="p">(</span><span class="n">nonoptimal_indices</span><span class="p">)</span>
         <span class="n">score</span> <span class="o">=</span> <span class="o">-</span><span class="n">discrepancies</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span>
@@ -399,10 +402,6 @@
             <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Codon harmonization on </span><span class="si">%s</span><span class="s2"> scored </span><span class="si">%.02E</span><span class="s2">&quot;</span>
             <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">score</span><span class="p">),</span>
         <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">localized_on_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_location</span><span class="p">,</span> <span class="n">start_codon</span><span class="p">,</span> <span class="n">end_codon</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Relocate without changing much.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">new_location</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">label_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;(custom table)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">]</span>

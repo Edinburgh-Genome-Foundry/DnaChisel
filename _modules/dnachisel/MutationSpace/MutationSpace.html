@@ -327,7 +327,7 @@
                 <span class="n">variant</span> <span class="o">=</span> <span class="n">variants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">new_sequence</span><span class="p">[</span><span class="n">choice</span><span class="o">.</span><span class="n">start</span> <span class="p">:</span> <span class="n">choice</span><span class="o">.</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">variant</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
             <span class="k">elif</span> <span class="n">sequence</span><span class="p">[</span><span class="n">choice</span><span class="o">.</span><span class="n">start</span> <span class="p">:</span> <span class="n">choice</span><span class="o">.</span><span class="n">end</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">variants</span><span class="p">:</span>
-                <span class="n">variant</span> <span class="o">=</span> <span class="n">variants</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">variants</span><span class="p">))]</span>
+                <span class="n">variant</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">variants</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">variants</span><span class="p">))]</span>
                 <span class="n">new_sequence</span><span class="p">[</span><span class="n">choice</span><span class="o">.</span><span class="n">start</span> <span class="p">:</span> <span class="n">choice</span><span class="o">.</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">variant</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">new_sequence</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span></div>
 
@@ -455,7 +455,62 @@
                     <span class="n">choices_index</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">choice</span>
             <span class="c1"># for i in range(new_choice.start, new_choice.end):</span>
             <span class="c1">#     choices_index[i] = new_choice</span>
-        <span class="k">return</span> <span class="n">MutationSpace</span><span class="p">(</span><span class="n">choices_index</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">MutationSpace</span><span class="p">(</span><span class="n">choices_index</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MutationSpace.string_representation"><a class="viewcode-back" href="../../../ref/core_classes.html#dnachisel.MutationSpace.MutationSpace.string_representation">[docs]</a>    <span class="k">def</span> <span class="nf">string_representation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;|&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generates a string of the mutation space</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; print (mutation_space.string_representation())</span>
+<span class="sd">        &gt;&gt;&gt; A|G|ATG|CA|A|CA|T|GTC|AC|T|A|C|T|T|T</span>
+<span class="sd">        &gt;&gt;&gt; T|C|   |  |G|  |C|   |  |C|T|A|C|A|C</span>
+<span class="sd">        &gt;&gt;&gt; G|A|   |  | |  | |   |  |G|G|G|G|G|G</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">depth</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">variants</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices_list</span><span class="p">])</span>
+        <span class="n">sequences</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices_list</span><span class="p">:</span>
+            <span class="n">variants</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">variants</span><span class="p">)</span>
+            <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">choice</span><span class="o">.</span><span class="n">segment</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">variants</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">depth</span><span class="p">:</span>
+                <span class="n">variants</span> <span class="o">+=</span> <span class="p">(</span><span class="n">depth</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">variants</span><span class="p">))</span> <span class="o">*</span> <span class="p">[</span><span class="n">length</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">variant</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">variants</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequences</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+                    <span class="n">sequences</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">separator</span>
+                <span class="n">sequences</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">variant</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">y_offset</span><span class="o">=-</span><span class="mi">2</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices_list</span><span class="p">:</span>
+            <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">choice</span><span class="o">.</span><span class="n">segment</span>
+            <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">variants</span><span class="p">)</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="mf">0.2</span>
+            <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">sign</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">start</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]:</span>
+                <span class="n">_x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">delta</span>
+                <span class="n">_y</span> <span class="o">=</span> <span class="n">y_offset</span> <span class="o">+</span> <span class="mf">0.5</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">_x</span><span class="p">,</span> <span class="n">_x</span><span class="p">],</span> <span class="p">[</span><span class="n">_y</span><span class="p">,</span> <span class="n">_y</span> <span class="o">-</span> <span class="n">N</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">variant</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">choice</span><span class="o">.</span><span class="n">variants</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">nucleotide</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">variant</span><span class="p">):</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">start</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="n">delta</span><span class="p">,</span> <span class="n">end</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">delta</span><span class="p">],</span>
+                        <span class="p">[</span><span class="n">y_offset</span> <span class="o">-</span> <span class="n">y</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">y_offset</span> <span class="o">-</span> <span class="n">y</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">],</span>
+                        <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                        <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                        <span class="n">x</span> <span class="o">+</span> <span class="n">start</span><span class="p">,</span>
+                        <span class="o">-</span><span class="n">y</span> <span class="o">+</span> <span class="n">y_offset</span><span class="p">,</span>
+                        <span class="n">nucleotide</span><span class="p">,</span>
+                        <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                        <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                        <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                    <span class="p">)</span>
+        <span class="n">max_variants</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">variants</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices_list</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="o">-</span><span class="n">max_variants</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[</span><span class="mi">0</span><span class="p">]))</span></div>
+
 </pre></div>
 
           </div>

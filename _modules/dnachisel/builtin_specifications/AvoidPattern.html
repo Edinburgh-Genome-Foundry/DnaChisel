@@ -269,9 +269,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">best_possible_score</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">shrink_when_localized</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">priority</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">shorthand_name</span> <span class="o">=</span> <span class="s2">&quot;no&quot;</span>
+    <span class="n">shorthand_name</span> <span class="o">=</span> <span class="s2">&quot;no&quot;</span>  <span class="c1"># will appear as, for instance, @no(BsmBI_site)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize.&quot;&quot;&quot;</span>
@@ -305,17 +304,14 @@
     <span class="k">def</span> <span class="nf">localized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">with_righthand</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Localize the pattern to the given location. Taking into account the</span>
 <span class="sd">        specification&#39;s own location, and the size of the pattern.&quot;&quot;&quot;</span>
-        <span class="n">pattern_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">size</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">shrink_when_localized</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">self</span>
-            <span class="n">extended_location</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">extended</span><span class="p">(</span>
-                <span class="n">pattern_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">with_righthand</span>
-            <span class="p">)</span>
-            <span class="n">new_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span><span class="n">extended_location</span><span class="p">)</span>
-
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="n">extended_location</span> <span class="o">=</span> <span class="n">location</span><span class="o">.</span><span class="n">extended</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">with_righthand</span>
+        <span class="p">)</span>
+        <span class="n">new_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">overlap_region</span><span class="p">(</span><span class="n">extended_location</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">new_location</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">label_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
