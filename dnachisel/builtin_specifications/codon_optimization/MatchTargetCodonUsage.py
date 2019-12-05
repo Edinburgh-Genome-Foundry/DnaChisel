@@ -144,6 +144,12 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
         """Return a dict indicating differences between codons frequencies in
         the sequence and in this specifications's codons usage table.
 
+        Examples
+        --------
+
+        >>> codons = spec.get_codons(problem)
+        >>> print(spec.compare_frequencies(codons)
+
         Returns
         -------
 

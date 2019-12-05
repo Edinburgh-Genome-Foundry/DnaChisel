@@ -64,6 +64,11 @@ def test_codon_optimize_match_usage_gfp_sequence():
     problem.optimize()
     assert problem.objective_scores_sum() > -16
 
+    # Just for coverage, we run the compare_frequency function in text mode
+    spec = problem.objectives[0]
+    codons = spec.get_codons(problem)
+    print(spec.compare_frequencies(codons, text_mode=True))
+
 
 def test_codon_optimize_match_usage_short_sequence():
     numpy.random.seed(123)
