@@ -15,8 +15,15 @@ Pattern removal
     specifications such as ``no()`` or ``insert()`` indicates where to look for
     the pattern. Annotations in the +1 sense indicate that the
     pattern should only be looked for in the +1 (5'3') strand. Patterns in the -1
-    strand are only looked at in the -1 (3'5') sense. Annotations with no
-    orientation indicate that the pattern should be looked for in both strands.
+    strand are only looked at in the -1 (3'5') sense.
+
+.. caution:: Use ``strand=both`` in Genbank files to target both strands.
+
+    Standard Genbank does not allow you to create strands without direction
+    (unlike the Biopython Record format, or the Snapgene format. So keep in
+    mind that by default, only the feature's strand is considered. In ``@no()``
+    and ``@insert()``, you can use ``strand=both`` to indicate that the pattern
+    should be avoided in both strands, for instance ``@no(BsaI_site, strand=both)``.
 
 To remove a pattern in a given region, use the ``@no()`` label
 (alias for ``@AvoidPattern()``). For instance to remove any GC pattern:

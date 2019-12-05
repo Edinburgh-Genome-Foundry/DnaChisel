@@ -1,13 +1,13 @@
 filename,spec,location,sequence,highlights
-avoid_pattern_cg,@no(CG),2-24,ATGCACACGCATCGTCTCATCACTCAT,"8-9, 13-14"
-avoid_pattern_cg_obj,~no(CG),2-24,ATGCACACGCATCGTCTCCGACTCATA,"8-9, 13-14, 19-20"
-avoid_pattern_noisoleucine,@no(ATH),2-24,ATGCACATCAACACAATTACACTACCT,"7-9, 16-18"
-avoid_pattern_regex,@no(ATG.*TAA),2-24,CAATGCACACGCATAATCTCATCACTT,3-15
-avoid_pattern_kmer,@no(4x2mer),2-24,ATGCACACACATCGTCTCATCACTCAT,4-11
-avoid_pattern_enzyme,@no(BsmBI_site),2-24,ATGCACACGCATCGTCTCATCACTCAT,13-18
+avoid_pattern_cg,@no(CG),2-24,ATGCACACGCATCGTCTCATCACTCAT,"7-9, 12-14"
+avoid_pattern_cg_obj,~no(CG),2-24,ATGCACACGCATCGTCTCCGACTCATA,"7-9, 12-14, 18-20"
+avoid_pattern_noisoleucine,"@no(ATH, strand=both)",2-24,ATGCACATCAACACAATTACACTACCT,"6-9, 15-18"
+avoid_pattern_regex,@no(ATG.*TAA),2-24,CAATGCACACGCATAATCTCATCACTT,2-15
+avoid_pattern_kmer,@no(4x2mer),2-24,ATGCACACACATCGTCTCATCACTCAT,3-11
+avoid_pattern_enzyme,"@no(BsmBI_site, strand=both)",2-24,ATGCACACGCATCGTCTCATCACTCAT,12-18
 keep,@keep,"1-8, 16-22",ATGCACACGCATCGTCTCATCACTCAT,none
 keep_obj,~keep,2-24,ATGCACACGCATCGTCTCATCACTCAT,none
-change,~change,10-20,ATGCACACGCATCGTCTCATCACTCAT,10-20
+change,~change,10-20,ATGCACACGCATCGTCTCATCACTCAT,9-20
 insert,@insert(BsmBI_site),2-24+,ATGCACACGCATCGATTCATCACTCAT,none
 insert_several,"@insert(CG, occurences=3)",2-24,ATGCACACACATCGATTCATCACTCAT,none
 gc_range,@gc(45-55%),2-24,ATGCACACACATCGATTCATCACTCAT,none
@@ -19,8 +19,8 @@ use_best_codon,~use_best_codon(e_coli),2-23+,CAATGCACACATCGATTCATCACTCAT,none
 match_codon_usage,~match_codon_usage,2-23+,CAATGCACACATCGATTCATCACTCAT,none
 harmonize_rca,~harmonize_rca(e_coli => h_sapiens),2-23+,CAATGCACACATCGATTCATCACTCAT,none
 allow_primer,"@primer(tmin=50, tmax=70)",2-24,CAATGCACACATCGATTCATCACTCAT,none
-all_unique_kmers,@all_unique_kmers(k=15),2-24,CAATGCACACATCGATTCATGCACATT,"3-8, 19-24"
-all_unique_kmers_here,"@all_unique_kmers(k=15, here)",2-24,CAATGCACACATCGATTCATGCACATT,"3-8, 19-24"
+all_unique_kmers,@all_unique_kmers(k=15),2-24,CAATGCACACATCGATTCATGCACATT,"2-8, 18-24"
+all_unique_kmers_here,"@all_unique_kmers(k=15, here)",2-24,CAATGCACACATCGATTCATGCACATT,"2-8, 18-24"
 choice,@choice(ATG|TTA|CGT),1-4,CCATT,none
 enforce_melting,@tm(50-70C),2-24,CAATGCACACATCGATTCATGCACATT,none
 enforce_melting_obj,~tm(55C),2-24,CAATGCACACATCGATTCATGCACATT,none

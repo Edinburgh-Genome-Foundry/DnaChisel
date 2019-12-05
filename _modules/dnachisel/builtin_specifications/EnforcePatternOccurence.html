@@ -281,6 +281,14 @@
 <span class="sd">      If true, new inserted patterns will prioritize locations at the center</span>
 <span class="sd">      of the specification&#39;s location. Else the insertion will happen at</span>
 <span class="sd">      the beginning of the location.</span>
+
+<span class="sd">    strand</span>
+<span class="sd">      Alternative way to set the strand, meant to be used in two cases only:</span>
+<span class="sd">      (1) in a Genbank annotation by setting ``strand=both`` to indicate that</span>
+<span class="sd">      the pattern could be on both strands (otherwise, only the</span>
+<span class="sd">      feature&#39;s strand will be considered).</span>
+<span class="sd">      (2) if you want to create a specification without preset location, but</span>
+<span class="sd">      with a set strand: ``EnforcePatternOccurence(&#39;BsmBI_site&#39;, strand=1)``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">best_possible_score</span> <span class="o">=</span> <span class="mi">0</span>
@@ -288,13 +296,26 @@
     <span class="n">shorthand_name</span> <span class="o">=</span> <span class="s2">&quot;insert&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">occurences</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">boost</span><span class="o">=</span><span class="mf">1.0</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">pattern</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">occurences</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">strand</span><span class="o">=</span><span class="s2">&quot;from_location&quot;</span><span class="p">,</span>
+        <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">boost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">pattern</span> <span class="o">=</span> <span class="n">SequencePattern</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="n">pattern</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">strand</span> <span class="o">!=</span> <span class="s2">&quot;from_location&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">strand</span> <span class="o">==</span> <span class="s2">&quot;both&quot;</span><span class="p">:</span>
+                <span class="n">strand</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">strand</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unknown strand: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">strand</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span> <span class="o">=</span> <span class="n">strand</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strand</span> <span class="o">=</span> <span class="n">strand</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">occurences</span> <span class="o">=</span> <span class="n">occurences</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">center</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">boost</span> <span class="o">=</span> <span class="n">boost</span>
@@ -304,7 +325,7 @@
 
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Score the difference between expected and observed n_occurences.&quot;&quot;&quot;</span>
-        <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="p">)</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">find_matches</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">,)</span>
         <span class="n">score</span> <span class="o">=</span> <span class="o">-</span><span class="nb">abs</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">occurences</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">score</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>

@@ -639,7 +639,7 @@ complement of the sequence (or sub sequence if <cite>location</cite> is not None
 <h3>AvoidPattern<a class="headerlink" href="#avoidpattern" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.AvoidPattern">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidPattern</code><span class="sig-paren">(</span><em class="sig-param">pattern=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidPattern.html#AvoidPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidPattern" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">AvoidPattern</code><span class="sig-paren">(</span><em class="sig-param">pattern=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">strand='from_location'</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/AvoidPattern.html#AvoidPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.AvoidPattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enforce that the given pattern is absent in the sequence.</p>
 <p>Shorthand for annotations: “no”.</p>
 <dl class="field-list">
@@ -651,7 +651,19 @@ complement of the sequence (or sub sequence if <cite>location</cite> is not None
 <p><strong>location</strong></p>
 <blockquote>
 <div><p>Location of the DNA segment on which to enforce the pattern e.g.
-<code class="docutils literal notranslate"><span class="pre">Location(10,</span> <span class="pre">45,</span> <span class="pre">1)</span></code></p>
+<code class="docutils literal notranslate"><span class="pre">Location(10,</span> <span class="pre">45,</span> <span class="pre">1)</span></code>. For patterns which are not palyndromic,
+the strand matters! use +1 for eliminating the pattern on the +1 strand
+only, -1 for eliminating the pattern on the -1 strand, and 0 for
+eliminating the pattern on both strands.</p>
+</div></blockquote>
+<p><strong>strand</strong></p>
+<blockquote>
+<div><p>Alternative way to set the strand, meant to be used in two cases only:
+(1) in a Genbank annotation by setting <code class="docutils literal notranslate"><span class="pre">strand=both</span></code> to indicate that
+the pattern should be avoided on both strands (otherwise, only the
+feature’s strand will be considered).
+(2) if you want to create a specification without preset location, but
+with a set strand: <code class="docutils literal notranslate"><span class="pre">AvoidPattern('BsmBI_site',</span> <span class="pre">strand=1)</span></code></p>
 </div></blockquote>
 </dd>
 </dl>
@@ -1029,7 +1041,7 @@ if both parameters are provided</p>
 <h3>EnforcePatternOccurence<a class="headerlink" href="#enforcepatternoccurence" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="dnachisel.builtin_specifications.EnforcePatternOccurence">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">EnforcePatternOccurence</code><span class="sig-paren">(</span><em class="sig-param">pattern=None</em>, <em class="sig-param">occurences=1</em>, <em class="sig-param">location=None</em>, <em class="sig-param">center=True</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforcePatternOccurence.html#EnforcePatternOccurence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforcePatternOccurence" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.builtin_specifications.</code><code class="sig-name descname">EnforcePatternOccurence</code><span class="sig-paren">(</span><em class="sig-param">pattern=None</em>, <em class="sig-param">occurences=1</em>, <em class="sig-param">location=None</em>, <em class="sig-param">strand='from_location'</em>, <em class="sig-param">center=True</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/builtin_specifications/EnforcePatternOccurence.html#EnforcePatternOccurence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.builtin_specifications.EnforcePatternOccurence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enforce a number of occurences of the given pattern in the sequence.</p>
 <p>Shorthand for annotations: “insert” (although this specification can be
 used to both insert new occurences of a pattern, or destroy surnumerary
@@ -1055,6 +1067,15 @@ patterns)</p>
 <div><p>If true, new inserted patterns will prioritize locations at the center
 of the specification’s location. Else the insertion will happen at
 the beginning of the location.</p>
+</div></blockquote>
+<p><strong>strand</strong></p>
+<blockquote>
+<div><p>Alternative way to set the strand, meant to be used in two cases only:
+(1) in a Genbank annotation by setting <code class="docutils literal notranslate"><span class="pre">strand=both</span></code> to indicate that
+the pattern could be on both strands (otherwise, only the
+feature’s strand will be considered).
+(2) if you want to create a specification without preset location, but
+with a set strand: <code class="docutils literal notranslate"><span class="pre">EnforcePatternOccurence('BsmBI_site',</span> <span class="pre">strand=1)</span></code></p>
 </div></blockquote>
 </dd>
 </dl>
