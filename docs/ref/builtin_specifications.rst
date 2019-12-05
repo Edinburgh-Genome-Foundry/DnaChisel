@@ -11,12 +11,13 @@ Summary
 
     AllowPrimer
     AvoidBlastMatches
+    AvoidMatches
     AvoidChanges
     AvoidHairpins
     AvoidHeterodimerization
-    AvoidMatches
     AvoidPattern
     AvoidStopCodons
+    AvoidRareCodons
     CodonOptimize
     MaximizeCAI
     MatchTargetCodonUsage
@@ -37,6 +38,16 @@ AllowPrimer
 +++++++++++
 
 .. autoclass:: AllowPrimer
+
+EnforceMeltingTemperature
++++++++++++++++++++++++++
+
+.. autoclass:: EnforceMeltingTemperature
+
+AvoidMatches
++++++++++++++++++
+
+.. autoclass:: AvoidMatches
 
 AvoidBlastMatches
 +++++++++++++++++
@@ -67,6 +78,11 @@ AvoidStopCodons
 +++++++++++++++
 
 .. autoclass:: AvoidStopCodons
+
+AvoidRareCodons
++++++++++++++++
+
+.. autoclass:: AvoidRareCodons
 
 Codon Optimization Specifications
 +++++++++++++++++++++++++++++++++
