@@ -64,11 +64,10 @@ def find_all_bowtie_matches(
     try:
         output = run_process("BOWTIE", parameters)
     except Exception as err:
+        raise err
+    finally:
         if tmp_fasta_path is not None:
             os.remove(tmp_fasta_path)
-        raise err
-    if tmp_fasta_path is not None:
-        os.remove(tmp_fasta_path)
     output_records = [
         line.split("\t") for line in output.decode().split("\n") if len(line)
     ]
