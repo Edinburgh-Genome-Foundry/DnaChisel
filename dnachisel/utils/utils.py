@@ -1,5 +1,5 @@
 """Misc. functions using DnaChisel which can be useful in other programs."""
-import dnachisel as dc
+from .. import random_dna_sequence, DnaOptimizationProblem
 
 
 def random_compatible_dna_sequence(
@@ -36,10 +36,10 @@ def random_compatible_dna_sequence(
       Either 'bar' or None (no logger) or any proglog logger.
 
     """
-    sequence = dc.random_dna_sequence(
+    sequence = random_dna_sequence(
         sequence_length, probas=probas, seed=seed
     )
-    problem = dc.DnaOptimizationProblem(
+    problem = DnaOptimizationProblem(
         sequence, constraints=constraints, logger=logger
     )
     problem.max_random_iters = max_random_iters

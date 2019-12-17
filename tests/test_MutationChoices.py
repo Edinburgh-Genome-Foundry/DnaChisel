@@ -1,4 +1,4 @@
-from dnachisel.MutationSpace import MutationChoice, MutationSpace
+from dnachisel.Mutation import MutationChoice, MutationSpace
 
 
 def test_mutation_choice_extract_varying_region():

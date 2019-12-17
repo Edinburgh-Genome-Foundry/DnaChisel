@@ -33,9 +33,9 @@ try:
 except ImportError:
     PANDAS_AVAILABLE = False
 
-from ..DnaOptimizationProblem import DnaOptimizationProblem
+from ..OptimizationProblem import DnaOptimizationProblem
 from ..biotools import sequence_to_biopython_record, annotate_record
-from ..builtin_specifications import (
+from ..Specifications.builtin_specifications import (
     EnforceGCContent,
     AvoidPattern,
     AvoidHairpins,

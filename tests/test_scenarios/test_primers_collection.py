@@ -12,7 +12,7 @@ could be used together without undesired annealing between them).
 """
 
 from dnachisel import DnaOptimizationProblem, random_dna_sequence
-from dnachisel.builtin_specifications import (
+from dnachisel.Specifications.builtin_specifications import (
     AvoidHeterodimerization,
     EnforceGCContent,
     AvoidPattern,

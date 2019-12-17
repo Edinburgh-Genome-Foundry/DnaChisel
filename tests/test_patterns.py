@@ -1,4 +1,4 @@
-from dnachisel.SequencePattern import SequencePattern
+from dnachisel.SeqPattern import SequencePattern
 
 def test_patterns_from_string():
     pattern = SequencePattern.from_string("6xT")

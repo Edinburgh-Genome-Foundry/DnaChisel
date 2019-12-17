@@ -42,10 +42,10 @@ Location
 .. automodule:: dnachisel.Location
    :members:
 
-MutationSpace
+Mutation
 -----------------------
 
-.. automodule:: dnachisel.MutationSpace
+.. automodule:: dnachisel.Mutation
    :members:
 
 SequencePattern

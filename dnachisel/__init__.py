@@ -1,4 +1,6 @@
-from .DnaOptimizationProblem import (
+print('dnachisel')
+
+from .OptimizationProblem import (
     DnaOptimizationProblem,
     CircularDnaOptimizationProblem,
     NoSolutionError,
@@ -6,13 +8,13 @@ from .DnaOptimizationProblem import (
 
 from .Location import Location
 
-from .Specification import (
+from .Specifications import (
     Specification,
     SpecificationSet,
     SpecEvaluation
 )
 
-from .builtin_specifications import (
+from .Specifications.builtin_specifications import (
     AllowPrimer,
     AvoidBlastMatches,
     AvoidChanges,
@@ -39,7 +41,7 @@ from .builtin_specifications import (
     DEFAULT_SPECIFICATIONS_DICT,
 )
 
-from .SequencePattern import (
+from .SeqPattern import (
     SequencePattern,
     DnaNotationPattern,
     HomopolymerPattern,
