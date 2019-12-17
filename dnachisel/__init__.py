@@ -1,5 +1,3 @@
-print('dnachisel')
-
 from .OptimizationProblem import (
     DnaOptimizationProblem,
     CircularDnaOptimizationProblem,
