@@ -136,3 +136,4 @@ class MaximizeCAI(BaseCodonOptimizationClass):
         if self.species is not None:
             result += " (%s)" % self.species
         return result
+

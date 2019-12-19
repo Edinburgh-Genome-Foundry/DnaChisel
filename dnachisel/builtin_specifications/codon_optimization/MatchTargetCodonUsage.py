@@ -208,3 +208,8 @@ class MatchTargetCodonUsage(BaseCodonOptimizationClass):
             return dict_to_pretty_string(comparisons)
         else:
             return codons_positions, comparisons
+    def short_label(self):
+        result = "match-codon-usage"
+        if self.species is not None:
+            result += " (%s)" % self.species
+        return result

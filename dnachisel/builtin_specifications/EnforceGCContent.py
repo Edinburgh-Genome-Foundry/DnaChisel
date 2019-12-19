@@ -62,7 +62,9 @@ class EnforceGCContent(Specification):
     ):
         """Initialize."""
         if isinstance(mini, str):
-            mini, maxi, target, window = self.string_to_parameters(mini)
+            mini, maxi, target, _window = self.string_to_parameters(mini)
+            if _window is not None:
+                window = _window
         if target is not None:
             mini = maxi = target
         self.target = target
