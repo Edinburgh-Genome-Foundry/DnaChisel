@@ -1,3 +1,5 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
 *.py[cod]
 
 # C extensions
@@ -52,3 +54,4 @@ examples/downloaded_data
 
 .cache
 .vscode
+*.ipynb*
