@@ -16,8 +16,8 @@ from io import BytesIO
 
 import proglog
 
-from dnachisel.biotools import sequence_to_biopython_record, annotate_record
-from dnachisel.builtin_specifications import (
+from ...biotools import sequence_to_biopython_record, annotate_record
+from ...builtin_specifications import (
     EnforceGCContent,
     AvoidPattern,
     AvoidHairpins,

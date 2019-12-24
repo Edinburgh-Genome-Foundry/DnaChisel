@@ -1,7 +1,7 @@
 from collections import Counter
 import itertools
 
-from dnachisel.Location import Location
+from ..Location import Location
 from ..Specification import Specification, SpecEvaluation
 
 class EnforceRegionsCompatibility(Specification):

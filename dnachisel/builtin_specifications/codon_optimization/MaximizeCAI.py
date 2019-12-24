@@ -1,7 +1,7 @@
 import numpy as np
 
 from .BaseCodonOptimizationClass import BaseCodonOptimizationClass
-from dnachisel.Specification.SpecEvaluation import SpecEvaluation
+from ...Specification.SpecEvaluation import SpecEvaluation
 
 
 class MaximizeCAI(BaseCodonOptimizationClass):

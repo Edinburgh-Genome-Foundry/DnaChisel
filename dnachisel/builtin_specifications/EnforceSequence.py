@@ -5,8 +5,8 @@
 import numpy as np
 
 from ..Specification import Specification, SpecEvaluation
-from dnachisel.Location import Location
-from dnachisel.biotools import (group_nearby_indices,
+from ..Location import Location
+from ..biotools import (group_nearby_indices,
                                 reverse_complement,
                                 IUPAC_NOTATION)
 

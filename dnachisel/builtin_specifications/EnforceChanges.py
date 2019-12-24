@@ -3,12 +3,12 @@
 import numpy as np
 
 from ..Specification import Specification, SpecEvaluation
-from dnachisel.biotools import (
+from ..biotools import (
     sequences_differences_array,
     group_nearby_indices,
     OTHER_BASES,
 )
-from dnachisel.Location import Location
+from ..Location import Location
 
 other_bases_sets = {
     base: other_bases for (base, other_bases) in OTHER_BASES.items()

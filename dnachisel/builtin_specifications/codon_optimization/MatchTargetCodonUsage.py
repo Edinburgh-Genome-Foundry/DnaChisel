@@ -1,6 +1,6 @@
 import numpy as np
-from dnachisel.Specification.SpecEvaluation import SpecEvaluation
-from dnachisel.biotools import dict_to_pretty_string
+from ...Specification.SpecEvaluation import SpecEvaluation
+from ...biotools import dict_to_pretty_string
 
 from .BaseCodonOptimizationClass import BaseCodonOptimizationClass
 

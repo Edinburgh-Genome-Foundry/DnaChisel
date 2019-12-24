@@ -1,7 +1,7 @@
 "Implement AvoidRareCodons."
 
-from dnachisel.Specification import SpecEvaluation
-from dnachisel.biotools import reverse_complement
+from ...Specification import SpecEvaluation
+from ...biotools import reverse_complement
 from .BaseCodonOptimizationClass import BaseCodonOptimizationClass
 
 

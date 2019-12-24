@@ -1,5 +1,5 @@
-from dnachisel.Location import Location
-from dnachisel.Specification.SpecEvaluation import ProblemObjectivesEvaluations
+from ...Location import Location
+from ...Specification.SpecEvaluation import ProblemObjectivesEvaluations
 from ..NoSolutionError import NoSolutionError
 
 

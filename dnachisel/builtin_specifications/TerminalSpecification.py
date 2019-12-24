@@ -1,6 +1,6 @@
 """Implements TerminalSpecification."""
 
-from dnachisel.Location import Location
+from ..Location import Location
 from ..Specification import Specification, SpecEvaluation
 
 
