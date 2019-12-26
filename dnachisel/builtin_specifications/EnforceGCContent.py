@@ -3,8 +3,8 @@
 import numpy as np
 import re
 
-from dnachisel.biotools import gc_content, group_nearby_segments
-from dnachisel.Location import Location
+from ..biotools import gc_content, group_nearby_segments
+from ..Location import Location
 from ..Specification import Specification, SpecEvaluation
 
 

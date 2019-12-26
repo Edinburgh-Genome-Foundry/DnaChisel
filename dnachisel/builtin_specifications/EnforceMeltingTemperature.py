@@ -7,7 +7,7 @@ except ImportError:
     PRIMER3_AVAILABLE = False
 
 from Bio.SeqUtils import MeltingTemp as bio_mt
-from dnachisel.Location import Location
+from ..Location import Location
 from ..Specification import Specification, SpecEvaluation
 
 

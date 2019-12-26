@@ -1,6 +1,6 @@
 import numpy as np
 
-from dnachisel.Specification.SpecEvaluation import SpecEvaluation
+from ...Specification.SpecEvaluation import SpecEvaluation
 from .BaseCodonOptimizationClass import BaseCodonOptimizationClass
 
 

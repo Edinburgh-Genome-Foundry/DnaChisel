@@ -1,12 +1,12 @@
-from dnachisel.biotools import (
+from ...biotools import (
     load_record,
     write_record,
     sequence_to_biopython_record,
     find_specification_label_in_feature,
     sequences_differences_segments,
 )
-from dnachisel.Specification.Specification import Specification
-from dnachisel.Location import Location
+from ...Specification.Specification import Specification
+from ...Location import Location
 
 
 class RecordRepresentationMixin:

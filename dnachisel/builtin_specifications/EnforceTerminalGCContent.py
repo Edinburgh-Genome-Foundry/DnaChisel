@@ -1,7 +1,7 @@
 """Implement EnforceTerminalGCContent"""
 
 from .TerminalSpecification import TerminalSpecification
-from dnachisel.biotools import gc_content
+from ..biotools import gc_content
 
 class EnforceTerminalGCContent(TerminalSpecification):
     """Enforce bounds for the GC content at the sequence's terminal ends.

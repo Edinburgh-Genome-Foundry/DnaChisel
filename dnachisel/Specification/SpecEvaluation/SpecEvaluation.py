@@ -13,8 +13,8 @@ implement methods for printing or exporting as Genbank a set of evaluations.
 import textwrap
 
 from Bio.SeqFeature import SeqFeature
-from dnachisel.biotools import score_to_formatted_string
-from dnachisel.Location import Location
+from ...biotools import score_to_formatted_string
+from ...Location import Location
 
 
 class SpecEvaluation:
