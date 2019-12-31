@@ -5,7 +5,7 @@ from uuid import uuid4
 
 from ..tools import (aa2codon_table, analyzeCodons, codon2aa_table,
                      default_cai_table,analyze_cai)
-from .Feature import Feature
+from .Specification import Specification
 from ..Solution import Solution
 
 
@@ -91,7 +91,7 @@ def SimpleCAIOperator(sequence,
         return new_seq
 
 
-class CAI(Feature):
+class CAI(Specification):
     """
     CAI Feature
         solution - solution where CAI should be computed
@@ -114,7 +114,7 @@ class CAI(Feature):
             }):
         if caiObject == None:  #create new instance
             #General properties of feature
-            Feature.__init__(self, solution=solution, label=label)
+            Specification.__init__(self, solution=solution, label=label)
             #Specifics of this Feature
             self.cai_range = args['cai_range']
             self.sequence = solution.sequence[self.cai_range[0]:(
@@ -125,7 +125,7 @@ class CAI(Feature):
             self.set_scores()
             self.set_level()
         else:  #copy instance
-            Feature.__init__(self, caiObject)
+            Specification.__init__(self, caiObject)
             self.cai_range = caiObject.cai_range
             self.sequence = caiObject.sequence
             self.mutable_region = caiObject.mutable_region

@@ -2,10 +2,8 @@ from uuid import uuid4
 from ..mutation import randomMutationOperator
 from ..Solution import Solution
 
-class Feature(object):
-    '''
-    A master class for Solution Features to be manipulated
-    '''
+class Specification():
+
     def __init__(self, featureObject=None, solution=None, label=""):
         
         if featureObject == None: #create a new instance of object

@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from ..Solution import Solution
 from ..tools import analyze_ntcontent, appendLabelToDict, codon2aa_table
-from .Feature import Feature
+from .Specification import Specification
 
 
 def SimpleNtContentOperator(seq,
@@ -74,7 +74,7 @@ def SimpleNtContentOperator(seq,
 
 
 
-class NucleotideContent(Feature):
+class NucleotideContent(Specification):
     """
     Nucleotide Content Feature
         solution - solution where nucleotide content should be computed
@@ -96,7 +96,7 @@ class NucleotideContent(Feature):
     ):
         if nucleotideContentObject == None: #create new instance
             #General properties of feature
-            Feature.__init__(self, solution=solution, label=label)
+            Specification.__init__(self, solution=solution, label=label)
             #Specifics of this Feature
             self.ntcontent_range    = args['ntcontent_range']
             self.sequence           = solution.sequence[self.ntcontent_range[0]:self.ntcontent_range[1]+1]
@@ -106,7 +106,7 @@ class NucleotideContent(Feature):
             self.set_scores()
             self.set_level()
         else:
-            Feature.__init__(self, nucleotideContentObject)
+            Specification.__init__(self, nucleotideContentObject)
             self.ntcontent_range    = nucleotideContentObject.ntcontent_range
             self.sequence           = nucleotideContentObject.sequence
             self.mutable_region     = nucleotideContentObject.mutable_region
