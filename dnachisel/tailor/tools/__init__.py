@@ -6,6 +6,8 @@ from .mathtools import pick_random,pick_random_tuple,hammingDistance
 
 from .seqtools import analyze_ntcontent
 
+from .range import Range,RangeSet
+
 def appendLabelToDict(somedict, label):
     return {
         label + str(key):somedict[key]

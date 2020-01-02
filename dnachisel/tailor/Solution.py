@@ -8,7 +8,7 @@ from .mutation import randomMutationOperator
 class Solution:
     '''
     A Solution encapsulates a sequence and their inherent attributes:
-        sol_id - ID for Solution
+        solution_id - ID for Solution
         seqence - sequence for Solution
         cds_region - a tuple indicating the location of (Begin,End) of CDS sequence (this will be necessary in the design mode if one want to contrain mutations).
         mutable_region - a list with all positions that can be mutated
@@ -16,7 +16,7 @@ class Solution:
         
     '''
     def __init__(self,
-                 sol_id=0,
+                 solution_id=0,
                  sequence="",
                  cds_region=None,
                  keep_aa=False,
@@ -33,7 +33,7 @@ class Solution:
         self.mutable_region = mutable_region
         self.cds_region = cds_region
         self.keep_aa = keep_aa
-        self.solid = sol_id
+        self.solid = solution_id
         self.parent = parent
         self.sequence = sequence.lower()
         self.scores = {}
@@ -101,7 +101,7 @@ class Solution:
         new_seq = randomMutationOperator(self.sequence, self.keep_aa,
                                          self.mutable_region, self.cds_region,
                                          pos, n_mut)
-        return Solution(sol_id=str(uuid4().int),
+        return Solution(solution_id=str(uuid4().int),
                         sequence=new_seq,
                         cds_region=self.cds_region,
                         keep_aa=self.keep_aa,

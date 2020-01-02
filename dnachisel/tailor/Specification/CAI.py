@@ -103,7 +103,7 @@ class CAI(Specification):
     """
     def __init__(
             self,
-            caiObject=None,
+
             solution=None,
             label="",
             args={
@@ -112,27 +112,19 @@ class CAI(Specification):
                 'cds_region': None,
                 'keep_aa': True
             }):
-        if caiObject == None:  #create new instance
-            #General properties of feature
-            Specification.__init__(self, solution=solution, label=label)
-            #Specifics of this Feature
-            self.cai_range = args['cai_range']
-            self.sequence = solution.sequence[self.cai_range[0]:(
-                self.cai_range[1] + 1)]
-            self.mutable_region = args.get('mutable_region',solution.mutable_region)
-            self.cds_region = args.get('cds_region', solution.cds_region)
-            self.keep_aa = args.get('keep_aa',solution.keep_aa) 
-            self.set_scores()
-            self.set_level()
-        else:  #copy instance
-            Specification.__init__(self, caiObject)
-            self.cai_range = caiObject.cai_range
-            self.sequence = caiObject.sequence
-            self.mutable_region = caiObject.mutable_region
-            self.cds_region = caiObject.cds_region
-            self.keep_aa = caiObject.keep_aa
-            self.codons_cai = caiObject.codons_cai
-            self.scores = caiObject.scores
+
+        #General properties of feature
+        Specification.__init__(self, solution=solution, label=label)
+        #Specifics of this Feature
+        self.cai_range = args['cai_range']
+        self.sequence = solution.sequence[self.cai_range[0]:(
+            self.cai_range[1] + 1)]
+        self.mutable_region = args.get('mutable_region',solution.mutable_region)
+        self.cds_region = args.get('cds_region', solution.cds_region)
+        self.keep_aa = args.get('keep_aa',solution.keep_aa) 
+        self.set_scores()
+        self.set_level()
+
 
     def set_scores(self, scoring_function=analyze_cai):
         self.scores[self.label + "CAI"] = scoring_function(self.sequence)
