@@ -60,7 +60,7 @@ class DBSQLite():
 
         #Design Dynamic tables
         features_fields = ''.join([
-            feature + "Level TEXT, "
+            feature + "_Level TEXT, "
             for feature in self.design_space.feature_label
         ])
 
@@ -79,7 +79,7 @@ class DBSQLite():
                 self.design_space.value_type)
         ])
         features_level_position_fields = ''.join([
-            feature + "Position REAL" + ", "
+            feature + "_Position REAL" + ", "
             for feature in self.design_space.feature_label
         ])
 
@@ -124,7 +124,7 @@ class DBSQLite():
             for d_sol in self.design_space.designs_list
         ]
         features_levels_fields = ''.join([
-            feature + "Level, " for feature in self.design_space.feature_label
+            feature + "_Level, " for feature in self.design_space.feature_label
         ])
 
         sql = "insert into desired_solution(" + features_levels_fields 
@@ -166,13 +166,13 @@ class DBSQLite():
         Insert solution into database
         returns: Nothing
         '''
-        if solution.solid in self._generated_solutions_id or solution.valid == False:
+        if solution.solution_id in self._generated_solutions_id :
             return 0
         else:
-            self._generated_solutions_id[solution.solid] = '1'
+            self._generated_solutions_id[solution.solution_id] = '1'
 
         key = '.'.join([
-            str(solution.levels[feature + 'Level'])
+            str(solution.levels[feature + '_Level'])
             for feature in self.design_space.feature_label
         ])
 
@@ -200,7 +200,7 @@ class DBSQLite():
 
         #update generated solution table
         dict_with_values = {
-            'generated_solution_id': solution.solid,
+            'generated_solution_id': solution.solution_id,
             'des_solution_id': desired_solution_id,
             'sequence': solution.sequence,
             'worker_id': self.worker_id
@@ -208,11 +208,11 @@ class DBSQLite():
         dict_with_values.update(solution.scores)
         dict_with_values.update(solution.levels)
         dict_with_values.update({
-            (feature + 'Position'):
-            self._calculateRelativeLevel(feature,
-                                        solution.levels[feature + 'Level'],
-                                        solution.scores[feature])
-            for feature in self.design_space.features
+            (self.design_space.feature_label[i] + '_Position'):
+            self.design_space.range_set_list[i].calculate_relative_level(
+                solution.scores[self.design_space.feature_label[i]]
+            )
+            for i in range(len(self.design_space.feature_label))
         })
 
         self._generated_solutions_sql.append(dict_with_values)
@@ -238,7 +238,7 @@ class DBSQLite():
         #Insert buffered solutions into DB
         self._flushSQL()
 
-        if self.design_space.listDesigns == []:
+        if self.design_space.designs_list == []:
             return None
 
         # get a desired solution from db
@@ -273,11 +273,10 @@ class DBSQLite():
 
     def DBGetClosestSolution(self, desiredSolution):
         '''
-        Get a solution that is closer to the desired solution
-        returns: a dictionary with a solution with all attributes
+        ! wrong, need fix
         '''
 
-        if self.design_space.listDesigns == [] or desiredSolution == None:
+        if self.design_space.designs_list == [] or desiredSolution == None:
             # if there is no desiredSolution return a random solution
             query = """SELECT generated_solution_id, sequence 
                         FROM generated_solution 
@@ -298,10 +297,14 @@ class DBSQLite():
         all_solutions = (self._cur.fetchall())
 
         #print all_solutions
-        distanceArray = [
-            self.distanceBetweenSolutions(sol_i, desiredSolution)
+        # if len(all_solutions) > 0:print(dict(all_solutions[0]))
+        distanceArray = [ 
+            self.design_space._distance_between_designs(
+                    dict(sol_i),
+                    desiredSolution['des_solution_id'])
             for sol_i in all_solutions
         ]
+
         total_fit = sum([1 / (dist + 0.0001) for dist in distanceArray])
         p_array = [((1 / dist) / total_fit) for dist in distanceArray]
 
@@ -359,14 +362,12 @@ class DBSQLite():
 
         # generated solutions
         features_fields = ','.join([
-            '{0}, {0}Level, {0}Position'.format(feature)
-            # feature + ", " + feature + "Level, " + feature + "Position"
-            for feature in self.design_space.features
+            '{0}, {0}_Level, {0}_Position'.format(feature)
+            for feature in self.design_space.feature_label
         ])
         features_values_fields = ','.join([
-            ':{0}, :{0}Level, :{0}Position'.format(feature)
-            # ":" + feature + ", :" + feature + "Level, :" + feature + "Position"
-            for feature in self.design_space.features
+            ':{0}, :{0}_Level, :{0}_Position'.format(feature)
+            for feature in self.design_space.feature_label
         ])
 
         sql = """insert into generated_solution(
@@ -388,49 +389,3 @@ class DBSQLite():
         self._cur.executemany(sql, self._generated_solutions_sql)
         self._generated_solutions_sql = []  #empty list
 
-    def distanceBetweenSolutions(self, sol1, levels_sol2):
-
-        euc_dist = 0
-
-        for feature in self.design_space.features:
-            if levels_sol2[feature + 'Level'] == '?' or sol1[feature +
-                                                             'Level'] == '?':
-                #d = int(max(self.design_space.thresholds[feature].keys()))
-                d = 1
-            elif int(levels_sol2[feature + 'Level']) == int(sol1[feature +
-                                                                 'Level']):
-                d = 0
-            else:
-                d = (int(levels_sol2[feature + 'Level']) -
-                     int(sol1[feature + 'Level']))
-                rel_level = self._calculateRelativeLevel(
-                    feature, sol1[feature + 'Level'], sol1[feature])
-                if d > 0:
-                    rel_level = 1 - rel_level
-                d = abs(d) + rel_level
-            euc_dist += d**2
-
-        euc_dist = sqrt(euc_dist)
-
-        return euc_dist
-
-    def _calculateRelativeLevel(self, feature="", level=1, featureScore=0):
-
-        if level == '?':
-            return 0
-
-        thresholds = self.design_space.thresholds[feature][level]
-
-        if isinstance(thresholds, tuple):
-            t_max = thresholds[1]
-            t_min = thresholds[0]
-
-            #TODO how to see how far a solution is when limits are infinity?
-            if t_max == None:
-                return 0
-            elif t_min == None:
-                return 0
-
-            return abs(featureScore - t_min) / abs(t_max - t_min)
-
-        return 0

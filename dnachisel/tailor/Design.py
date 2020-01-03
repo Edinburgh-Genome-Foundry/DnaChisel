@@ -14,8 +14,9 @@ class DesignSpace:
     )
     '''
     __slot__ = ['feature_label','range_set_list','value_type','designs_list','ndesigns']
-    def __init__(self,feature_label,range_set_list,value_type):
+    def __init__(self,feature_label,feature_specification,range_set_list,value_type,**args):
         self.feature_label = feature_label
+        self.feature_specification = feature_specification
         self.range_set_list = range_set_list
         self.value_type = value_type
         self.designs_list = []
@@ -59,10 +60,10 @@ class CustomDesign(DesignSpace):
     Class encoding a custom design (as many targets as you want)
     '''
     __slot__ = ['feature_label','range_set_list','value_type','designs_list','ndesigns']
-    def __init__(self, feature_label,range_set_list,value_type, targets=[]):
+    def __init__(self,feature_label,feature_specification,range_set_list,value_type,**args):
 
-        DesignSpace.__init__(self, feature_label,range_set_list,value_type)
-        self.designs_list = targets
+        DesignSpace.__init__(self, feature_label,feature_specification,range_set_list,value_type)
+        self.designs_list = args['targets']
         self.nDesigns = self.designs_list.__len__()
 
 
@@ -71,10 +72,10 @@ class Optimization(DesignSpace):
     Class encoding a single-target design (optimization) 
     '''
     __slot__ = ['feature_label','range_set_list','value_type','designs_list','ndesigns']
-    def __init__(self,feature_label,range_set_list,value_type, target):
+    def __init__(self,feature_label,feature_specification,range_set_list,value_type,**args):
 
-        DesignSpace.__init__(self, feature_label,range_set_list,value_type)
-        self.designs_list = [target]
+        DesignSpace.__init__(self, feature_label,feature_specification,range_set_list,value_type)
+        self.designs_list = [args['target']]
         self.nDesigns = self.designs_list.__len__()
 
 
@@ -83,11 +84,11 @@ class RandomSampling(DesignSpace):
     Class encoding a random sampling design
     '''
     __slot__ = ['feature_label','range_set_list','value_type','designs_list','ndesigns']
-    def __init__(self, feature_label,range_set_list,value_type, sample_size=1000):
+    def __init__(self,feature_label,feature_specification,range_set_list,value_type,**args):
 
-        DesignSpace.__init__(self, feature_label,range_set_list,value_type)
+        DesignSpace.__init__(self, feature_label,feature_specification,range_set_list,value_type)
         self.designs_list = []
-        self.nDesigns = sample_size
+        self.nDesigns = args['sample_size']
 
 
 class FullFactorial(DesignSpace):
@@ -95,9 +96,9 @@ class FullFactorial(DesignSpace):
     Class encoding a multi factorial design
     '''
     __slot__ = ['feature_label','range_set_list','value_type','designs_list','ndesigns']
-    def __init__(self, feature_label,range_set_list,value_type):
+    def __init__(self,feature_label,feature_specification,range_set_list,value_type,**args):
 
-        DesignSpace.__init__(self, feature_label,range_set_list,value_type)
+        DesignSpace.__init__(self, feature_label,feature_specification,range_set_list,value_type)
         self.designs_list = self._computeCombinations()
         self.nDesigns = self.designs_list.__len__()
 

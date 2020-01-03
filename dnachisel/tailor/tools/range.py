@@ -20,7 +20,7 @@ class Range:
     def __contains__(self,number):
         return self.start <= number < self.end
     
-    def _calculate_relative_level(self,number):
+    def calculate_relative_level(self,number):
         if number not in self:
             raise ValueError('%s not in %s'%(number,self))
         return (number - self.start) / (self.end - self.start )
@@ -68,11 +68,21 @@ class RangeSet:
         for i in range(self.level_num):
             if number in self.level_range[i]:
                 return i
+
+    def get_level(self,number):
+        return self.level_label[self._index(number)]    
     
+    def get_range(self,number):
+        return self.level_range[self._index(number)]    
+    
+    def calculate_relative_level(self,number):
+        return self.get_range(number).calculate_relative_level(number)
+
+
     def _calculate_distance(self, number,desired_label):
         index = self._index(number)
         _range = self.level_range[ index ]
-        relative_level = _range._calculate_relative_level(number)
+        relative_level = _range.calculate_relative_level(number)
         
         try:
             dist = self.level_label.index(str(desired_label)) - index
