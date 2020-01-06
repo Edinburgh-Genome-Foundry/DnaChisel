@@ -28,7 +28,7 @@ from dnachisel.tailor.Specification import CAI, GCContent
 # design =   FullFactorial(
 design =      Optimization(
         ['cai','gc'],
-        [GCContent(),GCContent()],
+        [CAI(),GCContent()],
         [RangeSet([(1, Range(0,0.06)),(3, Range(0.06,0.07)),(2, Range(0.07,1))]),   
          RangeSet([('a', Range(0,0.3)),('b', Range(0.3,0.6)),('c', Range(0.6,1))]) ],
         ['REAL','REAL'],
