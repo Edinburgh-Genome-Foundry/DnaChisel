@@ -1,4 +1,4 @@
-from .biotables import (aa2codon_table, codon2aa_table, default_cai_table,
+from .biotables_tailor import (aa2codon_table, codon2aa_table, default_cai_table,
                         default_tai_tuller, sense_codons_list)
 from random import choice
 

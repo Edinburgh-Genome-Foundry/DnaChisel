@@ -20,6 +20,7 @@ from . import mixins
 class DnaOptimizationProblem(
     mixins.ConstraintsSolverMixin,
     mixins.ObjectivesMaximizerMixin,
+    mixins.DesignSolverMixin,
     mixins.RecordRepresentationMixin,
 ):
     """Problem specifications: sequence, constraints, optimization objectives.
@@ -119,6 +120,10 @@ class DnaOptimizationProblem(
         objectives=None,
         logger="bar",
         mutation_space=None,
+        # disign
+        design_space = None,
+        solution_id = None,
+        parent=None
     ):
         """Initialize"""
         if isinstance(sequence, SeqRecord):
@@ -136,6 +141,13 @@ class DnaOptimizationProblem(
             min_time_interval=0.2,
         )
         self.mutation_space = mutation_space
+        # design
+        self.design_space = design_space
+        self.solution_id = solution_id
+        self.parent = parent
+        if self.design_space is not None:
+          self._init_disign()
+        
         self.initialize()
 
     def initialize(self):

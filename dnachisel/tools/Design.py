@@ -1,7 +1,7 @@
 from itertools import product
 from math import sqrt
 
-from .tools import RangeSet
+from .range import RangeSet
 
 
 class DesignSpace:

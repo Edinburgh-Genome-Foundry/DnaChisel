@@ -3,7 +3,7 @@ from time import time
 from uuid import uuid4
 
 from .DBSQLite import DBSQLite
-from .tools import hammingDistance
+from .mathtools import hammingDistance
 
 class SequenceDesigner(object):
     '''
