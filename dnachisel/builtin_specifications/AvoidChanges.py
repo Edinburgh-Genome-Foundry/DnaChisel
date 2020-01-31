@@ -9,7 +9,7 @@ from ..biotools import (
     sequences_differences_array,
     group_nearby_indices,
 )
-from dnachisel.Location import Location
+from ..Location import Location
 
 
 class AvoidChanges(Specification):

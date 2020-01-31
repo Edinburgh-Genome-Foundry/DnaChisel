@@ -1,8 +1,8 @@
 from ..CodonSpecification import CodonSpecification
 from python_codon_tables import get_codons_table
 import numpy as np
-from dnachisel.Location import Location
-from dnachisel.biotools import group_nearby_indices
+from ...Location import Location
+from ...biotools import group_nearby_indices
 
 
 class BaseCodonOptimizationClass(CodonSpecification):

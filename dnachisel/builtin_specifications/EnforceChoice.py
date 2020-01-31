@@ -2,9 +2,9 @@
 
 # TODO: factorize with self.sequence ?
 
-from dnachisel.SequencePattern import SequencePattern
-from dnachisel.Location import Location
-from dnachisel.biotools import reverse_complement
+from ..SequencePattern import SequencePattern
+from ..Location import Location
+from ..biotools import reverse_complement
 from ..Specification import Specification, SpecEvaluation
 
 

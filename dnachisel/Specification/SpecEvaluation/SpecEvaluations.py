@@ -1,6 +1,6 @@
-from dnachisel.biotools import score_to_formatted_string
-from dnachisel.Location import Location
-from dnachisel.reports import colors_cycle
+from ...biotools import score_to_formatted_string
+from ...Location import Location
+from ...reports import colors_cycle
 
 
 class SpecEvaluations:

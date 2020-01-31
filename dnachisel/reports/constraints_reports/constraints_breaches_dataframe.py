@@ -5,8 +5,8 @@ try:
 except ImportError:
     PANDAS_AVAILABLE = False
 
-from dnachisel.DnaOptimizationProblem import DnaOptimizationProblem
-from dnachisel.Location import Location
+from ...DnaOptimizationProblem import DnaOptimizationProblem
+from ...Location import Location
 
 def _breaches(constraint, sequence):
     problem = DnaOptimizationProblem(sequence, mutation_space={})

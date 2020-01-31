@@ -6,8 +6,8 @@ from ..Specification import Specification
 
 # from .VoidSpecification import VoidSpecification
 from ..Specification.SpecEvaluation import SpecEvaluation
-from dnachisel.biotools import reverse_complement
-from dnachisel.Location import Location
+from ..biotools import reverse_complement
+from ..Location import Location
 
 from functools import lru_cache
 

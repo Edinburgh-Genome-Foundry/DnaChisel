@@ -1,8 +1,8 @@
 """Implementation of AvoidHairpins."""
 
 from ..Specification import Specification, SpecEvaluation
-from dnachisel.biotools import reverse_complement, group_nearby_segments
-from dnachisel.Location import Location
+from ..biotools import reverse_complement, group_nearby_segments
+from ..Location import Location
 
 
 class AvoidHairpins(Specification):

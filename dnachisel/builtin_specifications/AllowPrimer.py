@@ -6,8 +6,8 @@ EnforceMeltingTemperature, AvoidHeterodimerization.
 """
 
 from ..Specification.SpecificationSet import SpecificationSet
-from dnachisel.Location import Location
-from dnachisel.SequencePattern import RepeatedKmerPattern
+from ..Location import Location
+from ..SequencePattern import RepeatedKmerPattern
 from .UniquifyAllKmers import UniquifyAllKmers
 from .AvoidPattern import AvoidPattern
 from .EnforceMeltingTemperature import EnforceMeltingTemperature

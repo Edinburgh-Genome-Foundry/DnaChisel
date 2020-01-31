@@ -169,7 +169,7 @@ class Specification(FeatureRepresentationMixin):
                 [
                     assignment_symbol.join(map(str, p))
                     if isinstance(p, tuple)
-                    else p
+                    else str(p)
                     for p in params
                 ]
             )
