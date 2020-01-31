@@ -186,3 +186,15 @@ class EnforceGCContent(Specification):
         if self.window is not None:
             result += "/%dbp" % self.window
         return result
+    
+    def breach_label(self):
+        if self.target is not None:
+            result = "GC != %d%% " % (np.round(100 * self.target))
+        else:
+            result = "GC outside %d-%d%%" % (
+                np.round(100 * self.mini),
+                np.round(100 * self.maxi),
+            )
+        if self.window is not None:
+            result += "/%dbp" % self.window
+        return result

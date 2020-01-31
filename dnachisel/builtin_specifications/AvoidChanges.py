@@ -174,4 +174,7 @@ class AvoidChanges(Specification):
 
     def short_label(self):
         return "keep"
+    
+    def breach_label(self):
+        return "edits"
 

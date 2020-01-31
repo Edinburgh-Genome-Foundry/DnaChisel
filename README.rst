@@ -160,16 +160,15 @@ Below is an animation of the algorithm in action:
 Installation
 -------------
 
-You can install DnaChisel through PIP:
+DNA Chisel requires Python 3 and can be installed via a pip command:
 
 .. code::
+    sudo pip install dnachisel     # <= minimal install without reports support
+    sudo pip install dnachisel[reports] # <= full install with all dependencies
 
-    sudo pip install dnachisel[reports]
-
-The ``[reports]`` suffix will install some heavier libraries
-(Matplotlib, PDF reports, sequenticon) for report generation,
-you can omit it if you just want to use DNA chisel to edit sequences and
-generate genbanks (for any interactive use, reports are highly recommended).
+The full installation using ``dnachisel[reports]`` downloads heavier libraries
+(Matplotlib, PDF reports, sequenticon) for report generation, but is highly
+recommended to use DNA Chisel interactively via Python scripts.
 
 Alternatively, you can unzip the sources in a folder and type
 
@@ -199,3 +198,17 @@ More biology software
   :target: https://edinburgh-genome-foundry.github.io/
 
 DNA Chisel is part of the `EGF Codons <https://edinburgh-genome-foundry.github.io/>`_ synthetic biology software suite for DNA design, manufacturing and validation.
+
+Related projects
+----------------
+
+(If you would like to see a DNA Chisel-related project advertized here, please open
+an issue or propose a PR)
+
+- `Benchling <https://www.benchling.com/>`_ uses DNA Chisel as part of its sequence
+  optimization pipeline according to `this weinar video <https://www.youtube.com/watch?v=oIcz5fQgtS8&t=865s>`_.
+- `dnachisel-dtailor-mode <https://github.com/Lix1993/dnachisel_dtailor_mode>`_ brings
+  features from `D-tailor <https://academic.oup.com/bioinformatics/article/30/8/1087/254801>`_
+  to DNA Chisel, in particular for the generation of large collection of sequences
+  covering the objectives fitness landscape (i.e. with sequences with are good at
+  some objectives and bad at others, and vice versa).

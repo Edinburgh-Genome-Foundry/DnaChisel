@@ -72,6 +72,12 @@ class AvoidPattern(Specification):
             return "No %s" % self.pattern.name
         else:
             return "No %s" % self.pattern
+    
+    def breach_label(self):
+        if self.pattern.name is not None:
+            return str(self.pattern.name)
+        else:
+            return str(self.pattern)
 
     def initialized_on_problem(self, problem, role="constraint"):
         return self._copy_with_full_span_if_no_location(problem)

@@ -123,6 +123,7 @@ class Specification(FeatureRepresentationMixin):
         with_location=True,
         assignment_symbol=":",
         use_short_form=False,
+        use_breach_form=False
     ):
         """Return a string label for this specification.
 
@@ -151,6 +152,11 @@ class Specification(FeatureRepresentationMixin):
             if with_location:
                 label += ", %s" % self.location
             return prefix + label
+        if use_breach_form:
+            label = self.breach_label()
+            if with_location:
+                label += ", %s" % self.location
+            return label
         if with_location and hasattr(self, "location") and self.location:
             location = "[%s]" % self.location
         else:
@@ -177,6 +183,14 @@ class Specification(FeatureRepresentationMixin):
         to be represented as '40-60% GC' in reports tables etc..
         """
         return self.__class__.__name__
+    
+    def breach_label(self):
+        """Shorter, less precise label to be used in tables, reports, etc.
+
+        This is meant for specifications such as EnforceGCContent(0.4, 0.6)
+        to be represented as '40-60% GC' in reports tables etc..
+        """
+        return "'%s' breach" % (self.short_label())
 
     def label_parameters(self):
         """In subclasses, returns a list of the creation parameters.

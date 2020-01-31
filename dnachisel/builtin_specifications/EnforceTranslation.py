@@ -221,3 +221,6 @@ class EnforceTranslation(CodonSpecification):
 
     def short_label(self):
         return "cds"
+    
+    def breach_label(self):
+        return "protein sequence changed"

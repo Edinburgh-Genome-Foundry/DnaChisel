@@ -86,3 +86,8 @@ class AvoidHairpins(Specification):
         stem = self.stem_size
         inside = self.hairpin_window - 2 * self.stem_size
         return "No %d-%d-%dbp hairpin" % (stem, inside, stem)
+    
+    def breach_label(self):
+        stem = self.stem_size
+        inside = self.hairpin_window - 2 * self.stem_size
+        return "%d-%d-%dbp hairpin" % (stem, inside, stem)

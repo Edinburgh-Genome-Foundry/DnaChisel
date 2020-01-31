@@ -82,7 +82,7 @@ def constraints_breaches_dataframe(
             + [
                 (
                     constraint.label(
-                        use_short_form=True,
+                        use_breach_form=True,
                         with_location=display_constraints_locations,
                     ),
                     _breaches(constraint, sequence),

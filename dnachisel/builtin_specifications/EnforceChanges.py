@@ -308,3 +308,6 @@ class EnforceChanges(Specification):
 
     def short_label(self):
         return "change"
+    
+    def breach_label(self):
+        return "unchanged"

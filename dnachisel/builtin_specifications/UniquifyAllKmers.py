@@ -307,3 +307,6 @@ class UniquifyAllKmers(Specification):
 
     def short_label(self):
         return "All %dbp unique" % self.k
+    
+    def breach_label(self):
+        return "%dbp homologies" % self.k

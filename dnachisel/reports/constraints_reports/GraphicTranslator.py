@@ -17,7 +17,7 @@ class GraphicTranslator(BiopythonTranslator):
     @staticmethod
     def compute_feature_box_linewidth(f):
         return 1 if f.qualifiers.get("is_a_breach", False) else 0
-
+    
     @staticmethod
     def compute_feature_fontdict(f):
         return {
