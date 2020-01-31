@@ -217,7 +217,7 @@ As you noticed we used species names in these examples. See
 for species that can be referred to by name. This includes ``b_subtilis``,
 ``c_elegans``, ``d_melanogaster``, ``e_coli``, ``g_gallus``, ``h_sapiens``,
 ``m_musculus``, ``s_cerevisiae``. You can also use a TaxID to refer to a species,
-e.g. ``species=1423`` at which case the codon frequencies will be downloaded from
+e.g. ``species='1423'`` in which case the codon frequencies will be downloaded from
 the `Kazusa codon usage database <https://www.kazusa.or.jp/codon/>`_ (assuming it
 isn't down!)
 
