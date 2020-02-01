@@ -208,7 +208,7 @@ def constraints_before_after_dataframe(problem, constraints_evaluations=None):
                 ("before", "PASS" if evaluation_before.passes else "FAIL"),
                 ("after", "PASS" if evaluation_after.passes else "FAIL"),
                 ("edits", edits_sum),
-                ("edits (%)", np.round(edits_percent, 2)),
+                ("% edited", np.round(edits_percent, 2)),
             ]
         )
 
@@ -245,7 +245,7 @@ def objectives_before_after_dataframe(problem, objectives_evaluations=None):
                 ("before", evaluation_before.score_to_formatted_string),
                 ("after", evaluation_after.score_to_formatted_string),
                 ("edits", edits_sum),
-                ("edits (%)", np.round(edits_percent, 2)),
+                ("% edited", np.round(edits_percent, 2)),
             ]
         )
 

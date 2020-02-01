@@ -4,6 +4,16 @@ Genbank API
 This section documents the Genbank API for all builtin specifications of
 DNA chisel. See also the :ref:`genbank-usage-notes` section for tips.
 
+.. caution:: Use either "=" or ":" in sequence annotation parameters
+
+    For historical reasons, DNA Chisel allows to write keyword parameters
+    with either ``:`` or ``=`` in genbank annotations, for instance both
+    ``@no(ATG, strand:both)`` and ``@no(ATG, strand=both)`` are valid.
+
+    While we find ``=`` more readable, we have also seen that some tools are
+    confused by the presence of an ``=`` sign in a Genbank label, so using
+    ``:`` may be safer.   
+
 .. contents::
 
 Pattern removal
