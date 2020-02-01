@@ -18,16 +18,17 @@ DNA Chisel - a versatile sequence optimizer
 
 DNA Chisel (complete documentation `here <https://edinburgh-genome-foundry.github.io/DnaChisel/>`_)
 is a Python library for optimizing DNA sequences with respect to a set of
-constraints and optimization objectives. It comes with over 15 classes of
-sequence specifications which can be composed to, for instance, codon-optimize
-genes, meet the constraints of a commercial DNA provider, avoid homologies
-between sequences, tune GC content, or all of this at once! Users can also
-define their own specifications using Python, making the library suitable for
-a large range of automated sequence design applications, and complex custom
-design projects.
+constraints and optimization objectives. It can also be used via a command-line
+interface, or a `web application <https://cuba.genomefoundry.org/sculpt_a_sequence>`_.
 
-It can be used as a Python library, a command-line interface, or able
-`web application <https://cuba.genomefoundry.org/sculpt_a_sequence>`_.
+The library comes with over 15 classes of sequence specifications which can be
+composed to, for instance, codon-optimize genes, meet the constraints of a
+commercial DNA provider, avoid homologies between sequences, tune GC content,
+or all of this at once! Users can also define their own specifications using
+Python, making the library suitable for a large range of automated sequence
+design applications, and complex custom design projects.
+
+
 
 Usage
 -----
@@ -198,7 +199,7 @@ Related projects
 an issue or propose a PR)
 
 - `Benchling <https://www.benchling.com/>`_ uses DNA Chisel as part of its sequence
-  optimization pipeline according to `this weinar video <https://www.youtube.com/watch?v=oIcz5fQgtS8&t=865s>`_.
+  optimization pipeline according to `this webinar video <https://www.youtube.com/watch?v=oIcz5fQgtS8&t=865s>`_.
 - `dnachisel-dtailor-mode <https://github.com/Lix1993/dnachisel_dtailor_mode>`_ brings
   features from `D-tailor <https://academic.oup.com/bioinformatics/article/30/8/1087/254801>`_
   to DNA Chisel, in particular for the generation of large collection of sequences
