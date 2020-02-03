@@ -38,10 +38,23 @@ def reverse_complement(sequence):
 def reverse_translate(
     protein_sequence, randomize_codons=False, table="Standard"
 ):
-    """Return a DNA sequence which translates to the provided protein sequence
+    """Return a DNA sequence which translates to the provided protein sequence.
 
-    Note: at the moment, the first valid codon found is used for each
-    amino-acid (so it is deterministic but no codon-optimization is done).
+    Parameters
+    ----------
+
+    protein_sequence
+      A sequence string of aminoacids, e.g. "MVKK..."
+
+    table
+      Genetic code table to use (e.g. 'Standard', 'Bacterial', etc.).
+      See dnachisel.biotools.CODON_TABLE_NAMES for a list of available genetic
+      code tables.
+    
+    randomize_codons
+      If False, the first valid codon found is used for each, which can create
+      biases (GC content, etc.), if True, each amino acid gets replaced by a
+      randomly selected codon for this amino acid.
     """
     backtranslation_table = get_backtranslation_table(table_name=table)
     if randomize_codons:
