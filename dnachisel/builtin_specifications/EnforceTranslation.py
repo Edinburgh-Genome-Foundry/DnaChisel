@@ -33,7 +33,7 @@ class EnforceTranslation(CodonSpecification):
 
     genetic_table
       Either "Standard", "Bacterial", or any other Biopython genetic table name
-      (see dnachisel.biotools.CODON_TABLES_NAMES for a list of accepted names).
+      (see dnachisel.biotools.CODON_TABLE_NAMES for a list of accepted names).
 
     start_codon
       Signals that the first codon is a start codon and provides a policy for
