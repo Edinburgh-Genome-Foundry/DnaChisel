@@ -6,7 +6,6 @@ from collections import OrderedDict
 import hashlib
 
 from Bio import SeqIO
-import pandas
 import flametree
 import numpy as np
 
@@ -20,10 +19,16 @@ from .tools import install_extras_message
 from ..Location import Location
 
 try:
+    import pandas
+    PANDAS_AVAILABLE = True
+except ImportError:
+    PANDAS_AVAILABLE = False
+
+try:
     from sequenticon import sequenticon
 
     SEQUENTICON_AVAILABLE = True
-except:
+except ImportError:
     SEQUENTICON_AVAILABLE = False
 
 MATPLOTLIB_AVAILABLE = False
@@ -41,7 +46,7 @@ try:
     from geneblocks import DiffBlocks
 
     GENEBLOCKS_AVAILABLE = True
-except:
+except ImportError:
     GENEBLOCKS_AVAILABLE = False
 
 try:
@@ -49,7 +54,7 @@ try:
     import pdf_reports.tools as pdf_tools
 
     PDF_REPORTS_AVAILABLE = True
-except:
+except ImportError:
 
     def ReportWriter(*a, **kw):
         return None
@@ -190,6 +195,8 @@ def write_no_solution_report(
 
 
 def constraints_before_after_dataframe(problem, constraints_evaluations=None):
+    if not PANDAS_AVAILABLE:
+        raise ImportError("Install pandas to use this method.")
     if constraints_evaluations is None:
         constraints_evaluations = problem.constraints_evaluations()
     edits = problem.sequence_edits_as_array()
