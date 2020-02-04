@@ -68,6 +68,11 @@ The example below will generate a random sequence and optimize it so that:
     print(problem.constraints_text_summary())
     print(problem.objectives_text_summary())
 
+    # GET THE FINAL SEQUENCE (AS STRING OR ANNOTATED BIOPYTHON RECORDS)
+
+    final_sequence = problem.sequence  # string
+    final_record = problem.to_record(with_sequence_edits=True)
+
 
 Defining a problem via Genbank features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
