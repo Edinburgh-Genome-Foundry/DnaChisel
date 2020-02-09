@@ -40,7 +40,7 @@ class SpecEvaluations:
         return all([ev.passes for ev in self.evaluations])
 
     def scores_sum(self, as_text=False):
-        """Return the sum of all evaluations scores.
+        """Return the sum of all evaluations scores, factoring their boost.
 
         Scores are multiplied by their respective boost factor.
         """

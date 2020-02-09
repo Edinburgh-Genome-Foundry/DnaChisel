@@ -4,7 +4,6 @@ from ..NoSolutionError import NoSolutionError
 
 
 class ObjectivesMaximizerMixin:
-
     @property
     def objectives_before(self):
         if self._objectives_before is None:
@@ -160,6 +159,7 @@ class ObjectivesMaximizerMixin:
             localized_objectives = [
                 obj.localized(location, problem=self)
                 for obj in self.objectives
+                if obj.boost != 0
             ]
             localized_objectives = [
                 obj for obj in localized_objectives if obj is not None
@@ -207,7 +207,9 @@ class ObjectivesMaximizerMixin:
         """Maximize the total score by optimizing each objective in turn."""
 
         objectives = [
-            obj for obj in self.objectives if not obj.optimize_passively
+            obj
+            for obj in self.objectives
+            if not obj.optimize_passively and obj.boost != 0
         ]
         if len(objectives) == 0:
             return
