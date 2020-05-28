@@ -110,7 +110,8 @@ def annotate_differences(
     seq1 = str(record.seq)
     seq2 = str(reference.seq)
     indices_diff = (
-        np.fromstring(seq1, dtype="uint8") - np.fromstring(seq2, dtype="uint8")
+        np.frombuffer(seq1.encode(), dtype="uint8") -
+        np.frombuffer(seq2.encode(), dtype="uint8")
     ).nonzero()[0]
     indices_diff = [int(e) for e in indices_diff]
     locations = [[indices_diff[0], indices_diff[0]]]

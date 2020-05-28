@@ -12,8 +12,8 @@ def sequences_differences_array(seq1, seq2):
         raise ValueError(
             "Only use on same-size sequences (%d, %d)" % (len(seq1), len(seq2))
         )
-    arr1 = np.fromstring(seq1, dtype="uint8")
-    arr2 = np.fromstring(seq2, dtype="uint8")
+    arr1 = np.frombuffer(seq1.encode(), dtype="uint8")
+    arr2 = np.frombuffer(seq2.encode(), dtype="uint8")
     return arr1 != arr2
 
 
