@@ -44,19 +44,15 @@ class AvoidHairpins(Specification):
         sequence = self.location.extract_sequence(problem.sequence)
         reverse = reverse_complement(sequence)
         locations = []
-        for i in range(len(sequence) - self.hairpin_window):
+        for i in range(len(sequence) - self.stem_size):
             word = sequence[i : i + self.stem_size]
             rest = reverse[-(i + self.hairpin_window) : -(i + self.stem_size)]
             if word in rest:
-                locations.append((i, i + rest.index(word) + len(word)))
+                index = rest.index(word)
+                locations.append((i, i + self.hairpin_window - index - 1))
         score = -len(locations)
         locations = group_nearby_segments(locations, max_start_spread=10)
-        locations = sorted(
-            [
-                Location(l[0][0], l[-1][1] + self.hairpin_window)
-                for l in locations
-            ]
-        )
+        locations = sorted([Location(l[0][0], l[-1][1]) for l in locations])
 
         return SpecEvaluation(self, problem, score, locations=locations)
 
