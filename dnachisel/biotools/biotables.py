@@ -59,4 +59,5 @@ def get_backtranslation_table(table_name="Standard"):
         back_translation_table[amino_acid].append(codon)
     back_translation_table["*"] = table.stop_codons
     back_translation_table["START"] = table.start_codons
+    back_translation_table["U"] = "TGA"
     return back_translation_table
