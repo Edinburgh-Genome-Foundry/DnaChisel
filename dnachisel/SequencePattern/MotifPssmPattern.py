@@ -1,7 +1,6 @@
 from Bio.Seq import Seq
 from Bio import motifs
 from Bio.Align.AlignInfo import PSSM
-from Bio.Alphabet import IUPAC
 from .SequencePattern import SequencePattern
 import numpy as np
 
