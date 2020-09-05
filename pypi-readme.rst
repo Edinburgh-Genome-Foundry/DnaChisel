@@ -47,7 +47,7 @@ Example of use
 Alternatively, DNA Chisel lets you define problems by annotating a Genbank file.
 You can also define a problem by annotating directly a Genbank as follows:
 
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/example_sequence_map.png
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaChisel/master/docs/_static/images/example_sequence.png
    :alt: [logo]
    :align: center
    :width: 450px
