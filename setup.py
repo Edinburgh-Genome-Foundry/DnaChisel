@@ -27,10 +27,7 @@ setup(
     long_description=open("pypi-readme.rst").read(),
     license="MIT",
     url="https://github.com/Edinburgh-Genome-Foundry/DnaChisel",
-    keywords=(
-        "DNA gene design codon optimization constraints "
-        "synthetic biology"
-    ),
+    keywords=("DNA gene design codon optimization constraints " "synthetic biology"),
     packages=find_packages(exclude="docs"),
     include_package_data=True,
     scripts=["scripts/dnachisel"],
