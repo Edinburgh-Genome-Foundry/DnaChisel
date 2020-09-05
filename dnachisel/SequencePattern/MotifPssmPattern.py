@@ -5,6 +5,7 @@ from Bio.Alphabet import IUPAC
 from .SequencePattern import SequencePattern
 import numpy as np
 
+
 class MotifPssmPattern(SequencePattern):
     """Motif pattern represented by a Position-Specific Scoring Matrix (PSSM).
 
@@ -28,11 +29,9 @@ class MotifPssmPattern(SequencePattern):
       0 means "match everything", 1 means "only match the one (or several)
       sequence(s) with the absolute highest possible score".
     """
+
     def __init__(
-        self,
-        pssm,
-        threshold=None,
-        relative_threshold=None,
+        self, pssm, threshold=None, relative_threshold=None,
     ):
         self.name = pssm.name
         self.pssm = pssm.pssm
@@ -48,7 +47,7 @@ class MotifPssmPattern(SequencePattern):
     @classmethod
     def apply_pseudocounts(cls, motif, pseudocounts):
         """Add pseudocounts to the motif's pssm matrix.
-        
+
         Add nothing if pseudocounts is None, auto-compute pseudocounts if
         pseudocounts="jaspar", else just attribute the pseudocounts as-is
         to the motif.
@@ -60,7 +59,7 @@ class MotifPssmPattern(SequencePattern):
 
     def find_matches_in_string(self, sequence):
         """Find all positions where the PSSM score is above threshold."""
-        
+
         # NOTE: Before, I made my PSSM searches with Biopython. It was looong!
         # Now I use Numpy and np.choice(), and I never looked back
         # sequence = Seq(sequence, alphabet=alphabet)
@@ -68,9 +67,7 @@ class MotifPssmPattern(SequencePattern):
         #     sequence, threshold=self.threshold, both=False
         # )
         indices = find_pssm_matches_with_numpy(
-            pssm_matrix=self.pssm_matrix,
-            sequence=sequence,
-            threshold=self.threshold,
+            pssm_matrix=self.pssm_matrix, sequence=sequence, threshold=self.threshold,
         )
         return [(i, i + self.size, 1) for i in indices]
 
@@ -89,15 +86,15 @@ class MotifPssmPattern(SequencePattern):
         ----------
 
         sequences
-          A list of same-length sequences
+          A list of same-length sequences.
 
         name
-          Name to give to the pattern (will appear in reports etc.)
+          Name to give to the pattern (will appear in reports etc.).
 
         pseudocounts
           Either a dict {"A": 0.01, "T": ...} or "jaspar" for automatic
           pseudocounts from the Biopython.motifs.jaspar module (recommended),
-          or None for no pseudocounts at all (not recommended!)
+          or None for no pseudocounts at all (not recommended!).
 
         threshold
           locations of the sequence with a PSSM score above this value will be
@@ -115,9 +112,7 @@ class MotifPssmPattern(SequencePattern):
         pssm = PSSM(motif.pssm)
         pssm.name = name
         return MotifPssmPattern(
-            pssm=pssm,
-            threshold=threshold,
-            relative_threshold=relative_threshold,
+            pssm=pssm, threshold=threshold, relative_threshold=relative_threshold,
         )
 
     @classmethod
@@ -139,12 +134,12 @@ class MotifPssmPattern(SequencePattern):
 
         file_format
           File format. one of "jaspar", "meme", "TRANSFAC".
-        
+
         pseudocounts
           Either a dict {"A": 0.01, "T": ...} or "jaspar" for automatic
           pseudocounts from the Biopython.motifs.jaspar module (recommended),
-          or None for no pseudocounts at all (not recommended!)
-        
+          or None for no pseudocounts at all (not recommended!).
+
         threshold
           locations of the sequence with a PSSM score above this value will be
           considered matches. For convenience, a relative_threshold can be
@@ -166,9 +161,7 @@ class MotifPssmPattern(SequencePattern):
 
         return [
             MotifPssmPattern(
-                pssm,
-                threshold=threshold,
-                relative_threshold=relative_threshold,
+                pssm, threshold=threshold, relative_threshold=relative_threshold,
             )
             for pssm in motifs_list
         ]
@@ -187,9 +180,10 @@ class MotifPssmPattern(SequencePattern):
             threshold = "%.2f" % self.threshold
         return "%s-PSSM(%s+)" % (self.name, threshold)
 
+
 def find_pssm_matches_with_numpy(pssm_matrix, sequence, threshold):
     """Return every index in the +1 strand wit a PSSM score above threshold.
-    
+
     My numpy-based implementation is 10 times faster than Biopython for some
     reason. Weird. Can someone else check?
 
@@ -198,10 +192,10 @@ def find_pssm_matches_with_numpy(pssm_matrix, sequence, threshold):
 
     pssm
       A matrix whose rows give the frequency motif of ATGC (in this order).
-    
+
     sequence
       A string representing a DNA sequence.
-    
+
     threshold
       Every index with a score above this threshold will be returned.
     """
@@ -221,9 +215,7 @@ def find_pssm_matches_with_numpy(pssm_matrix, sequence, threshold):
 
     # If sequence is large, use Numpy for speed. tested experimentally
 
-    nucl_indices = np.array(
-        [nucleotide_to_index[n] for n in sequence], dtype="uint8"
-    )
+    nucl_indices = np.array([nucleotide_to_index[n] for n in sequence], dtype="uint8")
     len_pattern = len(pssm_matrix[0])
     scores = np.array(
         [
