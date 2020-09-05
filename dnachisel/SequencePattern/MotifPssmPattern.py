@@ -151,9 +151,9 @@ class MotifPssmPattern(SequencePattern):
         """
         if isinstance(motifs_file, str):
             with open("./jaspar.txt", "r") as f:
-                motifs_list = motifs.parse(f, format=file_format)
+                motifs_list = motifs.parse(f, file_format)
         else:
-            motifs_list = motifs.parse(motifs_file, format=file_format)
+            motifs_list = motifs.parse(motifs_file, file_format)
         if pseudocounts is not None:
             for motif in motifs_list:
                 cls.apply_pseudocounts(motif, pseudocounts)
