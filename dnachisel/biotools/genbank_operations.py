@@ -6,7 +6,13 @@ import numpy as np
 from Bio.Seq import Seq
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 from Bio.SeqRecord import SeqRecord
-from Bio.Alphabet import DNAAlphabet
+
+try:
+    # Biopython <1.78
+    from Bio.Alphabet import DNAAlphabet
+except ImportError:
+    # Biopython >=1.78
+    has_dna_alphabet = False
 from Bio import SeqIO
 
 try:
@@ -156,7 +162,13 @@ def annotate_pattern_occurrences(
 def change_biopython_record_sequence(record, new_seq):
     """Return a version of the record with the sequence set to new_seq."""
     new_record = deepcopy(record)
-    new_record.seq = Seq(new_seq, alphabet=DNAAlphabet())
+
+    if has_dna_alphabet:
+        seq = Seq(new_seq, alphabet=DNAAlphabet())
+    else:
+        seq = Seq(new_seq)
+
+    new_record.seq = seq
     return new_record
 
 
@@ -164,11 +176,17 @@ def sequence_to_biopython_record(
     sequence, id="<unknown id>", name="<unknown name>", features=()
 ):
     """Return a SeqRecord of the sequence, ready to be Genbanked."""
+    if has_dna_alphabet:
+        seq = Seq(sequence, alphabet=DNAAlphabet())
+    else:
+        seq = Seq(sequence)
+
     return SeqRecord(
-        Seq(sequence, alphabet=DNAAlphabet()),
+        seq=seq,
         id=id,
         name=name,
         features=list(features),
+        annotations={"molecule_type": "DNA"},
     )
 
 
@@ -222,8 +240,9 @@ def write_record(
     if remove_locationless_features:
         record.features = [f for f in record.features if f.location is not None]
     record.name = record.name[:max_name_length]
-    if str(record.seq.alphabet.__class__.__name__) != "DNAAlphabet":
-        record.seq.alphabet = DNAAlphabet()
+    if has_dna_alphabet:
+        if str(record.seq.alphabet.__class__.__name__) != "DNAAlphabet":
+            record.seq.alphabet = DNAAlphabet()
     if hasattr(target, "open"):
         target = target.open("w")
     SeqIO.write(record, target, file_format)
