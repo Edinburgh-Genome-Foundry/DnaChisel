@@ -14,7 +14,7 @@ class MutationSpace:
 
     choices_index
       A list L such that L[i] gives the MutationChoice governing the mutations
-      allowed at position i (ansd possibly around i)
+      allowed at position i (and possibly around i).
 
 
     Examples
@@ -51,15 +51,13 @@ class MutationSpace:
                 if nvariants == 0:
                     self.unsolvable_segments.append(c.segment)
                 elif nvariants == 1:
-                    self.determined_segments.append(
-                        (c.segment, list(c.variants)[0])
-                    )
+                    self.determined_segments.append((c.segment, list(c.variants)[0]))
                 else:
                     self.multichoices.append(c)
 
     @property
     def choices_span(self):
-        """Return (start, end), segment where mutiple choices are possible"""
+        """Return (start, end), segment where mutiple choices are possible."""
         if self.multichoices == []:
             return None
         return self.multichoices[0].start, self.multichoices[-1].end
@@ -97,7 +95,7 @@ class MutationSpace:
 
     @property
     def space_size(self):
-        """Return the number of possible mutations"""
+        """Return the number of possible mutations."""
         if len(self.multichoices) == 0:
             return 0
         choices = [len(choice.variants) for choice in self.multichoices]
@@ -106,7 +104,7 @@ class MutationSpace:
         return np.exp(min(100, np.log(choices).sum()))
 
     def pick_random_mutations(self, n_mutations, sequence):
-        """Draw N random mutations"""
+        """Draw N random mutations."""
         n_mutations = min(len(self.multichoices), n_mutations)
         if n_mutations == 1:
             index = np.random.randint(len(self.multichoices))
@@ -143,7 +141,7 @@ class MutationSpace:
             a kind of 'least-change' order, which biases towards solutions
             close to the current sequence.
 
-            Impact on overall algorithm speed is < 0.5%"""
+            Impact on overall algorithm speed is < 0.5%."""
             current = sequence[choice.segment[0] : choice.segment[1]]
             alphasort = {v: i for i, v in enumerate(sorted(choice.variants))}
 
@@ -169,9 +167,7 @@ class MutationSpace:
     def from_optimization_problem(problem, new_constraints=None):
         """Create a mutation space from a DNA optimization problem.
 
-        This can be used either to initialize mutation spaces for new problems,
-        or to
-
+        This can be used to initialize mutation spaces for new problems.
         """
 
         sequence = problem.sequence
@@ -179,9 +175,7 @@ class MutationSpace:
         if new_constraints is None:
             variants = {"A": "ATGC", "T": "TACG", "G": "GCAT", "C": "CGTA"}
             choices_index = [
-                MutationChoice(
-                    (i, i + 1), variants=variants[c], is_any_nucleotide=True
-                )
+                MutationChoice((i, i + 1), variants=variants[c], is_any_nucleotide=True)
                 for i, c in enumerate(sequence)
             ]
             constraints = problem.constraints
@@ -214,7 +208,7 @@ class MutationSpace:
         return MutationSpace(choices_index)
 
     def string_representation(self, separator="|"):
-        """Generates a string of the mutation space
+        """Generates a string of the mutation space.
 
         Examples
         --------
@@ -266,4 +260,3 @@ class MutationSpace:
                     )
         max_variants = max([len(c.variants) for c in self.choices_list])
         ax.set_ylim(bottom=min(-max_variants - 2, ax.get_ylim()[0]))
-

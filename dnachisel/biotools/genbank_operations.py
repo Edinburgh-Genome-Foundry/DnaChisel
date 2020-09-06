@@ -6,7 +6,13 @@ import numpy as np
 from Bio.Seq import Seq
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 from Bio.SeqRecord import SeqRecord
-from Bio.Alphabet import DNAAlphabet
+
+try:
+    # Biopython <1.78
+    from Bio.Alphabet import DNAAlphabet
+except ImportError:
+    # Biopython >=1.78
+    has_dna_alphabet = False
 from Bio import SeqIO
 
 try:
@@ -44,11 +50,7 @@ def load_record(filepath, linear=True, name="unnamed", file_format="auto"):
 
 
 def annotate_record(
-    seqrecord,
-    location="full",
-    feature_type="misc_feature",
-    margin=0,
-    **qualifiers
+    seqrecord, location="full", feature_type="misc_feature", margin=0, **qualifiers
 ):
     """Add a feature to a Biopython SeqRecord.
 
@@ -59,10 +61,10 @@ def annotate_record(
       The biopython seqrecord to be annotated.
 
     location
-      Either (start, end) or (start, end, strand). (strand defaults to +1)
+      Either (start, end) or (start, end, strand). (strand defaults to +1).
 
     feature_type
-      The type associated with the feature
+      The type associated with the feature.
 
     margin
       Number of extra bases added on each side of the given location.
@@ -83,9 +85,7 @@ def annotate_record(
     )
 
 
-def annotate_differences(
-    record, reference, feature_type="misc_feature", prefix="#"
-):
+def annotate_differences(record, reference, feature_type="misc_feature", prefix="#"):
     """Annotate differences between two records in a new record.
 
     Returns a version of SeqRecord ``record`` where differences with the
@@ -94,10 +94,10 @@ def annotate_differences(
     Parameters
     ----------
     record
-      The SeqRecord to be compared to the reference
+      The SeqRecord to be compared to the reference.
 
     reference
-      The reference SeqRecord. Must be the same size as ``reference``
+      The reference SeqRecord. Must be the same size as ``reference``.
 
     feature_type
       The type of the features added to mark differences.
@@ -110,8 +110,8 @@ def annotate_differences(
     seq1 = str(record.seq)
     seq2 = str(reference.seq)
     indices_diff = (
-        np.frombuffer(seq1.encode(), dtype="uint8") -
-        np.frombuffer(seq2.encode(), dtype="uint8")
+        np.frombuffer(seq1.encode(), dtype="uint8")
+        - np.frombuffer(seq2.encode(), dtype="uint8")
     ).nonzero()[0]
     indices_diff = [int(e) for e in indices_diff]
     locations = [[indices_diff[0], indices_diff[0]]]
@@ -139,14 +139,13 @@ def annotate_pattern_occurrences(
     Parameters
     -----------
     record
-      A Biopython record
+      A Biopython record.
 
     pattern
-      A DnaChisel SequencePattern object (such as DnaPAttern)
+      A DnaChisel SequencePattern object (such as DnaPAttern).
 
     feature_type
-      Type of the annotations in the returned record
-
+      Type of the annotations in the returned record.
     """
     new_record = deepcopy(record)
     label = prefix + str(pattern)
@@ -161,9 +160,15 @@ def annotate_pattern_occurrences(
 
 
 def change_biopython_record_sequence(record, new_seq):
-    """Return a version of the record with the sequence set to new_seq"""
+    """Return a version of the record with the sequence set to new_seq."""
     new_record = deepcopy(record)
-    new_record.seq = Seq(new_seq, alphabet=DNAAlphabet())
+
+    if has_dna_alphabet:
+        seq = Seq(new_seq, alphabet=DNAAlphabet())
+    else:
+        seq = Seq(new_seq)
+
+    new_record.seq = seq
     return new_record
 
 
@@ -171,11 +176,17 @@ def sequence_to_biopython_record(
     sequence, id="<unknown id>", name="<unknown name>", features=()
 ):
     """Return a SeqRecord of the sequence, ready to be Genbanked."""
+    if has_dna_alphabet:
+        seq = Seq(sequence, alphabet=DNAAlphabet())
+    else:
+        seq = Seq(sequence)
+
     return SeqRecord(
-        Seq(sequence, alphabet=DNAAlphabet()),
+        seq=seq,
         id=id,
         name=name,
         features=list(features),
+        annotations={"molecule_type": "DNA"},
     )
 
 
@@ -208,13 +219,13 @@ def write_record(
     Parameters
     ----------
     record
-      A biopython record
+      A biopython record.
 
     target
       Path to a file or filelike object.
 
     file_format
-      Format, either Genbank or fasta
+      Format, either Genbank or fasta.
 
     remove_locationless_features
       If True, will remove all features whose location is None, to avoid a
@@ -222,17 +233,16 @@ def write_record(
 
     max_name_length
       The record's name will be truncated if longer than this (also here to
-      avoid a biopython bug).
+      avoid a Biopython bug).
 
     """
     record = deepcopy(record)
     if remove_locationless_features:
-        record.features = [
-            f for f in record.features if f.location is not None
-        ]
+        record.features = [f for f in record.features if f.location is not None]
     record.name = record.name[:max_name_length]
-    if str(record.seq.alphabet.__class__.__name__) != "DNAAlphabet":
-        record.seq.alphabet = DNAAlphabet()
+    if has_dna_alphabet:
+        if str(record.seq.alphabet.__class__.__name__) != "DNAAlphabet":
+            record.seq.alphabet = DNAAlphabet()
     if hasattr(target, "open"):
         target = target.open("w")
     SeqIO.write(record, target, file_format)
