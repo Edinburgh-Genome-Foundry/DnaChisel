@@ -9,6 +9,10 @@ from dnachisel import (
     AvoidPattern,
     AvoidChanges,
 )
+from dnachisel.reports.tools import install_extras_message
+from dnachisel.reports.constraints_reports.constraints_breaches_dataframe import (
+    _install_extras_message,
+)
 
 
 def test_optimize_with_report(tmpdir):
@@ -38,3 +42,21 @@ def test_optimize_with_report_no_solution(tmpdir):
     success, message, data = problem.optimize_with_report(target)
     assert not success
     assert os.listdir(target) != []
+
+
+def test_reports_tools_install_extras_message():
+    assert (
+        install_extras_message("pkg")
+        == "Could not load pkg (is it installed ?). You can install it separately  "
+        "with:  pip install pkg\n\nInstall all dependencies for generating DNA Chisel"
+        " reports with:\n\npip install dnachisel[reports]"
+    )
+
+
+def test_reports_constraints_reports__install_extras_message():
+    assert (
+        _install_extras_message("pkg")
+        == "Could not load pkg (is it installed ?). You can install it separately  "
+        "with:  pip install pkg\n\nInstall all dependencies for generating DNA Chisel"
+        " reports with:\n\npip install dnachisel[reports]"
+    )
