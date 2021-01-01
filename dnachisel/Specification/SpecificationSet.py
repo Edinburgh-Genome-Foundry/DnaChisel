@@ -3,7 +3,7 @@ class SpecificationSet:
 
     Behaves as a Specification when it comes to instanciation, reading it
     from annotated records, etc. but the initialization actually creates a
-    dictionnary of standard Specifications in the DNAOptimizationProblem
+    dictionary of standard Specifications in the DNAOptimizationProblem
     """
 
     def register_specifications(self, specifications):

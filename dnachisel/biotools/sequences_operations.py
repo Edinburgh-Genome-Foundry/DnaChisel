@@ -79,7 +79,7 @@ def translate(dna_sequence, table="Standard", assume_start_codon=False):
 
     http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc25
 
-    ``translation_table`` can also be a dictionnary of the form
+    ``translation_table`` can also be a dictionary of the form
     ``{"ATT": "M", "CTC": "X", etc.}`` for more exotic translation tables
 
     If assume_start_codon is True and the first codon is a start codon in the

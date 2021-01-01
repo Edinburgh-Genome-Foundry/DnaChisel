@@ -97,7 +97,7 @@ class DnaOptimizationProblem(
     Notes
     -----
 
-    The dictionnary ``self.possible_mutations`` is of the form
+    The dictionary ``self.possible_mutations`` is of the form
     ``{location1 : list1, location2: list2...}``
     where ``location`` is either a single index (e.g. 10) indicating the
     position of a nucleotide to be muted, or a couple ``(start, end)``
