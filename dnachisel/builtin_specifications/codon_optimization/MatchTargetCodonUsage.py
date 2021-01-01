@@ -8,7 +8,7 @@ from .BaseCodonOptimizationClass import BaseCodonOptimizationClass
 class MatchTargetCodonUsage(BaseCodonOptimizationClass):
     """Codon-optimize a sequence so it has the same codon usage as a target.
 
-    The objective minized here is the sum of the discrepancies, over every
+    The objective minimized here is the sum of the discrepancies, over every
     possible triplet ATG, CCG, etc. between the codon frequency of this triplet
     in the sequence, and its frequency in the target organism.
 
