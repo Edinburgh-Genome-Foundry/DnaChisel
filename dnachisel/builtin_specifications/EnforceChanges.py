@@ -35,9 +35,9 @@ class EnforceChanges(Specification):
     As a genbank annotation:
 
     - ``@change``, ``@change(minimum=40%)``, ``@change(minimum=3)`` will
-      enforce respectivel 100% different nucleotides, 40%+ different, and 3+
+      enforce respectively 100% different nucleotides, 40%+ different, and 3+
       nucleotides different.
-    - ``~change``, ``~change(40%)``, ``~change(3)`` to aim at, respectively,
+    - ``~change``, ``~change(40%)``, ``~change(3)`` to aim at, respectivelyy,
       as close as possible to 100% change, 40% changes, or a target of 3
       nucleotides changes.
 
