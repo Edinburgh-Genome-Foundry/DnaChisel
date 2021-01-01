@@ -1,4 +1,4 @@
-"""Ensure that the location is primer-frienly.
+"""Ensure that the location is primer-friendly.
 
 AllowPrimer is a good example SpecificationSet that will create specifications
 of type RepeatedKmerPattern, UniquifyAllKmers, AvoidPattern,
