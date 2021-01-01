@@ -86,7 +86,7 @@ class MutationSpace:
         return new_sequence.decode()
 
     def localized(self, location):
-        """Return a new version with only mutations overlaping the location."""
+        """Return a new version with only mutations overlapping the location."""
         if hasattr(location, "start"):
             start, end = location.start, location.end
         else:
