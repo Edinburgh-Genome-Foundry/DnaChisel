@@ -24,13 +24,13 @@ class EnforceChanges(Specification):
     - **For constraints**, use EnforceChanges() to force all nucleotides to
       be different from the reference (by default, the reference is the
       starting sequence). Use EnforceChanges(minimum=3) to enforce at least
-      3 nucleotide changes, or EnforceChanges(minumum_percent=70) to enforce
+      3 nucleotide changes, or EnforceChanges(minimum_percent=70) to enforce
       at least 70% change. Note that having a minimum makes computations much
       slower.
     - **For objectives**, use EnforceChanges() to maximize the number of
       nucleotide changes, or use EnforceChanges(amount=10) to aim at a
       10-nucleotides change (no more, no less), or use
-      EnforceChanges(minumum_amount=70) to aim at 70% change, no more no less.
+      EnforceChanges(minimum_amount=70) to aim at 70% change, no more no less.
 
     As a genbank annotation:
 
