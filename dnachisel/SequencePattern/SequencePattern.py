@@ -58,7 +58,7 @@ class SequencePattern:
         size=None,
         name=None,
         lookahead="loop",
-        is_palyndromic=False,
+        is_palindromic=False,
     ):
         # if size is None:
         #     self.shrink_when_localized = False
@@ -73,7 +73,7 @@ class SequencePattern:
         self.compiled_expression = re.compile(self.lookahead_expression)
         self.size = size
         self.name = name
-        self.is_palyndromic = is_palyndromic
+        self.is_palindromic = is_palindromic
 
     def find_matches(self, sequence, location=None, forced_strand=None):
         """Return the locations where the sequence matches the expression.
@@ -124,13 +124,13 @@ class SequencePattern:
             if strand == 1:
                 return self.find_matches(sequence, location, 1)
             if strand == -1:
-                if self.is_palyndromic:
+                if self.is_palindromic:
                     return self.find_matches(sequence, location, 1)
                 else:
                     return self.find_matches(sequence, location, -1)
             if strand == 0:
                 matches =  self.find_matches(sequence, location, 1)
-                if not self.is_palyndromic:
+                if not self.is_palindromic:
                     matches += self.find_matches(sequence, location, -1)
                 return matches
 
