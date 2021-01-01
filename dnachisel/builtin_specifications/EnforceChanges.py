@@ -192,7 +192,7 @@ class EnforceChanges(Specification):
         # FIND THE INDICES WHERE THE SEQUENCE IS UNCHANGED
 
         # Note: at this stage any minimum_percent or amount_percent have been
-        # transformed into abolsute self.minimum and self.amount.
+        # transformed into absolute self.minimum and self.amount.
 
         target = self.reference
         sequence = self.extract_subsequence(problem.sequence)
