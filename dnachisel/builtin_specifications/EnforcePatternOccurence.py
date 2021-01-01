@@ -162,7 +162,7 @@ class EnforcePatternOccurence(Specification):
         )
 
     def resolution_heuristic(self, problem):
-        """Resolve using custom instertion if possible."""
+        """Resolve using custom insertion if possible."""
         if isinstance(self.pattern, DnaNotationPattern):
             evaluation = self.evaluate(problem)
             if evaluation.passes:
