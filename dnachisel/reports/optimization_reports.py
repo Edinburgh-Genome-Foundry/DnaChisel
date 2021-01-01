@@ -290,7 +290,7 @@ def plot_optimization_changes(problem):
 def write_optimization_report(
     target,
     problem,
-    project_name="unnammed",
+    project_name="unnamed",
     plot_figure=True,
     constraints_evaluations=None,
     objectives_evaluations=None,
