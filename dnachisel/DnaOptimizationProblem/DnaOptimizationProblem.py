@@ -141,7 +141,7 @@ class DnaOptimizationProblem(
     def initialize(self):
         """Precompute specification sets, evaluations, and mutation space."""
 
-        # Find the specifications (ibjectives, constraints) which are actually
+        # Find the specifications (objectives, constraints) which are actually
         #  SpecificationSets, and unpack these to complete the lists of
         # objectives and constraints.
         for specs in (self.constraints, self.objectives):
