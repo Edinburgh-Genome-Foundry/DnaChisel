@@ -17,7 +17,7 @@ import numpy
 # Note: we are not providing a location for AvoidChanges: it applies globally
 
 
-def test_EnforceTranlation():
+def test_EnforceTranslation():
     numpy.random.seed(1234)
     sequence = reverse_translate(random_protein_sequence(50, seed=123))
     problem = DnaOptimizationProblem(
@@ -29,7 +29,7 @@ def test_EnforceTranlation():
     assert problem.all_constraints_pass()
 
 
-def test_EnforceTranlationReversed():
+def test_EnforceTranslationReversed():
     numpy.random.seed(1234)
     sequence = reverse_translate(random_protein_sequence(50, seed=123))
     rev_sequence = reverse_complement(sequence)
@@ -46,7 +46,7 @@ def test_EnforceTranlationReversed():
     assert problem.all_constraints_pass()
 
 
-def test_EnforceTranlation_error_location_not_3x():
+def test_EnforceTranslation_error_location_not_3x():
     """Providing a location that is not multiple of 3 raises an error"""
     numpy.random.seed(1234)
     sequence = reverse_translate(random_protein_sequence(50, seed=123))
@@ -59,7 +59,7 @@ def test_EnforceTranlation_error_location_not_3x():
     assert "Location 0-16(+) has length 16" in str(err.value)
 
 
-def test_EnforceTranlation_error_location_smaller_than_translation():
+def test_EnforceTranslation_error_location_smaller_than_translation():
     """Providing a location that is not multiple of 3 raises an error"""
     numpy.random.seed(1234)
     sequence = reverse_translate(random_protein_sequence(15, seed=123))
