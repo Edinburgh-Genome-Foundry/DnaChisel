@@ -57,7 +57,7 @@ class MutationSpace:
 
     @property
     def choices_span(self):
-        """Return (start, end), segment where mutiple choices are possible."""
+        """Return (start, end), segment where multiple choices are possible."""
         if self.multichoices == []:
             return None
         return self.multichoices[0].start, self.multichoices[-1].end
