@@ -173,7 +173,7 @@ class CircularDnaOptimizationProblem(DnaOptimizationProblem):
         ----------
 
         target
-          Either a path to a folder that will containt the report, or a path to
+          Either a path to a folder that will contain the report, or a path to
           a zip archive, or "@memory" to return raw data of a zip archive
           containing the report.
 
