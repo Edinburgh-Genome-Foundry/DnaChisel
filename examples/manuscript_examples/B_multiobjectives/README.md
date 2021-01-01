@@ -10,7 +10,7 @@ This example explores different variations of a problem where a gene is optimize
 - ``~gc(39%/100bp)`` is an objective targeting 39% GC on every 100bp window (the negative score is the sum of all absolute deviations from 39% on all 100bp windows)
 - ``~no(CG)`` seeks to minimize the occurences of "CG" in the sequence (the negative score is the number of CG patterns in the sequence).
 - ``~codon_optimize`` seeks to maximize the CAI gene's CAI for *E. coli* (the negative score is the sum of each codon's deviation from its optimal relative frequency).
-- ``~keep`` is an objective fostering parcimony in sequence changes by penalizing differences (the negative score is the number of changes in the sequence).
+- ``~keep`` is an objective fostering parsimony in sequence changes by penalizing differences (the negative score is the number of changes in the sequence).
 
 The script runs variations of this problem where:
 - All objectives are considered at once, with equal weight ("equal weights")
