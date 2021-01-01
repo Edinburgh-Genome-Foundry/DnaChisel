@@ -25,7 +25,7 @@ class EnforceMeltingTemperature(Specification):
       specification as an optimization objective.
     target
       Target melting temperature. Will be overridden by (mini+maxi)/2 if these
-      are provided. The "target" parametr is only practical when the spec is
+      are provided. The "target" parameter is only practical when the spec is
       used as an optimization objective.
 
     location
