@@ -111,7 +111,7 @@ class UniquifyAllKmers(Specification):
     >>> from dnachisel import *
     >>> sequence = random_dna_sequence(50000)
     >>> constraint= UniquifyAllKmers(10, include_reverse_complement=True)
-    >>> problem = DnaOptimizationProblem(sequence, constraints= [contraint])
+    >>> problem = DnaOptimizationProblem(sequence, constraints= [constraint])
     >>> print (problem.constraints_summary())
     """
 
