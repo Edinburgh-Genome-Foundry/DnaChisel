@@ -16,7 +16,7 @@ class EnforceTranslation(CodonSpecification):
 
     This class enforces the standard translation, but it is also possible to
     change the class' `codons_sequences` and `codons_translations`
-    dictionnaries for more exotic kind of translations
+    dictionaries for more exotic kind of translations
 
     Shorthand for annotations: "cds".
 

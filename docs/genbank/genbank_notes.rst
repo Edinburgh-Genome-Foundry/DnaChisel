@@ -66,7 +66,7 @@ extending the default specifications dict:
     DEFAULT_SPECIFICATIONS_DICT['MySpecification'] = MySpecification
     problem = DnaOptimizationProblem.from_record('my_record.gb')
 
-Any specification in this dictionnary can be used in Genbank annotations with
+Any specification in this dictionary can be used in Genbank annotations with
 the same parameters as in a Python script (note that strings do not require
 quotes):
 

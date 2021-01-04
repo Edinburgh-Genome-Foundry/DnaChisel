@@ -1,4 +1,4 @@
-"""This module provides useful biological tables as Python dictionnaries.
+"""This module provides useful biological tables as Python dictionaries.
 """
 
 from collections import defaultdict

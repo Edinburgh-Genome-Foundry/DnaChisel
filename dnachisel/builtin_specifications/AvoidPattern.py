@@ -19,7 +19,7 @@ class AvoidPattern(Specification):
 
     location
       Location of the DNA segment on which to enforce the pattern e.g.
-      ``Location(10, 45, 1)``. For patterns which are not palyndromic,
+      ``Location(10, 45, 1)``. For patterns which are not palindromic,
       the strand matters! use +1 for eliminating the pattern on the +1 strand
       only, -1 for eliminating the pattern on the -1 strand, and 0 for
       eliminating the pattern on both strands.

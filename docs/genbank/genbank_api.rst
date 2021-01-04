@@ -179,7 +179,7 @@ To indicate that a region is a CDS and the protein sequence should be conserved
 
 .. caution:: Non-ATG start codons
 
-    If the coding region has a start codon in an organims using non-ATG
+    If the coding region has a start codon in an organisms using non-ATG
     start codons (for instance, E. coli sometimes use GTG), make sure to define
     a policy for the start codon, for instance ``start_codon=keep`` to keep the
     sequence of the original start codon, or ``start_codon=ATG`` to use ATG as

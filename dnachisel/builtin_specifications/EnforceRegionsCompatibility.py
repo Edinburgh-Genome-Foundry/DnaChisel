@@ -39,7 +39,7 @@ class EnforceRegionsCompatibility(Specification):
         if score == 0:
             message = "All compatible !"
         else:
-            message = "Found the following imcompatibilities: %s" % (
+            message = "Found the following incompatibilities: %s" % (
                 incompatible_locations_pairs
             )
         return SpecEvaluation(

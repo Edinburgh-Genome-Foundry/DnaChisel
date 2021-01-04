@@ -57,7 +57,7 @@ class MutationSpace:
 
     @property
     def choices_span(self):
-        """Return (start, end), segment where mutiple choices are possible."""
+        """Return (start, end), segment where multiple choices are possible."""
         if self.multichoices == []:
             return None
         return self.multichoices[0].start, self.multichoices[-1].end
@@ -86,7 +86,7 @@ class MutationSpace:
         return new_sequence.decode()
 
     def localized(self, location):
-        """Return a new version with only mutations overlaping the location."""
+        """Return a new version with only mutations overlapping the location."""
         if hasattr(location, "start"):
             start, end = location.start, location.end
         else:

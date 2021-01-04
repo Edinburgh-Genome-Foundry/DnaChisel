@@ -3,7 +3,7 @@ import numpy as np
 
 # TEST PARAMETERS AUTO-SETTINGS
 
-def test_parametrization():
+def test_parameterization():
     def all_none(variables):
         return all([c is None for c in variables])
 
