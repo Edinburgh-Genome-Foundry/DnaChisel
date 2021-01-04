@@ -41,7 +41,7 @@ class MotifPssmPattern(SequencePattern):
         self.relative_threshold = relative_threshold
         self.size = pssm.length
         self.pssm_matrix = np.array([self.pssm[n] for n in "ATGC"])
-        self.is_palyndromic = False
+        self.is_palindromic = False
 
     @classmethod
     def apply_pseudocounts(cls, motif, pseudocounts):

@@ -151,7 +151,7 @@ class EnforcePatternOccurence(Specification):
                     return
                 except NoSolutionError:
                     pass
-        if (not reverse) and (not self.pattern.is_palyndromic):
+        if (not reverse) and (not self.pattern.is_palindromic):
             self.insert_pattern_in_problem(problem, reverse=True)
             return
         raise NoSolutionError(

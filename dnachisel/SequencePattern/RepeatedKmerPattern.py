@@ -21,7 +21,7 @@ class RepeatedKmerPattern(SequencePattern):
             size=kmer_size * n_repeats,
             expression=r"([ATGC]{%d})\1{%d}" % (kmer_size, n_repeats - 1),
             name="%d-repeats %d-mers" % (n_repeats, kmer_size),
-            is_palyndromic=True,  # a repeat on a strand is also on the other
+            is_palindromic=True,  # a repeat on a strand is also on the other
             lookahead="loop",
         )
 

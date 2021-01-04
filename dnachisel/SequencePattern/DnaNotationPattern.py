@@ -21,7 +21,7 @@ class DnaNotationPattern(SequencePattern):
             size=len(sequence),
             expression=self.dna_sequence_to_regexpr(sequence),
             name=name,
-            is_palyndromic=reverse_complement(sequence) == sequence,
+            is_palindromic=reverse_complement(sequence) == sequence,
         )
         self.sequence = sequence
 
