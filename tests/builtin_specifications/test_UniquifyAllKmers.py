@@ -49,3 +49,9 @@ def test_UniquifyAllKmers_from_polyAs_uncached():
     assert not problem.all_constraints_pass()
     problem.resolve_constraints()
     assert problem.all_constraints_pass()
+
+
+def test_UniquifyAllKmers_include_reverse_complement_false():
+    constraint = UniquifyAllKmers(10, include_reverse_complement=False)
+    problem = DnaOptimizationProblem(sequence=40 * "A", constraints=[constraint])
+    problem.constraints_text_summary()
