@@ -54,12 +54,7 @@ class Location:
             return None
 
     def extended(
-        self,
-        extension_length,
-        lower_limit=0,
-        upper_limit=None,
-        left=True,
-        right=True,
+        self, extension_length, lower_limit=0, upper_limit=None, left=True, right=True,
     ):
         """Extend the location of a few basepairs on each side."""
 
@@ -169,7 +164,10 @@ class Location:
         if isinstance(location_data, (tuple, list)):
             return Location.from_tuple(location_data)
         if isinstance(location_data, FeatureLocation):
-            return Location.from_biopython_location(location_data)
+            feature_location = Location.from_biopython_location(location_data)
+            if feature_location.strand is None:
+                feature_location.strand = 0
+            return feature_location
         if isinstance(location_data, Location):
             return Location(
                 location_data.start, location_data.end, location_data.strand
@@ -178,8 +176,7 @@ class Location:
     def to_biopython_location(self):
         """Return a Biopython FeatureLocation equivalent to the location."""
         start, end, strand = [
-            None if e is None else int(e)
-            for e in [self.start, self.end, self.strand]
+            None if e is None else int(e) for e in [self.start, self.end, self.strand]
         ]
         return FeatureLocation(start, end, strand)
 
@@ -187,7 +184,5 @@ class Location:
         """Return a Biopython SeqFeature with same location and custom
         qualifiers."""
         return SeqFeature(
-            self.to_biopython_location(),
-            type=feature_type,
-            qualifiers=qualifiers,
+            self.to_biopython_location(), type=feature_type, qualifiers=qualifiers,
         )
