@@ -6,9 +6,7 @@ import numpy as np
 
 from ..Specification import Specification, SpecEvaluation
 from ..Location import Location
-from ..biotools import (group_nearby_indices,
-                                reverse_complement,
-                                IUPAC_NOTATION)
+from ..biotools import group_nearby_indices, reverse_complement, IUPAC_NOTATION
 
 
 class EnforceSequence(Specification):
@@ -27,10 +25,11 @@ class EnforceSequence(Specification):
       ``Location(10, 45, 1)`` or simply ``(10, 45, 1)``
 
     """
+
     localization_interval_length = 6  # used when optimizing
     best_possible_score = 0
     enforced_by_nucleotide_restrictions = True
-    shorthand_name = 'sequence'
+    shorthand_name = "sequence"
 
     def __init__(self, sequence=None, location=None, boost=1.0):
         """Initialize."""
@@ -56,11 +55,13 @@ class EnforceSequence(Specification):
         in nucleotides equal to ``localization_interval_length`.`
         """
         sequence = self.location.extract_sequence(problem.sequence)
-        discrepancies = np.array([
-            i
-            for i, nuc in enumerate(sequence)
-            if nuc not in IUPAC_NOTATION[self.sequence[i]]
-        ])
+        discrepancies = np.array(
+            [
+                i
+                for i, nuc in enumerate(sequence)
+                if nuc not in IUPAC_NOTATION[self.sequence[i]]
+            ]
+        )
 
         if self.location.strand == -1:
             discrepancies = self.location.end - discrepancies
@@ -69,13 +70,14 @@ class EnforceSequence(Specification):
         intervals = [
             (r[0], r[-1] + 1)
             for r in group_nearby_indices(
-                discrepancies,
-                max_group_spread=self.localization_interval_length)
+                discrepancies, max_group_spread=self.localization_interval_length
+            )
         ]
         locations = [Location(start, end, 1) for start, end in intervals]
 
-        return SpecEvaluation(self, problem, score=-len(discrepancies),
-                              locations=locations)
+        return SpecEvaluation(
+            self, problem, score=-len(discrepancies), locations=locations
+        )
 
     def localized(self, location, problem=None):
         """Localize the spec to the overlap of its location and the new."""
@@ -92,8 +94,7 @@ class EnforceSequence(Specification):
                 end = new_location.end - self.location.start
             new_sequence = self.sequence[start:end]
 
-            return self.copy_with_changes(location=new_location,
-                                          sequence=new_sequence)
+            return self.copy_with_changes(location=new_location, sequence=new_sequence)
 
     def restrict_nucleotides(self, sequence, location=None):
         """When localizing, forbid any nucleotide but the one already there."""
@@ -106,13 +107,22 @@ class EnforceSequence(Specification):
         start, end = new_location.start, new_location.end
         if self.location.strand == -1:
             lend = self.location.end
-            return [(i, set(reverse_complement(n) for n in
-                            IUPAC_NOTATION[self.sequence[lend - i]]))
-                    for i in range(start, end)]
+            return [
+                (
+                    i,
+                    set(
+                        reverse_complement(n)
+                        for n in IUPAC_NOTATION[self.sequence[lend - i]]
+                    ),
+                )
+                for i in range(start, end)
+            ]
         else:
             lstart = self.location.start
-            return [(i, IUPAC_NOTATION[self.sequence[i - lstart]])
-                    for i in range(start, end)]
+            return [
+                (i, IUPAC_NOTATION[self.sequence[i - lstart]])
+                for i in range(start, end)
+            ]
 
     def __repr__(self):
         """Represent."""
