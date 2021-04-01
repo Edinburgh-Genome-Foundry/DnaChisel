@@ -21,14 +21,13 @@ class Location:
     Parameters
     ----------
     start
-      Lowest position index of the segment
+      Lowest position index of the segment.
 
     end
-      Highest position index of the segment
+      Highest position index of the segment.
 
     strand
       Either 1 or -1 for sense or anti-sense orientation.
-
     """
 
     __slots__ = ["strand", "start", "end"]
@@ -98,27 +97,27 @@ class Location:
         return self.to_tuple() < other.to_tuple()
 
     def __add__(self, number):
-        """Return the location shifted by the number"""
+        """Return the location shifted by the number."""
         return Location(self.start + number, self.end + number, self.strand)
 
     def __sub__(self, number):
-        """Return the location shifted by the number"""
+        """Return the location shifted by the number."""
         return Location(self.start - number, self.end - number, self.strand)
 
     def __repr__(self):
-        """Represent"""
+        """Represent."""
         result = "%d-%d" % (self.start, self.end)
         if self.strand is not None:
             result += {1: "(+)", -1: "(-)", 0: ""}[self.strand]
         return result
 
     def __len__(self):
-        """Size of the location"""
+        """Size of the location."""
         return self.end - self.start
 
     @staticmethod
     def merge_overlapping_locations(locations):
-        """Return a list of locations obtained by mergin all overlapping."""
+        """Return a list of locations obtained by merging all overlapping."""
         if len(locations) == 0:
             return locations
         locations = sorted(locations)
@@ -154,10 +153,10 @@ class Location:
 
         This method is used in particular in every built-in specification to
         quickly standardize the input location.
-        
+
         ``location_data`` can be a tuple (start, end) or (start, end, strand),
         or a Biopython FeatureLocation, or a Location instance. In any case,
-        a new Location object will be returned. 
+        a new Location object will be returned.
         """
         if location_data is None:
             return None
