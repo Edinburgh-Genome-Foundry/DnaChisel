@@ -112,7 +112,7 @@ class EnforceSequence(Specification):
                     i,
                     set(
                         reverse_complement(n)
-                        for n in IUPAC_NOTATION[self.sequence[lend - i]]
+                        for n in IUPAC_NOTATION[self.sequence[lend - i - 1]]
                     ),
                 )
                 for i in range(start, end)
