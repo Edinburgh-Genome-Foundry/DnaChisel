@@ -40,7 +40,7 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
     codon_usage_table
       Optional - can be provided instead of ``species``. A dict of the form
       ``{'*': {"TGA": 0.112, "TAA": 0.68}, 'K': ...}`` giving the RSCU table
-      (relative usage of each codon). 
+      (relative usage of each codon).
 
     original_species
       Name or TaxID of the species the original sequence was taken from. This
@@ -65,9 +65,8 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
     Claassens et. al., Improving heterologous membrane protein
     production in Escherichia coli by combining transcriptional tuning and
     codon usage algorithms. PLOS One, 2017
-
     """
-    
+
     shorthand_name = "harmonize_rca"
 
     def __init__(
@@ -79,8 +78,8 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
         location=None,
         boost=1,
     ):
-        if isinstance(species, str) and "=>" in species:
-            species, original_species = species.split('=>')
+        if isinstance(species, str) and "->" in species:
+            original_species, species = species.split("->")
             species = species.strip()
             original_species = original_species.strip()
         BaseCodonOptimizationClass.__init__(
@@ -140,8 +139,7 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
             for original_codon in self.original_codons
         ]
         rca_in_target_species = [
-            self.codon_usage_table["RCA"][codon]
-            for codon in codons
+            self.codon_usage_table["RCA"][codon] for codon in codons
         ]
         discrepancies = abs(
             np.array(rca_in_original_species) - np.array(rca_in_target_species)
@@ -155,8 +153,7 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
             problem,
             score=score,
             locations=locations,
-            message="Codon harmonization on %s scored %.02E"
-            % (self.location, score),
+            message="Codon harmonization on %s scored %.02E" % (self.location, score),
         )
 
     def label_parameters(self):
