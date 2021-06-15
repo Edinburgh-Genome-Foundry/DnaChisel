@@ -157,7 +157,10 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
         )
 
     def label_parameters(self):
-        return ["(custom table)" if self.species is None else self.species]
+        if self.species is None:
+            return ["(custom table)"]
+        else:
+            return [self.original_species + " -> " + self.species]
 
     def short_label(self):
         result = "best-codon-optimize"
