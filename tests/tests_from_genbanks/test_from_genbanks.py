@@ -35,6 +35,16 @@ def test_cuba_example_1():
     assert problem.objective_scores_sum() > -0.1
 
 
+def test_rca_example():
+    """Test a Genbank with ~harmonize_rca feature."""
+    path = os.path.join("tests", "tests_from_genbanks", "genbanks", "rca_example.gb")
+    problem = DnaOptimizationProblem.from_record(path)
+    assert str(problem.objectives) == "[HarmonizeRCA[0-105(+)](e_coli -> h_sapiens)]"
+    assert problem.objectives[0].original_species == "e_coli"
+    assert problem.objectives[0].species == "h_sapiens"
+    problem.optimize()
+
+
 def test_all_shorthands():
     """This test compiles all shorthands as a check that nothing is broken."""
     numpy.random.seed(123)

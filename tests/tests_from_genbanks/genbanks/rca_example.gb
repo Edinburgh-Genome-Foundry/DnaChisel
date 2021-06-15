@@ -1,0 +1,22 @@
+LOCUS       Exported                 105 bp ds-DNA     linear   UNA 15-JUN-2021
+DEFINITION  natural linear DNA.
+ACCESSION   .
+VERSION     .
+KEYWORDS    .
+SOURCE      natural DNA sequence
+  ORGANISM  unspecified
+REFERENCE   1  (bases 1 to 105)
+  AUTHORS   .
+  TITLE     Direct Submission
+  JOURNAL   Exported Tuesday, Jun 15, 2021 from SnapGene Viewer 5.2.4
+            https://www.snapgene.com
+FEATURES             Location/Qualifiers
+     source          1..105
+                     /organism="unspecified"
+                     /mol_type="genomic DNA"
+     misc_feature    1..105
+                     /label=~harmonize_rca(e_coli -> h_sapiens)
+ORIGIN
+        1 atgctcggat ccattgaact caactctcgt agccatcccg cgctttatct cacctccctt
+       61 agattacggt tcaccgcgtt aggtctggcc ggatccaact gataa
+//
