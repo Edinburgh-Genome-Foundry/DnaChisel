@@ -11,7 +11,7 @@ from dnachisel import (
 
 
 def test_circular_example():
-    """This example has a BsmBI cross origin site (location -3 -- 3)"""
+    """This example has a BsmBI cross origin site (location -3 -- 3)."""
     path = os.path.join(
         "tests", "tests_from_genbanks", "genbanks", "circular_example_1.gb"
     )
@@ -55,6 +55,7 @@ def test_all_shorthands():
     problem.resolve_constraints()
     assert problem.all_constraints_pass()
 
+
 def test_record_with_multispec_feature():
     sequence = random_dna_sequence(100)
     record = sequence_to_biopython_record(sequence)
@@ -65,6 +66,7 @@ def test_record_with_multispec_feature():
     c1, c2, c3 = problem.constraints
     assert c1.mini == 0.4
     assert c2.pattern.name == "BsaI"
+
 
 def test_feature_to_spec():
     sequence = random_dna_sequence(100)
