@@ -222,6 +222,9 @@ codons), use ``~harmonize_rca``:
     <img class='annotation-example'
     src='../_static/images/genbank_annotations/harmonize_rca.png'></img>
 
+In the example above (``~harmonize_rca(e_coli -> h_sapiens)``), the original host is
+``e_coli`` and the target host is  ``h_sapiens``, separated by an arrow (``->``).
+See ``HarmonizeRCA`` for more details.
 As you noticed we used species names in these examples. See
 `the Codon Usage Tables package webpage <https://github.com/Edinburgh-Genome-Foundry/codon-usage-tables/tree/master/codon_usage_data/tables>`_
 for species that can be referred to by name. This includes ``b_subtilis``,
