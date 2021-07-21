@@ -179,7 +179,7 @@ To indicate that a region is a CDS and the protein sequence should be conserved
 
 .. caution:: Non-ATG start codons
 
-    If the coding region has a start codon in an organims using non-ATG
+    If the coding region has a start codon in an organisms using non-ATG
     start codons (for instance, E. coli sometimes use GTG), make sure to define
     a policy for the start codon, for instance ``start_codon=keep`` to keep the
     sequence of the original start codon, or ``start_codon=ATG`` to use ATG as
@@ -222,6 +222,9 @@ codons), use ``~harmonize_rca``:
     <img class='annotation-example'
     src='../_static/images/genbank_annotations/harmonize_rca.png'></img>
 
+In the example above (``~harmonize_rca(e_coli -> h_sapiens)``), the original host is
+``e_coli`` and the target host is  ``h_sapiens``, separated by an arrow (``->``).
+See ``HarmonizeRCA`` for more details.
 As you noticed we used species names in these examples. See
 `the Codon Usage Tables package webpage <https://github.com/Edinburgh-Genome-Foundry/codon-usage-tables/tree/master/codon_usage_data/tables>`_
 for species that can be referred to by name. This includes ``b_subtilis``,

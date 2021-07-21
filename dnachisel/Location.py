@@ -21,14 +21,13 @@ class Location:
     Parameters
     ----------
     start
-      Lowest position index of the segment
+      Lowest position index of the segment.
 
     end
-      Highest position index of the segment
+      Highest position index of the segment.
 
     strand
       Either 1 or -1 for sense or anti-sense orientation.
-
     """
 
     __slots__ = ["strand", "start", "end"]
@@ -54,12 +53,7 @@ class Location:
             return None
 
     def extended(
-        self,
-        extension_length,
-        lower_limit=0,
-        upper_limit=None,
-        left=True,
-        right=True,
+        self, extension_length, lower_limit=0, upper_limit=None, left=True, right=True,
     ):
         """Extend the location of a few basepairs on each side."""
 
@@ -103,27 +97,27 @@ class Location:
         return self.to_tuple() < other.to_tuple()
 
     def __add__(self, number):
-        """Return the location shifted by the number"""
+        """Return the location shifted by the number."""
         return Location(self.start + number, self.end + number, self.strand)
 
     def __sub__(self, number):
-        """Return the location shifted by the number"""
+        """Return the location shifted by the number."""
         return Location(self.start - number, self.end - number, self.strand)
 
     def __repr__(self):
-        """Represent"""
+        """Represent."""
         result = "%d-%d" % (self.start, self.end)
         if self.strand is not None:
             result += {1: "(+)", -1: "(-)", 0: ""}[self.strand]
         return result
 
     def __len__(self):
-        """Size of the location"""
+        """Size of the location."""
         return self.end - self.start
 
     @staticmethod
     def merge_overlapping_locations(locations):
-        """Return a list of locations obtained by mergin all overlapping."""
+        """Return a list of locations obtained by merging all overlapping."""
         if len(locations) == 0:
             return locations
         locations = sorted(locations)
@@ -159,17 +153,20 @@ class Location:
 
         This method is used in particular in every built-in specification to
         quickly standardize the input location.
-        
+
         ``location_data`` can be a tuple (start, end) or (start, end, strand),
         or a Biopython FeatureLocation, or a Location instance. In any case,
-        a new Location object will be returned. 
+        a new Location object will be returned.
         """
         if location_data is None:
             return None
         if isinstance(location_data, (tuple, list)):
             return Location.from_tuple(location_data)
         if isinstance(location_data, FeatureLocation):
-            return Location.from_biopython_location(location_data)
+            feature_location = Location.from_biopython_location(location_data)
+            if feature_location.strand is None:
+                feature_location.strand = 0
+            return feature_location
         if isinstance(location_data, Location):
             return Location(
                 location_data.start, location_data.end, location_data.strand
@@ -178,8 +175,7 @@ class Location:
     def to_biopython_location(self):
         """Return a Biopython FeatureLocation equivalent to the location."""
         start, end, strand = [
-            None if e is None else int(e)
-            for e in [self.start, self.end, self.strand]
+            None if e is None else int(e) for e in [self.start, self.end, self.strand]
         ]
         return FeatureLocation(start, end, strand)
 
@@ -187,7 +183,5 @@ class Location:
         """Return a Biopython SeqFeature with same location and custom
         qualifiers."""
         return SeqFeature(
-            self.to_biopython_location(),
-            type=feature_type,
-            qualifiers=qualifiers,
+            self.to_biopython_location(), type=feature_type, qualifiers=qualifiers,
         )

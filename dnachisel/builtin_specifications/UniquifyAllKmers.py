@@ -38,9 +38,9 @@ def get_kmer_extractor_cached(sequence, include_reverse_complement=True, k=1):
     This globally cached method enables much faster computations when
     several UniquifyAllKmers functions with equal k are used. 
     """
+    L = len(sequence)
     if include_reverse_complement:
         rev_comp_sequence = reverse_complement(sequence)
-        L = len(sequence)
 
         @lru_cache(maxsize=L)
         def extract_kmer(i):
@@ -111,7 +111,7 @@ class UniquifyAllKmers(Specification):
     >>> from dnachisel import *
     >>> sequence = random_dna_sequence(50000)
     >>> constraint= UniquifyAllKmers(10, include_reverse_complement=True)
-    >>> problem = DnaOptimizationProblem(sequence, constraints= [contraint])
+    >>> problem = DnaOptimizationProblem(sequence, constraints= [constraint])
     >>> print (problem.constraints_summary())
     """
 

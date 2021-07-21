@@ -1,12 +1,10 @@
-"""Implement AvoidPattern"""
+"""Implement EnforcePatternOccurence"""
 
 from ..MutationSpace import MutationSpace
 from ..SequencePattern import SequencePattern, DnaNotationPattern
 from ..Location import Location
 from ..biotools import reverse_complement
-from ..DnaOptimizationProblem.DnaOptimizationProblem import (
-    DnaOptimizationProblem,
-)
+from ..DnaOptimizationProblem.DnaOptimizationProblem import DnaOptimizationProblem
 from ..DnaOptimizationProblem.NoSolutionError import NoSolutionError
 from ..Specification import Specification, SpecEvaluation
 
@@ -14,10 +12,10 @@ from .EnforceSequence import EnforceSequence
 
 
 class EnforcePatternOccurence(Specification):
-    """Enforce a number of occurences of the given pattern in the sequence.
+    """Enforce a number of occurrences of the given pattern in the sequence.
 
     Shorthand for annotations: "insert" (although this specification can be
-    used to both insert new occurences of a pattern, or destroy surnumerary
+    used to both insert new occurences of a pattern, or destroy supernumerary
     patterns)
 
     Parameters
@@ -27,14 +25,14 @@ class EnforcePatternOccurence(Specification):
       "BsmBI_site", etc.
 
     occurences
-      Desired number of occurences of the pattern.
+      Desired number of occurrences of the pattern.
 
     location
       Location of the DNA segment on which to enforce the pattern e.g.
-      ``Location(10, 45, 1)``
+      ``Location(10, 45, 1)``.
 
     center
-      If true, new inserted patterns will prioritize locations at the center
+      If True, new inserted patterns will prioritize locations at the center
       of the specification's location. Else the insertion will happen at
       the beginning of the location.
 
@@ -44,7 +42,7 @@ class EnforcePatternOccurence(Specification):
       the pattern could be on both strands (otherwise, only the
       feature's strand will be considered).
       (2) if you want to create a specification without preset location, but
-      with a set strand: ``EnforcePatternOccurence('BsmBI_site', strand=1)``
+      with a set strand: ``EnforcePatternOccurence('BsmBI_site', strand=1)``.
     """
 
     best_possible_score = 0
@@ -115,8 +113,8 @@ class EnforcePatternOccurence(Specification):
     def insert_pattern_in_problem(self, problem, reverse=False):
         """Insert the pattern in the problem's sequence by successive tries.
 
-        This heuristic is attempted to get the number of occurences in the
-        pattern from 0 to some number
+        This heuristic is attempted to get the number of occurrences in the
+        pattern from 0 to some number.
         """
         sequence_to_insert = self.pattern.sequence
         if reverse:
@@ -162,16 +160,14 @@ class EnforcePatternOccurence(Specification):
         )
 
     def resolution_heuristic(self, problem):
-        """Resolve using custom instertion if possible."""
+        """Resolve using custom insertion if possible."""
         if isinstance(self.pattern, DnaNotationPattern):
             evaluation = self.evaluate(problem)
             if evaluation.passes:
                 return
             n_matches = len(evaluation.data["matches"])
             if n_matches < self.occurences:
-                other_constraints = [
-                    c for c in problem.constraints if c is not self
-                ]
+                other_constraints = [c for c in problem.constraints if c is not self]
                 new_problem = problem
                 for i in range(self.occurences - n_matches):
                     new_occurence_cst = self.copy_with_changes(

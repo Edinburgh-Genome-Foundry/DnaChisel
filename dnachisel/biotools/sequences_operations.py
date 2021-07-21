@@ -17,7 +17,7 @@ def complement(dna_sequence):
 
     For instance ``complement("ATGCCG")`` returns ``"TACGGC"``.
 
-    Uses BioPython for speed.
+    Uses Biopython for speed.
     """
     if len(dna_sequence) <= 30:
         return "".join([COMPLEMENTS[nuc] for nuc in dna_sequence])
@@ -28,16 +28,14 @@ def complement(dna_sequence):
 def reverse_complement(sequence):
     """Return the reverse-complement of the DNA sequence.
 
-    For instance ``complement("ATGCCG")`` returns ``"GCCGTA"``.
+    For instance ``reverse_complement("ATGCCG")`` returns ``"CGGCAT"``.
 
-    Uses BioPython for speed.
+    Uses Biopython for speed.
     """
     return complement(sequence)[::-1]
 
 
-def reverse_translate(
-    protein_sequence, randomize_codons=False, table="Standard"
-):
+def reverse_translate(protein_sequence, randomize_codons=False, table="Standard"):
     """Return a DNA sequence which translates to the provided protein sequence.
 
     Parameters
@@ -50,7 +48,7 @@ def reverse_translate(
       Genetic code table to use (e.g. 'Standard', 'Bacterial', etc.).
       See dnachisel.biotools.CODON_TABLE_NAMES for a list of available genetic
       code tables.
-    
+
     randomize_codons
       If False, the first valid codon found is used for each, which can create
       biases (GC content, etc.), if True, each amino acid gets replaced by a
@@ -79,7 +77,7 @@ def translate(dna_sequence, table="Standard", assume_start_codon=False):
 
     http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc25
 
-    ``translation_table`` can also be a dictionnary of the form
+    ``translation_table`` can also be a dictionary of the form
     ``{"ATT": "M", "CTC": "X", etc.}`` for more exotic translation tables
 
     If assume_start_codon is True and the first codon is a start codon in the
@@ -88,10 +86,7 @@ def translate(dna_sequence, table="Standard", assume_start_codon=False):
     """
     if isinstance(table, dict):
         return "".join(
-            [
-                table[dna_sequence[i : i + 3]]
-                for i in range(0, len(dna_sequence), 3)
-            ]
+            [table[dna_sequence[i : i + 3]] for i in range(0, len(dna_sequence), 3)]
         )
     else:
         table = CodonTable.unambiguous_dna_by_name[table]

@@ -1,4 +1,10 @@
-from dnachisel import DnaOptimizationProblem, AvoidPattern, EnforceSequence
+from dnachisel import (
+    DnaOptimizationProblem,
+    AvoidPattern,
+    EnforceSequence,
+    EnforcePatternOccurence,
+    Location,
+)
 import numpy
 
 
@@ -27,6 +33,23 @@ def test_EnforceSequence():
         problem.resolve_constraints()
         s, e = start, start + n_nucleotides
         assert all([n in nucleotides for n in problem.sequence[s:e]])
+
+    # Test -1 strand:
+    seq = "ATG" + "CAG" + "AGCAAGGTGCTGCT"
+    problem = DnaOptimizationProblem(
+        sequence=seq,
+        constraints=[
+            EnforcePatternOccurence(
+                pattern="CTG",  # CAG on strand +1
+                occurences=2,
+                strand=-1,
+                location=Location(start=0, end=50),
+            )
+        ],
+    )
+    assert not problem.all_constraints_pass()
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
 
 
 def test_EnforceSequence_as_objective():

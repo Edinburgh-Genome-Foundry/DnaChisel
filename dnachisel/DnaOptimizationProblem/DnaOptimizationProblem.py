@@ -97,7 +97,7 @@ class DnaOptimizationProblem(
     Notes
     -----
 
-    The dictionnary ``self.possible_mutations`` is of the form
+    The dictionary ``self.possible_mutations`` is of the form
     ``{location1 : list1, location2: list2...}``
     where ``location`` is either a single index (e.g. 10) indicating the
     position of a nucleotide to be muted, or a couple ``(start, end)``
@@ -141,7 +141,7 @@ class DnaOptimizationProblem(
     def initialize(self):
         """Precompute specification sets, evaluations, and mutation space."""
 
-        # Find the specifications (ibjectives, constraints) which are actually
+        # Find the specifications (objectives, constraints) which are actually
         #  SpecificationSets, and unpack these to complete the lists of
         # objectives and constraints.
         for specs in (self.constraints, self.objectives):
@@ -220,7 +220,7 @@ class DnaOptimizationProblem(
         ----------
 
         target
-          Either a path to a folder that will containt the report, or a path to
+          Either a path to a folder that will contain the report, or a path to
           a zip archive, or "@memory" to return raw data of a zip archive
           containing the report.
 

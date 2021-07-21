@@ -10,9 +10,7 @@ from ..biotools import (
 )
 from ..Location import Location
 
-other_bases_sets = {
-    base: other_bases for (base, other_bases) in OTHER_BASES.items()
-}
+other_bases_sets = {base: other_bases for (base, other_bases) in OTHER_BASES.items()}
 
 
 class EnforceChanges(Specification):
@@ -24,18 +22,18 @@ class EnforceChanges(Specification):
     - **For constraints**, use EnforceChanges() to force all nucleotides to
       be different from the reference (by default, the reference is the
       starting sequence). Use EnforceChanges(minimum=3) to enforce at least
-      3 nucleotide changes, or EnforceChanges(minumum_percent=70) to enforce
+      3 nucleotide changes, or EnforceChanges(minimum_percent=70) to enforce
       at least 70% change. Note that having a minimum makes computations much
       slower.
     - **For objectives**, use EnforceChanges() to maximize the number of
       nucleotide changes, or use EnforceChanges(amount=10) to aim at a
       10-nucleotides change (no more, no less), or use
-      EnforceChanges(minumum_amount=70) to aim at 70% change, no more no less.
+      EnforceChanges(minimum_amount=70) to aim at 70% change, no more no less.
 
     As a genbank annotation:
 
     - ``@change``, ``@change(minimum=40%)``, ``@change(minimum=3)`` will
-      enforce respectivel 100% different nucleotides, 40%+ different, and 3+
+      enforce respectively 100% different nucleotides, 40%+ different, and 3+
       nucleotides different.
     - ``~change``, ``~change(40%)``, ``~change(3)`` to aim at, respectively,
       as close as possible to 100% change, 40% changes, or a target of 3
@@ -135,12 +133,8 @@ class EnforceChanges(Specification):
 
         # FIRST DEAL WITH THE AMOUNTS OF CHANGE
 
-        both_amounts_none = (self.amount is None) and (
-            self.amount_percent is None
-        )
-        both_minimums_none = (self.minimum is None) and (
-            self.minimum_percent is None
-        )
+        both_amounts_none = (self.amount is None) and (self.amount_percent is None)
+        both_minimums_none = (self.minimum is None) and (self.minimum_percent is None)
 
         # Only if minimum_percent=100 is the constraint nucleotide-enforced
         # So this variable is updated below if necessary
@@ -192,13 +186,11 @@ class EnforceChanges(Specification):
         # FIND THE INDICES WHERE THE SEQUENCE IS UNCHANGED
 
         # Note: at this stage any minimum_percent or amount_percent have been
-        # transformed into abolsute self.minimum and self.amount.
+        # transformed into absolute self.minimum and self.amount.
 
         target = self.reference
         sequence = self.extract_subsequence(problem.sequence)
-        equalities = np.nonzero(
-            1 - sequences_differences_array(sequence, target)
-        )[0]
+        equalities = np.nonzero(1 - sequences_differences_array(sequence, target))[0]
         if self.indices is not None:
             equalities = self.indices[equalities]
         elif self.location is not None:
@@ -226,9 +218,7 @@ class EnforceChanges(Specification):
             if n_differences <= self.amount:
                 intervals = indices_to_intervals(equalities)
             else:
-                differences = [
-                    i for i in self.location.indices if i not in equalities
-                ]
+                differences = [i for i in self.location.indices if i not in equalities]
                 intervals = indices_to_intervals(differences)
         locations = (
             [self.location]
@@ -308,6 +298,6 @@ class EnforceChanges(Specification):
 
     def short_label(self):
         return "change"
-    
+
     def breach_label(self):
         return "unchanged"

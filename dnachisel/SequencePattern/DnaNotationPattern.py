@@ -10,7 +10,7 @@ from .SequencePattern import SequencePattern
 class DnaNotationPattern(SequencePattern):
     """Class for patterns in plain DNA notation: ATTGCCA, GCNNKTA, etc.
 
-    If the sequence is not palyndromic, the pattern will be looked for in
+    If the sequence is not palindromic, the pattern will be looked for in
     both strands of sequences.
     """
 

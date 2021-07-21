@@ -11,7 +11,7 @@ from dnachisel import (
 
 
 def test_circular_example():
-    """This example has a BsmBI cross origin site (location -3 -- 3)"""
+    """This example has a BsmBI cross origin site (location -3 -- 3)."""
     path = os.path.join(
         "tests", "tests_from_genbanks", "genbanks", "circular_example_1.gb"
     )
@@ -35,6 +35,16 @@ def test_cuba_example_1():
     assert problem.objective_scores_sum() > -0.1
 
 
+def test_rca_example():
+    """Test a Genbank with ~harmonize_rca feature."""
+    path = os.path.join("tests", "tests_from_genbanks", "genbanks", "rca_example.gb")
+    problem = DnaOptimizationProblem.from_record(path)
+    assert str(problem.objectives) == "[HarmonizeRCA[0-105(+)](e_coli -> h_sapiens)]"
+    assert problem.objectives[0].original_species == "e_coli"
+    assert problem.objectives[0].species == "h_sapiens"
+    problem.optimize()
+
+
 def test_all_shorthands():
     """This test compiles all shorthands as a check that nothing is broken."""
     numpy.random.seed(123)
@@ -55,6 +65,7 @@ def test_all_shorthands():
     problem.resolve_constraints()
     assert problem.all_constraints_pass()
 
+
 def test_record_with_multispec_feature():
     sequence = random_dna_sequence(100)
     record = sequence_to_biopython_record(sequence)
@@ -65,6 +76,7 @@ def test_record_with_multispec_feature():
     c1, c2, c3 = problem.constraints
     assert c1.mini == 0.4
     assert c2.pattern.name == "BsaI"
+
 
 def test_feature_to_spec():
     sequence = random_dna_sequence(100)

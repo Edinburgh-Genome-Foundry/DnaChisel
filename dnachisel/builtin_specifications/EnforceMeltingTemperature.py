@@ -24,8 +24,8 @@ class EnforceMeltingTemperature(Specification):
       instance 55 and 70. A "target" can be provided instead when using this
       specification as an optimization objective.
     target
-      Target melting temperature. Will be overriden by (mini+maxi)/2 if these
-      are provided. The "target" parametr is only practical when the spec is
+      Target melting temperature. Will be overridden by (mini+maxi)/2 if these
+      are provided. The "target" parameter is only practical when the spec is
       used as an optimization objective.
 
     location

@@ -8,8 +8,8 @@
 DNA Chisel - a versatile sequence optimizer
 ===========================================
 
-.. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel.svg?branch=master
-   :target: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaChisel
+.. image:: https://travis-ci.com/Edinburgh-Genome-Foundry/DnaChisel.svg?branch=master
+   :target: https://travis-ci.com/Edinburgh-Genome-Foundry/DnaChisel
    :alt: Travis CI build status
 
 .. image:: https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/DnaChisel/badge.svg?branch=master
@@ -161,18 +161,20 @@ Installation
 DNA Chisel requires Python 3, and can be installed via a pip command:
 
 .. code::
-    sudo pip install dnachisel     # <= minimal install without reports support
-    sudo pip install dnachisel[reports] # <= full install with all dependencies
+    pip install dnachisel     # <= minimal install without reports support
+    pip install dnachisel[reports] # <= full install with all dependencies
 
 The full installation using ``dnachisel[reports]`` downloads heavier libraries
 (Matplotlib, PDF reports, sequenticon) for report generation, but is highly
-recommended to use DNA Chisel interactively via Python scripts.
+recommended to use DNA Chisel interactively via Python scripts. Also install
+[Geneblocks](https://edinburgh-genome-foundry.github.io/Geneblocks) and its
+dependencies if you wish to include a plot of sequence edits in the report.
 
 Alternatively, you can unzip the sources in a folder and type
 
 .. code::
 
-    sudo python setup.py install
+    python setup.py install
 
 Optionally, also install Bowtie to be able to use ``AvoidMatches`` (which
 removes short homologies with existing genomes). On Ubuntu:

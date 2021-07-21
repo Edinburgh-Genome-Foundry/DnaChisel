@@ -60,7 +60,7 @@ def CodonOptimize(
 
     original_species
       When the method is 'harmonize_rca', this is the native species of the
-      original coding sequene. Same characteristics as parameter ``species``
+      original coding sequence. Same characteristics as parameter ``species``
       above.
   
     original_codon_usage_table
