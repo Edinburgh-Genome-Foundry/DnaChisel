@@ -38,9 +38,7 @@ class AvoidPattern(Specification):
     priority = 1
     shorthand_name = "no"  # will appear as, for instance, @no(BsmBI_site)
 
-    def __init__(
-        self, pattern=None, location=None, strand="from_location", boost=1.0
-    ):
+    def __init__(self, pattern=None, location=None, strand="from_location", boost=1.0):
         """Initialize."""
         if isinstance(pattern, str):
             pattern = SequencePattern.from_string(pattern)
@@ -72,7 +70,7 @@ class AvoidPattern(Specification):
             return "No %s" % self.pattern.name
         else:
             return "No %s" % self.pattern
-    
+
     def breach_label(self):
         if self.pattern.name is not None:
             return str(self.pattern.name)

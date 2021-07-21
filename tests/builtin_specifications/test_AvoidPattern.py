@@ -8,6 +8,9 @@ from dnachisel import (
     RepeatedKmerPattern,
     AvoidChanges,
     MotifPssmPattern,
+    EnzymeSitePattern,
+    EnforcePatternOccurence,
+    EnforceGCContent,
 )
 import numpy
 
@@ -89,7 +92,9 @@ def test_AvoidPattern_on_strands():
     # Both strands
     sequence = "CATGCTATGC"
     problem = DnaOptimizationProblem(
-        sequence, constraints=[AvoidPattern("CAT")], logger=None,
+        sequence,
+        constraints=[AvoidPattern("CAT")],
+        logger=None,
     )
     problem.resolve_constraints()
     assert "CAT" not in problem.sequence
@@ -138,3 +143,23 @@ def test_AvoidPattern_with_regular_expression():
     assert not problem.all_constraints_pass()
     problem.resolve_constraints()
     assert problem.all_constraints_pass()
+
+
+def test_location_strand_gets_conserved():
+    bsmbi = "CGTCTC"
+    bsmbi_rev = "GAGACG"
+    sequence = 100 * "TC" + 20 * "G" + bsmbi + 20 * "G" + 100 * "TC"
+    problem = DnaOptimizationProblem(
+        sequence,
+        constraints=[
+            AvoidPattern("BsmBI_site", location=(0, len(sequence), -1)),
+            EnforcePatternOccurence("BsmBI_site", 1),
+            EnforceGCContent(mini=0.4, maxi=0.6, window=40),
+        ],
+        logger=None,
+    )
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+    pattern = EnzymeSitePattern("BsmBI")
+    matches = pattern.find_matches_in_string(problem.sequence)
+    assert len(matches) == 1
