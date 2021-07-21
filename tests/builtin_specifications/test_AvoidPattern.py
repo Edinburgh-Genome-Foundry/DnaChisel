@@ -8,9 +8,7 @@ from dnachisel import (
     RepeatedKmerPattern,
     AvoidChanges,
     MotifPssmPattern,
-    EnzymeSitePattern,
-    EnforcePatternOccurence,
-    EnforceGCContent,
+    Location,
 )
 import numpy
 
@@ -146,20 +144,7 @@ def test_AvoidPattern_with_regular_expression():
 
 
 def test_location_strand_gets_conserved():
-    bsmbi = "CGTCTC"
-    bsmbi_rev = "GAGACG"
-    sequence = 100 * "TC" + 20 * "G" + bsmbi + 20 * "G" + 100 * "TC"
-    problem = DnaOptimizationProblem(
-        sequence,
-        constraints=[
-            AvoidPattern("BsmBI_site", location=(0, len(sequence), -1)),
-            EnforcePatternOccurence("BsmBI_site", 1),
-            EnforceGCContent(mini=0.4, maxi=0.6, window=40),
-        ],
-        logger=None,
-    )
-    problem.resolve_constraints()
-    assert problem.all_constraints_pass()
-    pattern = EnzymeSitePattern("BsmBI")
-    matches = pattern.find_matches_in_string(problem.sequence)
-    assert len(matches) == 1
+    cst = AvoidPattern("AACAAAT", Location(4, 1624, -1))
+    location = Location(9, 10)
+    new_cst = cst.localized(location)
+    assert new_cst.location.to_tuple() == (4, 16, -1)

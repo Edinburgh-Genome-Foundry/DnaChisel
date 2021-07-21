@@ -42,18 +42,25 @@ class Location:
         """Return the overlap span between two locations (None if None)."""
         strand = self.strand
         if other_location.start < self.start:
-            self, other_location = other_location, self
-
-        if other_location.start < self.end:
-            start = other_location.start
-            end = min(self.end, other_location.end)
-            strand = self.strand
-            return Location(start, end, strand)
+            left_location, right_location = other_location, self
         else:
+            left_location, right_location = self, other_location
+
+        if right_location.start >= left_location.end:
             return None
 
+        start = right_location.start
+        end = min(left_location.end, right_location.end)
+        strand = self.strand
+        return Location(start, end, strand)
+
     def extended(
-        self, extension_length, lower_limit=0, upper_limit=None, left=True, right=True,
+        self,
+        extension_length,
+        lower_limit=0,
+        upper_limit=None,
+        left=True,
+        right=True,
     ):
         """Extend the location of a few basepairs on each side."""
 
@@ -183,5 +190,7 @@ class Location:
         """Return a Biopython SeqFeature with same location and custom
         qualifiers."""
         return SeqFeature(
-            self.to_biopython_location(), type=feature_type, qualifiers=qualifiers,
+            self.to_biopython_location(),
+            type=feature_type,
+            qualifiers=qualifiers,
         )
