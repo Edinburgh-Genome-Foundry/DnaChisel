@@ -40,7 +40,6 @@ class Location:
 
     def overlap_region(self, other_location):
         """Return the overlap span between two locations (None if None)."""
-        strand = self.strand
         if other_location.start < self.start:
             left_location, right_location = other_location, self
         else:
@@ -51,8 +50,7 @@ class Location:
 
         start = right_location.start
         end = min(left_location.end, right_location.end)
-        strand = self.strand
-        return Location(start, end, strand)
+        return Location(start, end, self.strand)
 
     def extended(
         self,
