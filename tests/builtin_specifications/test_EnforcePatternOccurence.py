@@ -28,9 +28,7 @@ def test_enforce_pattern_basics():
         constraints = [
             EnforceTranslation(location=Location(1000, 2500)),
             EnforceTranslation(location=Location(3000, 4500)),
-            EnforcePatternOccurence(
-                "ANANANANTT", location=Location(1100, 2150)
-            ),
+            EnforcePatternOccurence("ANANANANTT", location=Location(1100, 2150)),
         ]
 
         problem = DnaOptimizationProblem(

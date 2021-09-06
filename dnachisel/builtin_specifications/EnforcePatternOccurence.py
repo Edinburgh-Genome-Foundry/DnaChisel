@@ -63,19 +63,25 @@ class EnforcePatternOccurence(Specification):
             pattern = SequencePattern.from_string(pattern)
         self.pattern = pattern
         self.location = Location.from_data(location)
-        if strand != "from_location":
-            if strand == "both":
-                strand = 0
-            if strand not in [-1, 0, 1]:
-                raise ValueError("unknown strand: %s" % strand)
-            self.location.strand = strand
-        self.strand = strand
+        if strand == "from_location":
+            if self.location is None:
+                self.strand = 0
+            else:
+                self.strand = self.location.strand
+        elif strand == "both":
+            self.strand = 0
+        elif strand in [-1, 0, 1]:
+            self.strand = strand
+        else:
+            raise ValueError("unknown strand: %s" % strand)
         self.occurences = occurences
         self.center = center
         self.boost = boost
 
     def initialized_on_problem(self, problem, role=None):
-        return self._copy_with_full_span_if_no_location(problem)
+        copy_of_constraint = self._copy_with_full_span_if_no_location(problem)
+        copy_of_constraint.location.strand = self.strand
+        return copy_of_constraint
 
     def evaluate(self, problem):
         """Score the difference between expected and observed n_occurences."""
