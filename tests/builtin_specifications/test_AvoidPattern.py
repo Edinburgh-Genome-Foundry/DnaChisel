@@ -68,9 +68,7 @@ def test_AvoidPattern_on_strands():
     # Negative strand only
     sequence = "CATGCTATGC"
     problem = DnaOptimizationProblem(
-        sequence,
-        constraints=[AvoidPattern("CAT", location=(0, 10, -1))],
-        logger=None,
+        sequence, constraints=[AvoidPattern("CAT", location=(0, 10, -1))], logger=None,
     )
     problem.resolve_constraints()
     assert "CAT" in problem.sequence
@@ -79,9 +77,7 @@ def test_AvoidPattern_on_strands():
     # Negative strand only
     sequence = "CATGCTATGC"
     problem = DnaOptimizationProblem(
-        sequence,
-        constraints=[AvoidPattern("CAT", location=(0, 10, -1))],
-        logger=None,
+        sequence, constraints=[AvoidPattern("CAT", location=(0, 10, -1))], logger=None,
     )
     problem.resolve_constraints()
     assert "CAT" in problem.sequence
@@ -90,9 +86,7 @@ def test_AvoidPattern_on_strands():
     # Both strands
     sequence = "CATGCTATGC"
     problem = DnaOptimizationProblem(
-        sequence,
-        constraints=[AvoidPattern("CAT")],
-        logger=None,
+        sequence, constraints=[AvoidPattern("CAT")], logger=None,
     )
     problem.resolve_constraints()
     assert "CAT" not in problem.sequence
@@ -148,3 +142,70 @@ def test_location_strand_gets_conserved():
     location = Location(9, 10)
     new_cst = cst.localized(location)
     assert new_cst.location.to_tuple() == (4, 16, -1)
+
+
+def test_avoid_pattern_options():
+    # Checks Github issue #53
+    pattern = "C" * 4
+    sequence = "A" * 6 + pattern
+
+    # location=None
+    problem = DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[AvoidPattern(pattern, strand="from_location")],
+        logger=None,
+    )
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+    assert pattern not in problem.sequence
+
+    problem = DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[AvoidPattern(pattern, strand="both")],
+        logger=None,
+    )
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+    assert pattern not in problem.sequence
+
+    problem = DnaOptimizationProblem(
+        sequence=sequence, constraints=[AvoidPattern(pattern, strand=-1)], logger=None,
+    )
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+    assert pattern in problem.sequence
+
+    # location specified
+    problem = DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[
+            AvoidPattern(pattern, location=Location(0, 10, -1), strand="from_location")
+        ],
+        logger=None,
+    )
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+    # sequence not changed because location strand is -1:
+    assert pattern in problem.sequence
+
+    problem = DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[
+            AvoidPattern(pattern, location=Location(0, 10, -1), strand="both")
+        ],
+        logger=None,
+    )
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+    # sequence changed because strand option overwrites location:
+    assert pattern not in problem.sequence
+
+    problem = DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[AvoidPattern(pattern, location=Location(0, 10, 1), strand=-1)],
+        logger=None,
+    )
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+    # sequence not changed because strand option overwrites location strand:
+    assert pattern in problem.sequence
