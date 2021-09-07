@@ -83,3 +83,90 @@ def test_insert_and_erase_pattern():
     assert problem.constraints[0].evaluate(problem).score == -3
     problem.resolve_constraints()
     assert problem.all_constraints_pass()
+
+
+def test_enforce_pattern_options():
+    # Checks for Github issue #53
+    # Test 6 cases: location yes/no, 3 strand options
+
+    sequence = "A" * 10
+    pattern = "C" * 4
+    # location=None
+    problem = dc.DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[
+            dc.EnforcePatternOccurence(pattern, occurences=1, strand="from_location"),
+        ],
+        logger=None,
+    )
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+    assert pattern in problem.sequence
+
+    problem = dc.DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[dc.EnforcePatternOccurence(pattern, occurences=1, strand="both")],
+        logger=None,
+    )
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+    assert pattern in problem.sequence
+
+    problem = dc.DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[dc.EnforcePatternOccurence(pattern, occurences=1, strand=-1)],
+        logger=None,
+    )
+    assert problem.constraints[0].evaluate(problem).score == -1
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+    assert dc.reverse_complement(pattern) in problem.sequence  # other strand used
+
+    # location specificed
+    # Use -1 strand from location:
+    problem = dc.DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[
+            dc.EnforcePatternOccurence(
+                pattern,
+                occurences=1,
+                strand="from_location",
+                location=Location(1, 6, strand=-1),
+            )
+        ],
+        logger=None,
+    )
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+    assert dc.reverse_complement(pattern) in problem.sequence
+
+    # Overwrite -1 strand to "both":
+    problem = dc.DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[
+            dc.EnforcePatternOccurence(
+                pattern,
+                occurences=1,
+                strand="both",
+                location=Location(1, 6, strand=-1),
+            )
+        ],
+        logger=None,
+    )
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+    assert pattern in problem.sequence  # uses +1 strand by default
+
+    # Overwrite -1 strand to +1:
+    problem = dc.DnaOptimizationProblem(
+        sequence=sequence,
+        constraints=[
+            dc.EnforcePatternOccurence(
+                pattern, occurences=1, strand=1, location=Location(1, 6, strand=-1),
+            )
+        ],
+        logger=None,
+    )
+    problem.resolve_constraints()
+    assert problem.all_constraints_pass()
+    assert pattern in problem.sequence  # uses +1 strand
