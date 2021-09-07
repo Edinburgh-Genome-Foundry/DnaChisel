@@ -29,7 +29,7 @@ class EnforcePatternOccurence(Specification):
 
     location
       Location of the DNA segment on which to enforce the pattern e.g.
-      ``Location(10, 45, 1)``.
+      ``Location(10, 45, 1)``. Default ``None`` means the whole sequence.
 
     center
       If True, new inserted patterns will prioritize locations at the center
@@ -38,11 +38,13 @@ class EnforcePatternOccurence(Specification):
 
     strand
       Alternative way to set the strand, meant to be used in two cases only:
-      (1) in a Genbank annotation by setting ``strand=both`` to indicate that
+      (1) in a Genbank annotation by setting ``strand='both'`` to indicate that
       the pattern could be on both strands (otherwise, only the
       feature's strand will be considered).
       (2) if you want to create a specification without preset location, but
       with a set strand: ``EnforcePatternOccurence('BsmBI_site', strand=1)``.
+      The default 'from_location' uses the strand specified in ``location``, or
+      if that is ``None``, it sets both strands.
     """
 
     best_possible_score = 0
