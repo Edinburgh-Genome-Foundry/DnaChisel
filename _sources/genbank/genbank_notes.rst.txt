@@ -34,10 +34,10 @@ e.g. ``~MySpec(..., boost=2)``.
     src='../_static/images/genbank_annotations/boosting.png'></img>
 
 
-Multiple specifications in a same annotation
---------------------------------------------
+Multiple specifications in the same annotation
+----------------------------------------------
 
-If you want to write less annotations, you can define several specifications in
+If you want to write fewer annotations, you can define several specifications in
 a single feature, separating them with the ``&`` symbol. For instance, to
 conserve a gene while getting rid of CpG islands and keeping the global GC%
 between 45% and 55%:
@@ -66,7 +66,7 @@ extending the default specifications dict:
     DEFAULT_SPECIFICATIONS_DICT['MySpecification'] = MySpecification
     problem = DnaOptimizationProblem.from_record('my_record.gb')
 
-Any specification in this dictionnary can be used in Genbank annotations with
+Any specification in this dictionary can be used in Genbank annotations with
 the same parameters as in a Python script (note that strings do not require
 quotes):
 

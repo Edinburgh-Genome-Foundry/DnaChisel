@@ -14,10 +14,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
 
       
       <script src="../_static/theme-vendors.js"></script>
@@ -42,21 +42,21 @@
 
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link  router-link-active">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -88,21 +88,21 @@
 
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link  router-link-active">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -136,7 +136,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Reference</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Reference</a></span>
       </p>
       <ul class="current">
         
@@ -193,7 +193,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Using Genbanks</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Using Genbanks</a></span>
       </p>
       <ul class="">
         
@@ -214,7 +214,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Examples</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Examples</a></span>
       </p>
       <ul class="">
         
@@ -258,20 +258,23 @@
   <div class="section" id="command-line-interface">
 <h1>Command Line Interface<a class="headerlink" href="#command-line-interface" title="Permalink to this headline">¶</a></h1>
 <p>Installing the DNA Chisel python library automatically installs the
-<code class="docutils literal notranslate"><span class="pre">dnachisel</span></code> command line interace (CLI) accessible from the machine’s terminal.</p>
+<code class="docutils literal notranslate"><span class="pre">dnachisel</span></code> command line interface (CLI) accessible from the machine’s terminal.</p>
 <p>This interface enables to get a problem as an annotated genbank and output
 the optimized sequence either as a single genbank or with a multi-file
 optimization report.</p>
 <p>Type <code class="docutils literal notranslate"><span class="pre">dnachisel</span> <span class="pre">-h</span></code> to display the documentation below, and see the
 <code class="docutils literal notranslate"><span class="pre">examples/cli</span></code> directory for files to test the command line interface on.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DnaChisel Command Line Interface
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DNA Chisel Command Line Interface
 
 Usage:
-  dnachisel &lt;source&gt; &lt;target&gt; [--circular] [--mute]
+  dnachisel &lt;source&gt; &lt;target&gt; [--circular] [--mute] [--with_sequence_edits]
 
 Where ``source`` is a fasta or Genbank file, and target can be one of:
 - A folder name or a zip name (extension .zip). In this case a complete report
   along with the sequence will be generated.
+- A Genbank file. In this case, only the optimized sequence file is created.
+  The with_sequence_edits option specifies that edits are also annotated in the
+  Genbank file. Note that the filename must end with &#39;.gb&#39;.
 
 Note: this CLI will be developed on a per-request basis, so don&#39;t hesitate to
 ask for more handles and options on Github
@@ -285,9 +288,6 @@ Example to output the result to a folder:
 
 &gt;&gt;&gt; dnachisel annotated_record.gb optimization_report/
 
-Example to output the result to a zip archive:
-
-&gt;&gt;&gt; dnachisel annotated_record.gb optimization_report.zip
 </pre></div>
 </div>
 </div>
@@ -307,7 +307,7 @@ Example to output the result to a zip archive:
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

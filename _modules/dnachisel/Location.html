@@ -14,10 +14,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
 
       
       <script src="../../_static/theme-vendors.js"></script>
@@ -40,21 +40,21 @@
 
   
     <div class="nav-item">
-      <a href="../../index.html#more-biology-software"
+      <a href="../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../index.html#more-biology-software"
+      <a href="../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../index.html#more-biology-software"
+      <a href="../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -86,21 +86,21 @@
 
   
     <div class="nav-item">
-      <a href="../../index.html#more-biology-software"
+      <a href="../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../index.html#more-biology-software"
+      <a href="../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../index.html#more-biology-software"
+      <a href="../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -134,7 +134,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../index.html#more-biology-software">Reference</a></span>
+        <span class="caption-text"><a href="../../index.html#related-projects">Reference</a></span>
       </p>
       <ul class="">
         
@@ -185,7 +185,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../index.html#more-biology-software">Using Genbanks</a></span>
+        <span class="caption-text"><a href="../../index.html#related-projects">Using Genbanks</a></span>
       </p>
       <ul class="">
         
@@ -206,7 +206,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../index.html#more-biology-software">Examples</a></span>
+        <span class="caption-text"><a href="../../index.html#related-projects">Examples</a></span>
       </p>
       <ul class="">
         
@@ -248,8 +248,8 @@
 <span class="sd">a subsequence from a sequence, etc.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">.biotools</span> <span class="k">import</span> <span class="n">reverse_complement</span>
-<span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="k">import</span> <span class="n">SeqFeature</span><span class="p">,</span> <span class="n">FeatureLocation</span>
+<span class="kn">from</span> <span class="nn">.biotools</span> <span class="kn">import</span> <span class="n">reverse_complement</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="kn">import</span> <span class="n">SeqFeature</span><span class="p">,</span> <span class="n">FeatureLocation</span>
 
 
 <div class="viewcode-block" id="Location"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.Location.Location">[docs]</a><span class="k">class</span> <span class="nc">Location</span><span class="p">:</span>
@@ -265,19 +265,18 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    start</span>
-<span class="sd">      Lowest position index of the segment</span>
+<span class="sd">      Lowest position index of the segment.</span>
 
 <span class="sd">    end</span>
-<span class="sd">      Highest position index of the segment</span>
+<span class="sd">      Highest position index of the segment.</span>
 
 <span class="sd">    strand</span>
 <span class="sd">      Either 1 or -1 for sense or anti-sense orientation.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;strand&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
@@ -285,17 +284,17 @@
 
 <div class="viewcode-block" id="Location.overlap_region"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.Location.Location.overlap_region">[docs]</a>    <span class="k">def</span> <span class="nf">overlap_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other_location</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the overlap span between two locations (None if None).&quot;&quot;&quot;</span>
-        <span class="n">strand</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">strand</span>
         <span class="k">if</span> <span class="n">other_location</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">other_location</span> <span class="o">=</span> <span class="n">other_location</span><span class="p">,</span> <span class="bp">self</span>
-
-        <span class="k">if</span> <span class="n">other_location</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
-            <span class="n">start</span> <span class="o">=</span> <span class="n">other_location</span><span class="o">.</span><span class="n">start</span>
-            <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">other_location</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
-            <span class="n">strand</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">strand</span>
-            <span class="k">return</span> <span class="n">Location</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="p">)</span>
+            <span class="n">left_location</span><span class="p">,</span> <span class="n">right_location</span> <span class="o">=</span> <span class="n">other_location</span><span class="p">,</span> <span class="bp">self</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span></div>
+            <span class="n">left_location</span><span class="p">,</span> <span class="n">right_location</span> <span class="o">=</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other_location</span>
+
+        <span class="k">if</span> <span class="n">right_location</span><span class="o">.</span><span class="n">start</span> <span class="o">&gt;=</span> <span class="n">left_location</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">start</span> <span class="o">=</span> <span class="n">right_location</span><span class="o">.</span><span class="n">start</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">left_location</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">right_location</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Location</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">strand</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Location.extended"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.Location.Location.extended">[docs]</a>    <span class="k">def</span> <span class="nf">extended</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -342,32 +341,32 @@
         <span class="sd">&quot;&quot;&quot;Greater than.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Lower than.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the location shifted by the number&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the location shifted by the number.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Location</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">+</span> <span class="n">number</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">+</span> <span class="n">number</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">strand</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the location shifted by the number&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the location shifted by the number.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Location</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">-</span> <span class="n">number</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="n">number</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">strand</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Represent&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Represent.&quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">-</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strand</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">+=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;(+)&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;(-)&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">strand</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">result</span>
 
-    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Size of the location&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Size of the location.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span>
 
 <div class="viewcode-block" id="Location.merge_overlapping_locations"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.Location.Location.merge_overlapping_locations">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">merge_overlapping_locations</span><span class="p">(</span><span class="n">locations</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a list of locations obtained by mergin all overlapping.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of locations obtained by merging all overlapping.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">locations</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">locations</span>
         <span class="n">locations</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">locations</span><span class="p">)</span>
@@ -403,17 +402,20 @@
 
 <span class="sd">        This method is used in particular in every built-in specification to</span>
 <span class="sd">        quickly standardize the input location.</span>
-<span class="sd">        </span>
+
 <span class="sd">        ``location_data`` can be a tuple (start, end) or (start, end, strand),</span>
 <span class="sd">        or a Biopython FeatureLocation, or a Location instance. In any case,</span>
-<span class="sd">        a new Location object will be returned. </span>
+<span class="sd">        a new Location object will be returned.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">location_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location_data</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
             <span class="k">return</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_tuple</span><span class="p">(</span><span class="n">location_data</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location_data</span><span class="p">,</span> <span class="n">FeatureLocation</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_biopython_location</span><span class="p">(</span><span class="n">location_data</span><span class="p">)</span>
+            <span class="n">feature_location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_biopython_location</span><span class="p">(</span><span class="n">location_data</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">feature_location</span><span class="o">.</span><span class="n">strand</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">feature_location</span><span class="o">.</span><span class="n">strand</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="n">feature_location</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location_data</span><span class="p">,</span> <span class="n">Location</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">Location</span><span class="p">(</span>
                 <span class="n">location_data</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">location_data</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">location_data</span><span class="o">.</span><span class="n">strand</span>
@@ -422,8 +424,7 @@
 <div class="viewcode-block" id="Location.to_biopython_location"><a class="viewcode-back" href="../../ref/core_classes.html#dnachisel.Location.Location.to_biopython_location">[docs]</a>    <span class="k">def</span> <span class="nf">to_biopython_location</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a Biopython FeatureLocation equivalent to the location.&quot;&quot;&quot;</span>
         <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="kc">None</span> <span class="k">if</span> <span class="n">e</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">strand</span><span class="p">]</span>
+            <span class="kc">None</span> <span class="k">if</span> <span class="n">e</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">strand</span><span class="p">]</span>
         <span class="p">]</span>
         <span class="k">return</span> <span class="n">FeatureLocation</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="p">)</span></div>
 
@@ -443,7 +444,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

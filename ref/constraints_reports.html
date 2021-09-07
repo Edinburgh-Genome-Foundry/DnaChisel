@@ -14,10 +14,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
 
       
       <script src="../_static/theme-vendors.js"></script>
@@ -42,21 +42,21 @@
 
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link  router-link-active">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -88,21 +88,21 @@
 
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link  router-link-active">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -136,7 +136,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Reference</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Reference</a></span>
       </p>
       <ul class="current">
         
@@ -193,7 +193,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Using Genbanks</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Using Genbanks</a></span>
       </p>
       <ul class="">
         
@@ -214,7 +214,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Examples</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Examples</a></span>
       </p>
       <ul class="">
         
@@ -257,61 +257,64 @@
             
   <div class="section" id="module-dnachisel.reports.constraints_reports">
 <span id="constraints-reports"></span><h1>Constraints reports<a class="headerlink" href="#module-dnachisel.reports.constraints_reports" title="Permalink to this headline">¶</a></h1>
-<p>Misc. plotting and reporting methods, some of which are really arbitrary.</p>
-<p>Here is a typical example of use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dnachisel.reports.constraint_reports</span> <span class="k">as</span> <span class="nn">cr</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">cr</span><span class="o">.</span><span class="n">constraints_breaches_dataframe</span><span class="p">(</span><span class="n">constraints</span><span class="p">,</span> <span class="n">sequences</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dataframe</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s2">&quot;output_breaches.xlsx&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="n">cr</span><span class="o">.</span><span class="n">records_from_breaches_dataframe</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">sequences</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cr</span><span class="o">.</span><span class="n">breaches_records_to_pdf</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="s1">&#39;output_breaches_plots.pdf&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="function">
-<dt id="dnachisel.reports.constraints_reports.records_from_breaches_dataframe">
-<code class="sig-prename descclassname">dnachisel.reports.constraints_reports.</code><code class="sig-name descname">records_from_breaches_dataframe</code><span class="sig-paren">(</span><em class="sig-param">dataframe</em>, <em class="sig-param">sequences</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports.html#records_from_breaches_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.records_from_breaches_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate records with annotations indicating constraints breaches.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>dataframe</strong></p>
-<blockquote>
-<div><p>A breaches dataframe returned by <code class="docutils literal notranslate"><span class="pre">constraints_breaches_dataframe</span></code></p>
-</div></blockquote>
-<p><strong>sequences</strong></p>
-<blockquote>
-<div><p>Either a list [(“name”, “sequence”)…] or a dict {“name”: “sequence”}
-or a list of biopython records whole id is the sequence name.</p>
-</div></blockquote>
-</dd>
-</dl>
+<dl class="py class">
+<dt id="dnachisel.reports.constraints_reports.GraphicTranslator">
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.reports.constraints_reports.</code><code class="sig-name descname">GraphicTranslator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">features_filters</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">features_properties</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports/GraphicTranslator.html#GraphicTranslator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.GraphicTranslator" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Biopython record translator for DNA Features Viewer.</p>
+<p>This translator produces label-free plots.</p>
+<dl class="py method">
+<dt id="dnachisel.reports.constraints_reports.GraphicTranslator.compute_feature_box_linewidth">
+<em class="property">static </em><code class="sig-name descname">compute_feature_box_linewidth</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports/GraphicTranslator.html#GraphicTranslator.compute_feature_box_linewidth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.GraphicTranslator.compute_feature_box_linewidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute a box_linewidth for this feature.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py method">
+<dt id="dnachisel.reports.constraints_reports.GraphicTranslator.compute_feature_color">
+<code class="sig-name descname">compute_feature_color</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports/GraphicTranslator.html#GraphicTranslator.compute_feature_color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.GraphicTranslator.compute_feature_color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute a color for this feature.</p>
+<p>If the feature has a <code class="docutils literal notranslate"><span class="pre">color</span></code> qualifier it will be used. Otherwise,
+the classe’s <code class="docutils literal notranslate"><span class="pre">default_feature_color</span></code> is used.</p>
+<p>To change the behaviour, create a subclass of <code class="docutils literal notranslate"><span class="pre">BiopythonTranslator</span></code>
+and overwrite this method.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dnachisel.reports.constraints_reports.GraphicTranslator.compute_feature_fontdict">
+<em class="property">static </em><code class="sig-name descname">compute_feature_fontdict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports/GraphicTranslator.html#GraphicTranslator.compute_feature_fontdict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.GraphicTranslator.compute_feature_fontdict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute a font dict for this feature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dnachisel.reports.constraints_reports.GraphicTranslator.compute_feature_label">
+<code class="sig-name descname">compute_feature_label</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports/GraphicTranslator.html#GraphicTranslator.compute_feature_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.GraphicTranslator.compute_feature_label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the label of the feature.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
 <dt id="dnachisel.reports.constraints_reports.breaches_records_to_pdf">
-<code class="sig-prename descclassname">dnachisel.reports.constraints_reports.</code><code class="sig-name descname">breaches_records_to_pdf</code><span class="sig-paren">(</span><em class="sig-param">breaches_records</em>, <em class="sig-param">pdf_path=None</em>, <em class="sig-param">figure_width=10</em>, <em class="sig-param">logger='bar'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports.html#breaches_records_to_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.breaches_records_to_pdf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.reports.constraints_reports.</code><code class="sig-name descname">breaches_records_to_pdf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">breaches_records</span></em>, <em class="sig-param"><span class="n">pdf_path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">figure_width</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">logger</span><span class="o">=</span><span class="default_value">'bar'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports/constraints_reports.html#breaches_records_to_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.breaches_records_to_pdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots figures of the breaches annotated in the records into a PDF file.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>breaches_records</strong></p>
-<blockquote>
-<div><p>A least of records annotated with breaches, as returned by the</p>
-</div></blockquote>
-<p><strong>pdf_path</strong></p>
-<blockquote>
-<div><p>Either the path to a PDF, or a file handle (open in wb mode) or None
+<dd class="field-odd"><dl class="simple">
+<dt><strong>breaches_records</strong></dt><dd><p>A least of records annotated with breaches, as returned by the</p>
+</dd>
+<dt><strong>pdf_path</strong></dt><dd><p>Either the path to a PDF, or a file handle (open in wb mode) or None
 for this method to return binary PDF data.</p>
-</div></blockquote>
-<p><strong>logger</strong></p>
-<blockquote>
-<div><p>Either “bar” for a progress bar, None for no logging, or any Proglog
+</dd>
+<dt><strong>logger</strong></dt><dd><p>Either “bar” for a progress bar, None for no logging, or any Proglog
 logger. The bar name is “sequence”.</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="dnachisel.reports.constraints_reports.constraints_breaches_dataframe">
-<code class="sig-prename descclassname">dnachisel.reports.constraints_reports.</code><code class="sig-name descname">constraints_breaches_dataframe</code><span class="sig-paren">(</span><em class="sig-param">constraints</em>, <em class="sig-param">sequences</em>, <em class="sig-param">display_constraints_locations=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports.html#constraints_breaches_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.constraints_breaches_dataframe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.reports.constraints_reports.</code><code class="sig-name descname">constraints_breaches_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">constraints</span></em>, <em class="sig-param"><span class="n">sequences</span></em>, <em class="sig-param"><span class="n">display_constraints_locations</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports/constraints_breaches_dataframe.html#constraints_breaches_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.constraints_breaches_dataframe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a dataframe summarizing constraints breaches in the sequences.</p>
 <p>Output dataframe schema (cst = constraint):</p>
 <table class="docutils align-default">
@@ -345,22 +348,20 @@ logger. The bar name is “sequence”.</p>
 </tr>
 </tbody>
 </table>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>constraints</strong></p>
-<blockquote>
-<div><p>A list of DNA Chisel Specifications.</p>
-</div></blockquote>
-<p><strong>sequences</strong></p>
-<blockquote>
-<div><p>Either a list [(“name”, “sequence”)…] or a dict {“name”: “sequence”}
+<dd class="field-odd"><dl class="simple">
+<dt><strong>constraints</strong></dt><dd><p>A list of DNA Chisel Specifications.</p>
+</dd>
+<dt><strong>sequences</strong></dt><dd><p>Either a list [(“name”, “sequence”)…] or a dict {“name”: “sequence”}
 or a list of biopython records whole id is the sequence name.</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dnachisel</span> <span class="k">as</span> <span class="nn">dc</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dnachisel.utils</span> <span class="k">import</span> <span class="n">constraints_breaches_dataframe</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dnachisel</span> <span class="k">as</span> <span class="nn">dc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dnachisel.utils</span> <span class="kn">import</span> <span class="n">constraints_breaches_dataframe</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sequences</span> <span class="o">=</span> <span class="p">[</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="p">(</span><span class="s2">&quot;SEQ 1&quot;</span><span class="p">,</span> <span class="s2">&quot;ATTGTGCATGTGACAC&quot;</span><span class="p">),</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="p">(</span><span class="s2">&quot;SEQ 2&quot;</span><span class="p">,</span> <span class="s2">&quot;ACATGTGTTGTGACAC&quot;</span><span class="p">),</span>
@@ -375,6 +376,23 @@ or a list of biopython records whole id is the sequence name.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dataframe</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s1">&#39;summary_spreadsheet.xlsx&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dnachisel.reports.constraints_reports.records_from_breaches_dataframe">
+<code class="sig-prename descclassname">dnachisel.reports.constraints_reports.</code><code class="sig-name descname">records_from_breaches_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataframe</span></em>, <em class="sig-param"><span class="n">sequences</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/constraints_reports/constraints_reports.html#records_from_breaches_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.constraints_reports.records_from_breaches_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate records with annotations indicating constraints breaches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>dataframe</strong></dt><dd><p>A breaches dataframe returned by <code class="docutils literal notranslate"><span class="pre">constraints_breaches_dataframe</span></code></p>
+</dd>
+<dt><strong>sequences</strong></dt><dd><p>Either a list [(“name”, “sequence”)…] or a dict {“name”: “sequence”}
+or a list of biopython records whole id is the sequence name.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -394,7 +412,7 @@ or a list of biopython records whole id is the sequence name.</p>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

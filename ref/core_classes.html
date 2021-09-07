@@ -14,10 +14,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
 
       
       <script src="../_static/theme-vendors.js"></script>
@@ -42,21 +42,21 @@
 
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link  router-link-active">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -88,21 +88,21 @@
 
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link  router-link-active">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -136,7 +136,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Reference</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Reference</a></span>
       </p>
       <ul class="current">
         
@@ -205,7 +205,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Using Genbanks</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Using Genbanks</a></span>
       </p>
       <ul class="">
         
@@ -226,7 +226,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Examples</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Examples</a></span>
       </p>
       <ul class="">
         
@@ -270,7 +270,7 @@
   <div class="section" id="core-classes">
 <h1><a class="toc-backref" href="#id1">Core Classes</a><a class="headerlink" href="#core-classes" title="Permalink to this headline">¶</a></h1>
 <div class="contents topic" id="contents">
-<p class="topic-title first">Contents</p>
+<p class="topic-title">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#core-classes" id="id1">Core Classes</a></p>
 <ul>
@@ -301,48 +301,40 @@
 </div>
 <div class="section" id="dnaoptimizationproblem">
 <h2><a class="toc-backref" href="#id2">DnaOptimizationProblem</a><a class="headerlink" href="#dnaoptimizationproblem" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="dnachisel.DnaOptimizationProblem">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">DnaOptimizationProblem</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">constraints=None</em>, <em class="sig-param">objectives=None</em>, <em class="sig-param">logger='bar'</em>, <em class="sig-param">mutation_space=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/DnaOptimizationProblem.html#DnaOptimizationProblem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">DnaOptimizationProblem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">objectives</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">logger</span><span class="o">=</span><span class="default_value">'bar'</span></em>, <em class="sig-param"><span class="n">mutation_space</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/DnaOptimizationProblem.html#DnaOptimizationProblem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Problem specifications: sequence, constraints, optimization objectives.</p>
 <p>The original constraints, objectives, and original sequence of the problem
 are stored in the DNA problem. This class also has methods to display
 reports on the constraints and objectives, as well as solving the
 constraints and objectives.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>sequence</strong></p>
-<blockquote>
-<div><p>A string of ATGC characters (they must be upper case!), e.g. “ATTGTGTA”</p>
-</div></blockquote>
-<p><strong>constraints</strong></p>
-<blockquote>
-<div><p>A list of objects of type <code class="docutils literal notranslate"><span class="pre">Specification</span></code>.</p>
-</div></blockquote>
-<p><strong>objectives</strong></p>
-<blockquote>
-<div><p>A list of objects of type <code class="docutils literal notranslate"><span class="pre">Specification</span></code> specifying what must be
+<dd class="field-odd"><dl class="simple">
+<dt><strong>sequence</strong></dt><dd><p>A string of ATGC characters (they must be upper case!), e.g. “ATTGTGTA”</p>
+</dd>
+<dt><strong>constraints</strong></dt><dd><p>A list of objects of type <code class="docutils literal notranslate"><span class="pre">Specification</span></code>.</p>
+</dd>
+<dt><strong>objectives</strong></dt><dd><p>A list of objects of type <code class="docutils literal notranslate"><span class="pre">Specification</span></code> specifying what must be
 optimized in the problem. Note that each objective has a float <code class="docutils literal notranslate"><span class="pre">boost</span></code>
 parameter. The larger the boost, the more the objective is taken into
 account during the optimization.</p>
-</div></blockquote>
-<p><strong>logger</strong></p>
-<blockquote>
-<div><p>Either None for no logger, ‘bar’ for a tqdm progress bar logger, or
+</dd>
+<dt><strong>logger</strong></dt><dd><p>Either None for no logger, ‘bar’ for a tqdm progress bar logger, or
 any ProgLog progress bar logger.</p>
-</div></blockquote>
-<p><strong>mutations_space</strong></p>
-<blockquote>
-<div><p>A MutationSpace indicating the possible mutations. In most case the
+</dd>
+<dt><strong>mutations_space</strong></dt><dd><p>A MutationSpace indicating the possible mutations. In most case the
 mutation space will be left to None and computed at problem
 initialization (which can be slightly compute-intensive), however some
 core DNA Chisel methods will create optimization problems with a provided
 mutation_space to save computing time.</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>The dictionnary <code class="docutils literal notranslate"><span class="pre">self.possible_mutations</span></code> is of the form
+<p>The dictionary <code class="docutils literal notranslate"><span class="pre">self.possible_mutations</span></code> is of the form
 <code class="docutils literal notranslate"><span class="pre">{location1</span> <span class="pre">:</span> <span class="pre">list1,</span> <span class="pre">location2:</span> <span class="pre">list2...}</span></code>
 where <code class="docutils literal notranslate"><span class="pre">location</span></code> is either a single index (e.g. 10) indicating the
 position of a nucleotide to be muted, or a couple <code class="docutils literal notranslate"><span class="pre">(start,</span> <span class="pre">end)</span></code>
@@ -350,7 +342,7 @@ indicating a whole segment whose sub-sequence should be replaced.
 The <code class="docutils literal notranslate"><span class="pre">list</span></code> s are lists of possible sequences to replace each location,
 e.g. for the mutation of a whole codon <code class="docutils literal notranslate"><span class="pre">(3,6):</span> <span class="pre">[&quot;ATT&quot;,</span> <span class="pre">&quot;ACT&quot;,</span> <span class="pre">&quot;AGT&quot;]</span></code>.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dnachisel</span> <span class="k">import</span> <span class="o">*</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dnachisel</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">sequence</span> <span class="o">=</span> <span class="s2">&quot;ATGCGTGTGTGC...&quot;</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span><span class="n">constraint1</span><span class="p">,</span> <span class="n">constraint2</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
@@ -362,73 +354,69 @@ e.g. for the mutation of a whole codon <code class="docutils literal notranslate
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">objectives_text_summary</span><span class="p">())</span>
 </pre></div>
 </div>
-<p class="rubric">Attributes</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 84%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>randomization_threshold</strong></p></td>
-<td><p>The algorithm will use an exhaustive search when the size of the mutation space (=the number of possible variants) is above this threshold, and a (guided) random search when it is above.</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>max_random_iters</strong></p></td>
-<td><p>When using a random search, stop after this many iterations</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>mutations_per_iteration</strong></p></td>
-<td><p>When using a random search, produce this many sequence mutations each iteration.</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>optimization_stagnation_tolerance</strong></p></td>
-<td><p>When using a random search, stop if the score hasn’t improved in the last “this many” iterations</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>local_extensions</strong></p></td>
-<td><p>Try local resolution several times if it fails, increasing the mutable zone by [N1, N2…] nucleotides on each side, until resolution works. (by default, an extension of 0bp is tried, then 5bp.</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>randomization_threshold</strong></dt><dd><p>The algorithm will use an exhaustive search when the size of the mutation
+space (=the number of possible variants) is above this threshold, and
+a (guided) random search when it is above.</p>
+</dd>
+<dt><strong>max_random_iters</strong></dt><dd><p>When using a random search, stop after this many iterations</p>
+</dd>
+<dt><strong>mutations_per_iteration</strong></dt><dd><p>When using a random search, produce this many sequence mutations each
+iteration.</p>
+</dd>
+<dt><strong>optimization_stagnation_tolerance</strong></dt><dd><p>When using a random search, stop if the score hasn’t improved in
+the last “this many” iterations</p>
+</dd>
+<dt><strong>local_extensions</strong></dt><dd><p>Try local resolution several times if it fails, increasing the mutable
+zone by [N1, N2…] nucleotides on each side, until resolution works.
+(by default, an extension of 0bp is tried, then 5bp.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
 <dt id="dnachisel.DnaOptimizationProblem.initialize">
 <code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/DnaOptimizationProblem.html#DnaOptimizationProblem.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.initialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Precompute specification sets, evaluations, and mutation space.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.DnaOptimizationProblem.number_of_edits">
 <code class="sig-name descname">number_of_edits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/DnaOptimizationProblem.html#DnaOptimizationProblem.number_of_edits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.number_of_edits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of nucleotide differences between the original
 and current sequence.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.DnaOptimizationProblem.optimize_with_report">
-<code class="sig-name descname">optimize_with_report</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">project_name='My project'</em>, <em class="sig-param">file_path=None</em>, <em class="sig-param">file_content=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/DnaOptimizationProblem.html#DnaOptimizationProblem.optimize_with_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.optimize_with_report" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">optimize_with_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target</span></em>, <em class="sig-param"><span class="n">project_name</span><span class="o">=</span><span class="default_value">'My project'</span></em>, <em class="sig-param"><span class="n">file_path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">file_content</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/DnaOptimizationProblem.html#DnaOptimizationProblem.optimize_with_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.optimize_with_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resolve constraints, optimize objectives, write a multi-file report.</p>
 <p>The report’s content may vary depending on the optimization’s success.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>target</strong></p>
-<blockquote>
-<div><p>Either a path to a folder that will containt the report, or a path to
+<dd class="field-odd"><dl class="simple">
+<dt><strong>target</strong></dt><dd><p>Either a path to a folder that will contain the report, or a path to
 a zip archive, or “&#64;memory” to return raw data of a zip archive
 containing the report.</p>
-</div></blockquote>
-<p><strong>project_name</strong></p>
-<blockquote>
-<div><p>Project name to write on PDF reports</p>
-</div></blockquote>
+</dd>
+<dt><strong>project_name</strong></dt><dd><p>Project name to write on PDF reports</p>
+</dd>
+</dl>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(success, message, zip_data)</p>
-<blockquote>
-<div><p>Triplet where success is True/False, message is a one-line string
+<dd class="field-even"><dl class="simple">
+<dt>(success, message, zip_data)</dt><dd><p>Triplet where success is True/False, message is a one-line string
 summary indication whether some clash was found, or some solution, or
 maybe no solution was found because the random searches were too short</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.DnaOptimizationProblem.sequence_edits_as_array">
 <code class="sig-name descname">sequence_edits_as_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/DnaOptimizationProblem.html#DnaOptimizationProblem.sequence_edits_as_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaOptimizationProblem.sequence_edits_as_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an array [False, False, True…] where True indicates an edit
@@ -441,93 +429,87 @@ and the current one).</p>
 </div>
 <div class="section" id="circulardnaoptimizationproblem">
 <h2><a class="toc-backref" href="#id3">CircularDnaOptimizationProblem</a><a class="headerlink" href="#circulardnaoptimizationproblem" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="dnachisel.CircularDnaOptimizationProblem">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">CircularDnaOptimizationProblem</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">constraints=None</em>, <em class="sig-param">objectives=None</em>, <em class="sig-param">logger='bar'</em>, <em class="sig-param">mutation_space=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/CircularDnaOptimizationProblem.html#CircularDnaOptimizationProblem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.CircularDnaOptimizationProblem" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">CircularDnaOptimizationProblem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">objectives</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">logger</span><span class="o">=</span><span class="default_value">'bar'</span></em>, <em class="sig-param"><span class="n">mutation_space</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/CircularDnaOptimizationProblem.html#CircularDnaOptimizationProblem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.CircularDnaOptimizationProblem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for solving circular DNA optimization problems.</p>
 <p>The high-level interface is the same as for DnaOptimizationProblem:
 initialization, resolve_constraints(), and optimize() work the same way.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.CircularDnaOptimizationProblem.all_constraints_pass">
-<code class="sig-name descname">all_constraints_pass</code><span class="sig-paren">(</span><em class="sig-param">autopass=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/CircularDnaOptimizationProblem.html#CircularDnaOptimizationProblem.all_constraints_pass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.CircularDnaOptimizationProblem.all_constraints_pass" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">all_constraints_pass</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">autopass</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/CircularDnaOptimizationProblem.html#CircularDnaOptimizationProblem.all_constraints_pass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.CircularDnaOptimizationProblem.all_constraints_pass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return whether the current problem sequence passes all constraints.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.CircularDnaOptimizationProblem.constraints_evaluations">
-<code class="sig-name descname">constraints_evaluations</code><span class="sig-paren">(</span><em class="sig-param">autopass=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/CircularDnaOptimizationProblem.html#CircularDnaOptimizationProblem.constraints_evaluations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.CircularDnaOptimizationProblem.constraints_evaluations" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">constraints_evaluations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">autopass</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/CircularDnaOptimizationProblem.html#CircularDnaOptimizationProblem.constraints_evaluations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.CircularDnaOptimizationProblem.constraints_evaluations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the evaluation of constraints.</p>
 <p>The “autopass_constraints” enables to just assume that constraints
 enforced by the mutation space are verified.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.CircularDnaOptimizationProblem.objectives_evaluations">
 <code class="sig-name descname">objectives_evaluations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/CircularDnaOptimizationProblem.html#CircularDnaOptimizationProblem.objectives_evaluations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.CircularDnaOptimizationProblem.objectives_evaluations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of the evaluation of each objective of the problem</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.CircularDnaOptimizationProblem.optimize">
 <code class="sig-name descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/CircularDnaOptimizationProblem.html#CircularDnaOptimizationProblem.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.CircularDnaOptimizationProblem.optimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maximize the total score by optimizing each objective in turn.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.CircularDnaOptimizationProblem.optimize_with_report">
-<code class="sig-name descname">optimize_with_report</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">project_name='My project'</em>, <em class="sig-param">file_path=None</em>, <em class="sig-param">file_content=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/CircularDnaOptimizationProblem.html#CircularDnaOptimizationProblem.optimize_with_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.CircularDnaOptimizationProblem.optimize_with_report" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">optimize_with_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target</span></em>, <em class="sig-param"><span class="n">project_name</span><span class="o">=</span><span class="default_value">'My project'</span></em>, <em class="sig-param"><span class="n">file_path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">file_content</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/CircularDnaOptimizationProblem.html#CircularDnaOptimizationProblem.optimize_with_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.CircularDnaOptimizationProblem.optimize_with_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resolve constraints, optimize objectives, write a multi-file report.</p>
 <p>WARNING: in case of optimization failure, the report generated will
 show a “pseudo-circular” sequence formed by concatenating the sequence
 with itself three times.</p>
 <p>TODO: fix the warning above, at some point?</p>
 <p>The report’s content may vary depending on the optimization’s success.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>target</strong></p>
-<blockquote>
-<div><p>Either a path to a folder that will containt the report, or a path to
+<dd class="field-odd"><dl class="simple">
+<dt><strong>target</strong></dt><dd><p>Either a path to a folder that will contain the report, or a path to
 a zip archive, or “&#64;memory” to return raw data of a zip archive
 containing the report.</p>
-</div></blockquote>
-<p><strong>project_name</strong></p>
-<blockquote>
-<div><p>Project name to write on PDF reports</p>
-</div></blockquote>
+</dd>
+<dt><strong>project_name</strong></dt><dd><p>Project name to write on PDF reports</p>
+</dd>
+</dl>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(success, message, zip_data)</p>
-<blockquote>
-<div><p>Triplet where success is True/False, message is a one-line string
+<dd class="field-even"><dl class="simple">
+<dt>(success, message, zip_data)</dt><dd><p>Triplet where success is True/False, message is a one-line string
 summary indication whether some clash was found, or some solution, or
 maybe no solution was found because the random searches were too
 short</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.CircularDnaOptimizationProblem.resolve_constraints">
-<code class="sig-name descname">resolve_constraints</code><span class="sig-paren">(</span><em class="sig-param">final_check=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/CircularDnaOptimizationProblem.html#CircularDnaOptimizationProblem.resolve_constraints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.CircularDnaOptimizationProblem.resolve_constraints" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">resolve_constraints</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">final_check</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/DnaOptimizationProblem/CircularDnaOptimizationProblem.html#CircularDnaOptimizationProblem.resolve_constraints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.CircularDnaOptimizationProblem.resolve_constraints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Solve a particular constraint using local, targeted searches.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>constraint</strong></p>
-<blockquote>
-<div><p>The <code class="docutils literal notranslate"><span class="pre">Specification</span></code> object for which the sequence should be solved</p>
-</div></blockquote>
-<p><strong>final_check</strong></p>
-<blockquote>
-<div><p>If True, a final check of that all constraints pass will be run at
+<dd class="field-odd"><dl class="simple">
+<dt><strong>constraint</strong></dt><dd><p>The <code class="docutils literal notranslate"><span class="pre">Specification</span></code> object for which the sequence should be solved</p>
+</dd>
+<dt><strong>final_check</strong></dt><dd><p>If True, a final check of that all constraints pass will be run at
 the end of the process, when constraints have been resolved one by
 one, to check that the solving of one constraint didn’t undo the
 solving of another.</p>
-</div></blockquote>
-<p><strong>cst_filter</strong></p>
-<blockquote>
-<div><p>An optional filter to only resolve a subset function (constraint =&gt; True/False)</p>
-</div></blockquote>
+</dd>
+<dt><strong>cst_filter</strong></dt><dd><p>An optional filter to only resolve a subset function (constraint =&gt; True/False)</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -537,53 +519,49 @@ solving of another.</p>
 </div>
 <div class="section" id="specification">
 <h2><a class="toc-backref" href="#id4">Specification</a><a class="headerlink" href="#specification" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="dnachisel.Specification">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">Specification</code><span class="sig-paren">(</span><em class="sig-param">evaluate=None</em>, <em class="sig-param">boost=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">Specification</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evaluate</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">boost</span><span class="o">=</span><span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification" title="Permalink to this definition">¶</a></dt>
 <dd><p>General class to define specifications to optimize.</p>
 <p>Note that all specifications have a <code class="docutils literal notranslate"><span class="pre">boost</span></code> attribute that is a
 multiplicator that will be used when computing the global specification
 score of a problem with <code class="docutils literal notranslate"><span class="pre">problem.all_objectives_score()</span></code>.</p>
 <p>New types of specifications are defined by subclassing <code class="docutils literal notranslate"><span class="pre">Specification</span></code> and
 providing a custom <code class="docutils literal notranslate"><span class="pre">evaluate</span></code> and <code class="docutils literal notranslate"><span class="pre">localized</span></code> methods.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evaluate</strong></p>
-<blockquote>
-<div><p>function (sequence) =&gt; SpecEvaluation</p>
-</div></blockquote>
-<p><strong>boost</strong></p>
-<blockquote>
-<div><p>Relative importance of the Specification’s score in a multi-specification
+<dd class="field-odd"><dl class="simple">
+<dt><strong>evaluate</strong></dt><dd><p>function (sequence) =&gt; SpecEvaluation</p>
+</dd>
+<dt><strong>boost</strong></dt><dd><p>Relative importance of the Specification’s score in a multi-specification
 problem.</p>
-</div></blockquote>
 </dd>
 </dl>
-<p class="rubric">Attributes</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 85%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>best_possible_score</strong></p></td>
-<td><p>Best score that the specification can achieve. Used by the optimization algorithm to understand when no more optimization is required.</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>optimize_passively (boolean)</strong></p></td>
-<td><p>Indicates that there should not be a pass of the optimization algorithm to optimize this objective. Instead, this objective is simply taken into account when optimizing other objectives.</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>enforced_by_nucleotide_restrictions (boolean)</strong></p></td>
-<td><p>When the spec is used as a constraints, this indicates that the constraint will initially restrict the mutation space in a way that ensures that the constraint will always be valid. The constraint does not need to be evaluated again, which speeds up the resolution algorithm.</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>priority</strong></p></td>
-<td><p>Value used to sort the specifications and solve/optimize them in order, with highest priority first.</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>shorthand_name</strong></p></td>
-<td><p>Shorter name for the specification class that will be recognized when parsing annotations from genbanks.</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>best_possible_score</strong></dt><dd><p>Best score that the specification can achieve. Used by the optimization
+algorithm to understand when no more optimization is required.</p>
+</dd>
+<dt><strong>optimize_passively (boolean)</strong></dt><dd><p>Indicates that there should not be a pass of the optimization algorithm
+to optimize this objective. Instead, this objective is simply taken into
+account when optimizing other objectives.</p>
+</dd>
+<dt><strong>enforced_by_nucleotide_restrictions (boolean)</strong></dt><dd><p>When the spec is used as a constraints, this indicates that the
+constraint will initially restrict the mutation space in a way that
+ensures that the constraint will always be valid. The constraint does
+not need to be evaluated again, which speeds up the resolution algorithm.</p>
+</dd>
+<dt><strong>priority</strong></dt><dd><p>Value used to sort the specifications and solve/optimize them in order,
+with highest priority first.</p>
+</dd>
+<dt><strong>shorthand_name</strong></dt><dd><p>Shorter name for the specification class that will be recognized when
+parsing annotations from genbanks.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
 <dt id="dnachisel.Specification.as_passive_objective">
 <code class="sig-name descname">as_passive_objective</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification.as_passive_objective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.as_passive_objective" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy with optimize_passively set to true.</p>
@@ -594,61 +572,63 @@ account in the global score when optimizing other objectives, and
 may therefore influence the final sequence.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
+<dt id="dnachisel.Specification.breach_label">
+<code class="sig-name descname">breach_label</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification.breach_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.breach_label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shorter, less precise label to be used in tables, reports, etc.</p>
+<p>This is meant for specifications such as EnforceGCContent(0.4, 0.6)
+to be represented as ‘40-60% GC’ in reports tables etc..</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="dnachisel.Specification.copy_with_changes">
-<code class="sig-name descname">copy_with_changes</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification.copy_with_changes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.copy_with_changes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">copy_with_changes</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification.copy_with_changes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.copy_with_changes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy of the Specification with modified properties.</p>
 <p>For instance <code class="docutils literal notranslate"><span class="pre">new_spec</span> <span class="pre">=</span> <span class="pre">spec.copy_with_changes(boost=10)</span></code>.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.Specification.initialized_on_problem">
-<code class="sig-name descname">initialized_on_problem</code><span class="sig-paren">(</span><em class="sig-param">problem</em>, <em class="sig-param">role='constraint'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification.initialized_on_problem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.initialized_on_problem" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">initialized_on_problem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span></em>, <em class="sig-param"><span class="n">role</span><span class="o">=</span><span class="default_value">'constraint'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification.initialized_on_problem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.initialized_on_problem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Complete specification initialization when the sequence gets known.</p>
 <p>Some specifications like to know what their role is and on which
 sequence they are employed before they complete some values.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.Specification.label">
-<code class="sig-name descname">label</code><span class="sig-paren">(</span><em class="sig-param">role=None</em>, <em class="sig-param">with_location=True</em>, <em class="sig-param">assignment_symbol=':'</em>, <em class="sig-param">use_short_form=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification.label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.label" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">label</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">role</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">with_location</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">assignment_symbol</span><span class="o">=</span><span class="default_value">':'</span></em>, <em class="sig-param"><span class="n">use_short_form</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_breach_form</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification.label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.label" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a string label for this specification.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>role</strong></p>
-<blockquote>
-<div><p>Either ‘constraint’ or ‘objective’ (for prefixing the label with &#64;
+<dd class="field-odd"><dl class="simple">
+<dt><strong>role</strong></dt><dd><p>Either ‘constraint’ or ‘objective’ (for prefixing the label with &#64;
 or ~), or None.</p>
-</div></blockquote>
-<p><strong>with_location</strong></p>
-<blockquote>
-<div><p>If true, the location will appear in the label.</p>
-</div></blockquote>
-<p><strong>assignment_symbol</strong></p>
-<blockquote>
-<div><p>Indicates whether to use “:” or “=” or anything else when indicating
+</dd>
+<dt><strong>with_location</strong></dt><dd><p>If true, the location will appear in the label.</p>
+</dd>
+<dt><strong>assignment_symbol</strong></dt><dd><p>Indicates whether to use “:” or “=” or anything else when indicating
 parameters values.</p>
-</div></blockquote>
-<p><strong>use_short_form</strong></p>
-<blockquote>
-<div><p>If True, the label will use self.short_label(), so for instance
+</dd>
+<dt><strong>use_short_form</strong></dt><dd><p>If True, the label will use self.short_label(), so for instance
 AvoidPattern(BsmBI_site) will become “no BsmBI”. How this is handled
 is dependent on the specification.</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.Specification.label_parameters">
 <code class="sig-name descname">label_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification.label_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.label_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>In subclasses, returns a list of the creation parameters.</p>
 <p>For instance [(‘pattern’, ‘ATT’), (‘occurences’, 2)]</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.Specification.localized">
-<code class="sig-name descname">localized</code><span class="sig-paren">(</span><em class="sig-param">location</em>, <em class="sig-param">problem=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification.localized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.localized" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">localized</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">location</span></em>, <em class="sig-param"><span class="n">problem</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification.localized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.localized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a modified version of the specification for the case where
 sequence modifications are only performed inside the provided location.</p>
 <p>For instance if an specification concerns local GC content, and we are
@@ -662,9 +642,9 @@ from the provided location, this must return None.</p>
 <p>Must return an object of class <code class="docutils literal notranslate"><span class="pre">Constraint</span></code>.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.Specification.restrict_nucleotides">
-<code class="sig-name descname">restrict_nucleotides</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">location=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification.restrict_nucleotides"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.restrict_nucleotides" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">restrict_nucleotides</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em>, <em class="sig-param"><span class="n">location</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification.restrict_nucleotides"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.restrict_nucleotides" title="Permalink to this definition">¶</a></dt>
 <dd><p>Restrict the mutation space to speed up optimization.</p>
 <p>This method only kicks in when this specification is used as a
 constraint. By default it does nothing, but subclasses such as
@@ -675,9 +655,9 @@ DNAOptimizationProblem, when the MutationSpace is created for each
 constraint</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.Specification.shifted">
-<code class="sig-name descname">shifted</code><span class="sig-paren">(</span><em class="sig-param">shift</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification.shifted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.shifted" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">shifted</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shift</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification.shifted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.shifted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shift the location of the specification.</p>
 <p>Some specification classes may have a special method to do side effects
 when shifting the location.</p>
@@ -685,7 +665,7 @@ when shifting the location.</p>
 optimization problems.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.Specification.short_label">
 <code class="sig-name descname">short_label</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Specification/Specification.html#Specification.short_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Specification.short_label" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shorter, less precise label to be used in tables, reports, etc.</p>
@@ -701,7 +681,7 @@ to be represented as ‘40-60% GC’ in reports tables etc..</p>
 <span class="target" id="module-dnachisel.SpecEvaluation"></span><p>Store relevant infos about the evaluation of an objective on a problem.</p>
 <div class="section" id="examples">
 <h3><a class="toc-backref" href="#id6">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">evaluation_result</span> <span class="o">=</span> <span class="n">ConstraintEvaluation</span><span class="p">(</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">evaluation_result</span> <span class="o">=</span> <span class="n">ConstraintEvaluation</span><span class="p">(</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">specification</span><span class="o">=</span><span class="n">specification</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">problem</span> <span class="o">=</span> <span class="n">problem</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">score</span><span class="o">=</span> <span class="n">evaluation_score</span><span class="p">,</span> <span class="c1"># float</span>
@@ -727,7 +707,7 @@ the optimization shoul be localized to improve the objective.</p>
 be displayed by <code class="docutils literal notranslate"><span class="pre">problem.print_objectives_summaries</span></code>.</p>
 </dd>
 </dl>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="dnachisel.SpecEvaluation.default_message">
 <code class="sig-prename descclassname">dnachisel.SpecEvaluation.</code><code class="sig-name descname">default_message</code><a class="headerlink" href="#dnachisel.SpecEvaluation.default_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the default message for console/reports.</p>
@@ -740,52 +720,48 @@ be displayed by <code class="docutils literal notranslate"><span class="pre">pro
 <p>Implements the Location class.</p>
 <p>The class has useful methods for finding overlaps between locations, extract
 a subsequence from a sequence, etc.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="dnachisel.Location.Location">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.Location.</code><code class="sig-name descname">Location</code><span class="sig-paren">(</span><em class="sig-param">start</em>, <em class="sig-param">end</em>, <em class="sig-param">strand=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.Location.</code><code class="sig-name descname">Location</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span></em>, <em class="sig-param"><span class="n">end</span></em>, <em class="sig-param"><span class="n">strand</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represent a segment of a sequence, with a start, end, and strand.</p>
 <p>Warning: we use Python’s splicing notation, so Location(5, 10) represents
 sequence[5, 6, 7, 8, 9] which corresponds to nucleotides number
 6, 7, 8, 9, 10.</p>
 <p>The data structure is similar to a Biopython’s FeatureLocation, but with
 different methods for different purposes.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>start</strong></p>
-<blockquote>
-<div><p>Lowest position index of the segment</p>
-</div></blockquote>
-<p><strong>end</strong></p>
-<blockquote>
-<div><p>Highest position index of the segment</p>
-</div></blockquote>
-<p><strong>strand</strong></p>
-<blockquote>
-<div><p>Either 1 or -1 for sense or anti-sense orientation.</p>
-</div></blockquote>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>start</strong></dt><dd><p>Lowest position index of the segment.</p>
+</dd>
+<dt><strong>end</strong></dt><dd><p>Highest position index of the segment.</p>
+</dd>
+<dt><strong>strand</strong></dt><dd><p>Either 1 or -1 for sense or anti-sense orientation.</p>
 </dd>
 </dl>
-<dl class="method">
+</dd>
+</dl>
+<dl class="py method">
 <dt id="dnachisel.Location.Location.extended">
-<code class="sig-name descname">extended</code><span class="sig-paren">(</span><em class="sig-param">extension_length</em>, <em class="sig-param">lower_limit=0</em>, <em class="sig-param">upper_limit=None</em>, <em class="sig-param">left=True</em>, <em class="sig-param">right=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.extended"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.extended" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extended</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">extension_length</span></em>, <em class="sig-param"><span class="n">lower_limit</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">upper_limit</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">left</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">right</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.extended"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.extended" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extend the location of a few basepairs on each side.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.Location.Location.extract_sequence">
-<code class="sig-name descname">extract_sequence</code><span class="sig-paren">(</span><em class="sig-param">sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.extract_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.extract_sequence" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extract_sequence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.extract_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.extract_sequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the subsequence read at the given location.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.Location.Location.from_biopython_location">
-<em class="property">static </em><code class="sig-name descname">from_biopython_location</code><span class="sig-paren">(</span><em class="sig-param">location</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.from_biopython_location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.from_biopython_location" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_biopython_location</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">location</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.from_biopython_location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.from_biopython_location" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a DnaChisel Location from a Biopython location.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.Location.Location.from_data">
-<em class="property">static </em><code class="sig-name descname">from_data</code><span class="sig-paren">(</span><em class="sig-param">location_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.from_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.from_data" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">location_data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.from_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.from_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a location, from varied data formats.</p>
 <p>This method is used in particular in every built-in specification to
 quickly standardize the input location.</p>
@@ -794,32 +770,32 @@ or a Biopython FeatureLocation, or a Location instance. In any case,
 a new Location object will be returned.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.Location.Location.merge_overlapping_locations">
-<em class="property">static </em><code class="sig-name descname">merge_overlapping_locations</code><span class="sig-paren">(</span><em class="sig-param">locations</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.merge_overlapping_locations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.merge_overlapping_locations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of locations obtained by mergin all overlapping.</p>
+<em class="property">static </em><code class="sig-name descname">merge_overlapping_locations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">locations</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.merge_overlapping_locations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.merge_overlapping_locations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of locations obtained by merging all overlapping.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.Location.Location.overlap_region">
-<code class="sig-name descname">overlap_region</code><span class="sig-paren">(</span><em class="sig-param">other_location</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.overlap_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.overlap_region" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">overlap_region</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other_location</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.overlap_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.overlap_region" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the overlap span between two locations (None if None).</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.Location.Location.to_biopython_feature">
-<code class="sig-name descname">to_biopython_feature</code><span class="sig-paren">(</span><em class="sig-param">feature_type='misc_feature'</em>, <em class="sig-param">**qualifiers</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.to_biopython_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.to_biopython_feature" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_biopython_feature</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">feature_type</span><span class="o">=</span><span class="default_value">'misc_feature'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">qualifiers</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.to_biopython_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.to_biopython_feature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Biopython SeqFeature with same location and custom
 qualifiers.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.Location.Location.to_biopython_location">
 <code class="sig-name descname">to_biopython_location</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.to_biopython_location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.to_biopython_location" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Biopython FeatureLocation equivalent to the location.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.Location.Location.to_tuple">
 <code class="sig-name descname">to_tuple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/Location.html#Location.to_tuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.Location.Location.to_tuple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return (start, end, strand).</p>
@@ -830,124 +806,31 @@ qualifiers.</p>
 </div>
 <div class="section" id="module-dnachisel.MutationSpace">
 <span id="mutationspace"></span><h2><a class="toc-backref" href="#id9">MutationSpace</a><a class="headerlink" href="#module-dnachisel.MutationSpace" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="dnachisel.MutationSpace.MutationSpace">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.MutationSpace.</code><code class="sig-name descname">MutationSpace</code><span class="sig-paren">(</span><em class="sig-param">choices_index</em>, <em class="sig-param">left_padding=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationSpace.html#MutationSpace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class for mutation space (set of sequence segments and their variants).</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>choices_index</strong></p>
-<blockquote>
-<div><p>A list L such that L[i] gives the MutationChoice governing the mutations
-allowed at position i (ansd possibly around i)</p>
-</div></blockquote>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># BEWARE: below, similar mutation choices are actually the SAME OBJECT</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">space</span> <span class="o">=</span> <span class="n">MutationSpace</span><span class="p">([</span>
-<span class="go">        MutationChoice((0, 2), {&#39;AT&#39;, &#39;TG&#39;}),</span>
-<span class="go">        MutationChoice((0, 2), {&#39;AT&#39;, &#39;TG&#39;}),</span>
-<span class="go">        MutationChoice((2, 5), {&#39;TTC&#39;, &#39;TTA&#39;, &#39;TTT&#39;}), # same</span>
-<span class="go">        MutationChoice((2, 5), {&#39;TTC&#39;, &#39;TTA&#39;, &#39;TTT&#39;}), #</span>
-<span class="go">        MutationChoice((2, 5), {&#39;TTC&#39;, &#39;TTA&#39;, &#39;TTT&#39;}),</span>
-<span class="go">    ])</span>
-</pre></div>
-</div>
-<dl class="method">
-<dt id="dnachisel.MutationSpace.MutationSpace.all_variants">
-<code class="sig-name descname">all_variants</code><span class="sig-paren">(</span><em class="sig-param">sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationSpace.html#MutationSpace.all_variants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.all_variants" title="Permalink to this definition">¶</a></dt>
-<dd><p>Iterate through all sequence variants in this mutation space.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="dnachisel.MutationSpace.MutationSpace.apply_random_mutations">
-<code class="sig-name descname">apply_random_mutations</code><span class="sig-paren">(</span><em class="sig-param">n_mutations</em>, <em class="sig-param">sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationSpace.html#MutationSpace.apply_random_mutations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.apply_random_mutations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a sequence with n random mutations applied.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="dnachisel.MutationSpace.MutationSpace.choices_span">
-<em class="property">property </em><code class="sig-name descname">choices_span</code><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.choices_span" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return (start, end), segment where mutiple choices are possible</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="dnachisel.MutationSpace.MutationSpace.constrain_sequence">
-<code class="sig-name descname">constrain_sequence</code><span class="sig-paren">(</span><em class="sig-param">sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationSpace.html#MutationSpace.constrain_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.constrain_sequence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a version of the sequence compatible with the mutation space.</p>
-<p>All nucleotides of the sequence that are incompatible with the
-mutation space are replaced by nucleotides compatible with the space.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="dnachisel.MutationSpace.MutationSpace.from_optimization_problem">
-<em class="property">static </em><code class="sig-name descname">from_optimization_problem</code><span class="sig-paren">(</span><em class="sig-param">problem</em>, <em class="sig-param">new_constraints=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationSpace.html#MutationSpace.from_optimization_problem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.from_optimization_problem" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a mutation space from a DNA optimization problem.</p>
-<p>This can be used either to initialize mutation spaces for new problems,
-or to</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="dnachisel.MutationSpace.MutationSpace.localized">
-<code class="sig-name descname">localized</code><span class="sig-paren">(</span><em class="sig-param">location</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationSpace.html#MutationSpace.localized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.localized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a new version with only mutations overlaping the location.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="dnachisel.MutationSpace.MutationSpace.pick_random_mutations">
-<code class="sig-name descname">pick_random_mutations</code><span class="sig-paren">(</span><em class="sig-param">n_mutations</em>, <em class="sig-param">sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationSpace.html#MutationSpace.pick_random_mutations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.pick_random_mutations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Draw N random mutations</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="dnachisel.MutationSpace.MutationSpace.space_size">
-<em class="property">property </em><code class="sig-name descname">space_size</code><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.space_size" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of possible mutations</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="dnachisel.MutationSpace.MutationSpace.string_representation">
-<code class="sig-name descname">string_representation</code><span class="sig-paren">(</span><em class="sig-param">separator='|'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationSpace.html#MutationSpace.string_representation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.string_representation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates a string of the mutation space</p>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="p">(</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">string_representation</span><span class="p">())</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">|</span><span class="n">G</span><span class="o">|</span><span class="n">ATG</span><span class="o">|</span><span class="n">CA</span><span class="o">|</span><span class="n">A</span><span class="o">|</span><span class="n">CA</span><span class="o">|</span><span class="n">T</span><span class="o">|</span><span class="n">GTC</span><span class="o">|</span><span class="n">AC</span><span class="o">|</span><span class="n">T</span><span class="o">|</span><span class="n">A</span><span class="o">|</span><span class="n">C</span><span class="o">|</span><span class="n">T</span><span class="o">|</span><span class="n">T</span><span class="o">|</span><span class="n">T</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span><span class="o">|</span><span class="n">C</span><span class="o">|</span>   <span class="o">|</span>  <span class="o">|</span><span class="n">G</span><span class="o">|</span>  <span class="o">|</span><span class="n">C</span><span class="o">|</span>   <span class="o">|</span>  <span class="o">|</span><span class="n">C</span><span class="o">|</span><span class="n">T</span><span class="o">|</span><span class="n">A</span><span class="o">|</span><span class="n">C</span><span class="o">|</span><span class="n">A</span><span class="o">|</span><span class="n">C</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">|</span><span class="n">A</span><span class="o">|</span>   <span class="o">|</span>  <span class="o">|</span> <span class="o">|</span>  <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span>  <span class="o">|</span><span class="n">G</span><span class="o">|</span><span class="n">G</span><span class="o">|</span><span class="n">G</span><span class="o">|</span><span class="n">G</span><span class="o">|</span><span class="n">G</span><span class="o">|</span><span class="n">G</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
+<dl class="py class">
 <dt id="dnachisel.MutationSpace.MutationChoice">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.MutationSpace.</code><code class="sig-name descname">MutationChoice</code><span class="sig-paren">(</span><em class="sig-param">segment</em>, <em class="sig-param">variants</em>, <em class="sig-param">is_any_nucleotide=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationChoice.html#MutationChoice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationChoice" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.MutationSpace.</code><code class="sig-name descname">MutationChoice</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">segment</span></em>, <em class="sig-param"><span class="n">variants</span></em>, <em class="sig-param"><span class="n">is_any_nucleotide</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationChoice.html#MutationChoice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationChoice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represent a segment of a sequence with several possible variants.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>segment</strong></p>
-<blockquote>
-<div><p>A pair (start, end) indicating the range of nucleotides concerned. We
+<dd class="field-odd"><dl class="simple">
+<dt><strong>segment</strong></dt><dd><p>A pair (start, end) indicating the range of nucleotides concerned. We
 are applying Python range, so</p>
-</div></blockquote>
-<p><strong>variants</strong></p>
-<blockquote>
-<div><p>A set of sequence variants, at the given position</p>
-</div></blockquote>
+</dd>
+<dt><strong>variants</strong></dt><dd><p>A set of sequence variants, at the given position</p>
+</dd>
+</dl>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">choice</span> <span class="o">=</span> <span class="n">MutationChoice</span><span class="p">((</span><span class="mi">70</span><span class="p">,</span> <span class="mi">73</span><span class="p">),</span> <span class="p">{})</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">choice</span> <span class="o">=</span> <span class="n">MutationChoice</span><span class="p">((</span><span class="mi">70</span><span class="p">,</span> <span class="mi">73</span><span class="p">),</span> <span class="p">{})</span>
 </pre></div>
 </div>
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.MutationSpace.MutationChoice.extract_varying_region">
 <code class="sig-name descname">extract_varying_region</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationChoice.html#MutationChoice.extract_varying_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationChoice.extract_varying_region" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return MutationChoices for the central varying region and 2 flanks.</p>
 <p>For instance:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">choice</span> <span class="o">=</span> <span class="n">MutationChoice</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="p">[</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">choice</span> <span class="o">=</span> <span class="n">MutationChoice</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="p">[</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;ATGCGTG&#39;</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;AAAAATG&#39;</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;AAATGTG&#39;</span><span class="p">,</span>
@@ -957,7 +840,7 @@ are applying Python range, so</p>
 </pre></div>
 </div>
 <p>Result :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">MutChoice</span><span class="p">(</span><span class="mi">5</span><span class="o">-</span><span class="mi">6</span> <span class="n">A</span><span class="p">),</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">MutChoice</span><span class="p">(</span><span class="mi">6</span><span class="o">-</span><span class="mi">10</span> <span class="n">TGCG</span><span class="o">-</span><span class="n">AATG</span><span class="o">-</span><span class="n">TGAA</span><span class="o">-</span><span class="n">AAAA</span><span class="p">),</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">MutChoice</span><span class="p">(</span><span class="mi">10</span><span class="o">-</span><span class="mi">12</span> <span class="n">TG</span><span class="p">)</span>
@@ -966,16 +849,106 @@ are applying Python range, so</p>
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.MutationSpace.MutationChoice.merge_with">
-<code class="sig-name descname">merge_with</code><span class="sig-paren">(</span><em class="sig-param">others</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationChoice.html#MutationChoice.merge_with"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationChoice.merge_with" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">merge_with</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">others</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationChoice.html#MutationChoice.merge_with"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationChoice.merge_with" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge this mutation choice with others to form a single choice</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.MutationSpace.MutationChoice.random_variant">
-<code class="sig-name descname">random_variant</code><span class="sig-paren">(</span><em class="sig-param">sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationChoice.html#MutationChoice.random_variant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationChoice.random_variant" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">random_variant</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationChoice.html#MutationChoice.random_variant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationChoice.random_variant" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return one of the variants, randomly.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="dnachisel.MutationSpace.MutationSpace">
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.MutationSpace.</code><code class="sig-name descname">MutationSpace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">choices_index</span></em>, <em class="sig-param"><span class="n">left_padding</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationSpace.html#MutationSpace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for mutation space (set of sequence segments and their variants).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>choices_index</strong></dt><dd><p>A list L such that L[i] gives the MutationChoice governing the mutations
+allowed at position i (and possibly around i).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># BEWARE: below, similar mutation choices are actually the SAME OBJECT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">space</span> <span class="o">=</span> <span class="n">MutationSpace</span><span class="p">([</span>
+<span class="go">        MutationChoice((0, 2), {&#39;AT&#39;, &#39;TG&#39;}),</span>
+<span class="go">        MutationChoice((0, 2), {&#39;AT&#39;, &#39;TG&#39;}),</span>
+<span class="go">        MutationChoice((2, 5), {&#39;TTC&#39;, &#39;TTA&#39;, &#39;TTT&#39;}), # same</span>
+<span class="go">        MutationChoice((2, 5), {&#39;TTC&#39;, &#39;TTA&#39;, &#39;TTT&#39;}), #</span>
+<span class="go">        MutationChoice((2, 5), {&#39;TTC&#39;, &#39;TTA&#39;, &#39;TTT&#39;}),</span>
+<span class="go">    ])</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="dnachisel.MutationSpace.MutationSpace.all_variants">
+<code class="sig-name descname">all_variants</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationSpace.html#MutationSpace.all_variants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.all_variants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate through all sequence variants in this mutation space.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dnachisel.MutationSpace.MutationSpace.apply_random_mutations">
+<code class="sig-name descname">apply_random_mutations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_mutations</span></em>, <em class="sig-param"><span class="n">sequence</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationSpace.html#MutationSpace.apply_random_mutations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.apply_random_mutations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a sequence with n random mutations applied.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dnachisel.MutationSpace.MutationSpace.choices_span">
+<em class="property">property </em><code class="sig-name descname">choices_span</code><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.choices_span" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return (start, end), segment where multiple choices are possible.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dnachisel.MutationSpace.MutationSpace.constrain_sequence">
+<code class="sig-name descname">constrain_sequence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationSpace.html#MutationSpace.constrain_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.constrain_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a version of the sequence compatible with the mutation space.</p>
+<p>All nucleotides of the sequence that are incompatible with the
+mutation space are replaced by nucleotides compatible with the space.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dnachisel.MutationSpace.MutationSpace.from_optimization_problem">
+<em class="property">static </em><code class="sig-name descname">from_optimization_problem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">problem</span></em>, <em class="sig-param"><span class="n">new_constraints</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationSpace.html#MutationSpace.from_optimization_problem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.from_optimization_problem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a mutation space from a DNA optimization problem.</p>
+<p>This can be used to initialize mutation spaces for new problems.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dnachisel.MutationSpace.MutationSpace.localized">
+<code class="sig-name descname">localized</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">location</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationSpace.html#MutationSpace.localized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.localized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new version with only mutations overlapping the location.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dnachisel.MutationSpace.MutationSpace.pick_random_mutations">
+<code class="sig-name descname">pick_random_mutations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_mutations</span></em>, <em class="sig-param"><span class="n">sequence</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationSpace.html#MutationSpace.pick_random_mutations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.pick_random_mutations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw N random mutations.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dnachisel.MutationSpace.MutationSpace.space_size">
+<em class="property">property </em><code class="sig-name descname">space_size</code><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.space_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of possible mutations.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dnachisel.MutationSpace.MutationSpace.string_representation">
+<code class="sig-name descname">string_representation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">separator</span><span class="o">=</span><span class="default_value">'|'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/MutationSpace/MutationSpace.html#MutationSpace.string_representation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MutationSpace.MutationSpace.string_representation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a string of the mutation space.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="p">(</span><span class="n">mutation_space</span><span class="o">.</span><span class="n">string_representation</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">|</span><span class="n">G</span><span class="o">|</span><span class="n">ATG</span><span class="o">|</span><span class="n">CA</span><span class="o">|</span><span class="n">A</span><span class="o">|</span><span class="n">CA</span><span class="o">|</span><span class="n">T</span><span class="o">|</span><span class="n">GTC</span><span class="o">|</span><span class="n">AC</span><span class="o">|</span><span class="n">T</span><span class="o">|</span><span class="n">A</span><span class="o">|</span><span class="n">C</span><span class="o">|</span><span class="n">T</span><span class="o">|</span><span class="n">T</span><span class="o">|</span><span class="n">T</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span><span class="o">|</span><span class="n">C</span><span class="o">|</span>   <span class="o">|</span>  <span class="o">|</span><span class="n">G</span><span class="o">|</span>  <span class="o">|</span><span class="n">C</span><span class="o">|</span>   <span class="o">|</span>  <span class="o">|</span><span class="n">C</span><span class="o">|</span><span class="n">T</span><span class="o">|</span><span class="n">A</span><span class="o">|</span><span class="n">C</span><span class="o">|</span><span class="n">A</span><span class="o">|</span><span class="n">C</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">|</span><span class="n">A</span><span class="o">|</span>   <span class="o">|</span>  <span class="o">|</span> <span class="o">|</span>  <span class="o">|</span> <span class="o">|</span>   <span class="o">|</span>  <span class="o">|</span><span class="n">G</span><span class="o">|</span><span class="n">G</span><span class="o">|</span><span class="n">G</span><span class="o">|</span><span class="n">G</span><span class="o">|</span><span class="n">G</span><span class="o">|</span><span class="n">G</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -1022,66 +995,60 @@ as argument. The pattern can be provided either as a string or as a class:</p>
 </table>
 <div class="section" id="sequencepattern-class">
 <h3><a class="toc-backref" href="#id11">SequencePattern class</a><a class="headerlink" href="#sequencepattern-class" title="Permalink to this headline">¶</a></h3>
-<dl class="class">
+<dl class="py class">
 <dt id="dnachisel.SequencePattern">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">SequencePattern</code><span class="sig-paren">(</span><em class="sig-param">expression</em>, <em class="sig-param">size=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">lookahead='loop'</em>, <em class="sig-param">is_palyndromic=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/SequencePattern.html#SequencePattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">SequencePattern</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">expression</span></em>, <em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lookahead</span><span class="o">=</span><span class="default_value">'loop'</span></em>, <em class="sig-param"><span class="n">is_palyndromic</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/SequencePattern.html#SequencePattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pattern/ that will be looked for in a DNA sequence.</p>
 <p>Use this class for matching regular expression patterns, and
 DnaNotationPattern for matching explicit sequences or sequences using Ns
 etc.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>expression</strong></p>
-<blockquote>
-<div><p>Any string or regular expression for matching ATGC nucleotides.
+<dd class="field-odd"><dl class="simple">
+<dt><strong>expression</strong></dt><dd><p>Any string or regular expression for matching ATGC nucleotides.
 Note that multi-nucleotides symbols such as “N” (for A-T-G-C), or “K”
 are not supported by this class, see DnaNotationPattern instead.</p>
-</div></blockquote>
-<p><strong>size</strong></p>
-<blockquote>
-<div><p>Size of the pattern, in number of characters (if none provided, the size
+</dd>
+<dt><strong>size</strong></dt><dd><p>Size of the pattern, in number of characters (if none provided, the size
 of the <code class="docutils literal notranslate"><span class="pre">pattern</span></code> string is used).
 The <code class="docutils literal notranslate"><span class="pre">size</span></code> is used to determine the size of windows when performing
 local optimization and constraint solving.
 It can be important to provide the size when the
 <code class="docutils literal notranslate"><span class="pre">pattern</span></code> string provided represents a complex regular expression whose
 maximal matching size cannot be easily evaluated.</p>
-</div></blockquote>
-<p><strong>name</strong></p>
-<blockquote>
-<div><p>Name of the pattern (will be displayed e.g. when the pattern is printed)</p>
-</div></blockquote>
+</dd>
+<dt><strong>name</strong></dt><dd><p>Name of the pattern (will be displayed e.g. when the pattern is printed)</p>
+</dd>
+</dl>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">expression</span> <span class="o">=</span> <span class="s2">&quot;A[ATGC]{3,}&quot;</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">expression</span> <span class="o">=</span> <span class="s2">&quot;A[ATGC]{3,}&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pattern</span> <span class="o">=</span> <span class="n">SequencePattern</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">constraint</span> <span class="o">=</span> <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
 </pre></div>
 </div>
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.SequencePattern.find_matches">
-<code class="sig-name descname">find_matches</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">location=None</em>, <em class="sig-param">forced_strand=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/SequencePattern.html#SequencePattern.find_matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.find_matches" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">find_matches</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em>, <em class="sig-param"><span class="n">location</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">forced_strand</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/SequencePattern.html#SequencePattern.find_matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.SequencePattern.find_matches" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the locations where the sequence matches the expression.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>sequence</strong></p>
-<blockquote>
-<div><p>A string of “ATGC…”</p>
-</div></blockquote>
-<p><strong>location</strong></p>
-<blockquote>
-<div><p>Location indicating a segment to which to restrict
+<dd class="field-odd"><dl class="simple">
+<dt><strong>sequence</strong></dt><dd><p>A string of “ATGC…”</p>
+</dd>
+<dt><strong>location</strong></dt><dd><p>Location indicating a segment to which to restrict
 the search. Only patterns entirely included in the segment will be
 returned</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>matches</p>
-<blockquote>
-<div><p>A list of the locations of matches, of the form
+<dd class="field-even"><dl class="simple">
+<dt>matches</dt><dd><p>A list of the locations of matches, of the form
 <code class="docutils literal notranslate"><span class="pre">[(start1,</span> <span class="pre">end1),</span> <span class="pre">(start2,</span> <span class="pre">end2),...]</span></code>.</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -1091,21 +1058,21 @@ returned</p>
 </div>
 <div class="section" id="dnanotationpattern">
 <h3><a class="toc-backref" href="#id12">DnaNotationPattern</a><a class="headerlink" href="#dnanotationpattern" title="Permalink to this headline">¶</a></h3>
-<dl class="class">
+<dl class="py class">
 <dt id="dnachisel.DnaNotationPattern">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">DnaNotationPattern</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/DnaNotationPattern.html#DnaNotationPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaNotationPattern" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">DnaNotationPattern</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/DnaNotationPattern.html#DnaNotationPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaNotationPattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for patterns in plain DNA notation: ATTGCCA, GCNNKTA, etc.</p>
-<p>If the sequence is not palyndromic, the pattern will be looked for in
+<p>If the sequence is not palindromic, the pattern will be looked for in
 both strands of sequences.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.DnaNotationPattern.all_variants">
 <code class="sig-name descname">all_variants</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/DnaNotationPattern.html#DnaNotationPattern.all_variants"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaNotationPattern.all_variants" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all ATGC sequence variants of a sequence</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.DnaNotationPattern.dna_sequence_to_regexpr">
-<em class="property">static </em><code class="sig-name descname">dna_sequence_to_regexpr</code><span class="sig-paren">(</span><em class="sig-param">sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/DnaNotationPattern.html#DnaNotationPattern.dna_sequence_to_regexpr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaNotationPattern.dna_sequence_to_regexpr" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">dna_sequence_to_regexpr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/DnaNotationPattern.html#DnaNotationPattern.dna_sequence_to_regexpr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.DnaNotationPattern.dna_sequence_to_regexpr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a regular expression to find the pattern in a sequence.</p>
 </dd></dl>
 
@@ -1114,116 +1081,96 @@ both strands of sequences.</p>
 </div>
 <div class="section" id="motifpssmpattern">
 <h3><a class="toc-backref" href="#id13">MotifPssmPattern</a><a class="headerlink" href="#motifpssmpattern" title="Permalink to this headline">¶</a></h3>
-<dl class="class">
+<dl class="py class">
 <dt id="dnachisel.MotifPssmPattern">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">MotifPssmPattern</code><span class="sig-paren">(</span><em class="sig-param">pssm</em>, <em class="sig-param">threshold=None</em>, <em class="sig-param">relative_threshold=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/MotifPssmPattern.html#MotifPssmPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MotifPssmPattern" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">MotifPssmPattern</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pssm</span></em>, <em class="sig-param"><span class="n">threshold</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">relative_threshold</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/MotifPssmPattern.html#MotifPssmPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MotifPssmPattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Motif pattern represented by a Position-Specific Scoring Matrix (PSSM).</p>
 <p>This class is better instantiated by creating a pattern from a set of
 sequence strings with <code class="docutils literal notranslate"><span class="pre">MotifPssmPattern.from_sequences()</span></code>,  or reading
 pattern(s) for a file with <code class="docutils literal notranslate"><span class="pre">MotifPssmPattern.from_file()</span></code>.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>pssm</strong></p>
-<blockquote>
-<div><p>A Bio.Align.AlignInfo.PSSM object.</p>
-</div></blockquote>
-<p><strong>threshold</strong></p>
-<blockquote>
-<div><p>locations of the sequence with a PSSM score above this value will be
+<dd class="field-odd"><dl class="simple">
+<dt><strong>pssm</strong></dt><dd><p>A Bio.Align.AlignInfo.PSSM object.</p>
+</dd>
+<dt><strong>threshold</strong></dt><dd><p>locations of the sequence with a PSSM score above this value will be
 considered matches. For convenience, a relative_threshold can be
 given instead.</p>
-</div></blockquote>
-<p><strong>relative_threshold</strong></p>
-<blockquote>
-<div><p>Value between 0 and 1 from which the threshold will be auto-computed.
+</dd>
+<dt><strong>relative_threshold</strong></dt><dd><p>Value between 0 and 1 from which the threshold will be auto-computed.
 0 means “match everything”, 1 means “only match the one (or several)
 sequence(s) with the absolute highest possible score”.</p>
-</div></blockquote>
 </dd>
 </dl>
-<dl class="method">
+</dd>
+</dl>
+<dl class="py method">
 <dt id="dnachisel.MotifPssmPattern.apply_pseudocounts">
-<em class="property">classmethod </em><code class="sig-name descname">apply_pseudocounts</code><span class="sig-paren">(</span><em class="sig-param">motif</em>, <em class="sig-param">pseudocounts</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/MotifPssmPattern.html#MotifPssmPattern.apply_pseudocounts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MotifPssmPattern.apply_pseudocounts" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">apply_pseudocounts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">motif</span></em>, <em class="sig-param"><span class="n">pseudocounts</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/MotifPssmPattern.html#MotifPssmPattern.apply_pseudocounts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MotifPssmPattern.apply_pseudocounts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add pseudocounts to the motif’s pssm matrix.</p>
 <p>Add nothing if pseudocounts is None, auto-compute pseudocounts if
 pseudocounts=”jaspar”, else just attribute the pseudocounts as-is
 to the motif.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.MotifPssmPattern.find_matches_in_string">
-<code class="sig-name descname">find_matches_in_string</code><span class="sig-paren">(</span><em class="sig-param">sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/MotifPssmPattern.html#MotifPssmPattern.find_matches_in_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MotifPssmPattern.find_matches_in_string" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">find_matches_in_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/MotifPssmPattern.html#MotifPssmPattern.find_matches_in_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MotifPssmPattern.find_matches_in_string" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find all positions where the PSSM score is above threshold.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.MotifPssmPattern.from_sequences">
-<em class="property">classmethod </em><code class="sig-name descname">from_sequences</code><span class="sig-paren">(</span><em class="sig-param">sequences</em>, <em class="sig-param">name='unnamed'</em>, <em class="sig-param">pseudocounts='jaspar'</em>, <em class="sig-param">threshold=None</em>, <em class="sig-param">relative_threshold=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/MotifPssmPattern.html#MotifPssmPattern.from_sequences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MotifPssmPattern.from_sequences" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_sequences</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequences</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'unnamed'</span></em>, <em class="sig-param"><span class="n">pseudocounts</span><span class="o">=</span><span class="default_value">'jaspar'</span></em>, <em class="sig-param"><span class="n">threshold</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">relative_threshold</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/MotifPssmPattern.html#MotifPssmPattern.from_sequences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MotifPssmPattern.from_sequences" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a PSSM pattern computed from same-length sequences.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>sequences</strong></p>
-<blockquote>
-<div><p>A list of same-length sequences</p>
-</div></blockquote>
-<p><strong>name</strong></p>
-<blockquote>
-<div><p>Name to give to the pattern (will appear in reports etc.)</p>
-</div></blockquote>
-<p><strong>pseudocounts</strong></p>
-<blockquote>
-<div><p>Either a dict {“A”: 0.01, “T”: …} or “jaspar” for automatic
+<dd class="field-odd"><dl class="simple">
+<dt><strong>sequences</strong></dt><dd><p>A list of same-length sequences.</p>
+</dd>
+<dt><strong>name</strong></dt><dd><p>Name to give to the pattern (will appear in reports etc.).</p>
+</dd>
+<dt><strong>pseudocounts</strong></dt><dd><p>Either a dict {“A”: 0.01, “T”: …} or “jaspar” for automatic
 pseudocounts from the Biopython.motifs.jaspar module (recommended),
-or None for no pseudocounts at all (not recommended!)</p>
-</div></blockquote>
-<p><strong>threshold</strong></p>
-<blockquote>
-<div><p>locations of the sequence with a PSSM score above this value will be
+or None for no pseudocounts at all (not recommended!).</p>
+</dd>
+<dt><strong>threshold</strong></dt><dd><p>locations of the sequence with a PSSM score above this value will be
 considered matches. For convenience, a relative_threshold can be
 given instead.</p>
-</div></blockquote>
-<p><strong>relative_threshold</strong></p>
-<blockquote>
-<div><p>Value between 0 and 1 from which the threshold will be auto-computed.
+</dd>
+<dt><strong>relative_threshold</strong></dt><dd><p>Value between 0 and 1 from which the threshold will be auto-computed.
 0 means “match everything”, 1 means “only match the one (or several)
 sequence(s) with the absolute highest possible score”.</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.MotifPssmPattern.list_from_file">
-<em class="property">classmethod </em><code class="sig-name descname">list_from_file</code><span class="sig-paren">(</span><em class="sig-param">motifs_file</em>, <em class="sig-param">file_format</em>, <em class="sig-param">threshold=None</em>, <em class="sig-param">pseudocounts='jaspar'</em>, <em class="sig-param">relative_threshold=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/MotifPssmPattern.html#MotifPssmPattern.list_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MotifPssmPattern.list_from_file" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">list_from_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">motifs_file</span></em>, <em class="sig-param"><span class="n">file_format</span></em>, <em class="sig-param"><span class="n">threshold</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pseudocounts</span><span class="o">=</span><span class="default_value">'jaspar'</span></em>, <em class="sig-param"><span class="n">relative_threshold</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/MotifPssmPattern.html#MotifPssmPattern.list_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.MotifPssmPattern.list_from_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of PSSM patterns from a file in JASPAR, MEME, etc.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>motifs_file</strong></p>
-<blockquote>
-<div><p>Path to a motifs file, or file handle.</p>
-</div></blockquote>
-<p><strong>file_format</strong></p>
-<blockquote>
-<div><p>File format. one of “jaspar”, “meme”, “TRANSFAC”.</p>
-</div></blockquote>
-<p><strong>pseudocounts</strong></p>
-<blockquote>
-<div><p>Either a dict {“A”: 0.01, “T”: …} or “jaspar” for automatic
+<dd class="field-odd"><dl class="simple">
+<dt><strong>motifs_file</strong></dt><dd><p>Path to a motifs file, or file handle.</p>
+</dd>
+<dt><strong>file_format</strong></dt><dd><p>File format. one of “jaspar”, “meme”, “TRANSFAC”.</p>
+</dd>
+<dt><strong>pseudocounts</strong></dt><dd><p>Either a dict {“A”: 0.01, “T”: …} or “jaspar” for automatic
 pseudocounts from the Biopython.motifs.jaspar module (recommended),
-or None for no pseudocounts at all (not recommended!)</p>
-</div></blockquote>
-<p><strong>threshold</strong></p>
-<blockquote>
-<div><p>locations of the sequence with a PSSM score above this value will be
+or None for no pseudocounts at all (not recommended!).</p>
+</dd>
+<dt><strong>threshold</strong></dt><dd><p>locations of the sequence with a PSSM score above this value will be
 considered matches. For convenience, a relative_threshold can be
 given instead.</p>
-</div></blockquote>
-<p><strong>relative_threshold</strong></p>
-<blockquote>
-<div><p>Value between 0 and 1 from which the threshold will be auto-computed.
+</dd>
+<dt><strong>relative_threshold</strong></dt><dd><p>Value between 0 and 1 from which the threshold will be auto-computed.
 0 means “match everything”, 1 means “only match the one (or several)
 sequence(s) with the absolute highest possible score”.</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -1233,18 +1180,18 @@ sequence(s) with the absolute highest possible score”.</p>
 </div>
 <div class="section" id="enzymesitepattern">
 <h3><a class="toc-backref" href="#id14">EnzymeSitePattern</a><a class="headerlink" href="#enzymesitepattern" title="Permalink to this headline">¶</a></h3>
-<dl class="class">
+<dl class="py class">
 <dt id="dnachisel.EnzymeSitePattern">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">EnzymeSitePattern</code><span class="sig-paren">(</span><em class="sig-param">enzyme_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/EnzymeSitePattern.html#EnzymeSitePattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.EnzymeSitePattern" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">EnzymeSitePattern</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">enzyme_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/EnzymeSitePattern.html#EnzymeSitePattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.EnzymeSitePattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to represent Enzyme site patterns</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">enzyme_pattern</span> <span class="o">=</span> <span class="n">EnzymeSitePattern</span><span class="p">(</span><span class="s2">&quot;BsaI&quot;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">enzyme_pattern</span> <span class="o">=</span> <span class="n">EnzymeSitePattern</span><span class="p">(</span><span class="s2">&quot;BsaI&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">constraint</span> <span class="o">=</span> <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">enzyme_pattern</span><span class="p">)</span>
 </pre></div>
 </div>
-<dl class="method">
+<dl class="py method">
 <dt id="dnachisel.EnzymeSitePattern.from_string">
-<em class="property">static </em><code class="sig-name descname">from_string</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/EnzymeSitePattern.html#EnzymeSitePattern.from_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.EnzymeSitePattern.from_string" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">string</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/EnzymeSitePattern.html#EnzymeSitePattern.from_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.EnzymeSitePattern.from_string" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert BsmBI_site to EnzymeSitePattern(BsmBI)</p>
 </dd></dl>
 
@@ -1253,13 +1200,13 @@ sequence(s) with the absolute highest possible score”.</p>
 </div>
 <div class="section" id="repeatedkmerpattern">
 <h3><a class="toc-backref" href="#id15">RepeatedKmerPattern</a><a class="headerlink" href="#repeatedkmerpattern" title="Permalink to this headline">¶</a></h3>
-<dl class="class">
+<dl class="py class">
 <dt id="dnachisel.RepeatedKmerPattern">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">RepeatedKmerPattern</code><span class="sig-paren">(</span><em class="sig-param">n_repeats</em>, <em class="sig-param">kmer_size</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/RepeatedKmerPattern.html#RepeatedKmerPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.RepeatedKmerPattern" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">RepeatedKmerPattern</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_repeats</span></em>, <em class="sig-param"><span class="n">kmer_size</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/RepeatedKmerPattern.html#RepeatedKmerPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.RepeatedKmerPattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Direct repeats like ATT-ATT, ATGC-ATGC-ATGC, etc.</p>
 <p>Shorthand string version: “3x4mer”, “5x2mer”, etc.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">RepeatedKmerPattern</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># dimers repeated 3 times</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">RepeatedKmerPattern</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># dimers repeated 3 times</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1267,13 +1214,13 @@ sequence(s) with the absolute highest possible score”.</p>
 </div>
 <div class="section" id="homopolymerpattern">
 <h3><a class="toc-backref" href="#id16">HomopolymerPattern</a><a class="headerlink" href="#homopolymerpattern" title="Permalink to this headline">¶</a></h3>
-<dl class="class">
+<dl class="py class">
 <dt id="dnachisel.HomopolymerPattern">
-<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">HomopolymerPattern</code><span class="sig-paren">(</span><em class="sig-param">nucleotide</em>, <em class="sig-param">number</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/HomopolymerPattern.html#HomopolymerPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.HomopolymerPattern" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dnachisel.</code><code class="sig-name descname">HomopolymerPattern</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">nucleotide</span></em>, <em class="sig-param"><span class="n">number</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/SequencePattern/HomopolymerPattern.html#HomopolymerPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.HomopolymerPattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Homopolymer of the form AAAAAAA, TTTTT, etc.</p>
 <p>Shorthand string version: “7xA”, “9xC”, etc.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pattern</span> <span class="o">=</span> <span class="n">HomopolymerPattern</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pattern</span> <span class="o">=</span> <span class="n">HomopolymerPattern</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">constraint</span> <span class="o">=</span> <span class="n">AvoidPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1298,7 +1245,7 @@ sequence(s) with the absolute highest possible score”.</p>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

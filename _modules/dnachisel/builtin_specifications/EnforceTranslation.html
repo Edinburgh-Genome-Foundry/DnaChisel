@@ -14,10 +14,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
 
       
       <script src="../../../_static/theme-vendors.js"></script>
@@ -40,21 +40,21 @@
 
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -86,21 +86,21 @@
 
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -134,7 +134,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Reference</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Reference</a></span>
       </p>
       <ul class="">
         
@@ -185,7 +185,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Using Genbanks</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Using Genbanks</a></span>
       </p>
       <ul class="">
         
@@ -206,7 +206,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Examples</a></span>
       </p>
       <ul class="">
         
@@ -245,14 +245,14 @@
 <span></span><span class="s2">&quot;Implement EnforceTranslation.&quot;</span>
 
 
-<span class="kn">from</span> <span class="nn">..Specification</span> <span class="k">import</span> <span class="n">SpecEvaluation</span>
-<span class="kn">from</span> <span class="nn">..biotools</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">..Specification</span> <span class="kn">import</span> <span class="n">SpecEvaluation</span>
+<span class="kn">from</span> <span class="nn">..biotools</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">translate</span><span class="p">,</span>
     <span class="n">reverse_complement</span><span class="p">,</span>
     <span class="n">get_backtranslation_table</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">..Location</span> <span class="k">import</span> <span class="n">Location</span>
-<span class="kn">from</span> <span class="nn">.CodonSpecification</span> <span class="k">import</span> <span class="n">CodonSpecification</span>
+<span class="kn">from</span> <span class="nn">..Location</span> <span class="kn">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">.CodonSpecification</span> <span class="kn">import</span> <span class="n">CodonSpecification</span>
 
 
 <div class="viewcode-block" id="EnforceTranslation"><a class="viewcode-back" href="../../../ref/builtin_specifications.html#dnachisel.builtin_specifications.EnforceTranslation">[docs]</a><span class="k">class</span> <span class="nc">EnforceTranslation</span><span class="p">(</span><span class="n">CodonSpecification</span><span class="p">):</span>
@@ -260,7 +260,7 @@
 
 <span class="sd">    This class enforces the standard translation, but it is also possible to</span>
 <span class="sd">    change the class&#39; `codons_sequences` and `codons_translations`</span>
-<span class="sd">    dictionnaries for more exotic kind of translations</span>
+<span class="sd">    dictionaries for more exotic kind of translations</span>
 
 <span class="sd">    Shorthand for annotations: &quot;cds&quot;.</span>
 
@@ -277,7 +277,7 @@
 
 <span class="sd">    genetic_table</span>
 <span class="sd">      Either &quot;Standard&quot;, &quot;Bacterial&quot;, or any other Biopython genetic table name</span>
-<span class="sd">      (see dnachisel.biotools.CODON_TABLES_NAMES for a list of accepted names).</span>
+<span class="sd">      (see dnachisel.biotools.CODON_TABLE_NAMES for a list of accepted names).</span>
 
 <span class="sd">    start_codon</span>
 <span class="sd">      Signals that the first codon is a start codon and provides a policy for</span>
@@ -305,7 +305,7 @@
     <span class="n">shorthand_name</span> <span class="o">=</span> <span class="s2">&quot;cds&quot;</span>
     <span class="n">default_genetic_table</span> <span class="o">=</span> <span class="s2">&quot;Standard&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">genetic_table</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
         <span class="n">start_codon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -457,14 +457,17 @@
 
         <span class="k">return</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">standardize_choice</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span> <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">choices</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;EnforceTranslation(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;EnforceTranslation(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">short_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;cds&quot;</span></div>
+        <span class="k">return</span> <span class="s2">&quot;cds&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">breach_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;protein sequence changed&quot;</span></div>
 </pre></div>
 
           </div>
@@ -473,7 +476,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

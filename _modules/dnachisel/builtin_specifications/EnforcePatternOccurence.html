@@ -14,10 +14,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
 
       
       <script src="../../../_static/theme-vendors.js"></script>
@@ -40,21 +40,21 @@
 
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -86,21 +86,21 @@
 
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -134,7 +134,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Reference</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Reference</a></span>
       </p>
       <ul class="">
         
@@ -185,7 +185,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Using Genbanks</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Using Genbanks</a></span>
       </p>
       <ul class="">
         
@@ -206,7 +206,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Examples</a></span>
       </p>
       <ul class="">
         
@@ -242,26 +242,24 @@
           <div class="content" role="main">
             
   <h1>Source code for dnachisel.builtin_specifications.EnforcePatternOccurence</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Implement AvoidPattern&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Implement EnforcePatternOccurence&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">dnachisel.MutationSpace</span> <span class="k">import</span> <span class="n">MutationSpace</span>
-<span class="kn">from</span> <span class="nn">dnachisel.SequencePattern</span> <span class="k">import</span> <span class="n">SequencePattern</span><span class="p">,</span> <span class="n">DnaNotationPattern</span>
-<span class="kn">from</span> <span class="nn">dnachisel.Location</span> <span class="k">import</span> <span class="n">Location</span>
-<span class="kn">from</span> <span class="nn">dnachisel.biotools</span> <span class="k">import</span> <span class="n">reverse_complement</span>
-<span class="kn">from</span> <span class="nn">dnachisel.DnaOptimizationProblem.DnaOptimizationProblem</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">DnaOptimizationProblem</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">dnachisel.DnaOptimizationProblem.NoSolutionError</span> <span class="k">import</span> <span class="n">NoSolutionError</span>
-<span class="kn">from</span> <span class="nn">..Specification</span> <span class="k">import</span> <span class="n">Specification</span><span class="p">,</span> <span class="n">SpecEvaluation</span>
+<span class="kn">from</span> <span class="nn">..MutationSpace</span> <span class="kn">import</span> <span class="n">MutationSpace</span>
+<span class="kn">from</span> <span class="nn">..SequencePattern</span> <span class="kn">import</span> <span class="n">SequencePattern</span><span class="p">,</span> <span class="n">DnaNotationPattern</span>
+<span class="kn">from</span> <span class="nn">..Location</span> <span class="kn">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">..biotools</span> <span class="kn">import</span> <span class="n">reverse_complement</span>
+<span class="kn">from</span> <span class="nn">..DnaOptimizationProblem.DnaOptimizationProblem</span> <span class="kn">import</span> <span class="n">DnaOptimizationProblem</span>
+<span class="kn">from</span> <span class="nn">..DnaOptimizationProblem.NoSolutionError</span> <span class="kn">import</span> <span class="n">NoSolutionError</span>
+<span class="kn">from</span> <span class="nn">..Specification</span> <span class="kn">import</span> <span class="n">Specification</span><span class="p">,</span> <span class="n">SpecEvaluation</span>
 
-<span class="kn">from</span> <span class="nn">.EnforceSequence</span> <span class="k">import</span> <span class="n">EnforceSequence</span>
+<span class="kn">from</span> <span class="nn">.EnforceSequence</span> <span class="kn">import</span> <span class="n">EnforceSequence</span>
 
 
 <div class="viewcode-block" id="EnforcePatternOccurence"><a class="viewcode-back" href="../../../ref/builtin_specifications.html#dnachisel.builtin_specifications.EnforcePatternOccurence">[docs]</a><span class="k">class</span> <span class="nc">EnforcePatternOccurence</span><span class="p">(</span><span class="n">Specification</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Enforce a number of occurences of the given pattern in the sequence.</span>
+    <span class="sd">&quot;&quot;&quot;Enforce a number of occurrences of the given pattern in the sequence.</span>
 
 <span class="sd">    Shorthand for annotations: &quot;insert&quot; (although this specification can be</span>
-<span class="sd">    used to both insert new occurences of a pattern, or destroy surnumerary</span>
+<span class="sd">    used to both insert new occurences of a pattern, or destroy supernumerary</span>
 <span class="sd">    patterns)</span>
 
 <span class="sd">    Parameters</span>
@@ -271,31 +269,33 @@
 <span class="sd">      &quot;BsmBI_site&quot;, etc.</span>
 
 <span class="sd">    occurences</span>
-<span class="sd">      Desired number of occurences of the pattern.</span>
+<span class="sd">      Desired number of occurrences of the pattern.</span>
 
 <span class="sd">    location</span>
 <span class="sd">      Location of the DNA segment on which to enforce the pattern e.g.</span>
-<span class="sd">      ``Location(10, 45, 1)``</span>
+<span class="sd">      ``Location(10, 45, 1)``. Default ``None`` means the whole sequence.</span>
 
 <span class="sd">    center</span>
-<span class="sd">      If true, new inserted patterns will prioritize locations at the center</span>
+<span class="sd">      If True, new inserted patterns will prioritize locations at the center</span>
 <span class="sd">      of the specification&#39;s location. Else the insertion will happen at</span>
 <span class="sd">      the beginning of the location.</span>
 
 <span class="sd">    strand</span>
 <span class="sd">      Alternative way to set the strand, meant to be used in two cases only:</span>
-<span class="sd">      (1) in a Genbank annotation by setting ``strand=both`` to indicate that</span>
+<span class="sd">      (1) in a Genbank annotation by setting ``strand=&#39;both&#39;`` to indicate that</span>
 <span class="sd">      the pattern could be on both strands (otherwise, only the</span>
 <span class="sd">      feature&#39;s strand will be considered).</span>
 <span class="sd">      (2) if you want to create a specification without preset location, but</span>
-<span class="sd">      with a set strand: ``EnforcePatternOccurence(&#39;BsmBI_site&#39;, strand=1)``</span>
+<span class="sd">      with a set strand: ``EnforcePatternOccurence(&#39;BsmBI_site&#39;, strand=1)``.</span>
+<span class="sd">      The default &#39;from_location&#39; uses the strand specified in ``location``, or</span>
+<span class="sd">      if that is ``None``, it sets both strands.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">best_possible_score</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">priority</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
     <span class="n">shorthand_name</span> <span class="o">=</span> <span class="s2">&quot;insert&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">pattern</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">occurences</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -309,19 +309,25 @@
             <span class="n">pattern</span> <span class="o">=</span> <span class="n">SequencePattern</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="n">pattern</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">strand</span> <span class="o">!=</span> <span class="s2">&quot;from_location&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">strand</span> <span class="o">==</span> <span class="s2">&quot;both&quot;</span><span class="p">:</span>
-                <span class="n">strand</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">if</span> <span class="n">strand</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unknown strand: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">strand</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span> <span class="o">=</span> <span class="n">strand</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">strand</span> <span class="o">=</span> <span class="n">strand</span>
+        <span class="k">if</span> <span class="n">strand</span> <span class="o">==</span> <span class="s2">&quot;from_location&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">strand</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">strand</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span>
+        <span class="k">elif</span> <span class="n">strand</span> <span class="o">==</span> <span class="s2">&quot;both&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">strand</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">strand</span> <span class="ow">in</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">strand</span> <span class="o">=</span> <span class="n">strand</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unknown strand: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">strand</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">occurences</span> <span class="o">=</span> <span class="n">occurences</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">center</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">boost</span> <span class="o">=</span> <span class="n">boost</span>
 
     <span class="k">def</span> <span class="nf">initialized_on_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_with_full_span_if_no_location</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+        <span class="n">copy_of_constraint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_with_full_span_if_no_location</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+        <span class="n">copy_of_constraint</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">strand</span>
+        <span class="k">return</span> <span class="n">copy_of_constraint</span>
 
     <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Score the difference between expected and observed n_occurences.&quot;&quot;&quot;</span>
@@ -359,8 +365,8 @@
     <span class="k">def</span> <span class="nf">insert_pattern_in_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Insert the pattern in the problem&#39;s sequence by successive tries.</span>
 
-<span class="sd">        This heuristic is attempted to get the number of occurences in the</span>
-<span class="sd">        pattern from 0 to some number</span>
+<span class="sd">        This heuristic is attempted to get the number of occurrences in the</span>
+<span class="sd">        pattern from 0 to some number.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">sequence_to_insert</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">sequence</span>
         <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
@@ -406,16 +412,14 @@
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">resolution_heuristic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Resolve using custom instertion if possible.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Resolve using custom insertion if possible.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="n">DnaNotationPattern</span><span class="p">):</span>
             <span class="n">evaluation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">evaluation</span><span class="o">.</span><span class="n">passes</span><span class="p">:</span>
                 <span class="k">return</span>
             <span class="n">n_matches</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">evaluation</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;matches&quot;</span><span class="p">])</span>
             <span class="k">if</span> <span class="n">n_matches</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">occurences</span><span class="p">:</span>
-                <span class="n">other_constraints</span> <span class="o">=</span> <span class="p">[</span>
-                    <span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span>
-                <span class="p">]</span>
+                <span class="n">other_constraints</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="p">]</span>
                 <span class="n">new_problem</span> <span class="o">=</span> <span class="n">problem</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">occurences</span> <span class="o">-</span> <span class="n">n_matches</span><span class="p">):</span>
                     <span class="n">new_occurence_cst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_with_changes</span><span class="p">(</span>
@@ -448,7 +452,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

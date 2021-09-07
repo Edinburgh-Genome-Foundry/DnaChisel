@@ -14,10 +14,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
 
       
       <script src="../../../_static/theme-vendors.js"></script>
@@ -40,21 +40,21 @@
 
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -86,21 +86,21 @@
 
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -134,7 +134,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Reference</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Reference</a></span>
       </p>
       <ul class="">
         
@@ -185,7 +185,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Using Genbanks</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Using Genbanks</a></span>
       </p>
       <ul class="">
         
@@ -206,7 +206,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Examples</a></span>
       </p>
       <ul class="">
         
@@ -242,17 +242,17 @@
           <div class="content" role="main">
             
   <h1>Source code for dnachisel.builtin_specifications.EnforceRegionsCompatibility</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Counter</span>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 
-<span class="kn">from</span> <span class="nn">dnachisel.Location</span> <span class="k">import</span> <span class="n">Location</span>
-<span class="kn">from</span> <span class="nn">..Specification</span> <span class="k">import</span> <span class="n">Specification</span><span class="p">,</span> <span class="n">SpecEvaluation</span>
+<span class="kn">from</span> <span class="nn">..Location</span> <span class="kn">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">..Specification</span> <span class="kn">import</span> <span class="n">Specification</span><span class="p">,</span> <span class="n">SpecEvaluation</span>
 
 <div class="viewcode-block" id="EnforceRegionsCompatibility"><a class="viewcode-back" href="../../../ref/builtin_specifications.html#dnachisel.builtin_specifications.EnforceRegionsCompatibility">[docs]</a><span class="k">class</span> <span class="nc">EnforceRegionsCompatibility</span><span class="p">(</span><span class="n">Specification</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Ensure that different subregions satisfy compatibility constraints.&quot;&quot;&quot;</span>
     <span class="n">max_possible_score</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locations</span><span class="p">,</span> <span class="n">compatibility_condition</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locations</span><span class="p">,</span> <span class="n">compatibility_condition</span><span class="p">,</span>
                  <span class="n">condition_label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">boost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">locations</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">Location</span><span class="o">.</span><span class="n">from_tuple</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
@@ -283,7 +283,7 @@
         <span class="k">if</span> <span class="n">score</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;All compatible !&quot;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Found the following imcompatibilities: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Found the following incompatibilities: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
                 <span class="n">incompatible_locations_pairs</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">SpecEvaluation</span><span class="p">(</span>
@@ -299,10 +299,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span> <span class="c1">#(parent=self)</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;CompatRegions(</span><span class="si">%s%s</span><span class="s2">...)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition_label</span><span class="p">,</span>
                                            <span class="bp">self</span><span class="o">.</span><span class="n">locations</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;CompatRegions(</span><span class="si">%s%s</span><span class="s2">...)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition_label</span><span class="p">,</span>
                                            <span class="bp">self</span><span class="o">.</span><span class="n">locations</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
@@ -319,7 +319,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

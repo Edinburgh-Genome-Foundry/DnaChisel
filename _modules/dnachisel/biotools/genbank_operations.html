@@ -14,10 +14,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
 
       
       <script src="../../../_static/theme-vendors.js"></script>
@@ -40,21 +40,21 @@
 
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -86,21 +86,21 @@
 
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -134,7 +134,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Reference</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Reference</a></span>
       </p>
       <ul class="">
         
@@ -185,7 +185,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Using Genbanks</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Using Genbanks</a></span>
       </p>
       <ul class="">
         
@@ -206,7 +206,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Examples</a></span>
       </p>
       <ul class="">
         
@@ -244,17 +244,25 @@
   <h1>Source code for dnachisel.biotools.genbank_operations</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Generic methods for reading/modifying Genbank/Biopython records&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="k">import</span> <span class="n">Seq</span>
-<span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="k">import</span> <span class="n">SeqFeature</span><span class="p">,</span> <span class="n">FeatureLocation</span>
-<span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="k">import</span> <span class="n">SeqRecord</span>
-<span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="k">import</span> <span class="n">DNAAlphabet</span>
-<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">SeqIO</span>
+<span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="kn">import</span> <span class="n">Seq</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="kn">import</span> <span class="n">SeqFeature</span><span class="p">,</span> <span class="n">FeatureLocation</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">snapgene_reader</span> <span class="k">import</span> <span class="n">snapgene_file_to_seqrecord</span>
+    <span class="c1"># Biopython &lt;1.78</span>
+    <span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="kn">import</span> <span class="n">DNAAlphabet</span>
+
+    <span class="n">has_dna_alphabet</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># Biopython &gt;=1.78</span>
+    <span class="n">has_dna_alphabet</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">snapgene_reader</span> <span class="kn">import</span> <span class="n">snapgene_file_to_seqrecord</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
 
     <span class="k">def</span> <span class="nf">snapgene_file_to_seqrecord</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">k</span><span class="p">):</span>
@@ -288,11 +296,7 @@
 
 
 <div class="viewcode-block" id="annotate_record"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.annotate_record">[docs]</a><span class="k">def</span> <span class="nf">annotate_record</span><span class="p">(</span>
-    <span class="n">seqrecord</span><span class="p">,</span>
-    <span class="n">location</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span>
-    <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span>
-    <span class="n">margin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">qualifiers</span>
+    <span class="n">seqrecord</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span> <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">qualifiers</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Add a feature to a Biopython SeqRecord.</span>
 
@@ -303,16 +307,16 @@
 <span class="sd">      The biopython seqrecord to be annotated.</span>
 
 <span class="sd">    location</span>
-<span class="sd">      Either (start, end) or (start, end, strand). (strand defaults to +1)</span>
+<span class="sd">      Either (start, end) or (start, end, strand). (strand defaults to +1).</span>
 
 <span class="sd">    feature_type</span>
-<span class="sd">      The type associated with the feature</span>
+<span class="sd">      The type associated with the feature.</span>
 
 <span class="sd">    margin</span>
 <span class="sd">      Number of extra bases added on each side of the given location.</span>
 
 <span class="sd">    qualifiers</span>
-<span class="sd">      Dictionnary that will be the Biopython feature&#39;s `qualifiers` attribute.</span>
+<span class="sd">      Dictionary that will be the Biopython feature&#39;s `qualifiers` attribute.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;full&quot;</span><span class="p">:</span>
         <span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="n">margin</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqrecord</span><span class="p">)</span> <span class="o">-</span> <span class="n">margin</span><span class="p">)</span>
@@ -327,9 +331,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="annotate_differences"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.annotate_differences">[docs]</a><span class="k">def</span> <span class="nf">annotate_differences</span><span class="p">(</span>
-    <span class="n">record</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;#&quot;</span>
-<span class="p">):</span>
+<div class="viewcode-block" id="annotate_differences"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.annotate_differences">[docs]</a><span class="k">def</span> <span class="nf">annotate_differences</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;#&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Annotate differences between two records in a new record.</span>
 
 <span class="sd">    Returns a version of SeqRecord ``record`` where differences with the</span>
@@ -338,10 +340,10 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    record</span>
-<span class="sd">      The SeqRecord to be compared to the reference</span>
+<span class="sd">      The SeqRecord to be compared to the reference.</span>
 
 <span class="sd">    reference</span>
-<span class="sd">      The reference SeqRecord. Must be the same size as ``reference``</span>
+<span class="sd">      The reference SeqRecord. Must be the same size as ``reference``.</span>
 
 <span class="sd">    feature_type</span>
 <span class="sd">      The type of the features added to mark differences.</span>
@@ -354,7 +356,8 @@
     <span class="n">seq1</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
     <span class="n">seq2</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
     <span class="n">indices_diff</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">seq1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">seq2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">seq1</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span>
+        <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">seq2</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span>
     <span class="p">)</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">indices_diff</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">indices_diff</span><span class="p">]</span>
     <span class="n">locations</span> <span class="o">=</span> <span class="p">[[</span><span class="n">indices_diff</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">indices_diff</span><span class="p">[</span><span class="mi">0</span><span class="p">]]]</span>
@@ -382,14 +385,13 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    -----------</span>
 <span class="sd">    record</span>
-<span class="sd">      A Biopython record</span>
+<span class="sd">      A Biopython record.</span>
 
 <span class="sd">    pattern</span>
-<span class="sd">      A DnaChisel SequencePattern object (such as DnaPAttern)</span>
+<span class="sd">      A DnaChisel SequencePattern object (such as DnaPAttern).</span>
 
 <span class="sd">    feature_type</span>
-<span class="sd">      Type of the annotations in the returned record</span>
-
+<span class="sd">      Type of the annotations in the returned record.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">new_record</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
     <span class="n">label</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
@@ -404,9 +406,15 @@
 
 
 <div class="viewcode-block" id="change_biopython_record_sequence"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.change_biopython_record_sequence">[docs]</a><span class="k">def</span> <span class="nf">change_biopython_record_sequence</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">new_seq</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a version of the record with the sequence set to new_seq&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a version of the record with the sequence set to new_seq.&quot;&quot;&quot;</span>
     <span class="n">new_record</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
-    <span class="n">new_record</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">Seq</span><span class="p">(</span><span class="n">new_seq</span><span class="p">,</span> <span class="n">alphabet</span><span class="o">=</span><span class="n">DNAAlphabet</span><span class="p">())</span>
+
+    <span class="k">if</span> <span class="n">has_dna_alphabet</span><span class="p">:</span>
+        <span class="n">seq</span> <span class="o">=</span> <span class="n">Seq</span><span class="p">(</span><span class="n">new_seq</span><span class="p">,</span> <span class="n">alphabet</span><span class="o">=</span><span class="n">DNAAlphabet</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">seq</span> <span class="o">=</span> <span class="n">Seq</span><span class="p">(</span><span class="n">new_seq</span><span class="p">)</span>
+
+    <span class="n">new_record</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">seq</span>
     <span class="k">return</span> <span class="n">new_record</span></div>
 
 
@@ -414,11 +422,17 @@
     <span class="n">sequence</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;&lt;unknown id&gt;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&lt;unknown name&gt;&quot;</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="p">()</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a SeqRecord of the sequence, ready to be Genbanked.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">has_dna_alphabet</span><span class="p">:</span>
+        <span class="n">seq</span> <span class="o">=</span> <span class="n">Seq</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">alphabet</span><span class="o">=</span><span class="n">DNAAlphabet</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">seq</span> <span class="o">=</span> <span class="n">Seq</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">SeqRecord</span><span class="p">(</span>
-        <span class="n">Seq</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">alphabet</span><span class="o">=</span><span class="n">DNAAlphabet</span><span class="p">()),</span>
+        <span class="n">seq</span><span class="o">=</span><span class="n">seq</span><span class="p">,</span>
         <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
         <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
         <span class="n">features</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">features</span><span class="p">),</span>
+        <span class="n">annotations</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">:</span> <span class="s2">&quot;DNA&quot;</span><span class="p">},</span>
     <span class="p">)</span></div>
 
 
@@ -451,13 +465,13 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    record</span>
-<span class="sd">      A biopython record</span>
+<span class="sd">      A biopython record.</span>
 
 <span class="sd">    target</span>
 <span class="sd">      Path to a file or filelike object.</span>
 
 <span class="sd">    file_format</span>
-<span class="sd">      Format, either Genbank or fasta</span>
+<span class="sd">      Format, either Genbank or fasta.</span>
 
 <span class="sd">    remove_locationless_features</span>
 <span class="sd">      If True, will remove all features whose location is None, to avoid a</span>
@@ -465,17 +479,16 @@
 
 <span class="sd">    max_name_length</span>
 <span class="sd">      The record&#39;s name will be truncated if longer than this (also here to</span>
-<span class="sd">      avoid a biopython bug).</span>
+<span class="sd">      avoid a Biopython bug).</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">record</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">remove_locationless_features</span><span class="p">:</span>
-        <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="p">]</span>
+        <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="n">record</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="p">[:</span><span class="n">max_name_length</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">alphabet</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;DNAAlphabet&quot;</span><span class="p">:</span>
-        <span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">alphabet</span> <span class="o">=</span> <span class="n">DNAAlphabet</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">has_dna_alphabet</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">alphabet</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;DNAAlphabet&quot;</span><span class="p">:</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">alphabet</span> <span class="o">=</span> <span class="n">DNAAlphabet</span><span class="p">()</span>
     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s2">&quot;open&quot;</span><span class="p">):</span>
         <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
     <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">file_format</span><span class="p">)</span></div>
@@ -487,7 +500,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

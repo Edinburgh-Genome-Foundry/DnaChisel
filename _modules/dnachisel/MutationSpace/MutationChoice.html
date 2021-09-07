@@ -14,10 +14,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
 
       
       <script src="../../../_static/theme-vendors.js"></script>
@@ -40,21 +40,21 @@
 
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -86,21 +86,21 @@
 
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -134,7 +134,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Reference</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Reference</a></span>
       </p>
       <ul class="">
         
@@ -185,7 +185,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Using Genbanks</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Using Genbanks</a></span>
       </p>
       <ul class="">
         
@@ -206,7 +206,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Examples</a></span>
       </p>
       <ul class="">
         
@@ -242,7 +242,7 @@
           <div class="content" role="main">
             
   <h1>Source code for dnachisel.MutationSpace.MutationChoice</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">..biotools</span> <span class="k">import</span> <span class="n">windows_overlap</span>
+<span></span><span class="kn">from</span> <span class="nn">..biotools</span> <span class="kn">import</span> <span class="n">windows_overlap</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -270,7 +270,7 @@
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;segment&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="s2">&quot;variants&quot;</span><span class="p">,</span> <span class="s2">&quot;is_any_nucleotide&quot;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">variants</span><span class="p">,</span> <span class="n">is_any_nucleotide</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segment</span><span class="p">,</span> <span class="n">variants</span><span class="p">,</span> <span class="n">is_any_nucleotide</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="n">segment</span> <span class="o">=</span> <span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="n">segment</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">segment</span> <span class="o">=</span> <span class="n">segment</span>
@@ -394,12 +394,12 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span></div>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Represent.&quot;&quot;&quot;</span>
         <span class="n">subsequences</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variants</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;MutChoice(</span><span class="si">%d</span><span class="s2">-</span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">subsequences</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Represent.&quot;&quot;&quot;</span>
         <span class="n">subsequences</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variants</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;MutChoice(</span><span class="si">%d</span><span class="s2">-</span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">subsequences</span><span class="p">)</span></div>
@@ -411,7 +411,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

@@ -14,10 +14,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
 
       
       <script src="../_static/theme-vendors.js"></script>
@@ -42,21 +42,21 @@
 
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link  router-link-active">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -88,21 +88,21 @@
 
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link  router-link-active">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -136,7 +136,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Reference</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Reference</a></span>
       </p>
       <ul class="current">
         
@@ -193,7 +193,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Using Genbanks</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Using Genbanks</a></span>
       </p>
       <ul class="">
         
@@ -214,7 +214,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Examples</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Examples</a></span>
       </p>
       <ul class="">
         
@@ -258,75 +258,57 @@
   <div class="section" id="module-dnachisel.reports.optimization_reports">
 <span id="reports"></span><h1>Reports<a class="headerlink" href="#module-dnachisel.reports.optimization_reports" title="Permalink to this headline">¶</a></h1>
 <p>Methods to generate optimization reports.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="dnachisel.reports.optimization_reports.write_no_solution_report">
-<code class="sig-prename descclassname">dnachisel.reports.optimization_reports.</code><code class="sig-name descname">write_no_solution_report</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">problem</em>, <em class="sig-param">error</em>, <em class="sig-param">file_content=None</em>, <em class="sig-param">file_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#write_no_solution_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.write_no_solution_report" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.reports.optimization_reports.</code><code class="sig-name descname">write_no_solution_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target</span></em>, <em class="sig-param"><span class="n">problem</span></em>, <em class="sig-param"><span class="n">error</span></em>, <em class="sig-param"><span class="n">file_content</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">file_path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#write_no_solution_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.write_no_solution_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a report on incompatibility found in the problem’s constraints.</p>
 <p>The report comprises a PDF of plots of the sequence (global constraints,
 local constraints around the problem) and an annotated genbank.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>target</strong></p>
-<blockquote>
-<div><p>Either a path to a folder, or a path to a zip archive, or “&#64;memory” to
+<dd class="field-odd"><dl class="simple">
+<dt><strong>target</strong></dt><dd><p>Either a path to a folder, or a path to a zip archive, or “&#64;memory” to
 return raw data of a zip archive containing the report.</p>
-</div></blockquote>
-<p><strong>problem</strong></p>
-<blockquote>
-<div><p>A DnaOptimizationProblem</p>
-</div></blockquote>
-<p><strong>error</strong></p>
-<blockquote>
-<div><p>A NoSolutionError (carries a message and a location)</p>
-</div></blockquote>
+</dd>
+<dt><strong>problem</strong></dt><dd><p>A DnaOptimizationProblem</p>
+</dd>
+<dt><strong>error</strong></dt><dd><p>A NoSolutionError (carries a message and a location)</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="dnachisel.reports.optimization_reports.write_optimization_report">
-<code class="sig-prename descclassname">dnachisel.reports.optimization_reports.</code><code class="sig-name descname">write_optimization_report</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">problem</em>, <em class="sig-param">project_name='unnammed'</em>, <em class="sig-param">plot_figure=True</em>, <em class="sig-param">constraints_evaluations=None</em>, <em class="sig-param">objectives_evaluations=None</em>, <em class="sig-param">figure_width=20</em>, <em class="sig-param">max_features_in_plots=300</em>, <em class="sig-param">file_path=None</em>, <em class="sig-param">file_content=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#write_optimization_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.write_optimization_report" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.reports.optimization_reports.</code><code class="sig-name descname">write_optimization_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target</span></em>, <em class="sig-param"><span class="n">problem</span></em>, <em class="sig-param"><span class="n">project_name</span><span class="o">=</span><span class="default_value">'unnamed'</span></em>, <em class="sig-param"><span class="n">plot_figure</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">constraints_evaluations</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">objectives_evaluations</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">figure_width</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">max_features_in_plots</span><span class="o">=</span><span class="default_value">300</span></em>, <em class="sig-param"><span class="n">file_path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">file_content</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/reports/optimization_reports.html#write_optimization_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.reports.optimization_reports.write_optimization_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write an optimization report with a PDF summary, plots, and genbanks.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>target</strong></p>
-<blockquote>
-<div><p>Path to a directory or zip file, or “&#64;memory” for returning raw data of
+<dd class="field-odd"><dl class="simple">
+<dt><strong>target</strong></dt><dd><p>Path to a directory or zip file, or “&#64;memory” for returning raw data of
 a zip file created in-memory.</p>
-</div></blockquote>
-<p><strong>problem</strong></p>
-<blockquote>
-<div><p>A DnaOptimizationProblem to be solved and optimized</p>
-</div></blockquote>
-<p><strong>project_name</strong></p>
-<blockquote>
-<div><p>Name of the project that will appear on the PDF report</p>
-</div></blockquote>
-<p><strong>constraints_evaluations</strong></p>
-<blockquote>
-<div><p>Precomputed constraints evaluations. If None provided, they will be
+</dd>
+<dt><strong>problem</strong></dt><dd><p>A DnaOptimizationProblem to be solved and optimized</p>
+</dd>
+<dt><strong>project_name</strong></dt><dd><p>Name of the project that will appear on the PDF report</p>
+</dd>
+<dt><strong>constraints_evaluations</strong></dt><dd><p>Precomputed constraints evaluations. If None provided, they will be
 computed again from the problem.</p>
-</div></blockquote>
-<p><strong>objectives_evaluations</strong></p>
-<blockquote>
-<div><p>Precomputed objectives evaluations. If None provided, they will be
+</dd>
+<dt><strong>objectives_evaluations</strong></dt><dd><p>Precomputed objectives evaluations. If None provided, they will be
 computed again from the problem.</p>
-</div></blockquote>
-<p><strong>figure_width</strong></p>
-<blockquote>
-<div><p>Width of the report’s figure, in inches. The more annotations there will
+</dd>
+<dt><strong>figure_width</strong></dt><dd><p>Width of the report’s figure, in inches. The more annotations there will
 be in the figure, the wider it should be. The default should work for
 most cases.</p>
-</div></blockquote>
-<p><strong>max_features_in_plots</strong></p>
-<blockquote>
-<div><p>Limit to the number of features to plot (plots with thousands of features
+</dd>
+<dt><strong>max_features_in_plots</strong></dt><dd><p>Limit to the number of features to plot (plots with thousands of features
 may take ages to plot)</p>
-</div></blockquote>
-<p><strong>file_path</strong></p>
-<blockquote>
-<div><p>Path to the file from which the problem was created</p>
-</div></blockquote>
+</dd>
+<dt><strong>file_path</strong></dt><dd><p>Path to the file from which the problem was created</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -348,7 +330,7 @@ may take ages to plot)</p>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

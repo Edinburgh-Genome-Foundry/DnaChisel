@@ -14,10 +14,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
 
       
       <script src="../../../_static/theme-vendors.js"></script>
@@ -40,21 +40,21 @@
 
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -86,21 +86,21 @@
 
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -134,7 +134,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Reference</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Reference</a></span>
       </p>
       <ul class="">
         
@@ -185,7 +185,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Using Genbanks</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Using Genbanks</a></span>
       </p>
       <ul class="">
         
@@ -206,7 +206,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Examples</a></span>
       </p>
       <ul class="">
         
@@ -246,35 +246,40 @@
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">textwrap</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
 
-<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">SeqIO</span>
-<span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
 <span class="kn">import</span> <span class="nn">flametree</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">..biotools</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">..biotools</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">sequence_to_biopython_record</span><span class="p">,</span>
     <span class="n">find_specification_label_in_feature</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">..version</span> <span class="k">import</span> <span class="n">__version__</span>
-<span class="kn">from</span> <span class="nn">.SpecAnnotationsTranslator</span> <span class="k">import</span> <span class="n">SpecAnnotationsTranslator</span>
-<span class="kn">from</span> <span class="nn">.tools</span> <span class="k">import</span> <span class="n">install_extras_message</span>
-<span class="kn">from</span> <span class="nn">..Location</span> <span class="k">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">..version</span> <span class="kn">import</span> <span class="n">__version__</span>
+<span class="kn">from</span> <span class="nn">.SpecAnnotationsTranslator</span> <span class="kn">import</span> <span class="n">SpecAnnotationsTranslator</span>
+<span class="kn">from</span> <span class="nn">.tools</span> <span class="kn">import</span> <span class="n">install_extras_message</span>
+<span class="kn">from</span> <span class="nn">..Location</span> <span class="kn">import</span> <span class="n">Location</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">sequenticon</span> <span class="k">import</span> <span class="n">sequenticon</span>
+    <span class="kn">import</span> <span class="nn">pandas</span>
+    <span class="n">PANDAS_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">PANDAS_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">sequenticon</span> <span class="kn">import</span> <span class="n">sequenticon</span>
 
     <span class="n">SEQUENTICON_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="k">except</span><span class="p">:</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">SEQUENTICON_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="n">MATPLOTLIB_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
     <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-    <span class="kn">from</span> <span class="nn">matplotlib.backends.backend_pdf</span> <span class="k">import</span> <span class="n">PdfPages</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.backends.backend_pdf</span> <span class="kn">import</span> <span class="n">PdfPages</span>
 
     <span class="n">MATPLOTLIB_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
@@ -282,18 +287,18 @@
 
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">geneblocks</span> <span class="k">import</span> <span class="n">DiffBlocks</span>
+    <span class="kn">from</span> <span class="nn">geneblocks</span> <span class="kn">import</span> <span class="n">DiffBlocks</span>
 
     <span class="n">GENEBLOCKS_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="k">except</span><span class="p">:</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">GENEBLOCKS_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">pdf_reports</span> <span class="k">import</span> <span class="n">ReportWriter</span>
+    <span class="kn">from</span> <span class="nn">pdf_reports</span> <span class="kn">import</span> <span class="n">ReportWriter</span>
     <span class="kn">import</span> <span class="nn">pdf_reports.tools</span> <span class="k">as</span> <span class="nn">pdf_tools</span>
 
     <span class="n">PDF_REPORTS_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="k">except</span><span class="p">:</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
 
     <span class="k">def</span> <span class="nf">ReportWriter</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -434,6 +439,8 @@
 
 
 <span class="k">def</span> <span class="nf">constraints_before_after_dataframe</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">constraints_evaluations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">PANDAS_AVAILABLE</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Install pandas to use this method.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">constraints_evaluations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">constraints_evaluations</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">constraints_evaluations</span><span class="p">()</span>
     <span class="n">edits</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">sequence_edits_as_array</span><span class="p">()</span>
@@ -452,7 +459,7 @@
                 <span class="p">(</span><span class="s2">&quot;before&quot;</span><span class="p">,</span> <span class="s2">&quot;PASS&quot;</span> <span class="k">if</span> <span class="n">evaluation_before</span><span class="o">.</span><span class="n">passes</span> <span class="k">else</span> <span class="s2">&quot;FAIL&quot;</span><span class="p">),</span>
                 <span class="p">(</span><span class="s2">&quot;after&quot;</span><span class="p">,</span> <span class="s2">&quot;PASS&quot;</span> <span class="k">if</span> <span class="n">evaluation_after</span><span class="o">.</span><span class="n">passes</span> <span class="k">else</span> <span class="s2">&quot;FAIL&quot;</span><span class="p">),</span>
                 <span class="p">(</span><span class="s2">&quot;edits&quot;</span><span class="p">,</span> <span class="n">edits_sum</span><span class="p">),</span>
-                <span class="p">(</span><span class="s2">&quot;edits (%)&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">edits_percent</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+                <span class="p">(</span><span class="s2">&quot;</span><span class="si">% e</span><span class="s2">dited&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">edits_percent</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
             <span class="p">]</span>
         <span class="p">)</span>
 
@@ -489,7 +496,7 @@
                 <span class="p">(</span><span class="s2">&quot;before&quot;</span><span class="p">,</span> <span class="n">evaluation_before</span><span class="o">.</span><span class="n">score_to_formatted_string</span><span class="p">),</span>
                 <span class="p">(</span><span class="s2">&quot;after&quot;</span><span class="p">,</span> <span class="n">evaluation_after</span><span class="o">.</span><span class="n">score_to_formatted_string</span><span class="p">),</span>
                 <span class="p">(</span><span class="s2">&quot;edits&quot;</span><span class="p">,</span> <span class="n">edits_sum</span><span class="p">),</span>
-                <span class="p">(</span><span class="s2">&quot;edits (%)&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">edits_percent</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+                <span class="p">(</span><span class="s2">&quot;</span><span class="si">% e</span><span class="s2">dited&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">edits_percent</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
             <span class="p">]</span>
         <span class="p">)</span>
 
@@ -527,7 +534,7 @@
 <div class="viewcode-block" id="write_optimization_report"><a class="viewcode-back" href="../../../ref/reports.html#dnachisel.reports.optimization_reports.write_optimization_report">[docs]</a><span class="k">def</span> <span class="nf">write_optimization_report</span><span class="p">(</span>
     <span class="n">target</span><span class="p">,</span>
     <span class="n">problem</span><span class="p">,</span>
-    <span class="n">project_name</span><span class="o">=</span><span class="s2">&quot;unnammed&quot;</span><span class="p">,</span>
+    <span class="n">project_name</span><span class="o">=</span><span class="s2">&quot;unnamed&quot;</span><span class="p">,</span>
     <span class="n">plot_figure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">constraints_evaluations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">objectives_evaluations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -675,7 +682,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

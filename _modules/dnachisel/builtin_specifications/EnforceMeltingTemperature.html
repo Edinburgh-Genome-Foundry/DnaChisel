@@ -14,10 +14,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
 
       
       <script src="../../../_static/theme-vendors.js"></script>
@@ -40,21 +40,21 @@
 
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -86,21 +86,21 @@
 
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -134,7 +134,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Reference</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Reference</a></span>
       </p>
       <ul class="">
         
@@ -185,7 +185,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Using Genbanks</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Using Genbanks</a></span>
       </p>
       <ul class="">
         
@@ -206,7 +206,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Examples</a></span>
       </p>
       <ul class="">
         
@@ -250,9 +250,9 @@
     <span class="n">primer3</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">PRIMER3_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
 
-<span class="kn">from</span> <span class="nn">Bio.SeqUtils</span> <span class="k">import</span> <span class="n">MeltingTemp</span> <span class="k">as</span> <span class="n">bio_mt</span>
-<span class="kn">from</span> <span class="nn">dnachisel.Location</span> <span class="k">import</span> <span class="n">Location</span>
-<span class="kn">from</span> <span class="nn">..Specification</span> <span class="k">import</span> <span class="n">Specification</span><span class="p">,</span> <span class="n">SpecEvaluation</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqUtils</span> <span class="kn">import</span> <span class="n">MeltingTemp</span> <span class="k">as</span> <span class="n">bio_mt</span>
+<span class="kn">from</span> <span class="nn">..Location</span> <span class="kn">import</span> <span class="n">Location</span>
+<span class="kn">from</span> <span class="nn">..Specification</span> <span class="kn">import</span> <span class="n">Specification</span><span class="p">,</span> <span class="n">SpecEvaluation</span>
 
 
 
@@ -268,8 +268,8 @@
 <span class="sd">      instance 55 and 70. A &quot;target&quot; can be provided instead when using this</span>
 <span class="sd">      specification as an optimization objective.</span>
 <span class="sd">    target</span>
-<span class="sd">      Target melting temperature. Will be overriden by (mini+maxi)/2 if these</span>
-<span class="sd">      are provided. The &quot;target&quot; parametr is only practical when the spec is</span>
+<span class="sd">      Target melting temperature. Will be overridden by (mini+maxi)/2 if these</span>
+<span class="sd">      are provided. The &quot;target&quot; parameter is only practical when the spec is</span>
 <span class="sd">      used as an optimization objective.</span>
 
 <span class="sd">    location</span>
@@ -283,7 +283,7 @@
 
     <span class="n">shorthand_name</span> <span class="o">=</span> <span class="s2">&quot;tm&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">mini</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boost</span><span class="o">=</span><span class="mf">1.0</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize.&quot;&quot;&quot;</span>
@@ -328,7 +328,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

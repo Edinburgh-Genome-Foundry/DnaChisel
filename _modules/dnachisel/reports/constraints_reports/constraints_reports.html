@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnachisel.reports.constraints_reports.constraints_reports</title>
+    
+      <link rel="stylesheet" href="../../../../_static/pygments.css">
+      <link rel="stylesheet" href="../../../../_static/theme.css">
+      <link rel="stylesheet" href="../../../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../../../_static/css/press_main.css" type="text/css" />
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+
+      
+      <script src="../../../../_static/theme-vendors.js"></script>
+      <script src="../../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../../index.html" class="home-link">
+    
+      <img class="logo" src="../../../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../../index.html#related-projects">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../../ref/core_classes.html" class="reference internal ">Core Classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/constraints_reports.html" class="reference internal ">Constraints reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/cli.html" class="reference internal ">Command Line Interface</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../notes.html" class="reference internal ">Notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../../index.html#related-projects">Using Genbanks</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../../genbank/genbank_api.html" class="reference internal ">Genbank API</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../genbank/genbank_notes.html" class="reference internal ">Genbank usage notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../../index.html#related-projects">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../../../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnachisel.reports.constraints_reports.constraints_reports</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for dnachisel.reports.constraints_reports.constraints_reports</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Misc. plotting and reporting methods, some of which are really arbitrary.</span>
+
+
+<span class="sd">Here is a typical example of use:</span>
+
+<span class="sd">&gt;&gt;&gt; import dnachisel.reports.constraint_reports as cr</span>
+<span class="sd">&gt;&gt;&gt; dataframe = cr.constraints_breaches_dataframe(constraints, sequences)</span>
+<span class="sd">&gt;&gt;&gt; dataframe.to_excel(&quot;output_breaches.xlsx&quot;)</span>
+<span class="sd">&gt;&gt;&gt; records = cr.records_from_breaches_dataframe(dataframe, sequences)</span>
+<span class="sd">&gt;&gt;&gt; cr.breaches_records_to_pdf(records, &#39;output_breaches_plots.pdf&#39;)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+
+<span class="kn">import</span> <span class="nn">proglog</span>
+
+<span class="kn">from</span> <span class="nn">...biotools</span> <span class="kn">import</span> <span class="n">sequence_to_biopython_record</span><span class="p">,</span> <span class="n">annotate_record</span>
+<span class="kn">from</span> <span class="nn">...builtin_specifications</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">EnforceGCContent</span><span class="p">,</span>
+    <span class="n">AvoidPattern</span><span class="p">,</span>
+    <span class="n">AvoidHairpins</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..colors_cycle</span> <span class="kn">import</span> <span class="n">colors_cycle</span>
+
+<span class="kn">from</span> <span class="nn">.GraphicTranslator</span> <span class="kn">import</span> <span class="n">GraphicTranslator</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.backends.backend_pdf</span> <span class="kn">import</span> <span class="n">PdfPages</span>
+    <span class="n">MPL_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">MPL_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">def</span> <span class="nf">_sequences_to_new_records</span><span class="p">(</span><span class="n">sequences</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Turn acceptable sequences input into a records list.</span>
+
+<span class="sd">    Acceptable formats are</span>
+<span class="sd">    - (&#39;name&#39;, &#39;sequence&#39;)</span>
+<span class="sd">    - {&#39;name&#39;: &#39;sequence&#39;}</span>
+<span class="sd">    - [records] (will be deepcopied)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sequences</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">sequences</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sequences</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+    <span class="n">records</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">):</span>
+            <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">seq</span> <span class="o">=</span> <span class="n">seq</span>
+            <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">sequence_to_biopython_record</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">records</span>
+
+
+<span class="k">def</span> <span class="nf">_parse_location</span><span class="p">(</span><span class="n">location_string</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parses locations like 235-350(+)&quot;&quot;&quot;</span>
+    <span class="n">location_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(\d+)-(\d+)(\(+\)|\(-\)|)&quot;</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">location_regex</span><span class="p">,</span> <span class="n">location_string</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">start</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">end</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">strand</span> <span class="o">==</span> <span class="s2">&quot;(-)&quot;</span> <span class="k">else</span> <span class="mi">1</span>
+
+
+
+<div class="viewcode-block" id="records_from_breaches_dataframe"><a class="viewcode-back" href="../../../../ref/constraints_reports.html#dnachisel.reports.constraints_reports.records_from_breaches_dataframe">[docs]</a><span class="k">def</span> <span class="nf">records_from_breaches_dataframe</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">sequences</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate records with annotations indicating constraints breaches.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    dataframe</span>
+<span class="sd">      A breaches dataframe returned by ``constraints_breaches_dataframe``</span>
+<span class="sd">    </span>
+<span class="sd">    sequences</span>
+<span class="sd">      Either a list [(&quot;name&quot;, &quot;sequence&quot;)...] or a dict {&quot;name&quot;: &quot;sequence&quot;}</span>
+<span class="sd">      or a list of biopython records whole id is the sequence name.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">records</span> <span class="o">=</span> <span class="n">_sequences_to_new_records</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+        <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">f</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">features</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_a_breach&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="p">]</span>
+    <span class="n">colors_cycle_iterator</span> <span class="o">=</span> <span class="n">colors_cycle</span><span class="p">()</span>
+    <span class="n">columns_colors</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">c</span><span class="p">:</span> <span class="nb">next</span><span class="p">(</span><span class="n">colors_cycle_iterator</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">rec</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">locations</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">locations</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">locations</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>
+                <span class="n">annotate_record</span><span class="p">(</span>
+                    <span class="n">rec</span><span class="p">,</span>
+                    <span class="n">location</span><span class="o">=</span><span class="n">_parse_location</span><span class="p">(</span><span class="n">location</span><span class="p">),</span>
+                    <span class="n">label</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="n">columns_colors</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
+                    <span class="n">ApEinfo_fwdcolor</span><span class="o">=</span><span class="n">columns_colors</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
+                    <span class="n">ApEinfo_revcolor</span><span class="o">=</span><span class="n">columns_colors</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
+                    <span class="n">is_a_breach</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">)</span>
+    <span class="k">return</span> <span class="n">records</span></div>
+
+
+<span class="k">def</span> <span class="nf">plot_breaches_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure_width</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">translator</span> <span class="o">=</span> <span class="n">GraphicTranslator</span><span class="p">()</span>
+    <span class="n">graphic_record</span> <span class="o">=</span> <span class="n">translator</span><span class="o">.</span><span class="n">translate_record</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">graphic_record</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">figure_width</span><span class="o">=</span><span class="n">figure_width</span><span class="p">,</span> <span class="n">strand_in_label_threshold</span><span class="o">=</span><span class="mi">7</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span>
+
+
+<div class="viewcode-block" id="breaches_records_to_pdf"><a class="viewcode-back" href="../../../../ref/constraints_reports.html#dnachisel.reports.constraints_reports.breaches_records_to_pdf">[docs]</a><span class="k">def</span> <span class="nf">breaches_records_to_pdf</span><span class="p">(</span>
+    <span class="n">breaches_records</span><span class="p">,</span> <span class="n">pdf_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure_width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plots figures of the breaches annotated in the records into a PDF file.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    breaches_records</span>
+<span class="sd">      A least of records annotated with breaches, as returned by the</span>
+<span class="sd">    </span>
+<span class="sd">    pdf_path</span>
+<span class="sd">      Either the path to a PDF, or a file handle (open in wb mode) or None</span>
+<span class="sd">      for this method to return binary PDF data.</span>
+<span class="sd">    </span>
+<span class="sd">    logger</span>
+<span class="sd">      Either &quot;bar&quot; for a progress bar, None for no logging, or any Proglog</span>
+<span class="sd">      logger. The bar name is &quot;sequence&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pdf_io</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span> <span class="k">if</span> <span class="n">pdf_path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">pdf_path</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">proglog</span><span class="o">.</span><span class="n">default_bar_logger</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">min_time_interval</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">PdfPages</span><span class="p">(</span><span class="n">pdf_io</span><span class="p">)</span> <span class="k">as</span> <span class="n">pdf</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">logger</span><span class="o">.</span><span class="n">iter_bar</span><span class="p">(</span><span class="n">sequence</span><span class="o">=</span><span class="n">breaches_records</span><span class="p">):</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_breaches_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">figure_width</span><span class="o">=</span><span class="n">figure_width</span><span class="p">)</span>
+            <span class="n">pdf</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pdf_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pdf_io</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
+
+
+<span class="n">EXAMPLE_MANUFACTURING_CONSTRAINTS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;BsaI_site&quot;</span><span class="p">),</span>
+    <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;BsmBI_site&quot;</span><span class="p">),</span>
+    <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;BbsI_site&quot;</span><span class="p">),</span>
+    <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;SapI_site&quot;</span><span class="p">),</span>
+    <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;9xA&quot;</span><span class="p">),</span>
+    <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;9xT&quot;</span><span class="p">),</span>
+    <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;6xG&quot;</span><span class="p">),</span>
+    <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;6xC&quot;</span><span class="p">),</span>
+    <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;5x3mer&quot;</span><span class="p">),</span>
+    <span class="n">AvoidPattern</span><span class="p">(</span><span class="s2">&quot;9x2mer&quot;</span><span class="p">),</span>
+    <span class="n">AvoidHairpins</span><span class="p">(</span><span class="n">stem_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">hairpin_window</span><span class="o">=</span><span class="mi">200</span><span class="p">),</span>
+    <span class="n">EnforceGCContent</span><span class="p">(</span><span class="n">mini</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>

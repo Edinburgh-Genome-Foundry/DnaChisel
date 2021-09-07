@@ -2,7 +2,7 @@ Command Line Interface
 ----------------------
 
 Installing the DNA Chisel python library automatically installs the
-``dnachisel`` command line interace (CLI) accessible from the machine's terminal.
+``dnachisel`` command line interface (CLI) accessible from the machine's terminal.
 
 This interface enables to get a problem as an annotated genbank and output
 the optimized sequence either as a single genbank or with a multi-file

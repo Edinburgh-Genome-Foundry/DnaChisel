@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnachisel.reports.constraints_reports.GraphicTranslator</title>
+    
+      <link rel="stylesheet" href="../../../../_static/pygments.css">
+      <link rel="stylesheet" href="../../../../_static/theme.css">
+      <link rel="stylesheet" href="../../../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../../../_static/css/press_main.css" type="text/css" />
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+
+      
+      <script src="../../../../_static/theme-vendors.js"></script>
+      <script src="../../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../../index.html" class="home-link">
+    
+      <img class="logo" src="../../../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../../index.html#related-projects">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../../ref/core_classes.html" class="reference internal ">Core Classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/constraints_reports.html" class="reference internal ">Constraints reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/cli.html" class="reference internal ">Command Line Interface</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../notes.html" class="reference internal ">Notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../../index.html#related-projects">Using Genbanks</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../../genbank/genbank_api.html" class="reference internal ">Genbank API</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../genbank/genbank_notes.html" class="reference internal ">Genbank usage notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../../index.html#related-projects">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../../../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnachisel.reports.constraints_reports.GraphicTranslator</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for dnachisel.reports.constraints_reports.GraphicTranslator</h1><div class="highlight"><pre>
+<span></span><span class="k">try</span><span class="p">:</span>
+
+    <span class="kn">from</span> <span class="nn">dna_features_viewer</span> <span class="kn">import</span> <span class="n">BiopythonTranslator</span>
+
+    <span class="n">DFV_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">BiopythonTranslator</span> <span class="o">=</span> <span class="nb">object</span>
+    <span class="n">DFV_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="GraphicTranslator"><a class="viewcode-back" href="../../../../ref/constraints_reports.html#dnachisel.reports.constraints_reports.GraphicTranslator">[docs]</a><span class="k">class</span> <span class="nc">GraphicTranslator</span><span class="p">(</span><span class="n">BiopythonTranslator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A Biopython record translator for DNA Features Viewer.</span>
+
+<span class="sd">        This translator produces label-free plots.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="GraphicTranslator.compute_feature_box_linewidth"><a class="viewcode-back" href="../../../../ref/constraints_reports.html#dnachisel.reports.constraints_reports.GraphicTranslator.compute_feature_box_linewidth">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compute_feature_box_linewidth</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_a_breach&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span></div>
+    
+<div class="viewcode-block" id="GraphicTranslator.compute_feature_fontdict"><a class="viewcode-back" href="../../../../ref/constraints_reports.html#dnachisel.reports.constraints_reports.GraphicTranslator.compute_feature_fontdict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compute_feature_fontdict</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;fontsize&quot;</span><span class="p">:</span> <span class="mi">12</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_a_breach&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="k">else</span> <span class="mi">9</span>
+        <span class="p">}</span></div>
+
+<div class="viewcode-block" id="GraphicTranslator.compute_feature_label"><a class="viewcode-back" href="../../../../ref/constraints_reports.html#dnachisel.reports.constraints_reports.GraphicTranslator.compute_feature_label">[docs]</a>    <span class="k">def</span> <span class="nf">compute_feature_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">BiopythonTranslator</span><span class="o">.</span><span class="n">compute_feature_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_a_breach&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="p">[:</span><span class="mi">19</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;…&quot;</span>
+        <span class="k">return</span> <span class="n">label</span></div>
+
+<div class="viewcode-block" id="GraphicTranslator.compute_feature_color"><a class="viewcode-back" href="../../../../ref/constraints_reports.html#dnachisel.reports.constraints_reports.GraphicTranslator.compute_feature_color">[docs]</a>    <span class="k">def</span> <span class="nf">compute_feature_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_a_breach&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;color&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;#ffffff&quot;</span></div></div>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>

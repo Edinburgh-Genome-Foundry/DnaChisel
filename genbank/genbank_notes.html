@@ -14,10 +14,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
 
       
       <script src="../_static/theme-vendors.js"></script>
@@ -42,21 +42,21 @@
 
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link  router-link-active">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -88,21 +88,21 @@
 
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link  router-link-active">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -136,7 +136,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Reference</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Reference</a></span>
       </p>
       <ul class="">
         
@@ -187,7 +187,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Using Genbanks</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Using Genbanks</a></span>
       </p>
       <ul class="current">
         
@@ -206,7 +206,7 @@
                 
                   <li class="toctree-l2"><a href="#weighted-objectives" class="reference internal">Weighted objectives</a></li>
                 
-                  <li class="toctree-l2"><a href="#multiple-specifications-in-a-same-annotation" class="reference internal">Multiple specifications in a same annotation</a></li>
+                  <li class="toctree-l2"><a href="#multiple-specifications-in-the-same-annotation" class="reference internal">Multiple specifications in the same annotation</a></li>
                 
                   <li class="toctree-l2"><a href="#adding-new-annotations-to-the-genbank-parser" class="reference internal">Adding new annotations to the Genbank parser</a></li>
                 
@@ -220,7 +220,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Examples</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Examples</a></span>
       </p>
       <ul class="">
         
@@ -281,9 +281,9 @@ parameter,
 e.g. <code class="docutils literal notranslate"><span class="pre">~MySpec(...,</span> <span class="pre">boost=2)</span></code>.</p>
 <img class='annotation-example'
 src='../_static/images/genbank_annotations/boosting.png'></img></div>
-<div class="section" id="multiple-specifications-in-a-same-annotation">
-<h2>Multiple specifications in a same annotation<a class="headerlink" href="#multiple-specifications-in-a-same-annotation" title="Permalink to this headline">¶</a></h2>
-<p>If you want to write less annotations, you can define several specifications in
+<div class="section" id="multiple-specifications-in-the-same-annotation">
+<h2>Multiple specifications in the same annotation<a class="headerlink" href="#multiple-specifications-in-the-same-annotation" title="Permalink to this headline">¶</a></h2>
+<p>If you want to write fewer annotations, you can define several specifications in
 a single feature, separating them with the <code class="docutils literal notranslate"><span class="pre">&amp;</span></code> symbol. For instance, to
 conserve a gene while getting rid of CpG islands and keeping the global GC%
 between 45% and 55%:</p>
@@ -304,7 +304,7 @@ extending the default specifications dict:</p>
 <span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="o">.</span><span class="n">from_record</span><span class="p">(</span><span class="s1">&#39;my_record.gb&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Any specification in this dictionnary can be used in Genbank annotations with
+<p>Any specification in this dictionary can be used in Genbank annotations with
 the same parameters as in a Python script (note that strings do not require
 quotes):</p>
 <img class='annotation-example'
@@ -326,7 +326,7 @@ src='../_static/images/genbank_annotations/myspec.png'></img></div>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

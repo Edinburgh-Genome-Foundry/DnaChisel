@@ -14,10 +14,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
 
       
       <script src="../_static/theme-vendors.js"></script>
@@ -42,21 +42,21 @@
 
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link  router-link-active">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -88,21 +88,21 @@
 
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link  router-link-active">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -136,7 +136,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Reference</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Reference</a></span>
       </p>
       <ul class="">
         
@@ -187,7 +187,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Using Genbanks</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Using Genbanks</a></span>
       </p>
       <ul class="current">
         
@@ -232,7 +232,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Examples</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Examples</a></span>
       </p>
       <ul class="">
         
@@ -277,8 +277,18 @@
 <h1><a class="toc-backref" href="#id1">Genbank API</a><a class="headerlink" href="#genbank-api" title="Permalink to this headline">¶</a></h1>
 <p>This section documents the Genbank API for all builtin specifications of
 DNA chisel. See also the <a class="reference internal" href="genbank_notes.html#genbank-usage-notes"><span class="std std-ref">Genbank usage notes</span></a> section for tips.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Use either “=” or “:” in sequence annotation parameters</p>
+<p>For historical reasons, DNA Chisel allows to write keyword parameters
+with either <code class="docutils literal notranslate"><span class="pre">:</span></code> or <code class="docutils literal notranslate"><span class="pre">=</span></code> in genbank annotations, for instance both
+<code class="docutils literal notranslate"><span class="pre">&#64;no(ATG,</span> <span class="pre">strand:both)</span></code> and <code class="docutils literal notranslate"><span class="pre">&#64;no(ATG,</span> <span class="pre">strand=both)</span></code> are valid.</p>
+<p>While we find <code class="docutils literal notranslate"><span class="pre">=</span></code> more readable, we have also seen that some tools are
+confused by the presence of an <code class="docutils literal notranslate"><span class="pre">=</span></code> sign in a Genbank label, so using
+<code class="docutils literal notranslate"><span class="pre">:</span></code> may be safer.</p>
+</div>
 <div class="contents topic" id="contents">
-<p class="topic-title first">Contents</p>
+<p class="topic-title">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#genbank-api" id="id1">Genbank API</a></p>
 <ul>
@@ -304,8 +314,8 @@ DNA chisel. See also the <a class="reference internal" href="genbank_notes.html#
 <p>Since v3.0, the orientation of the annotation of pattern-based
 specifications such as <code class="docutils literal notranslate"><span class="pre">no()</span></code> or <code class="docutils literal notranslate"><span class="pre">insert()</span></code> indicates where to look for
 the pattern. Annotations in the +1 sense indicate that the
-pattern should only be looked for in the +1 (5‘3’) strand. Patterns in the -1
-strand are only looked at in the -1 (3‘5’) sense.</p>
+pattern should only be looked for in the +1 (5’3’) strand. Patterns in the -1
+strand are only looked at in the -1 (3’5’) sense.</p>
 </div>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
@@ -388,7 +398,7 @@ src='../_static/images/genbank_annotations/choice.png'></img></div>
 src='../_static/images/genbank_annotations/cds.png'></img><div class="admonition caution">
 <p class="admonition-title">Caution</p>
 <p>Non-ATG start codons</p>
-<p>If the coding region has a start codon in an organims using non-ATG
+<p>If the coding region has a start codon in an organisms using non-ATG
 start codons (for instance, E. coli sometimes use GTG), make sure to define
 a policy for the start codon, for instance <code class="docutils literal notranslate"><span class="pre">start_codon=keep</span></code> to keep the
 sequence of the original start codon, or <code class="docutils literal notranslate"><span class="pre">start_codon=ATG</span></code> to use ATG as
@@ -416,7 +426,10 @@ src='../_static/images/genbank_annotations/match_codon_usage.png'></img><p>To ha
 by a rare codon in the target host (and common codons are replaced by common
 codons), use <code class="docutils literal notranslate"><span class="pre">~harmonize_rca</span></code>:</p>
 <img class='annotation-example'
-src='../_static/images/genbank_annotations/harmonize_rca.png'></img><p>As you noticed we used species names in these examples. See
+src='../_static/images/genbank_annotations/harmonize_rca.png'></img><p>In the example above (<code class="docutils literal notranslate"><span class="pre">~harmonize_rca(e_coli</span> <span class="pre">-&gt;</span> <span class="pre">h_sapiens)</span></code>), the original host is
+<code class="docutils literal notranslate"><span class="pre">e_coli</span></code> and the target host is  <code class="docutils literal notranslate"><span class="pre">h_sapiens</span></code>, separated by an arrow (<code class="docutils literal notranslate"><span class="pre">-&gt;</span></code>).
+See <code class="docutils literal notranslate"><span class="pre">HarmonizeRCA</span></code> for more details.
+As you noticed we used species names in these examples. See
 <a class="reference external" href="https://github.com/Edinburgh-Genome-Foundry/codon-usage-tables/tree/master/codon_usage_data/tables">the Codon Usage Tables package webpage</a>
 for species that can be referred to by name. This includes <code class="docutils literal notranslate"><span class="pre">b_subtilis</span></code>,
 <code class="docutils literal notranslate"><span class="pre">c_elegans</span></code>, <code class="docutils literal notranslate"><span class="pre">d_melanogaster</span></code>, <code class="docutils literal notranslate"><span class="pre">e_coli</span></code>, <code class="docutils literal notranslate"><span class="pre">g_gallus</span></code>, <code class="docutils literal notranslate"><span class="pre">h_sapiens</span></code>,
@@ -495,7 +508,7 @@ src='../_static/images/genbank_annotations/enforce_melting_and_kmers.png'></img>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

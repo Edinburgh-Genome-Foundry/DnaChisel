@@ -17,7 +17,7 @@ change_objective,~change,8-15,CAATGCACACATCGATTCATCACTCAT,8-15
 codon_optimize,~CodonOptimize(e_coli),2-23+,CAATGCACACATCGATTCATCACTCAT,none
 use_best_codon,~use_best_codon(e_coli),2-23+,CAATGCACACATCGATTCATCACTCAT,none
 match_codon_usage,~match_codon_usage,2-23+,CAATGCACACATCGATTCATCACTCAT,none
-harmonize_rca,~harmonize_rca(e_coli => h_sapiens),2-23+,CAATGCACACATCGATTCATCACTCAT,none
+harmonize_rca,~harmonize_rca(e_coli -> h_sapiens),2-23+,CAATGCACACATCGATTCATCACTCAT,none
 allow_primer,"@primer(tmin=50, tmax=70)",2-24,CAATGCACACATCGATTCATCACTCAT,none
 all_unique_kmers,@all_unique_kmers(k=15),2-24,CAATGCACACATCGATTCATGCACATT,"2-8, 18-24"
 all_unique_kmers_here,"@all_unique_kmers(k=15, here)",2-24,CAATGCACACATCGATTCATGCACATT,"2-8, 18-24"

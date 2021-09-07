@@ -14,10 +14,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
 
       
       <script src="../../../_static/theme-vendors.js"></script>
@@ -40,21 +40,21 @@
 
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -86,21 +86,21 @@
 
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../../../index.html#more-biology-software"
+      <a href="../../../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -134,7 +134,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Reference</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Reference</a></span>
       </p>
       <ul class="">
         
@@ -185,7 +185,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Using Genbanks</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Using Genbanks</a></span>
       </p>
       <ul class="">
         
@@ -206,7 +206,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+        <span class="caption-text"><a href="../../../index.html#related-projects">Examples</a></span>
       </p>
       <ul class="">
         
@@ -244,11 +244,11 @@
   <h1>Source code for dnachisel.biotools.sequences_operations</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">itertools</span>
 
-<span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="k">import</span> <span class="n">Seq</span>
-<span class="kn">from</span> <span class="nn">Bio.Data</span> <span class="k">import</span> <span class="n">CodonTable</span>
+<span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="kn">import</span> <span class="n">Seq</span>
+<span class="kn">from</span> <span class="nn">Bio.Data</span> <span class="kn">import</span> <span class="n">CodonTable</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">.biotables</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">.biotables</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">NUCLEOTIDE_TO_REGEXPR</span><span class="p">,</span>
     <span class="n">COMPLEMENTS</span><span class="p">,</span>
     <span class="n">IUPAC_NOTATION</span><span class="p">,</span>
@@ -261,7 +261,7 @@
 
 <span class="sd">    For instance ``complement(&quot;ATGCCG&quot;)`` returns ``&quot;TACGGC&quot;``.</span>
 
-<span class="sd">    Uses BioPython for speed.</span>
+<span class="sd">    Uses Biopython for speed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">30</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">COMPLEMENTS</span><span class="p">[</span><span class="n">nuc</span><span class="p">]</span> <span class="k">for</span> <span class="n">nuc</span> <span class="ow">in</span> <span class="n">dna_sequence</span><span class="p">])</span>
@@ -272,20 +272,31 @@
 <div class="viewcode-block" id="reverse_complement"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.reverse_complement">[docs]</a><span class="k">def</span> <span class="nf">reverse_complement</span><span class="p">(</span><span class="n">sequence</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the reverse-complement of the DNA sequence.</span>
 
-<span class="sd">    For instance ``complement(&quot;ATGCCG&quot;)`` returns ``&quot;GCCGTA&quot;``.</span>
+<span class="sd">    For instance ``reverse_complement(&quot;ATGCCG&quot;)`` returns ``&quot;CGGCAT&quot;``.</span>
 
-<span class="sd">    Uses BioPython for speed.</span>
+<span class="sd">    Uses Biopython for speed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">complement</span><span class="p">(</span><span class="n">sequence</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="reverse_translate"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.reverse_translate">[docs]</a><span class="k">def</span> <span class="nf">reverse_translate</span><span class="p">(</span>
-    <span class="n">protein_sequence</span><span class="p">,</span> <span class="n">randomize_codons</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="s2">&quot;Standard&quot;</span>
-<span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a DNA sequence which translates to the provided protein sequence</span>
+<div class="viewcode-block" id="reverse_translate"><a class="viewcode-back" href="../../../ref/biotools.html#dnachisel.biotools.reverse_translate">[docs]</a><span class="k">def</span> <span class="nf">reverse_translate</span><span class="p">(</span><span class="n">protein_sequence</span><span class="p">,</span> <span class="n">randomize_codons</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="s2">&quot;Standard&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a DNA sequence which translates to the provided protein sequence.</span>
 
-<span class="sd">    Note: at the moment, the first valid codon found is used for each</span>
-<span class="sd">    amino-acid (so it is deterministic but no codon-optimization is done).</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    protein_sequence</span>
+<span class="sd">      A sequence string of aminoacids, e.g. &quot;MVKK...&quot;</span>
+
+<span class="sd">    table</span>
+<span class="sd">      Genetic code table to use (e.g. &#39;Standard&#39;, &#39;Bacterial&#39;, etc.).</span>
+<span class="sd">      See dnachisel.biotools.CODON_TABLE_NAMES for a list of available genetic</span>
+<span class="sd">      code tables.</span>
+
+<span class="sd">    randomize_codons</span>
+<span class="sd">      If False, the first valid codon found is used for each, which can create</span>
+<span class="sd">      biases (GC content, etc.), if True, each amino acid gets replaced by a</span>
+<span class="sd">      randomly selected codon for this amino acid.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">backtranslation_table</span> <span class="o">=</span> <span class="n">get_backtranslation_table</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="n">table</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">randomize_codons</span><span class="p">:</span>
@@ -310,7 +321,7 @@
 
 <span class="sd">    http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc25</span>
 
-<span class="sd">    ``translation_table`` can also be a dictionnary of the form</span>
+<span class="sd">    ``translation_table`` can also be a dictionary of the form</span>
 <span class="sd">    ``{&quot;ATT&quot;: &quot;M&quot;, &quot;CTC&quot;: &quot;X&quot;, etc.}`` for more exotic translation tables</span>
 
 <span class="sd">    If assume_start_codon is True and the first codon is a start codon in the</span>
@@ -319,10 +330,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="n">table</span><span class="p">[</span><span class="n">dna_sequence</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]]</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">[</span><span class="n">table</span><span class="p">[</span><span class="n">dna_sequence</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">),</span> <span class="mi">3</span><span class="p">)]</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">table</span> <span class="o">=</span> <span class="n">CodonTable</span><span class="o">.</span><span class="n">unambiguous_dna_by_name</span><span class="p">[</span><span class="n">table</span><span class="p">]</span>
@@ -356,7 +364,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

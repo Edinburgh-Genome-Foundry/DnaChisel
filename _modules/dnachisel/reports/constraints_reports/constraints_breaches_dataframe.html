@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnachisel.reports.constraints_reports.constraints_breaches_dataframe</title>
+    
+      <link rel="stylesheet" href="../../../../_static/pygments.css">
+      <link rel="stylesheet" href="../../../../_static/theme.css">
+      <link rel="stylesheet" href="../../../../_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="../../../../_static/css/press_main.css" type="text/css" />
+          <link rel="stylesheet" href="../../../../_static/css/press_main.css" type="text/css" />
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+
+      
+      <script src="../../../../_static/theme-vendors.js"></script>
+      <script src="../../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../../index.html" class="home-link">
+    
+      <img class="logo" src="../../../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Using Genbanks
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#related-projects"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaChisel"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../../index.html#related-projects">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../../ref/core_classes.html" class="reference internal ">Core Classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/reports.html" class="reference internal ">Reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/constraints_reports.html" class="reference internal ">Constraints reports</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/biotools.html" class="reference internal ">Biotools</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/builtin_specifications.html" class="reference internal ">Built-in Specifications</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/cli.html" class="reference internal ">Command Line Interface</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../notes.html" class="reference internal ">Notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../../index.html#related-projects">Using Genbanks</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../../genbank/genbank_api.html" class="reference internal ">Genbank API</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../genbank/genbank_notes.html" class="reference internal ">Genbank usage notes</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../../index.html#related-projects">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../../../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnachisel.reports.constraints_reports.constraints_breaches_dataframe</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for dnachisel.reports.constraints_reports.constraints_breaches_dataframe</h1><div class="highlight"><pre>
+<span></span><span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pandas</span>
+
+    <span class="n">PANDAS_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">PANDAS_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="kn">from</span> <span class="nn">...DnaOptimizationProblem</span> <span class="kn">import</span> <span class="n">DnaOptimizationProblem</span>
+<span class="kn">from</span> <span class="nn">...Location</span> <span class="kn">import</span> <span class="n">Location</span>
+
+<span class="k">def</span> <span class="nf">_breaches</span><span class="p">(</span><span class="n">constraint</span><span class="p">,</span> <span class="n">sequence</span><span class="p">):</span>
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">DnaOptimizationProblem</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">mutation_space</span><span class="o">=</span><span class="p">{})</span>
+    <span class="n">new_constraint</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">initialized_on_problem</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">evaluation</span> <span class="o">=</span> <span class="n">new_constraint</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+    <span class="n">locations</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">merge_overlapping_locations</span><span class="p">(</span><span class="n">evaluation</span><span class="o">.</span><span class="n">locations</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">locations</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">_install_extras_message</span><span class="p">(</span><span class="n">libname</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="s2">&quot;Could not load </span><span class="si">%s</span><span class="s2"> (is it installed ?). You can install it separately &quot;</span>
+        <span class="s2">&quot; with:  pip install </span><span class="si">%s</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Install all dependencies for generating DNA Chisel reports with:&quot;</span>
+        <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">pip install dnachisel[reports]&quot;</span>
+        <span class="o">%</span> <span class="p">(</span><span class="n">libname</span><span class="p">,</span> <span class="n">libname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">))</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="constraints_breaches_dataframe"><a class="viewcode-back" href="../../../../ref/constraints_reports.html#dnachisel.reports.constraints_reports.constraints_breaches_dataframe">[docs]</a><span class="k">def</span> <span class="nf">constraints_breaches_dataframe</span><span class="p">(</span>
+    <span class="n">constraints</span><span class="p">,</span> <span class="n">sequences</span><span class="p">,</span> <span class="n">display_constraints_locations</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a dataframe summarizing constraints breaches in the sequences.</span>
+
+<span class="sd">    Output dataframe schema (cst = constraint):</span>
+
+<span class="sd">    =====  ========  ======================</span>
+<span class="sd">      /    Cst1       Cst2</span>
+<span class="sd">    =====  ========  ======================</span>
+<span class="sd">    Seq1   10-50(+)  100-200(+), 300-350(+)</span>
+<span class="sd">    seq2   </span>
+<span class="sd">    Seq3   2-10(+)</span>
+<span class="sd">    Seq4             500-1000(-)</span>
+<span class="sd">    =====  ========  ======================</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    constraints</span>
+<span class="sd">      A list of DNA Chisel Specifications.</span>
+
+<span class="sd">    sequences</span>
+<span class="sd">      Either a list [(&quot;name&quot;, &quot;sequence&quot;)...] or a dict {&quot;name&quot;: &quot;sequence&quot;}</span>
+<span class="sd">      or a list of biopython records whole id is the sequence name.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; import dnachisel as dc</span>
+<span class="sd">    &gt;&gt;&gt; from dnachisel.utils import constraints_breaches_dataframe</span>
+<span class="sd">    &gt;&gt;&gt; sequences = [</span>
+<span class="sd">    &gt;&gt;&gt;     (&quot;SEQ 1&quot;, &quot;ATTGTGCATGTGACAC&quot;),</span>
+<span class="sd">    &gt;&gt;&gt;     (&quot;SEQ 2&quot;, &quot;ACATGTGTTGTGACAC&quot;),</span>
+<span class="sd">    &gt;&gt;&gt;     (&quot;SEQ 3&quot;, &quot;TTGTGCACACATGTGA&quot;),</span>
+<span class="sd">    &gt;&gt;&gt; ]</span>
+<span class="sd">    &gt;&gt;&gt; constraints = [</span>
+<span class="sd">    &gt;&gt;&gt;     dc.AvoidPattern(&#39;ATTG&#39;),</span>
+<span class="sd">    &gt;&gt;&gt;     dc.EnforceGCContent(0.4, 0.6),</span>
+<span class="sd">    &gt;&gt;&gt;     dc.UniquifyAllKmers(5)</span>
+<span class="sd">    &gt;&gt;&gt; ]</span>
+<span class="sd">    &gt;&gt;&gt; dataframe = constraints_breaches_dataframe(constraints, sequences)</span>
+<span class="sd">    &gt;&gt;&gt; dataframe.to_excel(&#39;summary_spreadsheet.xlsx&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">PANDAS_AVAILABLE</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="n">_install_extras_message</span><span class="p">(</span><span class="s2">&quot;Pandas&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sequences</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">sequences</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sequences</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sequences</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;id&quot;</span><span class="p">):</span>
+        <span class="n">sequences</span> <span class="o">=</span> <span class="p">[(</span><span class="n">s</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">]</span>
+
+    <span class="n">dataframe_records</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nb">dict</span><span class="p">(</span>
+            <span class="p">[(</span><span class="s2">&quot;sequence&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)]</span>
+            <span class="o">+</span> <span class="p">[</span>
+                <span class="p">(</span>
+                    <span class="n">constraint</span><span class="o">.</span><span class="n">label</span><span class="p">(</span>
+                        <span class="n">use_breach_form</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">with_location</span><span class="o">=</span><span class="n">display_constraints_locations</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="n">_breaches</span><span class="p">(</span><span class="n">constraint</span><span class="p">,</span> <span class="n">sequence</span><span class="p">),</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">constraints</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sequence</span><span class="p">)</span> <span class="ow">in</span> <span class="n">sequences</span>
+    <span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">dataframe_records</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;sequence&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2019, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>

@@ -1,6 +1,0 @@
-.. _plasmid-optimization:
-
-Optimization with report
-------------------------
-
-.. literalinclude:: ../../examples/optimization_with_report.py

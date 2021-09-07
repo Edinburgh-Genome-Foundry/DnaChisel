@@ -14,10 +14,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
 
       
       <script src="../_static/theme-vendors.js"></script>
@@ -42,21 +42,21 @@
 
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link  router-link-active">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -88,21 +88,21 @@
 
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link  router-link-active">
          Reference
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Using Genbanks
       </a>
     </div>
   
     <div class="nav-item">
-      <a href="../index.html#more-biology-software"
+      <a href="../index.html#related-projects"
          class="nav-link ">
          Examples
       </a>
@@ -136,7 +136,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Reference</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Reference</a></span>
       </p>
       <ul class="current">
         
@@ -193,7 +193,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Using Genbanks</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Using Genbanks</a></span>
       </p>
       <ul class="">
         
@@ -214,7 +214,7 @@
   
     <div class="sidebar-group">
       <p class="caption">
-        <span class="caption-text"><a href="../index.html#more-biology-software">Examples</a></span>
+        <span class="caption-text"><a href="../index.html#related-projects">Examples</a></span>
       </p>
       <ul class="">
         
@@ -258,21 +258,84 @@
   <div class="section" id="module-dnachisel.biotools">
 <span id="biotools"></span><h1>Biotools<a class="headerlink" href="#module-dnachisel.biotools" title="Permalink to this headline">¶</a></h1>
 <p>Biologically-related useful methods.</p>
-<dl class="function">
+<dl class="py function">
+<dt id="dnachisel.biotools.annotate_differences">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">annotate_differences</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">record</span></em>, <em class="sig-param"><span class="n">reference</span></em>, <em class="sig-param"><span class="n">feature_type</span><span class="o">=</span><span class="default_value">'misc_feature'</span></em>, <em class="sig-param"><span class="n">prefix</span><span class="o">=</span><span class="default_value">'#'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#annotate_differences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.annotate_differences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Annotate differences between two records in a new record.</p>
+<p>Returns a version of SeqRecord <code class="docutils literal notranslate"><span class="pre">record</span></code> where differences with the
+references are annotated as new features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>record</strong></dt><dd><p>The SeqRecord to be compared to the reference.</p>
+</dd>
+<dt><strong>reference</strong></dt><dd><p>The reference SeqRecord. Must be the same size as <code class="docutils literal notranslate"><span class="pre">reference</span></code>.</p>
+</dd>
+<dt><strong>feature_type</strong></dt><dd><p>The type of the features added to mark differences.</p>
+</dd>
+<dt><strong>prefix</strong></dt><dd><p>Each new feature will be labeled “po” where p is the prefix and o the
+original sequence at the feature’s location. For instance “#A” or “#TT”.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dnachisel.biotools.annotate_pattern_occurrences">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">annotate_pattern_occurrences</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">record</span></em>, <em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">feature_type</span><span class="o">=</span><span class="default_value">'misc_feature'</span></em>, <em class="sig-param"><span class="n">prefix</span><span class="o">=</span><span class="default_value">'!'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#annotate_pattern_occurrences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.annotate_pattern_occurrences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new record annotated w. all occurences of pattern in sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>record</strong></dt><dd><p>A Biopython record.</p>
+</dd>
+<dt><strong>pattern</strong></dt><dd><p>A DnaChisel SequencePattern object (such as DnaPAttern).</p>
+</dd>
+<dt><strong>feature_type</strong></dt><dd><p>Type of the annotations in the returned record.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dnachisel.biotools.annotate_record">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">annotate_record</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seqrecord</span></em>, <em class="sig-param"><span class="n">location</span><span class="o">=</span><span class="default_value">'full'</span></em>, <em class="sig-param"><span class="n">feature_type</span><span class="o">=</span><span class="default_value">'misc_feature'</span></em>, <em class="sig-param"><span class="n">margin</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">qualifiers</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#annotate_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.annotate_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a feature to a Biopython SeqRecord.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>seqrecord</strong></dt><dd><p>The biopython seqrecord to be annotated.</p>
+</dd>
+<dt><strong>location</strong></dt><dd><p>Either (start, end) or (start, end, strand). (strand defaults to +1).</p>
+</dd>
+<dt><strong>feature_type</strong></dt><dd><p>The type associated with the feature.</p>
+</dd>
+<dt><strong>margin</strong></dt><dd><p>Number of extra bases added on each side of the given location.</p>
+</dd>
+<dt><strong>qualifiers</strong></dt><dd><p>Dictionary that will be the Biopython feature’s <cite>qualifiers</cite> attribute.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="dnachisel.biotools.blast_sequence">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">blast_sequence</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">blast_db=None</em>, <em class="sig-param">subject_sequences=None</em>, <em class="sig-param">subject=None</em>, <em class="sig-param">word_size=4</em>, <em class="sig-param">perc_identity=80</em>, <em class="sig-param">num_alignments=1000</em>, <em class="sig-param">ungapped=False</em>, <em class="sig-param">num_threads=3</em>, <em class="sig-param">culling_limit=None</em>, <em class="sig-param">e_value=None</em>, <em class="sig-param">task=None</em>, <em class="sig-param">dust='no'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/blast_sequence.html#blast_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.blast_sequence" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">blast_sequence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em>, <em class="sig-param"><span class="n">blast_db</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">subject_sequences</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">subject</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">word_size</span><span class="o">=</span><span class="default_value">4</span></em>, <em class="sig-param"><span class="n">perc_identity</span><span class="o">=</span><span class="default_value">80</span></em>, <em class="sig-param"><span class="n">num_alignments</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">ungapped</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_threads</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">culling_limit</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">e_value</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">task</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dust</span><span class="o">=</span><span class="default_value">'no'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/blast_sequence.html#blast_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.blast_sequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Biopython BLAST record of the given sequence BLASTed
 against the provided database.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>sequence</strong></p>
-<blockquote>
-<div><p>An ATGC sequence</p>
-</div></blockquote>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>sequence</strong></dt><dd><p>An ATGC sequence</p>
+</dd>
+</dl>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_record</span> <span class="o">=</span> <span class="n">blast_sequence</span><span class="p">(</span><span class="s2">&quot;ATTGTGCGTGTGTGCGT&quot;</span><span class="p">,</span> <span class="s2">&quot;blastdb/ecoli&quot;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_record</span> <span class="o">=</span> <span class="n">blast_sequence</span><span class="p">(</span><span class="s2">&quot;ATTGTGCGTGTGTGCGT&quot;</span><span class="p">,</span> <span class="s2">&quot;blastdb/ecoli&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">alignment</span> <span class="ow">in</span> <span class="n">blast_record</span><span class="o">.</span><span class="n">alignments</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="k">for</span> <span class="n">hit</span> <span class="ow">in</span> <span class="n">alignment</span><span class="o">.</span><span class="n">hsps</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span> <span class="p">(</span><span class="n">hit</span><span class="o">.</span><span class="n">identities</span><span class="p">)</span>
@@ -280,423 +343,328 @@ against the provided database.</p>
 </div>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
+<dt id="dnachisel.biotools.change_biopython_record_sequence">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">change_biopython_record_sequence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">record</span></em>, <em class="sig-param"><span class="n">new_seq</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#change_biopython_record_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.change_biopython_record_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a version of the record with the sequence set to new_seq.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dnachisel.biotools.complement">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">complement</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dna_sequence</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#complement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.complement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the complement of the DNA sequence.</p>
+<p>For instance <code class="docutils literal notranslate"><span class="pre">complement(&quot;ATGCCG&quot;)</span></code> returns <code class="docutils literal notranslate"><span class="pre">&quot;TACGGC&quot;</span></code>.</p>
+<p>Uses Biopython for speed.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dnachisel.biotools.dict_to_pretty_string">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">dict_to_pretty_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span></em>, <em class="sig-param"><span class="n">rounding_digits</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">indent</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/formatting_operations.html#dict_to_pretty_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.dict_to_pretty_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a nicely JSON-like formatted string to print a dict.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dnachisel.biotools.dna_pattern_to_regexpr">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">dna_pattern_to_regexpr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dna_pattern</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#dna_pattern_to_regexpr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.dna_pattern_to_regexpr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a regular expression pattern for the provided DNA pattern</p>
+<p>For instance <code class="docutils literal notranslate"><span class="pre">dna_pattern_to_regexpr('ATTNN')</span></code> returns
+<code class="docutils literal notranslate"><span class="pre">&quot;ATT[A|T|G|C][A|T|G|C]&quot;</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="dnachisel.biotools.find_all_bowtie_matches">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">find_all_bowtie_matches</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">bowtie_index_path</em>, <em class="sig-param">match_length</em>, <em class="sig-param">max_mismatches=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/bowtie.html#find_all_bowtie_matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.find_all_bowtie_matches" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">find_all_bowtie_matches</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em>, <em class="sig-param"><span class="n">bowtie_index_path</span></em>, <em class="sig-param"><span class="n">match_length</span></em>, <em class="sig-param"><span class="n">max_mismatches</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/bowtie.html#find_all_bowtie_matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.find_all_bowtie_matches" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return (short) matches between a sequence and a Bowtie index.</p>
 <p>The result is of the form [(start, end), n_mismatches)] where (start, end)
 indicates the position of the match in the sequence, and n_mismatches is
 the number of mismatches with the closest homology in the index.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dnachisel.biotools.change_biopython_record_sequence">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">change_biopython_record_sequence</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">new_seq</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#change_biopython_record_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.change_biopython_record_sequence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a version of the record with the sequence set to new_seq</p>
-</dd></dl>
-
-<dl class="function">
+<dl class="py function">
 <dt id="dnachisel.biotools.find_specification_label_in_feature">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">find_specification_label_in_feature</code><span class="sig-paren">(</span><em class="sig-param">feature</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#find_specification_label_in_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.find_specification_label_in_feature" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">find_specification_label_in_feature</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">feature</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#find_specification_label_in_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.find_specification_label_in_feature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Analyse a Biopython feature to find a DnaChisel Specification in it.</p>
 <p>The specification should start with either “&#64;” or “~”, in the feature’s
 field “label” or “note”.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
+<dt id="dnachisel.biotools.gc_content">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">gc_content</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em>, <em class="sig-param"><span class="n">window_size</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/gc_content.html#gc_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.gc_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute global or local GC content.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>sequence</strong></dt><dd><p>An ATGC DNA sequence (upper case!)</p>
+</dd>
+<dt><strong>window_size</strong></dt><dd><p>If provided, the local GC content for the different sliding windows of
+this size is returned, else the global GC content is returned.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>A number between 0 and 1 indication the proportion</dt><dd><p>of GC content. If window_size is provided, returns
+a list of len(sequence)-window_size values indicating
+the local GC contents (sliding-window method). The i-th value
+indicates the GC content in the window [i, i+window_size]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dnachisel.biotools.group_nearby_indices">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">group_nearby_indices</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">indices</span></em>, <em class="sig-param"><span class="n">max_gap</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_group_spread</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/indices_operations.html#group_nearby_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.group_nearby_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of groups of the different indices.</p>
+<p>Indices are considered from smaller to larger and placed into groups</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>max_gap</strong></dt><dd><p>Maximal allowed difference between two consecutive numbers of a group</p>
+</dd>
+<dt><strong>max_group_spread</strong></dt><dd><p>Maximal allowed difference between the smallest and largest elements
+of a group.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dnachisel.biotools.group_nearby_segments">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">group_nearby_segments</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">segments</span></em>, <em class="sig-param"><span class="n">max_start_gap</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_start_spread</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/indices_operations.html#group_nearby_segments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.group_nearby_segments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of groups of the different indices.</p>
+<p>Indices are considered from smaller to larger and placed into groups</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>max_gap</strong></dt><dd><p>Maximal allowed difference between two consecutive numbers of a group</p>
+</dd>
+<dt><strong>max_group_spread</strong></dt><dd><p>Maximal allowed difference between the smallest and largest elements
+of a group.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dnachisel.biotools.list_common_enzymes">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">list_common_enzymes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">site_length</span><span class="o">=</span><span class="default_value">6</span></em>, <em class="sig-param"><span class="n">opt_temp</span><span class="o">=</span><span class="default_value">37</span></em>, <em class="sig-param"><span class="n">min_suppliers</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">site_unlike</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/enzymes_operations.html#list_common_enzymes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.list_common_enzymes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of enzyme names with the given constraints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>site_length</strong></dt><dd><p>List of accepted site lengths (6, 4, …)</p>
+</dd>
+<dt><strong>opt_temp</strong></dt><dd><p>List of accepted optimal temperatures for the enzyme</p>
+</dd>
+<dt><strong>min_suppliers</strong></dt><dd><p>Minimal number registered suppliers in the Biopython data. A minimum
+of 3 known suppliers returns the most common enzymes.</p>
+</dd>
+<dt><strong>site_unlike</strong></dt><dd><p>List of (ambiguous or unambiguous) DNA sequences that should NOT be
+recognized by the selected enzymes.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="dnachisel.biotools.load_record">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">load_record</code><span class="sig-paren">(</span><em class="sig-param">filepath</em>, <em class="sig-param">linear=True</em>, <em class="sig-param">name='unnamed'</em>, <em class="sig-param">file_format='auto'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#load_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.load_record" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">load_record</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em>, <em class="sig-param"><span class="n">linear</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'unnamed'</span></em>, <em class="sig-param"><span class="n">file_format</span><span class="o">=</span><span class="default_value">'auto'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#load_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.load_record" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a FASTA/Genbank/Snapgene record.</p>
 <p>Note that reading Snapgene records requires the library snapgene_reader
 installed.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dnachisel.biotools.write_record">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">write_record</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">target</em>, <em class="sig-param">file_format='genbank'</em>, <em class="sig-param">remove_locationless_features=True</em>, <em class="sig-param">max_name_length=20</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#write_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.write_record" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a record as genbank, fasta, etc. via Biopython, with fixes.</p>
-<dl class="field-list">
+<dl class="py function">
+<dt id="dnachisel.biotools.random_dna_sequence">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">random_dna_sequence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">length</span></em>, <em class="sig-param"><span class="n">gc_share</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">probas</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">seed</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/random_sequences.html#random_dna_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.random_dna_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a random DNA sequence (“ATGGCGT…”) with the specified length.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>record</strong></p>
-<blockquote>
-<div><p>A biopython record</p>
-</div></blockquote>
-<p><strong>target</strong></p>
-<blockquote>
-<div><p>Path to a file or filelike object.</p>
-</div></blockquote>
-<p><strong>file_format</strong></p>
-<blockquote>
-<div><p>Format, either Genbank or fasta</p>
-</div></blockquote>
-<p><strong>remove_locationless_features</strong></p>
-<blockquote>
-<div><p>If True, will remove all features whose location is None, to avoid a
-Biopython bug</p>
-</div></blockquote>
-<p><strong>max_name_length</strong></p>
-<blockquote>
-<div><p>The record’s name will be truncated if longer than this (also here to
-avoid a biopython bug).</p>
-</div></blockquote>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>length</strong></dt><dd><p>Length of the DNA sequence.</p>
+</dd>
+<dt><strong>proba</strong></dt><dd><p>Frequencies for the different nucleotides, for instance
+<code class="docutils literal notranslate"><span class="pre">probas={&quot;A&quot;:0.2,</span> <span class="pre">&quot;T&quot;:0.3,</span> <span class="pre">&quot;G&quot;:0.3,</span> <span class="pre">&quot;C&quot;:0.2}</span></code>.
+If not specified, all nucleotides are equiprobable (p=0.25).</p>
+</dd>
+<dt><strong>seed</strong></dt><dd><p>The seed to feed to the random number generator. When a seed is provided
+the random results depend deterministically on the seed, thus enabling
+reproducibility</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dnachisel.biotools.sequence_to_biopython_record">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">sequence_to_biopython_record</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">id='&lt;unknown id&gt;'</em>, <em class="sig-param">name='&lt;unknown name&gt;'</em>, <em class="sig-param">features=()</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#sequence_to_biopython_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.sequence_to_biopython_record" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a SeqRecord of the sequence, ready to be Genbanked.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.annotate_record">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">annotate_record</code><span class="sig-paren">(</span><em class="sig-param">seqrecord</em>, <em class="sig-param">location='full'</em>, <em class="sig-param">feature_type='misc_feature'</em>, <em class="sig-param">margin=0</em>, <em class="sig-param">**qualifiers</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#annotate_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.annotate_record" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a feature to a Biopython SeqRecord.</p>
-<dl class="field-list">
+<dl class="py function">
+<dt id="dnachisel.biotools.random_protein_sequence">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">random_protein_sequence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">length</span></em>, <em class="sig-param"><span class="n">seed</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/random_sequences.html#random_protein_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.random_protein_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a random protein sequence “MNQTW…YL*” of the specified length.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>seqrecord</strong></p>
-<blockquote>
-<div><p>The biopython seqrecord to be annotated.</p>
-</div></blockquote>
-<p><strong>location</strong></p>
-<blockquote>
-<div><p>Either (start, end) or (start, end, strand). (strand defaults to +1)</p>
-</div></blockquote>
-<p><strong>feature_type</strong></p>
-<blockquote>
-<div><p>The type associated with the feature</p>
-</div></blockquote>
-<p><strong>margin</strong></p>
-<blockquote>
-<div><p>Number of extra bases added on each side of the given location.</p>
-</div></blockquote>
-<p><strong>qualifiers</strong></p>
-<blockquote>
-<div><p>Dictionnary that will be the Biopython feature’s <cite>qualifiers</cite> attribute.</p>
-</div></blockquote>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>length</strong></dt><dd><p>Length of the protein sequence (in number of amino-acids). Note that the
+sequence will always start with <code class="docutils literal notranslate"><span class="pre">&quot;M&quot;</span></code> and end with a stop codon <code class="docutils literal notranslate"><span class="pre">&quot;*&quot;</span></code>
+with (length-2) random amino-acids in the middle</p>
+</dd>
+<dt><strong>seed</strong></dt><dd><p>The seed to feed to the random number generator. When a seed is provided
+the random results depend deterministically on the seed, thus enabling
+reproducibility</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dnachisel.biotools.annotate_differences">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">annotate_differences</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">reference</em>, <em class="sig-param">feature_type='misc_feature'</em>, <em class="sig-param">prefix='#'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#annotate_differences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.annotate_differences" title="Permalink to this definition">¶</a></dt>
-<dd><p>Annotate differences between two records in a new record.</p>
-<p>Returns a version of SeqRecord <code class="docutils literal notranslate"><span class="pre">record</span></code> where differences with the
-references are annotated as new features.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>record</strong></p>
-<blockquote>
-<div><p>The SeqRecord to be compared to the reference</p>
-</div></blockquote>
-<p><strong>reference</strong></p>
-<blockquote>
-<div><p>The reference SeqRecord. Must be the same size as <code class="docutils literal notranslate"><span class="pre">reference</span></code></p>
-</div></blockquote>
-<p><strong>feature_type</strong></p>
-<blockquote>
-<div><p>The type of the features added to mark differences.</p>
-</div></blockquote>
-<p><strong>prefix</strong></p>
-<blockquote>
-<div><p>Each new feature will be labeled “po” where p is the prefix and o the
-original sequence at the feature’s location. For instance “#A” or “#TT”.</p>
-</div></blockquote>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.annotate_pattern_occurrences">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">annotate_pattern_occurrences</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">pattern</em>, <em class="sig-param">feature_type='misc_feature'</em>, <em class="sig-param">prefix='!'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#annotate_pattern_occurrences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.annotate_pattern_occurrences" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a new record annotated w. all occurences of pattern in sequence.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>record</strong></p>
-<blockquote>
-<div><p>A Biopython record</p>
-</div></blockquote>
-<p><strong>pattern</strong></p>
-<blockquote>
-<div><p>A DnaChisel SequencePattern object (such as DnaPAttern)</p>
-</div></blockquote>
-<p><strong>feature_type</strong></p>
-<blockquote>
-<div><p>Type of the annotations in the returned record</p>
-</div></blockquote>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.complement">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">complement</code><span class="sig-paren">(</span><em class="sig-param">dna_sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#complement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.complement" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the complement of the DNA sequence.</p>
-<p>For instance <code class="docutils literal notranslate"><span class="pre">complement(&quot;ATGCCG&quot;)</span></code> returns <code class="docutils literal notranslate"><span class="pre">&quot;TACGGC&quot;</span></code>.</p>
-<p>Uses BioPython for speed.</p>
-</dd></dl>
-
-<dl class="function">
+<dl class="py function">
 <dt id="dnachisel.biotools.reverse_complement">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">reverse_complement</code><span class="sig-paren">(</span><em class="sig-param">sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#reverse_complement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.reverse_complement" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">reverse_complement</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#reverse_complement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.reverse_complement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the reverse-complement of the DNA sequence.</p>
-<p>For instance <code class="docutils literal notranslate"><span class="pre">complement(&quot;ATGCCG&quot;)</span></code> returns <code class="docutils literal notranslate"><span class="pre">&quot;GCCGTA&quot;</span></code>.</p>
-<p>Uses BioPython for speed.</p>
+<p>For instance <code class="docutils literal notranslate"><span class="pre">reverse_complement(&quot;ATGCCG&quot;)</span></code> returns <code class="docutils literal notranslate"><span class="pre">&quot;CGGCAT&quot;</span></code>.</p>
+<p>Uses Biopython for speed.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="dnachisel.biotools.reverse_translate">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">reverse_translate</code><span class="sig-paren">(</span><em class="sig-param">protein_sequence</em>, <em class="sig-param">randomize_codons=False</em>, <em class="sig-param">table='Standard'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#reverse_translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.reverse_translate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a DNA sequence which translates to the provided protein sequence</p>
-<p>Note: at the moment, the first valid codon found is used for each
-amino-acid (so it is deterministic but no codon-optimization is done).</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.dna_pattern_to_regexpr">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">dna_pattern_to_regexpr</code><span class="sig-paren">(</span><em class="sig-param">dna_pattern</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#dna_pattern_to_regexpr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.dna_pattern_to_regexpr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a regular expression pattern for the provided DNA pattern</p>
-<p>For instance <code class="docutils literal notranslate"><span class="pre">dna_pattern_to_regexpr('ATTNN')</span></code> returns
-<code class="docutils literal notranslate"><span class="pre">&quot;ATT[A|T|G|C][A|T|G|C]&quot;</span></code>.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.translate">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">translate</code><span class="sig-paren">(</span><em class="sig-param">dna_sequence</em>, <em class="sig-param">table='Standard'</em>, <em class="sig-param">assume_start_codon=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.translate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Translate the DNA sequence into an amino-acids sequence “MLKYQT…”.
-If <code class="docutils literal notranslate"><span class="pre">translation_table</span></code> is the name or number of a NCBI genetic table,
-Biopython will be used. See here for options:</p>
-<p><a class="reference external" href="http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc25">http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc25</a></p>
-<p><code class="docutils literal notranslate"><span class="pre">translation_table</span></code> can also be a dictionnary of the form
-<code class="docutils literal notranslate"><span class="pre">{&quot;ATT&quot;:</span> <span class="pre">&quot;M&quot;,</span> <span class="pre">&quot;CTC&quot;:</span> <span class="pre">&quot;X&quot;,</span> <span class="pre">etc.}</span></code> for more exotic translation tables</p>
-<p>If assume_start_codon is True and the first codon is a start codon in the
-given genetic table, then the first amino acid will be M (methionine).</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.list_common_enzymes">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">list_common_enzymes</code><span class="sig-paren">(</span><em class="sig-param">site_length=(6</em>, <em class="sig-param">)</em>, <em class="sig-param">opt_temp=(37</em>, <em class="sig-param">)</em>, <em class="sig-param">min_suppliers=1</em>, <em class="sig-param">site_unlike=()</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/enzymes_operations.html#list_common_enzymes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.list_common_enzymes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of enzyme names with the given constraints.</p>
-<dl class="field-list">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">reverse_translate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">protein_sequence</span></em>, <em class="sig-param"><span class="n">randomize_codons</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">'Standard'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#reverse_translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.reverse_translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a DNA sequence which translates to the provided protein sequence.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>site_length</strong></p>
-<blockquote>
-<div><p>List of accepted site lengths (6, 4, …)</p>
-</div></blockquote>
-<p><strong>opt_temp</strong></p>
-<blockquote>
-<div><p>List of accepted optimal temperatures for the enzyme</p>
-</div></blockquote>
-<p><strong>min_suppliers</strong></p>
-<blockquote>
-<div><p>Minimal number registered suppliers in the Biopython data. A minimum
-of 3 known suppliers returns the most common enzymes.</p>
-</div></blockquote>
-<p><strong>site_unlike</strong></p>
-<blockquote>
-<div><p>List of (ambiguous or unambiguous) DNA sequences that should NOT be
-recognized by the selected enzymes.</p>
-</div></blockquote>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>protein_sequence</strong></dt><dd><p>A sequence string of aminoacids, e.g. “MVKK…”</p>
+</dd>
+<dt><strong>table</strong></dt><dd><p>Genetic code table to use (e.g. ‘Standard’, ‘Bacterial’, etc.).
+See dnachisel.biotools.CODON_TABLE_NAMES for a list of available genetic
+code tables.</p>
+</dd>
+<dt><strong>randomize_codons</strong></dt><dd><p>If False, the first valid codon found is used for each, which can create
+biases (GC content, etc.), if True, each amino acid gets replaced by a
+randomly selected codon for this amino acid.</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dnachisel.biotools.gc_content">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">gc_content</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">window_size=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/gc_content.html#gc_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.gc_content" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute global or local GC content.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>sequence</strong></p>
-<blockquote>
-<div><p>An ATGC DNA sequence (upper case!)</p>
-</div></blockquote>
-<p><strong>window_size</strong></p>
-<blockquote>
-<div><p>If provided, the local GC content for the different sliding windows of
-this size is returned, else the global GC content is returned.</p>
-</div></blockquote>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A number between 0 and 1 indication the proportion</p>
-<blockquote>
-<div><p>of GC content. If window_size is provided, returns
-a list of len(sequence)-window_size values indicating
-the local GC contents (sliding-window method). The i-th value
-indicates the GC content in the window [i, i+window_size]</p>
-</div></blockquote>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.group_nearby_indices">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">group_nearby_indices</code><span class="sig-paren">(</span><em class="sig-param">indices</em>, <em class="sig-param">max_gap=None</em>, <em class="sig-param">max_group_spread=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/indices_operations.html#group_nearby_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.group_nearby_indices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of groups of the different indices.</p>
-<p>Indices are considered from smaller to larger and placed into groups</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>max_gap</strong></p>
-<blockquote>
-<div><p>Maximal allowed difference between two consecutive numbers of a group</p>
-</div></blockquote>
-<p><strong>max_group_spread</strong></p>
-<blockquote>
-<div><p>Maximal allowed difference between the smallest and largest elements
-of a group.</p>
-</div></blockquote>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.group_nearby_segments">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">group_nearby_segments</code><span class="sig-paren">(</span><em class="sig-param">segments</em>, <em class="sig-param">max_start_gap=None</em>, <em class="sig-param">max_start_spread=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/indices_operations.html#group_nearby_segments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.group_nearby_segments" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of groups of the different indices.</p>
-<p>Indices are considered from smaller to larger and placed into groups</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>max_gap</strong></p>
-<blockquote>
-<div><p>Maximal allowed difference between two consecutive numbers of a group</p>
-</div></blockquote>
-<p><strong>max_group_spread</strong></p>
-<blockquote>
-<div><p>Maximal allowed difference between the smallest and largest elements
-of a group.</p>
-</div></blockquote>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.subdivide_window">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">subdivide_window</code><span class="sig-paren">(</span><em class="sig-param">window</em>, <em class="sig-param">max_span</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/indices_operations.html#subdivide_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.subdivide_window" title="Permalink to this definition">¶</a></dt>
-<dd><p>Subdivide a window (start, end) into windows of size &lt; max_span
-(start, i_1), (i_1, i_2), … (i_n, end)</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.windows_overlap">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">windows_overlap</code><span class="sig-paren">(</span><em class="sig-param">window1</em>, <em class="sig-param">window2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/indices_operations.html#windows_overlap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.windows_overlap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the overlap span between two windows.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>window1, window2</strong></p>
-<blockquote>
-<div><p>Each window is a couple of the form (start, end) indicating the range of
-a segment of integers.</p>
-</div></blockquote>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-<blockquote>
-<div><p>In case the two windows do not overlap.</p>
-</div></blockquote>
-<p>[start, end]</p>
-<blockquote>
-<div><p>The coordinates of the overlap segment if there is one.</p>
-</div></blockquote>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.sequences_differences">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">sequences_differences</code><span class="sig-paren">(</span><em class="sig-param">seq1</em>, <em class="sig-param">seq2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_differences.html#sequences_differences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.sequences_differences" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of nucleotides that differ in the two sequences.</p>
-<p>seq1, seq2 should be strings of DNA sequences e.g. “ATGCTGTGC”</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.sequences_differences_array">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">sequences_differences_array</code><span class="sig-paren">(</span><em class="sig-param">seq1</em>, <em class="sig-param">seq2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_differences.html#sequences_differences_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.sequences_differences_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return an array [0, 0, 1, 0, …] with 1s for sequence differences.</p>
-<p>seq1, seq2 should both be ATGC strings.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.sequences_differences_segments">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">sequences_differences_segments</code><span class="sig-paren">(</span><em class="sig-param">seq1</em>, <em class="sig-param">seq2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_differences.html#sequences_differences_segments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.sequences_differences_segments" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the list of segments on which sequence seq1 differs from seq2.</p>
-<p>The list is of the form [(start1, end1), (start2, end2), etc.]</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>seq1, seq2</strong></p>
-<blockquote>
-<div><p>ATGC sequences to be compared</p>
-</div></blockquote>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="dnachisel.biotools.dict_to_pretty_string">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">dict_to_pretty_string</code><span class="sig-paren">(</span><em class="sig-param">d</em>, <em class="sig-param">rounding_digits=2</em>, <em class="sig-param">indent=2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/formatting_operations.html#dict_to_pretty_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.dict_to_pretty_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a nicely JSON-like formatted string to print a dict.</p>
-</dd></dl>
-
-<dl class="function">
+<dl class="py function">
 <dt id="dnachisel.biotools.round_all_numbers_in_dict">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">round_all_numbers_in_dict</code><span class="sig-paren">(</span><em class="sig-param">d</em>, <em class="sig-param">rounding_digits=2</em>, <em class="sig-param">outplace=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/formatting_operations.html#round_all_numbers_in_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.round_all_numbers_in_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">round_all_numbers_in_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span></em>, <em class="sig-param"><span class="n">rounding_digits</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">outplace</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/formatting_operations.html#round_all_numbers_in_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.round_all_numbers_in_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a new version of dict d with all floats rounded to N digits.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="dnachisel.biotools.score_to_formatted_string">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">score_to_formatted_string</code><span class="sig-paren">(</span><em class="sig-param">score</em>, <em class="sig-param">characters=9</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/formatting_operations.html#score_to_formatted_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.score_to_formatted_string" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">score_to_formatted_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">score</span></em>, <em class="sig-param"><span class="n">characters</span><span class="o">=</span><span class="default_value">9</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/formatting_operations.html#score_to_formatted_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.score_to_formatted_string" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform a number (score) into a best-format string.</p>
 <p>The format will be either int (2234), float (10.234) or engineering
 (1.20E5), whichever is shorter. The score is then padded with left
 whitespaces to obtained the desired number of <code class="docutils literal notranslate"><span class="pre">characters</span></code>.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="dnachisel.biotools.random_dna_sequence">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">random_dna_sequence</code><span class="sig-paren">(</span><em class="sig-param">length</em>, <em class="sig-param">gc_share=None</em>, <em class="sig-param">probas=None</em>, <em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/random_sequences.html#random_dna_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.random_dna_sequence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a random DNA sequence (“ATGGCGT…”) with the specified length.</p>
-<dl class="field-list">
+<dl class="py function">
+<dt id="dnachisel.biotools.sequence_to_biopython_record">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">sequence_to_biopython_record</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em>, <em class="sig-param"><span class="n">id</span><span class="o">=</span><span class="default_value">'&lt;unknown id&gt;'</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'&lt;unknown name&gt;'</span></em>, <em class="sig-param"><span class="n">features</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#sequence_to_biopython_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.sequence_to_biopython_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a SeqRecord of the sequence, ready to be Genbanked.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dnachisel.biotools.sequences_differences">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">sequences_differences</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seq1</span></em>, <em class="sig-param"><span class="n">seq2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_differences.html#sequences_differences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.sequences_differences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of nucleotides that differ in the two sequences.</p>
+<p>seq1, seq2 should be strings of DNA sequences e.g. “ATGCTGTGC”</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dnachisel.biotools.sequences_differences_array">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">sequences_differences_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seq1</span></em>, <em class="sig-param"><span class="n">seq2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_differences.html#sequences_differences_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.sequences_differences_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an array [0, 0, 1, 0, …] with 1s for sequence differences.</p>
+<p>seq1, seq2 should both be ATGC strings.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dnachisel.biotools.sequences_differences_segments">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">sequences_differences_segments</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seq1</span></em>, <em class="sig-param"><span class="n">seq2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_differences.html#sequences_differences_segments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.sequences_differences_segments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the list of segments on which sequence seq1 differs from seq2.</p>
+<p>The list is of the form [(start1, end1), (start2, end2), etc.]</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>length</strong></p>
-<blockquote>
-<div><p>Length of the DNA sequence.</p>
-</div></blockquote>
-<p><strong>proba</strong></p>
-<blockquote>
-<div><p>Frequencies for the different nucleotides, for instance
-<code class="docutils literal notranslate"><span class="pre">probas={&quot;A&quot;:0.2,</span> <span class="pre">&quot;T&quot;:0.3,</span> <span class="pre">&quot;G&quot;:0.3,</span> <span class="pre">&quot;C&quot;:0.2}</span></code>.
-If not specified, all nucleotides are equiprobable (p=0.25).</p>
-</div></blockquote>
-<p><strong>seed</strong></p>
-<blockquote>
-<div><p>The seed to feed to the random number generator. When a seed is provided
-the random results depend deterministically on the seed, thus enabling
-reproducibility</p>
-</div></blockquote>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>seq1, seq2</strong></dt><dd><p>ATGC sequences to be compared</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="dnachisel.biotools.random_protein_sequence">
-<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">random_protein_sequence</code><span class="sig-paren">(</span><em class="sig-param">length</em>, <em class="sig-param">seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/random_sequences.html#random_protein_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.random_protein_sequence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a random protein sequence “MNQTW…YL*” of the specified length.</p>
-<dl class="field-list">
+<dl class="py function">
+<dt id="dnachisel.biotools.subdivide_window">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">subdivide_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">window</span></em>, <em class="sig-param"><span class="n">max_span</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/indices_operations.html#subdivide_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.subdivide_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subdivide a window (start, end) into windows of size &lt; max_span
+(start, i_1), (i_1, i_2), … (i_n, end)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dnachisel.biotools.translate">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">translate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dna_sequence</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">'Standard'</span></em>, <em class="sig-param"><span class="n">assume_start_codon</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/sequences_operations.html#translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate the DNA sequence into an amino-acids sequence “MLKYQT…”.
+If <code class="docutils literal notranslate"><span class="pre">translation_table</span></code> is the name or number of a NCBI genetic table,
+Biopython will be used. See here for options:</p>
+<p><a class="reference external" href="http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc25">http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc25</a></p>
+<p><code class="docutils literal notranslate"><span class="pre">translation_table</span></code> can also be a dictionary of the form
+<code class="docutils literal notranslate"><span class="pre">{&quot;ATT&quot;:</span> <span class="pre">&quot;M&quot;,</span> <span class="pre">&quot;CTC&quot;:</span> <span class="pre">&quot;X&quot;,</span> <span class="pre">etc.}</span></code> for more exotic translation tables</p>
+<p>If assume_start_codon is True and the first codon is a start codon in the
+given genetic table, then the first amino acid will be M (methionine).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dnachisel.biotools.windows_overlap">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">windows_overlap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">window1</span></em>, <em class="sig-param"><span class="n">window2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/indices_operations.html#windows_overlap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.windows_overlap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the overlap span between two windows.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>length</strong></p>
-<blockquote>
-<div><p>Length of the protein sequence (in number of amino-acids). Note that the
-sequence will always start with <code class="docutils literal notranslate"><span class="pre">&quot;M&quot;</span></code> and end with a stop codon <code class="docutils literal notranslate"><span class="pre">&quot;*&quot;</span></code>
-with (length-2) random amino-acids in the middle</p>
-</div></blockquote>
-<p><strong>seed</strong></p>
-<blockquote>
-<div><p>The seed to feed to the random number generator. When a seed is provided
-the random results depend deterministically on the seed, thus enabling
-reproducibility</p>
-</div></blockquote>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>window1, window2</strong></dt><dd><p>Each window is a couple of the form (start, end) indicating the range of
+a segment of integers.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>None</dt><dd><p>In case the two windows do not overlap.</p>
+</dd>
+<dt>[start, end]</dt><dd><p>The coordinates of the overlap segment if there is one.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dnachisel.biotools.write_record">
+<code class="sig-prename descclassname">dnachisel.biotools.</code><code class="sig-name descname">write_record</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">record</span></em>, <em class="sig-param"><span class="n">target</span></em>, <em class="sig-param"><span class="n">file_format</span><span class="o">=</span><span class="default_value">'genbank'</span></em>, <em class="sig-param"><span class="n">remove_locationless_features</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">max_name_length</span><span class="o">=</span><span class="default_value">20</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnachisel/biotools/genbank_operations.html#write_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnachisel.biotools.write_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a record as genbank, fasta, etc. via Biopython, with fixes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>record</strong></dt><dd><p>A biopython record.</p>
+</dd>
+<dt><strong>target</strong></dt><dd><p>Path to a file or filelike object.</p>
+</dd>
+<dt><strong>file_format</strong></dt><dd><p>Format, either Genbank or fasta.</p>
+</dd>
+<dt><strong>remove_locationless_features</strong></dt><dd><p>If True, will remove all features whose location is None, to avoid a
+Biopython bug</p>
+</dd>
+<dt><strong>max_name_length</strong></dt><dd><p>The record’s name will be truncated if longer than this (also here to
+avoid a Biopython bug).</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -718,7 +686,7 @@ reproducibility</p>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2019, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>
