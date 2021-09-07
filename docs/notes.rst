@@ -5,7 +5,7 @@ Reproducibility
 ---------------
 
 The randomness in DNA Chisel is entirely determined by the Numpy random generator.
-As a consequence, setting the Numpy seed at the beginning of a ascript ensures
+As a consequence, setting the Numpy seed at the beginning of a script ensures
 that the result will always be the same:
 
 .. code:: python
