@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-DnaChisel Command Line Interface
+DNA Chisel Command Line Interface
 
 Usage:
   dnachisel <source> <target> [--circular] [--mute]
@@ -14,7 +14,7 @@ Note: this CLI will be developed on a per-request basis, so don't hesitate to
 ask for more handles and options on Github
 (https://github.com/Edinburgh-Genome-Foundry/DnaChisel/issues)
 
-Example to output the result to a genbank:
+Example to output the result to a genbank (filename must end with '.gb'):
 
 >>> dnachisel annotated_record.gb optimized_record.gb
 
@@ -56,13 +56,14 @@ if __name__ == "__main__":
         problem.objectives_text_summary(),
     )
 
-    if target.lower().endswith(".gb"):
+    if target.lower().endswith(".gb"):  # save genbank
         verbose_print("Resolving Constraints...")
         problem.resolve_constraints()
         verbose_print("Optimizing...")
         problem.optimize()
+        problem.to_record(filepath=target, with_sequence_edits=True)
 
-    else:
+    else:  # save into zip or folder
         project_name = os.path.basename(source)
         problem.optimize_with_report(
             target, project_name=project_name, file_path=source
