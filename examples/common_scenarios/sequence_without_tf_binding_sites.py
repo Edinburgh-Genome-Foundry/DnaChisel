@@ -16,6 +16,8 @@ tf_column.dropna(inplace=True)
 tf_list = tf_column.to_list()
 # According to the description, the binding sites are in uppercase, so we remove lowercase:
 tf_binding_sequences = ["".join(ch for ch in tf if not ch.islower()) for tf in tf_list]
+# Remove single-nucleotide TFs:
+tf_binding_sequences = [tf for tf in tf_binding_sequences if len(tf) > 1]
 
 # DEFINE AND SOLVE THE OPTIMIZATION PROBLEM
 problem = DnaOptimizationProblem(
