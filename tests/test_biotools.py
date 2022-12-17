@@ -44,7 +44,9 @@ def test_change_biopython_record_sequence():
 
 
 def test_list_common_enzymes():
-    assert len(list_common_enzymes(min_suppliers=3)) == 63
+    assert len(list_common_enzymes(min_suppliers=3)) >= 61
+    # biopython v1.80: 61 enzymes
+    # < v1.79: 63 enzymes
 
 
 def biopython_translate(sequence, table="Standard", cds=False):
