@@ -20,6 +20,7 @@ from ..Location import Location
 
 try:
     import pandas
+
     PANDAS_AVAILABLE = True
 except ImportError:
     PANDAS_AVAILABLE = False
@@ -78,9 +79,7 @@ install_reports_extra_message = (
 )
 
 
-def write_no_solution_report(
-    target, problem, error, file_content=None, file_path=None
-):
+def write_no_solution_report(target, problem, error, file_content=None, file_path=None):
     """Write a report on incompatibility found in the problem's constraints.
 
     The report comprises a PDF of plots of the sequence (global constraints,
@@ -129,18 +128,15 @@ def write_no_solution_report(
         if error.location is None:
             raise error
         start, end, strand = error.location.to_tuple()
-        ax.fill_between(
-            [start, end], -10, 10, zorder=-1000, facecolor="#ffcccc"
-        )
+        ax.fill_between([start, end], -10, 10, zorder=-1000, facecolor="#ffcccc")
         title = "\n".join(
             textwrap.wrap(
-                "No solution found in zone [%d, %d]:%s"
-                % (start, end, str(error)),
+                "No solution found in zone [%d, %d]:%s" % (start, end, str(error)),
                 width=120,
             )
         )
         ax.set_title(title, fontdict=TITLE_FONTDICT)
-        pdf_io.savefig(ax.figure, bbox_inches="tight", alpha=0.5)
+        pdf_io.savefig(ax.figure, bbox_inches="tight")
         plt.close(ax.figure)
 
         # CREATE AND SAVE THE LOCAL CONSTRAINTS BREACHES RECORD
@@ -166,9 +162,7 @@ def write_no_solution_report(
             label_prefix="BREACH", locations_filter=is_in_focus
         )
         SeqIO.write(
-            record,
-            root._file("local_constraints_breaches.gb").open("w"),
-            "genbank",
+            record, root._file("local_constraints_breaches.gb").open("w"), "genbank",
         )
 
         # CREATE A FIGURE OF THE LOCAL CONSTRAINTS BREACHES AS A NEW PDF PAGE
@@ -184,7 +178,7 @@ def write_no_solution_report(
             fontdict=TITLE_FONTDICT,
         )
         ax.set_ylim(top=ax.get_ylim()[1] + 1)
-        pdf_io.savefig(ax.figure, bbox_inches="tight", alpha=0.5)
+        pdf_io.savefig(ax.figure, bbox_inches="tight")
         plt.close(ax.figure)
 
     root._file("logs.txt").write(problem.logger.dump_logs())
@@ -373,9 +367,7 @@ def write_optimization_report(
         problem=problem, constraints_evaluations=constraints_evaluations
     )
     filename = "constraints_before_and_after.csv"
-    constraints_before_after.to_csv(
-        root._file(filename).open("w"), index=False
-    )
+    constraints_before_after.to_csv(root._file(filename).open("w"), index=False)
 
     # GENERATE AND SAVE THE OBJECTIVES SUMMARY
 
@@ -415,9 +407,7 @@ def write_optimization_report(
         label_prefix="Breach from", merge_overlapping=True
     )
     record.features += breaches_locations
-    SeqIO.write(
-        record, root._file("final_sequence_with_edits.gb").open("w"), "genbank"
-    )
+    SeqIO.write(record, root._file("final_sequence_with_edits.gb").open("w"), "genbank")
 
     # CREATE THE "FINAL SEQUENCE" REPORT
 
