@@ -38,6 +38,8 @@ setup(
         "docopt",
         "flametree",
         "python_codon_tables",
+        "genome_collector",
+        "primer3-py",
     ],
     extras_require={
         "reports": [
