@@ -37,9 +37,7 @@ setup(
         "proglog",
         "docopt",
         "flametree",
-        "python_codon_tables",
-        "genome_collector",
-        "primer3-py",
+        "python_codon_tables"
     ],
     extras_require={
         "reports": [
@@ -48,6 +46,15 @@ setup(
             "matplotlib",
             "dna_features_viewer",
             "pandas",
+        ],
+        "test": [
+            "coveralls",
+            "geneblocks",
+            "genome_collector",
+            "matplotlib",
+            "primer3-py",
+            "pytest",
+            "pytest-cov"
         ]
     },
 )
