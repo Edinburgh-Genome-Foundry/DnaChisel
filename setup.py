@@ -47,7 +47,7 @@ setup(
             "dna_features_viewer",
             "pandas",
         ],
-        "test": [
+        "tests": [
             "coveralls",
             "geneblocks",
             "genome_collector",

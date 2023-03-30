@@ -4,7 +4,7 @@ python:
 # command to install dependencies
 install:
   - sudo apt-get install ncbi-blast+ bowtie
-  - pip install -e .[reports,test]
+  - pip install -e .[reports,tests]
 # command to run tests
 script:
   - python -m pytest -v --cov dnachisel --cov-report term-missing
