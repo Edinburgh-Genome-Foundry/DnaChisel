@@ -37,7 +37,7 @@ setup(
         "proglog",
         "docopt",
         "flametree",
-        "python_codon_tables"
+        "python_codon_tables",
     ],
     extras_require={
         "reports": [
@@ -54,7 +54,7 @@ setup(
             "matplotlib",
             "primer3-py",
             "pytest",
-            "pytest-cov"
+            "pytest-cov",
         ]
     },
 )
