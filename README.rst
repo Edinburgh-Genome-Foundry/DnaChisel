@@ -164,7 +164,7 @@ DNA Chisel requires Python 3, and can be installed via a pip command:
 .. code::
 
     pip install dnachisel     # <= minimal install without reports support
-    pip install dnachisel[reports] # <= full install with all dependencies
+    pip install 'dnachisel[reports]' # <= full install with all dependencies
 
 The full installation using ``dnachisel[reports]`` downloads heavier libraries
 (Matplotlib, PDF reports, sequenticon) for report generation, but is highly
