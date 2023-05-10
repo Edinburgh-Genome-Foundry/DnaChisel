@@ -123,6 +123,7 @@ DnaChisel also implements features for verification and troubleshooting. For
 instance by generating optimization reports:
 
 .. code:: python
+
     problem = DnaOptimizationProblem(...)
     problem.optimize_with_report(target="report.zip")
 
@@ -161,6 +162,7 @@ Installation
 DNA Chisel requires Python 3, and can be installed via a pip command:
 
 .. code::
+
     pip install dnachisel     # <= minimal install without reports support
     pip install dnachisel[reports] # <= full install with all dependencies
 
