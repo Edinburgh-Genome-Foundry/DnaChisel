@@ -61,7 +61,7 @@ def get_backtranslation_table(table_name="Standard"):
         back_translation_table[amino_acid].append(codon)
     back_translation_table["*"] = table.stop_codons
     back_translation_table["START"] = table.start_codons
-    back_translation_table["X"] = flatten(backtranslation_table.values())
+    back_translation_table["X"] = flatten(back_translation_table.values())
     back_translation_table["B"] = back_translation_table["N"] + back_translation_table["D"]
     back_translation_table["J"] = back_translation_table["L"] + back_translation_table["I"]
     back_translation_table["Z"] = back_translation_table["E"] + back_translation_table["Q"]
