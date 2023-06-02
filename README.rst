@@ -110,16 +110,16 @@ Or via a Python script:
     problem = DnaOptimizationProblem.from_record("my_record.gb")
     problem.optimize_with_report(target="report.zip")
 
-By default, only the built-in specifications of DnaChisel can be used in the
+By default, only the built-in specifications of DNA Chisel can be used in the
 annotations, however it is easy to add your own specifications to the Genbank
 parser, and build applications supporting custom specifications on top of
-DnaChisel.
+DNA Chisel.
 
 
 Reports
 ~~~~~~~
 
-DnaChisel also implements features for verification and troubleshooting. For
+DNA Chisel also implements features for verification and troubleshooting. For
 instance by generating optimization reports:
 
 .. code:: python
@@ -142,7 +142,7 @@ Here is an example of summary report:
 How it works
 ------------
 
-DnaChisel hunts down every constraint breach and suboptimal region by
+DNA Chisel hunts down every constraint breach and suboptimal region by
 recreating local version of the problem around these regions. Each type of
 constraint can be locally *reduced* and solved in its own way, to ensure fast
 and reliable resolution.
@@ -169,7 +169,7 @@ DNA Chisel requires Python 3, and can be installed via a pip command:
 The full installation using ``dnachisel[reports]`` downloads heavier libraries
 (Matplotlib, PDF reports, sequenticon) for report generation, but is highly
 recommended to use DNA Chisel interactively via Python scripts. Also install
-[Geneblocks](https://edinburgh-genome-foundry.github.io/Geneblocks) and its
+`Geneblocks<https://edinburgh-genome-foundry.github.io/Geneblocks>`_ and its
 dependencies if you wish to include a plot of sequence edits in the report.
 
 Alternatively, you can unzip the sources in a folder and type
@@ -189,7 +189,7 @@ removes short homologies with existing genomes). On Ubuntu:
 License = MIT
 -------------
 
-DnaChisel is an open-source software originally written at the `Edinburgh Genome Foundry
+DNA Chisel is an open-source software originally written at the `Edinburgh Genome Foundry
 <http://edinburgh-genome-foundry.github.io/home.html>`_ by `Zulko <https://github.com/Zulko>`_
 and `released on Github <https://github.com/Edinburgh-Genome-Foundry/DnaChisel>`_ under the MIT licence (Copyright 2017 Edinburgh Genome Foundry). Everyone is welcome to contribute!
 
