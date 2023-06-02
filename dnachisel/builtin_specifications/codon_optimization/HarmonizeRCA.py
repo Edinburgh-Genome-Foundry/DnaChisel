@@ -39,8 +39,9 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
 
     codon_usage_table
       Optional - can be provided instead of ``species``. A dict of the form
-      ``{'*': {"TGA": 0.112, "TAA": 0.68}, 'K': ...}`` giving the RSCU table
-      (relative usage of each codon).
+      ``{'*': {"TGA": 0.112, "TAA": 0.68}, 'K': ...}`` giving the codon
+      frequency table (relative usage of each codon; frequencies add up to 1,
+      separately for each amino acid).
 
     original_species
       Name or TaxID of the species the original sequence was taken from. This
@@ -50,7 +51,8 @@ class HarmonizeRCA(BaseCodonOptimizationClass):
 
     original_codon_usage_table
       A dict of the form ``{'*': {"TGA": 0.112, "TAA": 0.68}, 'K': ...}``
-      giving the RSCU table (relative usage of each codon).
+      giving the codon frequency table (relative usage of each codon;
+      frequencies add up to 1, separately for each amino acid).
 
     location
       Location on which the specification applies

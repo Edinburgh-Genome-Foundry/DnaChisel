@@ -43,8 +43,9 @@ class MaximizeCAI(BaseCodonOptimizationClass):
 
     codon_usage_table
       A dict of the form ``{'*': {"TGA": 0.112, "TAA": 0.68}, 'K': ...}``
-      giving the RSCU table (relative usage of each codon). Only provide if
-      no ``species`` parameter was provided.
+      giving the codon frequency table (relative usage of each codon;
+      frequencies add up to 1, separately for each amino acid). Only
+      provide if no ``species`` parameter was provided.
 
     boost
       Score multiplicator (=weight) for when the specification is used as an

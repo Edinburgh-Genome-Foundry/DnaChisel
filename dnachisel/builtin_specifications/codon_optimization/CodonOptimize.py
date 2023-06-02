@@ -55,8 +55,9 @@ def CodonOptimize(
     codon_usage_table
       Optional codon usage table of the species for which the sequence will be
       codon-optimized, which can be provided instead of ``species``. A dict of
-      the form ``{'*': {"TGA": 0.112, "TAA": 0.68}, 'K': ...}`` giving the RSCU
-      table (relative usage of each codon). See parameter ``species`` above.
+      the form ``{'*': {"TGA": 0.112, "TAA": 0.68}, 'K': ...}`` giving the codon
+      frequency table (relative usage of each codon; frequencies add up to 1,
+      separately for each amino acid). See parameter ``species`` above.
 
     original_species
       When the method is 'harmonize_rca', this is the native species of the
