@@ -8,9 +8,9 @@
 DNA Chisel - a versatile sequence optimizer
 ===========================================
 
-.. image:: https://travis-ci.com/Edinburgh-Genome-Foundry/DnaChisel.svg?branch=master
-   :target: https://travis-ci.com/Edinburgh-Genome-Foundry/DnaChisel
-   :alt: Travis CI build status
+.. image:: https://github.com/Edinburgh-Genome-Foundry/DnaChisel/actions/workflows/build.yml/badge.svg
+   :target: https://github.com/Edinburgh-Genome-Foundry/DnaChisel/actions/workflows/build.yml
+   :alt: GitHub CI build status
 
 .. image:: https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/DnaChisel/badge.svg?branch=master
    :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/DnaChisel?branch=master
