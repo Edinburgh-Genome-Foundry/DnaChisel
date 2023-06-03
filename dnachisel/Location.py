@@ -3,11 +3,13 @@
 The class has useful methods for finding overlaps between locations, extract
 a subsequence from a sequence, etc.
 """
+from functools import total_ordering
 
 from .biotools import reverse_complement
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 
 
+@total_ordering
 class Location:
     """Represent a segment of a sequence, with a start, end, and strand.
 
@@ -93,10 +95,10 @@ class Location:
         result = list(range(self.start, self.end))
         return result if (self.strand != -1) else result[::-1]
 
-    def __geq__(self, other):
-        """Greater than."""
-        return self.to_tuple() >= other.to_tuple()
-
+    def __eq__(self, other):
+        """Equal to."""
+        return self.to_tuple() == other.to_tuple()
+    
     def __lt__(self, other):
         """Lower than."""
         return self.to_tuple() < other.to_tuple()
