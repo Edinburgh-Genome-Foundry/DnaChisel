@@ -22,7 +22,7 @@ class EnforcePatternOccurence(Specification):
     ----------
     pattern
       A SequencePattern or DnaNotationPattern or a string such as "AATTG",
-      "BsmBI_site", etc.
+      "BsmBI_site", etc. See SequencePattern documentation for more details.
 
     occurences
       Desired number of occurrences of the pattern.
@@ -87,7 +87,10 @@ class EnforcePatternOccurence(Specification):
 
     def evaluate(self, problem):
         """Score the difference between expected and observed n_occurences."""
-        matches = self.pattern.find_matches(problem.sequence, self.location,)
+        matches = self.pattern.find_matches(
+            problem.sequence,
+            self.location,
+        )
         score = -abs(len(matches) - self.occurences)
 
         if score == 0:

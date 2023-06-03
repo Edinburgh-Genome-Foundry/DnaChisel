@@ -123,7 +123,7 @@ def annotate_differences(record, reference, feature_type="misc_feature", prefix=
         else:
             locations.append([ind, ind])
     new_record = deepcopy(record)
-    for (start, end) in locations:
+    for start, end in locations:
         annotate_record(
             new_record,
             location=(start, end + 1),
@@ -144,7 +144,7 @@ def annotate_pattern_occurrences(
       A Biopython record.
 
     pattern
-      A DnaChisel SequencePattern object (such as DnaPAttern).
+      A DNA Chisel SequencePattern object. See SequencePattern documentation.
 
     feature_type
       Type of the annotations in the returned record.

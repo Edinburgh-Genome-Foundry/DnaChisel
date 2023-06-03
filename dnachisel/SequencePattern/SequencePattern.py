@@ -16,7 +16,7 @@ from ..Location import Location
 
 
 class SequencePattern:
-    """Pattern/ that will be looked for in a DNA sequence.
+    """Pattern that will be looked for in a DNA sequence.
 
     Use this class for matching regular expression patterns, and
     DnaNotationPattern for matching explicit sequences or sequences using Ns
@@ -32,22 +32,21 @@ class SequencePattern:
     ----------
 
     expression
-      Any string or regular expression for matching ATGC nucleotides.
-      Note that multi-nucleotides symbols such as "N" (for A-T-G-C), or "K"
+      Any string or regular expression (regex) for matching ATGC nucleotides.
+      Note that multi-nucleotide symbols such as "N" (for A-T-G-C), or "K"
       are not supported by this class, see DnaNotationPattern instead.
 
     size
-      Size of the pattern, in number of characters (if none provided, the size
-      of the ``pattern`` string is used).
-      The ``size`` is used to determine the size of windows when performing
-      local optimization and constraint solving.
-      It can be important to provide the size when the
+      Size of the pattern, in number of characters. The ``size`` is used to
+      determine the size of windows when performing local optimization and
+      constraint solving. It can be important to provide the size when the
       ``pattern`` string provided represents a complex regular expression whose
       maximal matching size cannot be easily evaluated.
+      For example, if a regex is used to actively remove sites, then a size
+      should be provided to inform DNA Chisel during optimization.
 
     name
-      Name of the pattern (will be displayed e.g. when the pattern is printed)
-
+      Name of the pattern (will be displayed e.g. when the pattern is printed).
     """
 
     registered_string_pattern_classes = []
@@ -100,11 +99,10 @@ class SequencePattern:
 
         # THE FUNCTION HAS BEEN CALLED WITH A LOCATION AND A FORCED STRAND
         if forced_strand is not None:
-            subsequence = sequence[location.start: location.end]
+            subsequence = sequence[location.start : location.end]
             if forced_strand == 1:
                 return [
-                    (loc + location.start)
-                    for loc in self.find_matches(subsequence)
+                    (loc + location.start) for loc in self.find_matches(subsequence)
                 ]
             if forced_strand == -1:
                 subsequence = reverse_complement(subsequence)
@@ -129,7 +127,7 @@ class SequencePattern:
                 else:
                     return self.find_matches(sequence, location, -1)
             if strand == 0:
-                matches =  self.find_matches(sequence, location, 1)
+                matches = self.find_matches(sequence, location, 1)
                 if not self.is_palyndromic:
                     matches += self.find_matches(sequence, location, -1)
                 return matches
@@ -158,9 +156,7 @@ class SequencePattern:
             ]
 
     def __str__(self):
-        return self.expression + (
-            "" if self.name is None else " (%s)" % self.name
-        )
+        return self.expression + ("" if self.name is None else " (%s)" % self.name)
 
     @classmethod
     def from_string(cls, string):

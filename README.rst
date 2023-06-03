@@ -169,7 +169,7 @@ DNA Chisel requires Python 3, and can be installed via a pip command:
 The full installation using ``dnachisel[reports]`` downloads heavier libraries
 (Matplotlib, PDF reports, sequenticon) for report generation, but is highly
 recommended to use DNA Chisel interactively via Python scripts. Also install
-`Geneblocks<https://edinburgh-genome-foundry.github.io/Geneblocks>`_ and its
+`GeneBlocks <https://edinburgh-genome-foundry.github.io/Geneblocks>`_ and its
 dependencies if you wish to include a plot of sequence edits in the report.
 
 Alternatively, you can unzip the sources in a folder and type

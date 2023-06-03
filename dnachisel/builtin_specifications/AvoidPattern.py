@@ -15,7 +15,9 @@ class AvoidPattern(Specification):
     ----------
 
     pattern
-      A SequencePattern or DnaNotationPattern
+      A SequencePattern or DnaNotationPattern. If a ``str`` is given, it will
+      be converted. Note that providing ``size`` may be necessary for certain
+      patterns. See SequencePattern documentation for more details.
 
     location
       Location of the DNA segment on which to enforce the pattern e.g.
