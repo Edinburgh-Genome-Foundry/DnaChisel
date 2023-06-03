@@ -48,13 +48,13 @@ setup(
             "pandas",
         ],
         "tests": [
+            "pytest",
+            "pytest-cov",
             "coveralls",
             "geneblocks",
             "genome_collector",
             "matplotlib",
             "primer3-py",
-            "pytest",
-            "pytest-cov",
-        ]
+        ],
     },
 )

@@ -15,13 +15,12 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pytest-cov coveralls
-          pip install matplotlib primer3-py genome_collector geneblocks
+          pip install --upgrade pytest pytest-cov coveralls
           sudo apt-get install ncbi-blast+ bowtie
           
       - name: Install
         run: |
-          pip install -e .[reports]
+          pip install -e .[reports,tests]
       - name: Test with pytest
         run: |
           python -m pytest --cov dnachisel --cov-report term-missing
