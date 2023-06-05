@@ -5,6 +5,8 @@ a subsequence from a sequence, etc.
 """
 from functools import total_ordering
 
+from Bio.SeqFeature import FeatureLocation, SeqFeature
+
 from .biotools import reverse_complement
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 
@@ -98,7 +100,7 @@ class Location:
     def __eq__(self, other):
         """Equal to."""
         return self.to_tuple() == other.to_tuple()
-    
+
     def __lt__(self, other):
         """Lower than."""
         return self.to_tuple() < other.to_tuple()
@@ -121,6 +123,9 @@ class Location:
     def __len__(self):
         """Size of the location."""
         return self.end - self.start
+
+    def __hash__(self):
+        return hash((self.start, self.end, self.strand))
 
     @staticmethod
     def merge_overlapping_locations(locations):
