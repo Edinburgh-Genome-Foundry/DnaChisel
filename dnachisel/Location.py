@@ -125,7 +125,7 @@ class Location:
         return self.end - self.start
 
     def __hash__(self):
-        return hash((self.start, self.end, self.strand))
+        return hash(self.to_tuple())
 
     @staticmethod
     def merge_overlapping_locations(locations):
