@@ -83,3 +83,9 @@ def reverse_translate_with_tables():
         rv_translation = reverse_translate(protein, table=table)
         assert rv_translation == expected
         assert translate(rv_translation, table=table) == protein
+
+
+def reverse_translate_with_ambiguous_aa():
+    aa_seq = "MXBJZ*"
+    rv_translation = reverse_translate(aa_seq, randomize_codons=False, table="Standard")
+    assert rv_translation == "ATGGTGAATTTAGAATAA"
