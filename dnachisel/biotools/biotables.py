@@ -49,6 +49,8 @@ NUCLEOTIDE_TO_REGEXPR = dict_from_csv(
 iupac_file = os.path.join(data_dir, "iupac_notation.csv")
 IUPAC_NOTATION = {k: set(v) for k, v in dict_from_csv(iupac_file).items()}
 
+def flatten(l):
+    return [item for sublist in l for item in sublist]
 
 def get_backtranslation_table(table_name="Standard"):
     table = CodonTable.unambiguous_dna_by_name[table_name]
@@ -59,4 +61,8 @@ def get_backtranslation_table(table_name="Standard"):
         back_translation_table[amino_acid].append(codon)
     back_translation_table["*"] = table.stop_codons
     back_translation_table["START"] = table.start_codons
+    back_translation_table["X"] = list(set(flatten(back_translation_table.values())) - set(back_translation_table["*"]))
+    back_translation_table["B"] = back_translation_table["N"] + back_translation_table["D"]
+    back_translation_table["J"] = back_translation_table["L"] + back_translation_table["I"]
+    back_translation_table["Z"] = back_translation_table["E"] + back_translation_table["Q"]
     return back_translation_table
