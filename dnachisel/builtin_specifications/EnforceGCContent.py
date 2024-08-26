@@ -100,6 +100,9 @@ class EnforceGCContent(Specification):
         wstart, wend = self.location.start, self.location.end
         sequence = self.location.extract_sequence(problem.sequence)
         gc = gc_content(sequence, window_size=self.window)
+        # Ensure that GC is not a scalar.
+        if len(gc.shape) == 0:
+            gc = np.reshape(gc, (1,))
         breaches = np.maximum(0, self.mini - gc) + np.maximum(
             0, gc - self.maxi
         )
