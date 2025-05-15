@@ -5,7 +5,10 @@ class NoSolutionError(Exception):
 
     def __init__(self, message, problem, constraint=None, location=None):
         """Initialize."""
-        Exception.__init__(self, message)
+        # Passing all of our args into the superclass constructor allows
+        # this exception to roundtrip through pickle;
+        # https://stackoverflow.com/a/41809333
+        Exception.__init__(self, message, problem, constraint, location)
         self.message = message
         self.problem = problem
         self.constraint = constraint

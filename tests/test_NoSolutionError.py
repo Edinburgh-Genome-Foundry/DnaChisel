@@ -1,3 +1,4 @@
+import pickle
 import pytest
 from dnachisel import (
     DnaOptimizationProblem,
@@ -45,3 +46,9 @@ def test_no_solution_error_exhaustive_search():
     with pytest.raises(NoSolutionError) as err:
         problem.resolve_constraints()
     assert "Exhaustive search failed" in str(err.value)
+
+
+def test_nosolutionerror_roundtrips_through_pickle():
+    err = NoSolutionError("my message", "my problem", "my constraint", "my location")
+    roundtripped = pickle.loads(pickle.dumps(err))
+    assert dir(err) == dir(roundtripped)
