@@ -15,14 +15,29 @@ class AvoidFrameshiftStartStopCodons(Specification):
 
     best_possible_score = 0
 
-    def __init__(self, genetic_table="Standard", location=None, frames=(1, 2), boost=1.0):
+    def __init__(
+        self,
+        genetic_table="Standard",
+        location=None,
+        frames=(1, 2),
+        frame_origin=None,
+        boost=1.0,
+    ):
         self.genetic_table = genetic_table
         self.location = Location.from_data(location)
         self.frames = frames
+        self.frame_origin = (
+            frame_origin
+            if frame_origin is not None
+            else (self.location.start if self.location is not None else None)
+        )
         self.boost = boost
 
     def initialized_on_problem(self, problem, role):
-        return self._copy_with_full_span_if_no_location(problem)
+        initialized = self._copy_with_full_span_if_no_location(problem)
+        if initialized.frame_origin is None:
+            initialized.frame_origin = initialized.location.start
+        return initialized
 
     def localized(self, location, problem=None, with_righthand=True):
         if self.location is None:
@@ -33,13 +48,9 @@ class AvoidFrameshiftStartStopCodons(Specification):
         new_location = self.location.overlap_region(extended_location)
         return self.copy_with_changes(location=new_location)
 
-    def _codon_location(self, location, codon_start_index):
-        indices = location.indices
-        codon_indices = indices[codon_start_index : codon_start_index + 3]
-        if len(codon_indices) < 3:
-            return None
-        start = min(codon_indices)
-        end = max(codon_indices) + 1
+    def _codon_location(self, location, codon_start):
+        start = codon_start
+        end = codon_start + 3
         return Location(start, end, location.strand)
 
     def evaluate(self, problem):
@@ -48,19 +59,19 @@ class AvoidFrameshiftStartStopCodons(Specification):
             if self.location is not None
             else Location(0, len(problem.sequence))
         )
-        subsequence = location.extract_sequence(problem.sequence)
+        frame_origin = self.frame_origin if self.frame_origin is not None else location.start
         table = CodonTable.unambiguous_dna_by_name[self.genetic_table]
         start_codons = set(table.start_codons)
         stop_codons = set(table.stop_codons)
 
         errors_locations = []
-        for frame in self.frames:
-            for index in range(frame, len(subsequence) - 2, 3):
-                codon = subsequence[index : index + 3]
-                if (codon in start_codons) or (codon in stop_codons):
-                    location_match = self._codon_location(location, index)
-                    if location_match is not None:
-                        errors_locations.append(location_match)
+        allowed_frames = set(self.frames)
+        for codon_start in range(location.start, location.end - 2):
+            if (codon_start - frame_origin) % 3 not in allowed_frames:
+                continue
+            codon = problem.sequence[codon_start : codon_start + 3]
+            if (codon in start_codons) or (codon in stop_codons):
+                errors_locations.append(self._codon_location(location, codon_start))
 
         return SpecEvaluation(
             self,
