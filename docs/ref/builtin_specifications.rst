@@ -16,6 +16,7 @@ Summary
     AvoidHairpins
     AvoidHeterodimerization
     AvoidPattern
+    AvoidFrameshiftStartStopCodons
     AvoidStopCodons
     AvoidRareCodons
     CodonOptimize
@@ -78,6 +79,11 @@ AvoidStopCodons
 +++++++++++++++
 
 .. autoclass:: AvoidStopCodons
+
+AvoidFrameshiftStartStopCodons
+++++++++++++++++++++++++++++++
+
+.. autoclass:: AvoidFrameshiftStartStopCodons
 
 AvoidRareCodons
 +++++++++++++++

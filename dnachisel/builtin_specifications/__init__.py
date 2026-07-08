@@ -8,6 +8,7 @@ from .AvoidHeterodimerization import AvoidHeterodimerization
 from .AvoidMatches import AvoidMatches
 from .UniquifyAllKmers import UniquifyAllKmers
 from .AvoidPattern import AvoidPattern
+from .AvoidFrameshiftStartStopCodons import AvoidFrameshiftStartStopCodons
 from .AvoidStopCodons import AvoidStopCodons
 from .EnforceChanges import EnforceChanges
 from .EnforceChoice import EnforceChoice
@@ -37,6 +38,7 @@ DEFAULT_SPECIFICATIONS_DICT = {
     "AvoidHairpins": AvoidHairpins,
     "UniquifyAllKmers": UniquifyAllKmers,
     "AvoidPattern": AvoidPattern,
+    "AvoidFrameshiftStartStopCodons": AvoidFrameshiftStartStopCodons,
     "CodonOptimize": CodonOptimize,
     "EnforceGCContent": EnforceGCContent,
     "EnforceMeltingTemperature": EnforceMeltingTemperature,
@@ -65,6 +67,7 @@ __all__ = [
     "AvoidMatches",
     "UniquifyAllKmers",
     "AvoidPattern",
+    "AvoidFrameshiftStartStopCodons",
     "AvoidStopCodons",
     "CodonOptimize",
     "EnforceChanges",
